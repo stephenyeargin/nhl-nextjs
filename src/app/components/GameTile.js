@@ -1,0 +1,138 @@
+import Image from "next/image";
+import Link from "next/link";
+import { dayjs } from 'dayjs';
+
+const formatGameDate = (dateString) => {
+  return new Date(dateString).toLocaleDateString('en-US');
+};
+
+const formatGameTime = (timeString) => {
+  return new Date(timeString).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  });
+};
+
+const formatBroadcasts = (broadcasts) => {
+  if (!broadcasts || broadcasts.length === 0) {
+    return '';
+  }
+
+  return broadcasts.map((b) => b.network).join(', ');
+};
+
+export default function GameTile({game}) {
+
+  game.awayTeam.defeated = game.awayTeam.score < game.homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
+  game.homeTeam.defeated = game.homeTeam.score < game.awayTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
+
+  return (
+    <Link
+      href={`/game/${game.id}`}
+      key={game.id} 
+      className={`border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''}`}
+    >
+      <div className="flex justify-between items-center mb-4">
+        <div className="text-lg">
+          {game.gameType === 1 && (
+            <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1">Preseason</span>
+          )}
+          {game.gameScheduleState === 'CNCL' && (
+            <span className="text-sm font-medium px-2 py-1 bg-slate-500 dark:text-black rounded mr-1">Cancelled</span>
+          )}
+          {game.gameScheduleState === 'PPD' && (
+            <span className="text-sm font-medium px-2 py-1 bg-blue-500 dark:text-black rounded mr-1">Postponed</span>
+          )}
+          {(game.gameState === 'LIVE' || game.gameState === 'CRIT') && (
+            <span className="text-sm font-medium px-2 py-1 bg-red-900 text-white rounded mr-1">LIVE</span>
+          )}         
+        </div>
+        {game.gameState === 'FUT' && (
+          <div className="text-sm text-right text-slate-600">
+            {formatBroadcasts(game.tvBroadcasts)}
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        {/* Away Team */}
+        <div className={`flex items-center justify-between ${game.awayTeam.defeated ? 'opacity-50' : ''}`}>
+          <div className="flex items-center">
+            <Image 
+              src={game.awayTeam.logo} 
+              alt={`${game.awayTeam.placeName?.default} logo`}
+              className="w-8 h-8 dark:hidden mr-3"
+              width={32}
+              height={32}
+            />
+            <Image 
+              src={game.awayTeam.darkLogo} 
+              alt={`${game.awayTeam.placeName?.default} logo`}
+              className="w-8 h-8 hidden dark:block mr-3"
+              width={32}
+              height={32}
+            />
+            <span className="font-bold">{game.awayTeam.placeName?.default}</span>
+          </div>
+          <span className="text-lg font-semibold">
+            {game.gameState !== 'FUT' ? game.awayTeam.score : ''}
+          </span>
+        </div>
+
+        {/* Home Team */}
+        <div className={`flex items-center justify-between ${game.homeTeam.defeated ? 'opacity-50' : ''}`}>
+          <div className="flex items-center">
+            <Image 
+              src={game.homeTeam.logo} 
+              alt={`${game.homeTeam.placeName?.default} logo`}
+              className="w-8 h-8 dark:hidden mr-3"
+              width={32}
+              height={32}
+            />
+            <Image 
+              src={game.homeTeam.darkLogo} 
+              alt={`${game.homeTeam.placeName?.default} logo`}
+              className="w-8 h-8 hidden dark:block mr-3"
+              width={32}
+              height={32}
+            />
+            <span className="font-bold">{game.homeTeam.placeName?.default}</span>
+          </div>
+          <span className="text-lg font-semibold">
+            {game.homeTeam.score}
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-2 pt-3 border-t">
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-slate-600">{game.venue.default}</span>
+          {(game.gameState === 'FINAL' || game.gameState === 'OFF') && (
+            <div>
+              <span className="text-sm mr-2">{formatGameDate(game.gameDate)}</span>
+              <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
+                FINAL{game.gameOutcome?.lastPeriodType !== 'REG' ? `/${game.gameOutcome?.lastPeriodType}` : ''}
+              </span>
+            </div>
+          )}
+          {(game.gameState === 'LIVE' || game.gameState === 'CRIT' && (
+            <span className="text-sm font-medium px-2 py-1 bg-red-900 text-white rounded">
+              {game.periodDescriptor?.number}
+              {game.clock?.inIntermission ? ' INT' : ''}
+              {' '}
+              {game.clock?.timeRemaining}
+            </span>
+          ))}
+          {game.gameState === 'FUT' && (
+            <span className="text-sm">
+              {formatGameTime(game.startTimeUTC)}
+              {' '}
+              {formatGameDate(game.gameDate)}
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
+  )
+}
