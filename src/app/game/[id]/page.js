@@ -3,110 +3,19 @@
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import Link from 'next/link.js';
 import utc from 'dayjs/plugin/utc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faHockeyPuck, faPauseCircle, faPlayCircle, faRadio, faTelevision, faTrophy, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCheckCircle, faHockeyPuck, faPlayCircle, faRadio, faTelevision, faTrophy, faWarning, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+
 import GameSkeleton from '@/app/components/GameSkeleton.js';
-import Link from 'next/link.js';
 import { GameClock } from '@/app/components/GameClock.js';
 import { RadioLink } from '@/app/components/RadioLink.js';
+import { GameHeader } from '@/app/components/GameHeader.js';
+import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES } from '@/app/utils/constants';
+import { PreGameSummary } from '@/app/components/PreGameSummary';
 
 dayjs.extend(utc);
-
-const GAME_STATES = {
-  FINAL: 'Final',
-  OFF: 'Final',
-  LIVE: 'Live',
-  OT: 'Overtime',
-  PRE: 'Pregame',
-  FUT: 'Future',
-  CRIT: 'Critical',
-}
-
-const PERIOD_DESCRIPTORS = {
-  1: '1st',
-  2: '2nd',
-  3: '3rd',
-  4: 'Overtime',
-  5: 'Shootout',
-}
-
-const PENALTY_TYPES = {
-  'MAJ': 'Major',
-  'MIN': 'Minor',
-  'MAJ-MAJ': 'Double Major',
-  'GAM': 'Match Penalty',
-  'MIS': 'Misconduct',
-  'BEN': 'Bench',
-  'PS': 'Penalty Shot',
-  'boarding': 'Boarding',
-  'broken-stick': 'Playing with Broken Stick',
-  'closing-hand-on-puck': 'Closing Hand on Puck',
-  'cross-checking': 'Cross-checking',
-  'delaying-game': 'Delaying Game',
-  'delaying-game-puck-over-glass': 'Delaying Game - Puck Over Glass',
-  'delaying-game-unsuccessful-challenge': 'Delaying Game - Unsuccessful Challenge',
-  'elbowing': 'Elbowing',
-  'embellishment': 'Embellishment',
-  'fighting': 'Fighting',
-  'game-misconduct': 'Game Misconduct',
-  'high-sticking-double-minor': 'High-sticking - Double Minor',
-  'high-sticking': 'High-sticking',
-  'holding-the-stick': 'Holding the Stick',
-  'holding': 'Holding',
-  'hooking': 'Hooking',
-  'illegal-check-to-head': 'Illegal Check to the Head',
-  'instigator': 'Instigator',
-  'instigator-misconduct': 'Instigator Misconduct',
-  'interference-goalkeeper': 'Goaltender Interference',
-  'interference': 'Interference',
-  'kneeing': 'Kneeing',
-  'major': 'Unspecified Major Penalty',
-  'minor': 'Unspecified Minor Penalty',
-  'misconduct': 'Misconduct',
-  'ps-hooking-on-breakaway': 'Hooking on Breakaway',
-  'ps-holding-on-breakaway': 'Holding on Breakaway',
-  'ps-slash-on-breakaway': 'Slashing on Breakaway',
-  'ps-tripping-on-breakaway': 'Tripping on Breakaway',
-  'roughing': 'Roughing',
-  'roughing-double-minor': 'Roughing - Double Minor',
-  'slashing': 'Slashing',
-  'spearing': 'Spearing',
-  'too-many-men-on-the-ice': 'Too Many Men on the Ice',
-  'tripping': 'Tripping',
-  'unsportsmanlike-conduct-bench': 'Unsportsmanlike Conduct - Bench',
-  'unsportsmanlike-conduct': 'Unsportsmanlike Conduct',
-  'other': 'Other',
-}
-
-const TEAM_STATS = {
-  sog: 'Shots on Goal',
-  faceoffWinningPctg: 'Faceoff Winning %',
-  powerPlay: 'Power Play',
-  powerPlayPctg: 'Power Play %',
-  pim: 'Penalty Minutes',
-  hits: 'Hits',
-  blockedShots: 'Blocked Shots',
-  giveaways: 'Giveaways',
-  takeaways: 'Takeaways',
-}
-
-const PLAYER_STATS = {
-  goals: 'Goals',
-  assists: 'Assists',
-  points: 'Points',
-}
-
-const STAT_CONTEXT = {
-  last_5_games: 'Last 5 Games',
-  regular_season: 'Regular Season',
-}
-
-const SHOOTOUT_RESULT = {
-  save: 'Save',
-  goal: 'Goal',
-  miss: 'Miss',
-}
 
 const gameIsInProgress = (game) => {
   switch (GAME_STATES[game.gameState]) {
@@ -147,7 +56,15 @@ const formatBroadcasts = (broadcasts) => {
     return '';
   }
 
-  return broadcasts.map((b) => b.network).join(', ');
+  return broadcasts.map((b) => `${b.network} (${b.market})`).join(', ');
+};
+
+const formatGameTime = (timeString) => {
+  return new Date(timeString).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  });
 };
 
 export default function GamePage({ params }) {
@@ -257,100 +174,7 @@ export default function GamePage({ params }) {
 
   return (
     <div className="container mx-auto">
-      <div className="grid grid-cols-12 my-5 border py-4 items-center">
-        <div className="col-span-3 flex mx-auto">
-          <div>
-            <Link href={`/team/${awayTeam.abbrev}`}>
-              <Image src={awayTeam.logo} alt={awayTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
-            </Link>
-          </div>
-          <div>
-            <Link href={`/team/${awayTeam.abbrev}`}>
-              <div className="text-xl font-black block md:hidden">{awayTeam.abbrev}</div>
-              <div className="text-lg hidden md:block">
-                <div className="text-sm">{awayTeam.placeName.default}</div>
-                <div className="text-xl font-black">{awayTeam.name.default.replace(awayTeam.placeName.default, '')}</div>
-              </div>
-            </Link>
-            {game.gameState !== 'FUT' ? (
-              <div className="text-sm">SOG: {awayTeam.sog || 0}</div>
-            ) : (
-              <div className="text-sm">{awayTeam.record}</div>
-            )}
-          </div>
-        </div>
-        <div className={`col-span-2 text-center text-5xl md:text-7xl font-black ${awayTeam.score < homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState) ? 'opacity-50' : ''}`}>
-          {game.situation?.awayTeam.situationDescriptions?.map((code) => (
-            <span key={code} className="mx-1 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
-          ))}
-          {awayTeam.score}
-        </div>
-        <div className="col-span-2 text-center content-middle">
-          <div className="text-xs my-1">{venue.default}, {venueLocation.default}</div>
-          {(game.gameState === 'LIVE' || game.gameState === 'CRIT') && (
-            <div className="my-3">
-              <span className="font-md font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase">
-                {PERIOD_DESCRIPTORS[game.periodDescriptor.number]}
-                {game.clock.inIntermission ? ' INT' : ''}
-              </span>
-              <span className="font-bold text-xl">
-                <GameClock timeRemaining={game.clock?.timeRemaining} running={game.clock?.inIntermission || game.clock?.running} />
-                {!game.clock?.inIntermission && !game.clock?.running && (<FontAwesomeIcon icon={faPauseCircle} className="ml-1" />)}
-              </span>
-            </div>
-          )}
-          {(game.gameState === 'FINAL' || game.gameState === 'OFF') && (
-            <div className="text-center my-2 uppercase">
-              <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
-                Final
-                {game.periodDescriptor.periodType	!== 'REG' && `/${game.periodDescriptor.periodType}`}
-              </span>
-            </div>
-          )}
-          {(game.situation && (game.situation?.awayTeam.strength != 5 || game.situation?.homeTeam.strength) != 5) && (
-            <div className="my-2">
-              {game.situation?.timeRemaining && (
-                <span className="text-sm font-medium px-2 py-1 border text-slate-900 dark:text-slate-100 rounded">
-                  <GameClock timeRemaining={game.situation?.timeRemaining} running={game.clock?.running && !game.clock?.inIntermission} />
-                </span>
-              )}
-              <span className="text-md font-bold px-2 py-1 text-red-900 rounded uppercase">
-                {game.situation?.awayTeam.strength}-on-{game.situation?.homeTeam.strength}
-              </span>
-            </div>
-          )}
-          <div className="text-xs my-2">
-            <div>{dayjs(game.startTimeUTC).format('MMMM D, YYYY')}</div>
-          </div>
-        </div>
-        <div className={`col-span-2 text-center text-5xl md:text-7xl font-black ${awayTeam.score > homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState) ? 'opacity-50' : ''}`}>
-          {homeTeam.score}
-          {game.situation?.homeTeam.situationDescriptions?.map((code) => (
-            <span key={code} className="mx-2 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
-          ))}
-        </div>
-        <div className="col-span-3 flex mx-auto">
-          <div className="text-right">
-            <Link href={`/team/${homeTeam.abbrev}`}>
-              <div className="text-xl font-black block md:hidden">{homeTeam.abbrev}</div>
-              <div className="text-lg hidden md:block">
-                <div className="text-sm">{homeTeam.placeName.default}</div>
-                <div className="text-xl font-black">{homeTeam.name.default.replace(homeTeam.placeName.default, '')}</div>
-              </div>
-            </Link>
-            {game.gameState !== 'FUT' ? (
-              <div className="text-sm">SOG: {homeTeam.sog || 0}</div>
-            ) : (
-              <div className="text-sm">{homeTeam.record}</div>
-            )}
-          </div>
-          <div>
-            <Link href={`/team/${homeTeam.abbrev}`}>
-              <Image src={homeTeam.logo} alt={homeTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
-            </Link>
-          </div>
-        </div>
-      </div>
+      <GameHeader game={game} />
 
       <div className="text-center my-3 text-xs font-bold">
         <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
@@ -374,58 +198,7 @@ export default function GamePage({ params }) {
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
           {matchup && (
-            <div>
-              <div className="text-3xl font-bold underline">Players to Watch</div>
-              <div className="text-xl">{STAT_CONTEXT[matchup.teamLeaders?.context] || matchup.teamLeaders?.context}</div>
-              <div className="flex justify-between">
-                <div className="text-left">
-                  <Image src={awayTeam.logo} alt={awayTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
-                </div>
-                <div className="text-right">
-                  <Image src={homeTeam.logo} alt={homeTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
-                </div>
-              </div>
-              {matchup.teamLeaders?.leaders.map((leader) => (
-                <div key={leader.category} className="border grid grid-cols-12 mb-3 py-2 items-center">
-                  <div className="col-span-3 flex">
-                    <Image
-                      src={leader.awayLeader.headshot} alt={`${leader.awayLeader.firstName.default} ${leader.awayLeader.lastName.default}`}
-                      height={128} width={128}
-                      className="w-16 h-16 rounded-full mr-2 hidden md:block bg-slate-300"
-                    />
-                    <div className="mx-1">
-                      <div>{leader.awayLeader.firstName.default}</div>
-                      <div className="font-bold">{leader.awayLeader.lastName.default}</div>
-                      <div className="text-sm">#{leader.awayLeader.sweaterNumber} • {leader.awayLeader.positionCode}</div>
-                    </div>
-                  </div>
-                  <div className="col-span-2 text-center text-xl md:text-5xl font-black">
-                    {leader.awayLeader.value}
-                  </div>
-                  <div className="col-span-2 text-center">
-                    {PLAYER_STATS[leader.category]}
-                  </div>
-                  <div className="col-span-2 text-center text-xl md:text-5xl font-black">
-                    {leader.homeLeader.value}
-                  </div>
-                  <div className="col-span-3 flex justify-end">
-                    <div className="mx-1 text-right">
-                      <div>{leader.homeLeader.firstName.default}</div>
-                      <div className="font-bold">{leader.homeLeader.lastName.default}</div>
-                      <div className="text-sm">#{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}</div>
-                    </div>
-                    <Image
-                      src={leader.homeLeader.headshot}
-                      alt={`${leader.homeLeader.firstName.default}
-                      ${leader.homeLeader.lastName.default}`}
-                      height={128}
-                      width={128}
-                      className="w-16 h-16 rounded-full ml-2 hidden md:block"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+            <PreGameSummary game={game} />
           )}
           {summary && (
             <div>
@@ -675,7 +448,7 @@ export default function GamePage({ params }) {
                                     {PENALTY_TYPES[penalty.type] || penalty.type}
                                   </div>
                                   <div>
-                                    {PENALTY_TYPES[penalty.descKey] || penalty.descKey.replace(/-/g, ' ')}
+                                    {PENALTY_DESCRIPTIONS[penalty.descKey] || penalty.descKey.replace(/-/g, ' ')}
                                   </div>
                                 </div>
                               </div>
@@ -785,16 +558,34 @@ export default function GamePage({ params }) {
                     {!['OFF', 'FUT', 'FINAL'].includes(g.gameState) ? (
                       <div className="flex justify-between">
                         <div>
-                          <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase">
+                          <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-1 uppercase">
                             {PERIOD_DESCRIPTORS[g.periodDescriptor?.number]}
                             {g.clock?.inIntermission ? ' INT' : ''}
                           </span>
-                          <span className="text-sm font-bold">{g.clock?.timeRemaining}</span>
+                          <span className="text-xs font-bold">{g.clock?.timeRemaining}</span>
                         </div>
-                        <div className="text-sm py-1 text-right">{dayjs(g.startTimeUTC).format('MMM D')}</div>
+                        <div className="text-xs py-1 text-right">{dayjs(g.startTimeUTC).format('MMM D')}</div>
                       </div>
                     ) : (
-                      <div className="text-sm py-1">{dayjs(g.startTimeUTC).format('MMM D')}</div>
+                      <div className="flex justify-between">
+                        <div>
+                          {['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                            <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"> Final</span>
+                          )}
+                          {['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                            <span className="text-sm py-1">{formatGameTime(game.startTimeUTC)}</span>
+                          )}
+                          {g.gameScheduleState === 'CNCL' && (
+                            <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+                          )}
+                          {g.gameScheduleState === 'PPD' && (
+                            <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-sm py-1">{dayjs(g.startTimeUTC).format('MMM D')}</span>
+                        </div>
+                      </div>
                     )}
                   </Link>
                 ))}

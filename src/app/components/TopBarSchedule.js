@@ -6,6 +6,8 @@ import Link from 'next/link';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -96,11 +98,20 @@ export default function TopBarSchedule({ gameDate }) {
       {games?.length > 0 ? (
         <>
           <div className="flex text-xs py-4">
-            {dates.map((date) => (
-              <Link key={date} href={`?date=${date}`} className={date == focusedDate ? 'active rounded-xl bg-slate-500 text-white mx-3' : ' mx-3'} onClick={() => handleDateClick(date)}>
-                <div className="px-4">{dayjs(date).utc().format('MMM D')}</div>
-              </Link>
-            ))}
+            {dates.map((date) => {
+              let dateClass = 'mx-1 border rounded-xl';
+              if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
+                dateClass = 'mx-1 border border-blue-400 rounded-xl'
+              }
+              if (date === focusedDate) {
+                dateClass = 'active rounded-xl bg-slate-500 text-white mx-1'
+              }
+              return (
+                <Link key={date} href={`?date=${date}`} className={dateClass} onClick={() => handleDateClick(date)}>
+                  <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
+                </Link>
+              )
+              })}
           </div>
           <div className="overflow-x-auto scrollbar-hidden">
             <div className="flex flex-nowrap gap-4 p-4">
@@ -160,10 +171,10 @@ export default function TopBarSchedule({ gameDate }) {
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-slate-600">{game.venue.default}</span>
                         {game.gameScheduleState === 'CNCL' && (
-                          <span>Cancelled</span>
+                          <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
                         )}
                         {game.gameScheduleState === 'PPD' && (
-                          <span>Postponed</span>
+                          <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
                         )}
                         {(game.gameState === 'FINAL' || game.gameState === 'OFF') ? (
                           <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">

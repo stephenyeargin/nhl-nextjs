@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { dayjs } from 'dayjs';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBan, faWarning, faX } from "@fortawesome/free-solid-svg-icons";
 
 const formatGameDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('en-US');
@@ -36,13 +38,13 @@ export default function GameTile({game}) {
       <div className="flex justify-between items-center mb-4">
         <div className="text-lg">
           {game.gameType === 1 && (
-            <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1">Preseason</span>
+            <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1 uppercase">Preseason</span>
           )}
           {game.gameScheduleState === 'CNCL' && (
-            <span className="text-sm font-medium px-2 py-1 bg-slate-500 dark:text-black rounded mr-1">Cancelled</span>
+            <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
           )}
           {game.gameScheduleState === 'PPD' && (
-            <span className="text-sm font-medium px-2 py-1 bg-blue-500 dark:text-black rounded mr-1">Postponed</span>
+            <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
           )}
           {(game.gameState === 'LIVE' || game.gameState === 'CRIT') && (
             <span className="text-sm font-medium px-2 py-1 bg-red-900 text-white rounded mr-1">LIVE</span>
