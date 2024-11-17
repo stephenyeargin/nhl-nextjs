@@ -4,16 +4,21 @@ import Link from 'next/link';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPauseCircle, faWarning, faBan } from '@fortawesome/free-solid-svg-icons';
-import { GameClock } from './GameClock';
+import GameClock from './GameClock';
 import { formatGameTime } from '../utils/formatters';
 import { PERIOD_DESCRIPTORS } from '../utils/constants';
 
-export const GameHeader = ({ game }) => {
+const GameHeader = ({ game }) => {
 
   const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
 
+  let gameHeaderClass = 'grid grid-cols-12 my-5 border py-4 items-center';
+  if (gameState === 'CRIT') {
+    gameHeaderClass = 'grid grid-cols-12 my-5 border border-red-500 py-4 items-center';
+  }
+
   return (
-    <div className="grid grid-cols-12 my-5 border py-4 items-center">
+    <div className={gameHeaderClass}>
       <div className="col-span-3 flex mx-auto gap-2">
         <div>
           <Link href={`/team/${awayTeam.abbrev}`}>
@@ -90,9 +95,11 @@ export const GameHeader = ({ game }) => {
             </span>
           </div>
         )}
-        <div className="text-xs my-2">
-          <div>{dayjs(startTimeUTC).format('MMMM D, YYYY')}</div>
-        </div>
+        {!['LIVE', 'CRIT'].includes(gameState) && (
+          <div className="text-xs my-2">
+            <div>{dayjs(startTimeUTC).format('MMMM D, YYYY')}</div>
+          </div>
+        )}
       </div>
       <div className={`col-span-2 text-center text-5xl md:text-7xl font-black ${awayTeam.score > homeTeam.score && ['FINAL', 'OFF'].includes(gameState) ? 'opacity-50' : ''}`}>
         {homeTeam.score}
@@ -130,3 +137,5 @@ export const GameHeader = ({ game }) => {
     </div>
   );
 };
+
+export default GameHeader;

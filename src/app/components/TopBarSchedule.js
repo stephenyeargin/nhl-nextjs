@@ -8,17 +8,11 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { PERIOD_DESCRIPTORS } from '../utils/constants';
+import { formatGameTime } from '../utils/formatters';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
-
-const PERIOD_DESCRIPTORS = {
-  1: '1st',
-  2: '2nd',
-  3: '3rd',
-  4: 'OT',
-  5: 'SO',
-}
 
 const sortGamesByState = (games) => {
   const sortedGames = [...games].sort((a, b) => {
@@ -29,15 +23,7 @@ const sortGamesByState = (games) => {
   return sortedGames;
 }
 
-const formatGameTime = (timeString) => {
-  return new Date(timeString).toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZoneName: 'short'
-  });
-};
-
-export default function TopBarSchedule({ gameDate }) {
+const TopBarSchedule = ({ gameDate }) => {
   const [games, setGames] = useState([]);
   const [focusedDate, setFocusedDate] = useState(gameDate || null);
   const [dates, setDates] = useState([]);
@@ -120,8 +106,13 @@ export default function TopBarSchedule({ gameDate }) {
                 game.awayTeam.defeated = game.awayTeam.score < game.homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
                 game.homeTeam.defeated = game.homeTeam.score < game.awayTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
 
+                let itemClass = 'border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow';
+                if (game.gameState === 'CRIT') {
+                  itemClass = 'border border-red-500 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow';
+                }
+
                 return (
-                  <Link key={game.id} href={`/game/${game.id}`} className="border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow" style={{minWidth: '380px'}}>
+                  <Link key={game.id} href={`/game/${game.id}`} className={itemClass} style={{minWidth: '380px'}}>
                     <div className="space-y-2">
                       {/* Away Team */}
                       <div className={`flex items-center justify-between ${game.awayTeam.defeated ? 'opacity-50' : ''}`}>
@@ -242,3 +233,5 @@ export default function TopBarSchedule({ gameDate }) {
     </div>
   );
 }
+
+export default TopBarSchedule;

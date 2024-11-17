@@ -1,30 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { dayjs } from 'dayjs';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faWarning, faX } from "@fortawesome/free-solid-svg-icons";
+import { formatBroadcasts, formatGameTime, formatGameDate } from "../utils/formatters";
 
-const formatGameDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US');
-};
-
-const formatGameTime = (timeString) => {
-  return new Date(timeString).toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZoneName: 'short'
-  });
-};
-
-const formatBroadcasts = (broadcasts) => {
-  if (!broadcasts || broadcasts.length === 0) {
-    return '';
-  }
-
-  return broadcasts.map((b) => b.network).join(', ');
-};
-
-export default function GameTile({game}) {
+const GameTile = ({game}) => {
 
   game.awayTeam.defeated = game.awayTeam.score < game.homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
   game.homeTeam.defeated = game.homeTeam.score < game.awayTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
@@ -138,3 +118,5 @@ export default function GameTile({game}) {
     </Link>
   )
 }
+
+export default GameTile;

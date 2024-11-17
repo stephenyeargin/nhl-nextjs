@@ -7,13 +7,14 @@ import Link from 'next/link.js';
 import utc from 'dayjs/plugin/utc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBan, faCheckCircle, faHockeyPuck, faPlayCircle, faRadio, faTelevision, faTrophy, faWarning, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
-
 import GameSkeleton from '@/app/components/GameSkeleton.js';
-import { GameClock } from '@/app/components/GameClock.js';
-import { RadioLink } from '@/app/components/RadioLink.js';
-import { GameHeader } from '@/app/components/GameHeader.js';
-import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES } from '@/app/utils/constants';
-import { PreGameSummary } from '@/app/components/PreGameSummary';
+import Headshot from '@/app/components/Headshot';
+import RadioLink from '@/app/components/RadioLink.js';
+import GameHeader from '@/app/components/GameHeader.js';
+import PreGameSummary from '@/app/components/PreGameSummary';
+import IceSurface from '@/app/components/IceSurface';
+import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES, SHOOTOUT_RESULT } from '@/app/utils/constants';
+import { formatBroadcasts, formatGameTime, formatSeriesStatus } from '@/app/utils/formatters';
 
 dayjs.extend(utc);
 
@@ -28,46 +29,7 @@ const gameIsInProgress = (game) => {
   }
 }
 
-const formatSeriesStatus = (game, rightRail) => {
-  if (rightRail.seasonSeriesWins.homeTeamWins === rightRail.seasonSeriesWins.awayTeamWins) {
-    if (rightRail.seasonSeriesWins.homeTeamWins === 0) {
-      return (
-        <></>
-      )
-    }
-    return (
-      <>Series tied.</>
-    )
-  }
-
-  if (rightRail.seasonSeriesWins.homeTeamWins > rightRail.seasonSeriesWins.awayTeamWins) {
-    return (
-      <>{game.homeTeam.placeName.default} leads {rightRail.seasonSeriesWins.homeTeamWins}-{rightRail.seasonSeriesWins.awayTeamWins}</>
-    )
-  }
-
-  return (
-    <>{game.awayTeam.placeName.default} leads {rightRail.seasonSeriesWins.awayTeamWins}-{rightRail.seasonSeriesWins.homeTeamWins}</>
-  )
-}
-
-const formatBroadcasts = (broadcasts) => {
-  if (!broadcasts || broadcasts.length === 0) {
-    return '';
-  }
-
-  return broadcasts.map((b) => `${b.network} (${b.market})`).join(', ');
-};
-
-const formatGameTime = (timeString) => {
-  return new Date(timeString).toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZoneName: 'short'
-  });
-};
-
-export default function GamePage({ params }) {
+const GamePage = ({ params }) => {
   const { id } = params;
   const logos = {};
 
@@ -138,40 +100,6 @@ export default function GamePage({ params }) {
     }
   }
 
-  const Skater = ({ player, game }) => {
-
-    // Add time remaining
-    let time = '0:00';
-    if (player.secondsRemaining) {
-      const timeInSeconds = parseInt(player.secondsRemaining, 10);
-      const minutes = Math.floor(timeInSeconds / 60);
-      const seconds = timeInSeconds % 60;
-      const paddedMinutes = minutes.toString().padStart(2, '0');
-      const paddedSeconds = seconds.toString().padStart(2, '0');
-      time = `${paddedMinutes}:${paddedSeconds}`;
-    }
-
-    return (
-      <div key={player.playerId} className="text-xs text-center m-5">
-        <Image
-          src={player.headshot}
-          alt={`${player.name.default}`}
-          height={128}
-          width={128}
-          className="w-10 h-10 rounded-full m-1 bg-slate-300 mx-auto"
-        />
-        <div className="font-bold">{player.name.default}</div>
-        <div className="text-sm my-1">
-          #{player.sweaterNumber} • {player.positionCode}
-          {game && player.secondsRemaining && (
-            <span className="ml-1 border rounded p-1 text-xs"><GameClock timeRemaining={time} running={game.clock.running} /></span>
-          )}
-        </div>
-
-      </div>
-    )
-  };
-
   return (
     <div className="container mx-auto">
       <GameHeader game={game} />
@@ -202,75 +130,8 @@ export default function GamePage({ params }) {
           )}
           {summary && (
             <div>
-              {summary.iceSurface && !game.clock.inIntermission && (
-                <div>
-                  <div
-                    className="grid grid-cols-6 p-10 border rounded-3xl mt-5 gap-5 w-full relative"
-                  >
-                    <style jsx>{`
-                      .grid::before {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        bottom: 0;
-                        background-image: url(${logos[homeTeam.abbrev]});
-                        background-size: 300px 300px;
-                        background-position: center;
-                        background-repeat: no-repeat;
-                        opacity: 0.2;
-                        z-index: -1;
-                      }
-                    `}</style>
-                    <div className="col-span-1 self-center">
-                      {summary.iceSurface?.awayTeam.goalies.map((p) => (
-                        <Skater key={p.playerId} player={p} />
-                      ))}
-                    </div>
-                    <div className="col-span-1 self-center">
-                      {summary.iceSurface?.awayTeam.defensemen.map((p) => (
-                        <Skater key={p.playerId} player={p} />
-                      ))}
-                    </div>
-                    <div className="col-span-1 self-center">
-                      {summary.iceSurface?.awayTeam.forwards.map((p) => (
-                        <Skater key={p.playerId} player={p} />
-                      ))}
-                    </div>
-                    <div className="col-span-1 self-center">
-                      {summary.iceSurface?.homeTeam.forwards.map((p) => (
-                        <Skater key={p.playerId} player={p} />
-                      ))}
-                    </div>
-                    <div className="col-span-1 self-center">
-                      {summary.iceSurface?.homeTeam.defensemen.map((p) => (
-                        <Skater key={p.playerId} player={p} />
-                      ))}
-                    </div>
-                    <div className="col-span-1 self-center">
-                      {summary.iceSurface?.homeTeam.goalies.map((p) => (
-                        <Skater key={p.playerId} player={p} />
-                      ))}
-                    </div>
-                  </div>
-                  {(summary.iceSurface?.awayTeam.penaltyBox.length > 0 || summary.iceSurface?.homeTeam.penaltyBox.length > 0) && (
-                    <div className="grid grid-cols-2 gap-5">
-                      <div className="col-span-1 flex justify-end">
-                        {summary.iceSurface?.awayTeam.penaltyBox.map((p) => (
-                          <Skater key={p.playerId} player={p} game={game} />
-                        ))}
-                      </div>
-                      <div className="col-span-1 flex justify-start">
-                        {summary.iceSurface?.homeTeam.penaltyBox.map((p) => (
-                          <Skater key={p.playerId} player={p} game={game} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            
+              <IceSurface game={game} />
+
               <div className="text-3xl font-bold underline my-4">Game Summary</div>
               <div className="mb-4">
                 <h3 className="text-xl font-semibold my-3">Scoring Summary</h3>
@@ -279,15 +140,16 @@ export default function GamePage({ params }) {
                     <h4 className="font-semibold">{PERIOD_DESCRIPTORS[period.periodDescriptor.number] || period.periodDescriptor.number}</h4>
                     {period.periodDescriptor.periodType === 'SO' ? (
                       <>
+                        {game.summary?.shootout.length == 0 && (
+                          <p className="text-slate-500">No shots taken.</p>
+                        )}
                         {game.summary?.shootout.map((shot) => (
                           <div key={shot.sequence} className="border grid grid-cols-12 gap-2 my-5 p-2">
                             <div className="col-span-12 flex">
-                              <Image
+                              <Headshot
                                 src={shot.headshot}
                                 alt={`${shot.firstName} ${shot.lastName}`}
-                                height={128}
-                                width={128}
-                                className="w-16 h-16 rounded-full mr-2 bg-slate-300"
+                                className="w-16 h-16 mr-2"
                               />
                               <div className="grow">
                                 <span className="font-bold">
@@ -322,12 +184,10 @@ export default function GamePage({ params }) {
                         period.goals.map((goal, i) => (
                           <div key={i} className="border grid grid-cols-12 gap-2 my-5 p-2">
                             <div className="col-span-12 md:col-span-5 flex">
-                              <Image
+                              <Headshot
                                 src={goal.headshot}
                                 alt={`${goal.firstName.default} ${goal.lastName.default}`}
-                                height={128}
-                                width={128}
-                                className="w-16 h-16 rounded-full mr-2 bg-slate-300"
+                                className="w-16 h-16 mr-2"
                               />
                               <div>
                                 <span className="font-bold">
@@ -343,7 +203,7 @@ export default function GamePage({ params }) {
                                   <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Penalty Shot">PS</span>
                                 )}
                                 <br />
-                                <div className="flex">
+                                <div className="flex items-center">
                                   <Image
                                     src={logos[goal.teamAbbrev.default]}
                                     alt="Logo"
@@ -351,7 +211,7 @@ export default function GamePage({ params }) {
                                     width={128}
                                     className="w-8 h-8 mr-2"
                                   />
-                                  <div className="leading-8 text-sm"> {goal.assists.length > 0 ? (
+                                  <div className="text-sm"> {goal.assists.length > 0 ? (
                                     <>
                                       <strong>Assists:</strong>
                                       {' '}
@@ -471,12 +331,10 @@ export default function GamePage({ params }) {
                             <span className="absolute bottom-0 left-0 bg-white text-black rounded-full text-xs font-bold border border-slate-200 w-6 h-6 flex items-center justify-center">
                               {p.star}
                             </span>
-                            <Image
+                            <Headshot
                               src={p.headshot}
                               alt={p.name.default}
-                              width={128}
-                              height={128}
-                              className="w-16 h-16 mx-auto mb-2 rounded-full bg-slate-300"
+                              className="w-16 h-16 mx-auto mb-2"
                             />
                           </div>
                           <h4 className="font-semibold">{p.name.default}</h4>
@@ -597,3 +455,5 @@ export default function GamePage({ params }) {
     </div>
   );
 };
+
+export default GamePage;

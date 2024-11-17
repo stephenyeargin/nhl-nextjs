@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export default function GameSkeleton({}) {
+const GameSkeleton = ({}) => {
   return (
     <div className="container mx-auto animate-pulse">
       <div className="border grid grid-cols-12 my-5 border py-4 gap-5">
@@ -70,3 +70,5 @@ export default function GameSkeleton({}) {
 
   );
 }
+
+export default GameSkeleton;

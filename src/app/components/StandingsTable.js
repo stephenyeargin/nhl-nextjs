@@ -1,20 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link';
+import { formatPercentage } from '../utils/formatters';
 
-const formatPercentage = (value) => {
-  if (!value || value === 0) {
-    return '--';
-  }
-
-  // Check if the percentage is 1 (100%)
-  if (value === 1) {
-    return '1.000';
-  }
-  // For other values, format it as required
-  return value.toFixed(3).replace(/^0\./, '.');
-};
-
-export default function StandingsTable({ standings }) {
+const StandingsTable = ({ standings }) => {
   const tableRows = standings
     .sort((a, b) => {
       if (a.wildcardSequence === b.wildcardSequence) {
@@ -90,3 +78,5 @@ export default function StandingsTable({ standings }) {
       </table>
   )
 }
+
+export default StandingsTable;

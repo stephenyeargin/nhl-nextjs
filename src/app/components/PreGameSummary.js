@@ -2,9 +2,81 @@ import React from 'react';
 import Image from 'next/image';
 
 import { STAT_CONTEXT, PLAYER_STATS } from '../utils/constants';
+import Headshot from './Headshot';
+import StatsTable from './StatsTable';
 
-export const PreGameSummary = ({ game }) => {
+const PreGameSummary = ({ game }) => {
   const { matchup, awayTeam, homeTeam } = game;
+  const { skaterSeasonStats, goalieSeasonStats } = matchup;
+
+  const logos = {};
+  logos[homeTeam.abbrev] = homeTeam.logo;
+  logos[awayTeam.abbrev] = awayTeam.logo;
+
+  const renderTeamTotals = ({ team, teamAbbrev }) => (
+    <div className="grid grid-cols-12 mb-0 py-2 items-center">
+      <div className="col-span-4">
+        <Image
+          src={logos[teamAbbrev]}
+          alt={teamAbbrev}
+          className="w-20 h-20"
+          width="100"
+          height="100"
+        />
+      </div>
+      <div className="col-span-2 flex flex-col items-center">
+        <div className="text-lg font-bold">{team.teamTotals.record}</div>
+        <div className="text-sm font-light">Record</div>
+      </div>
+      <div className="col-span-2 flex flex-col items-center">
+        <div className="text-lg font-bold">{team.teamTotals.gaa.toFixed(3)}</div>
+        <div className="text-sm font-light">GAA</div>
+      </div>
+      <div className="col-span-2 flex flex-col items-center">
+        <div className="text-lg font-bold">{team.teamTotals.savePctg.toFixed(3)}</div>
+        <div className="text-sm font-light">Save %</div>
+      </div>
+      <div className="col-span-2 flex flex-col items-center">
+        <div className="text-lg font-bold">{team.teamTotals.shutouts}</div>
+        <div className="text-sm font-light">Shutouts</div>
+      </div>
+    </div>
+  );
+
+  const renderGoaltender = ({ goaltender }) => {
+    return (
+      <div className="border grid grid-cols-12 mb-3 py-2 items-center">
+        <div className="col-span-4 p-2 flex">
+          <Headshot
+            src={goaltender.headshot}
+            alt={`${goaltender.firstName.default} ${goaltender.lastName.default}`}
+            className="w-16 h-16 mr-2 hidden md:block"
+          />
+          <div className="mx-1">
+            <div>{goaltender.firstName.default}</div>
+            <div className="font-bold">{goaltender.lastName.default}</div>
+            <div className="text-sm">#{goaltender.sweaterNumber} • {goaltender.positionCode}</div>
+          </div>
+        </div>
+        <div className="col-span-2 flex flex-col items-center">
+          <div className="text-lg font-bold">{goaltender.record}</div>
+          <div className="text-sm font-light">Record</div>
+        </div>
+        <div className="col-span-2 flex flex-col items-center">
+          <div className="text-lg font-bold">{goaltender.gaa.toFixed(3)}</div>
+          <div className="text-sm font-light">GAA</div>
+        </div>
+        <div className="col-span-2 flex flex-col items-center">
+          <div className="text-lg font-bold">{goaltender.savePctg.toFixed(3)}</div>
+          <div className="text-sm font-light">Save %</div>
+        </div>
+        <div className="col-span-2 flex flex-col items-center">
+          <div className="text-lg font-bold">{goaltender.shutouts}</div>
+          <div className="text-sm font-light">Shutouts</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -12,19 +84,19 @@ export const PreGameSummary = ({ game }) => {
       <div className="text-xl">{STAT_CONTEXT[matchup.teamLeaders?.context] || matchup.teamLeaders?.context}</div>
       <div className="flex justify-between">
         <div className="">
-          <Image src={awayTeam.logo} alt={awayTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
+          <Image src={logos[awayTeam.abbrev]} alt={awayTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
         </div>
         <div className="">
-          <Image src={homeTeam.logo} alt={homeTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
+          <Image src={logos[homeTeam.abbrev]} alt={homeTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
         </div>
       </div>
       {matchup.teamLeaders?.leaders.map((leader) => (
         <div key={leader.category} className="border grid grid-cols-12 mb-3 py-2 items-center">
           <div className="col-span-3 p-2 flex">
-            <Image
-              src={leader.awayLeader.headshot} alt={`${leader.awayLeader.firstName.default} ${leader.awayLeader.lastName.default}`}
-              height={128} width={128}
-              className="w-16 h-16 rounded-full mr-2 hidden md:block bg-slate-300"
+            <Headshot
+              src={leader.awayLeader.headshot}
+              alt={`${leader.awayLeader.firstName.default} ${leader.awayLeader.lastName.default}`}
+              className="w-16 h-16 mr-2 hidden md:block"
             />
             <div className="mx-1">
               <div>{leader.awayLeader.firstName.default}</div>
@@ -47,19 +119,58 @@ export const PreGameSummary = ({ game }) => {
               <div className="font-bold">{leader.homeLeader.lastName.default}</div>
               <div className="text-sm">#{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}</div>
             </div>
-            <Image
+            <Headshot
               src={leader.homeLeader.headshot}
-              alt={`${leader.homeLeader.firstName.default}
-              ${leader.homeLeader.lastName.default}`}
-              height={128}
-              width={128}
-              className="w-16 h-16 rounded-full ml-2 hidden md:block"
+              alt={`${leader.homeLeader.firstName.default} ${leader.homeLeader.lastName.default}`}
+              className="w-16 h-16 ml-2 hidden md:block"
             />
           </div>
-
-          {/* TODO Goaltender comparison */}
         </div>
       ))}
+
+      <div className="my-5">
+        <div className="text-3xl font-bold underline my-3">Goalie Comparison</div>
+
+        {/* Away Team */}
+        <div className="mb-8">
+          {renderTeamTotals({team: matchup.goalieComparison.awayTeam, teamAbbrev: awayTeam.abbrev})}
+          {matchup.goalieComparison.awayTeam.leaders.map((goaltender) => (
+            <div key={goaltender.playerId}>
+              {renderGoaltender({goaltender})}
+            </div>
+          ))}
+        </div>
+
+        {/* Home Team */}
+        <div>
+        {renderTeamTotals({team: matchup.goalieComparison.homeTeam, teamAbbrev: homeTeam.abbrev})}
+        {matchup.goalieComparison.homeTeam.leaders.map((goaltender) => (
+          <div key={goaltender.playerId}>
+            {renderGoaltender({goaltender})}
+          </div>
+        ))}
+        </div>
+      </div>
+
+      <div className="my-5">
+        <div className="my-3">{awayTeam.placeName.default} <strong>{awayTeam.name.default}</strong></div>
+        <div className="font-bold my-2">Skaters</div>
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id)} />
+        <div className="font-bold my-2">Goalies</div>
+        <StatsTable goalieMode stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
+      </div>
+
+      <div className="my-5">
+        <div className="my-3">{homeTeam.placeName.default} <strong>{homeTeam.name.default}</strong></div>
+        <div className="font-bold my-2">Skaters</div>
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
+        <div className="font-bold my-2">Goalies</div>
+        <StatsTable goalieMode stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
+      </div>
+
+
     </div>
   );
 }
+
+export default PreGameSummary;

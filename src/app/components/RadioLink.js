@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FloatingAudioPlayer } from './FloatingAudioPlayer';
+import FloatingAudioPlayer from './FloatingAudioPlayer';
 
-export const RadioLink = ({ m3u8Url, label }) => {
+const RadioLink = ({ m3u8Url, label }) => {
   const [isPlayerVisible, setPlayerVisible] = useState(false);
 
   const handleClick = (event) => {
@@ -34,3 +34,5 @@ export const RadioLink = ({ m3u8Url, label }) => {
     </span>
   );
 };
+
+export default RadioLink;

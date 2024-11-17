@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export const GameClock = ({ timeRemaining, running }) => {
+const GameClock = ({ timeRemaining, running }) => {
   const [time, setTime] = useState(timeRemaining);
 
   // When timeRemaining from parent changes, update the state
@@ -34,3 +34,5 @@ export const GameClock = ({ timeRemaining, running }) => {
 
   return <span>{time}</span>;
 };
+
+export default GameClock;

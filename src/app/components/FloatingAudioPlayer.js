@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import ReactPlayer from 'react-player/lazy';
 
-export const FloatingAudioPlayer = ({ url, label, onClose }) => {
+const FloatingAudioPlayer = ({ url, label, onClose }) => {
   return (
     <div className="text-xl text-white dark:text-black fixed bottom-4 right-4 z-50 w-60 bg-black dark:bg-slate-100 rounded-lg shadow-lg">
       <div className="p-2 flex justify-between items-center">
@@ -34,3 +34,5 @@ export const FloatingAudioPlayer = ({ url, label, onClose }) => {
     </div>
   );
 };
+
+export default FloatingAudioPlayer;

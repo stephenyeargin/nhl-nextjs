@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation";
 
-export default function MainNav({}) {
+const MainNav = ({}) => {
   const pathname = usePathname();
   const isActive = (regex) => regex.test(pathname);
 
@@ -16,4 +16,6 @@ export default function MainNav({}) {
     </ul>
   </nav>
   );
-}
+};
+
+export default MainNav;
