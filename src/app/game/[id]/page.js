@@ -14,7 +14,7 @@ import GameHeader from '@/app/components/GameHeader.js';
 import PreGameSummary from '@/app/components/PreGameSummary';
 import IceSurface from '@/app/components/IceSurface';
 import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES, SHOOTOUT_RESULT } from '@/app/utils/constants';
-import { formatBroadcasts, formatGameTime, formatSeriesStatus } from '@/app/utils/formatters';
+import { formatBroadcasts, formatGameTime, formatSeriesStatus, formatStatValue } from '@/app/utils/formatters';
 
 dayjs.extend(utc);
 
@@ -84,21 +84,11 @@ const GamePage = ({ params }) => {
   }
 
   // Destructure data for rendering
-  const { homeTeam, awayTeam, venue, venueLocation, summary, matchup, game, rightRail, story } = gameData;
+  const { homeTeam, awayTeam, summary, matchup, game, rightRail, story } = gameData;
 
   // Update logo map
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
-
-  const formatStatValue = (stat, value) => {
-    switch (stat) {
-      case 'powerPlayPctg':
-      case 'faceoffWinningPctg':
-        return `${(value * 100).toFixed(1)}%`;
-      default:
-        return value;
-    }
-  }
 
   return (
     <div className="container mx-auto">
@@ -431,7 +421,7 @@ const GamePage = ({ params }) => {
                             <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"> Final</span>
                           )}
                           {['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
-                            <span className="text-sm py-1">{formatGameTime(game.startTimeUTC)}</span>
+                            <span className="text-xs py-1">{formatGameTime(game.startTimeUTC)}</span>
                           )}
                           {g.gameScheduleState === 'CNCL' && (
                             <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
@@ -441,7 +431,7 @@ const GamePage = ({ params }) => {
                           )}
                         </div>
                         <div>
-                          <span className="text-sm py-1">{dayjs(g.startTimeUTC).format('MMM D')}</span>
+                          <span className="text-xs py-1">{dayjs(g.startTimeUTC).format('MMM D')}</span>
                         </div>
                       </div>
                     )}

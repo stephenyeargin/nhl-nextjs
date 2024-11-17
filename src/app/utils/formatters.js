@@ -54,3 +54,13 @@ export const formatStat = (value, precision) => {
   }
   return value;
 };
+
+export const formatStatValue = (stat, value) => {
+  switch (stat) {
+    case 'powerPlayPctg':
+    case 'faceoffWinningPctg':
+      return `${(value * 100).toFixed(1)}%`;
+    default:
+      return value;
+  }
+}

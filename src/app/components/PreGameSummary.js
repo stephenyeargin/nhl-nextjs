@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 
 import { STAT_CONTEXT, PLAYER_STATS } from '../utils/constants';
 import Headshot from './Headshot';
 import StatsTable from './StatsTable';
+import { formatStat } from '../utils/formatters';
 
 const PreGameSummary = ({ game }) => {
+
+  const [activeStatTeam, setActiveStatTeam] = useState('awayTeam');
+
   const { matchup, awayTeam, homeTeam } = game;
   const { skaterSeasonStats, goalieSeasonStats } = matchup;
 
   const logos = {};
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
+
+  const handleStatTeamClick = (team) => {
+    setActiveStatTeam(team);
+  };
 
   const renderTeamTotals = ({ team, teamAbbrev }) => (
     <div className="grid grid-cols-12 mb-0 py-2 items-center">
@@ -29,11 +37,11 @@ const PreGameSummary = ({ game }) => {
         <div className="text-sm font-light">Record</div>
       </div>
       <div className="col-span-2 flex flex-col items-center">
-        <div className="text-lg font-bold">{team.teamTotals.gaa.toFixed(3)}</div>
+        <div className="text-lg font-bold">{formatStat(team.teamTotals.gaa, 3)}</div>
         <div className="text-sm font-light">GAA</div>
       </div>
       <div className="col-span-2 flex flex-col items-center">
-        <div className="text-lg font-bold">{team.teamTotals.savePctg.toFixed(3)}</div>
+        <div className="text-lg font-bold">{formatStat(team.teamTotals.savePctg, 3)}</div>
         <div className="text-sm font-light">Save %</div>
       </div>
       <div className="col-span-2 flex flex-col items-center">
@@ -59,19 +67,19 @@ const PreGameSummary = ({ game }) => {
           </div>
         </div>
         <div className="col-span-2 flex flex-col items-center">
-          <div className="text-lg font-bold">{goaltender.record}</div>
+          <div className="text-lg font-bold">{formatStat(goaltender.record)}</div>
           <div className="text-sm font-light">Record</div>
         </div>
         <div className="col-span-2 flex flex-col items-center">
-          <div className="text-lg font-bold">{goaltender.gaa.toFixed(3)}</div>
+          <div className="text-lg font-bold">{formatStat(goaltender.gaa, 3)}</div>
           <div className="text-sm font-light">GAA</div>
         </div>
         <div className="col-span-2 flex flex-col items-center">
-          <div className="text-lg font-bold">{goaltender.savePctg.toFixed(3)}</div>
+          <div className="text-lg font-bold">{formatStat(goaltender.savePctg, 3)}</div>
           <div className="text-sm font-light">Save %</div>
         </div>
         <div className="col-span-2 flex flex-col items-center">
-          <div className="text-lg font-bold">{goaltender.shutouts}</div>
+          <div className="text-lg font-bold">{formatStat(goaltender.shutouts)}</div>
           <div className="text-sm font-light">Shutouts</div>
         </div>
       </div>
@@ -132,7 +140,7 @@ const PreGameSummary = ({ game }) => {
         <div className="text-3xl font-bold underline my-3">Goalie Comparison</div>
 
         {/* Away Team */}
-        <div className="mb-8">
+        <div>
           {renderTeamTotals({team: matchup.goalieComparison.awayTeam, teamAbbrev: awayTeam.abbrev})}
           {matchup.goalieComparison.awayTeam.leaders.map((goaltender) => (
             <div key={goaltender.playerId}>
@@ -152,23 +160,49 @@ const PreGameSummary = ({ game }) => {
         </div>
       </div>
 
-      <div className="my-5">
-        <div className="my-3">{awayTeam.placeName.default} <strong>{awayTeam.name.default}</strong></div>
-        <div className="font-bold my-2">Skaters</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id)} />
+      <div className="flex justify-between">
+        <div className="text-3xl font-bold underline">Team Stats</div>
+        <div>
+          <div class="flex space-x-0">
+              <button
+                class={`flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md ${activeStatTeam === 'awayTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
+                onClick={() => handleStatTeamClick('awayTeam')}
+              >
+              <Image src={logos[awayTeam.abbrev]} alt={awayTeam.name.default} className="w-6 h-6" width="24" height="24" />
+              <div>
+                {awayTeam.placeName.default} <strong>{awayTeam.name.default.replace(awayTeam.placeName.default, '')}</strong>
+              </div>
+            </button>
+            <button
+              class={`flex gap-1 items-center text-sm p-2 border rounded-r-md ${activeStatTeam === 'homeTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
+              onClick={() => handleStatTeamClick('homeTeam')}
+            >
+              <Image src={logos[homeTeam.abbrev]} alt={homeTeam.name.default} className="w-6 h-6" width="24" height="24" />
+              <div>
+                {homeTeam.placeName.default} <strong>{homeTeam.name.default.replace(homeTeam.placeName.default, '')}</strong>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="awayTeamStats" className={`${activeStatTeam === 'awayTeam' ? '' : 'hidden'} my-5`}>
+        <div className="font-bold my-2">Forwards</div>
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position !== 'D')} />
+        <div className="font-bold my-2">Defensemen</div>
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position === 'D')} />
         <div className="font-bold my-2">Goalies</div>
         <StatsTable goalieMode stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
       </div>
 
-      <div className="my-5">
-        <div className="my-3">{homeTeam.placeName.default} <strong>{homeTeam.name.default}</strong></div>
-        <div className="font-bold my-2">Skaters</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
+      <div id="homeTeamStats" className={`${activeStatTeam === 'homeTeam' ? '' : 'hidden'} my-5`}>
+        <div className="font-bold my-2">Forwards</div>
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position !== 'D')} />
+        <div className="font-bold my-2">Defensemen</div>
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position === 'D')} />
         <div className="font-bold my-2">Goalies</div>
         <StatsTable goalieMode stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
       </div>
-
-
     </div>
   );
 }

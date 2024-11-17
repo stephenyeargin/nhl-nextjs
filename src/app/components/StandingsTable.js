@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link';
-import { formatPercentage } from '../utils/formatters';
+import { formatStat } from '../utils/formatters';
 
 const StandingsTable = ({ standings }) => {
   const tableRows = standings
@@ -17,34 +17,34 @@ const StandingsTable = ({ standings }) => {
   const wildcardRankings = ['1', '2', '3', '1', '2', '3', 'WC1', 'WC2', '', '', '', '', '', '', '', ''];
 
   return (
-    <table className="w-full table-auto border-collapse border border-slate-500">
+    <table className="w-full table-auto border-collapse border">
         <thead>
           <tr className="">
-            <th className="text-sm w-10 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2"></th>
-            <th className="text-sm text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">Team</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">GP</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">W</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">L</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">OT</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">PTS</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">P%</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2 hidden md:table-cell">RW</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2 hidden md:table-cell">ROW</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2 hidden md:table-cell">GF</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2 hidden md:table-cell">GA</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2 hidden md:table-cell">DIFF</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2 hidden md:table-cell">HOME</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2 hidden md:table-cell">AWAY</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">S/O</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">L10</th>
-            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 border-slate-500 p-2">STRK</th>
+            <th className="text-sm w-10 text-center border bg-slate-200 dark:bg-slate-800 p-2"></th>
+            <th className="text-sm text-center border bg-slate-200 dark:bg-slate-800 p-2">Team</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">GP</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">W</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">L</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">OT</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">PTS</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">P%</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">RW</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">ROW</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">GF</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">GA</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">DIFF</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">HOME</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">AWAY</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">S/O</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">L10</th>
+            <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">STRK</th>
           </tr>
         </thead>
         <tbody>
           {tableRows.map((team, i) => (
             <tr key={team.teamAbbrev.default}>
-              <td className="text-center border border-slate-500 text-xs">{wildcardRankings[i]}</td>
-              <td className="border border-slate-500 p-1 text-center text-sm font-semibold">
+              <td className="text-center border text-xs">{wildcardRankings[i]}</td>
+              <td className="border p-1 text-center text-sm font-semibold">
                 <Link href={`/team/${team.teamAbbrev.default}`}>
                   <div className="hidden lg:flex">
                     <Image src={team.teamLogo} title={team.teamName.default} width="30" height="30" className="pr-1" alt="Logo" />
@@ -56,22 +56,22 @@ const StandingsTable = ({ standings }) => {
                   </div>
                 </Link>
               </td>
-              <td className="text-center border border-slate-500 text-sm p-2">{team.gamesPlayed}</td>
-              <td className="text-center border border-slate-500 text-sm p-2">{team.wins}</td>
-              <td className="text-center border border-slate-500 text-sm p-2">{team.losses}</td>
-              <td className="text-center border border-slate-500 text-sm p-2">{team.otLosses}</td>
-              <td className="text-center border border-slate-500 text-sm p-2">{team.points}</td>
-              <td className="text-center border border-slate-500 text-sm p-2">{formatPercentage(team.pointPctg)}</td>
-              <td className="text-center border border-slate-500 text-sm p-2 hidden md:table-cell">{team.roadWins}</td>
-              <td className="text-center border border-slate-500 text-sm p-2 hidden md:table-cell">{team.regulationPlusOtWins}</td>
-              <td className="text-center border border-slate-500 text-sm p-2 hidden md:table-cell">{team.goalFor}</td>
-              <td className="text-center border border-slate-500 text-sm p-2 hidden md:table-cell">{team.goalAgainst}</td>
-              <td className="text-center border border-slate-500 text-sm p-2 hidden md:table-cell">{team.goalDifferential}</td>
-              <td className="text-center border border-slate-500 text-sm p-2 hidden md:table-cell">{team.homeWins}-{team.homeLosses}-{team.homeOtLosses}</td>
-              <td className="text-center border border-slate-500 text-sm p-2 hidden md:table-cell">{team.roadWins}-{team.roadLosses}-{team.roadOtLosses}</td>
-              <td className="text-center border border-slate-500 text-sm p-2">{team.shootoutWins}-{team.shootoutLosses}</td>
-              <td className="text-center border border-slate-500 text-sm p-2">{team.l10Wins}-{team.l10Losses}-{team.l10OtLosses}</td>
-              <td className="text-center border border-slate-500 text-sm p-2">{team.streakCode || '-'}{team.streakCount || '-'}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.gamesPlayed)}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.wins)}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.losses)}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.otLosses)}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.points)}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.pointPctg,3)}</td>
+              <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.roadWins)}</td>
+              <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.regulationPlusOtWins)}</td>
+              <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.goalFor)}</td>
+              <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.goalAgainst)}</td>
+              <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.goalDifferential)}</td>
+              <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.homeWins)}-{formatStat(team.homeLosses)}-{formatStat(team.homeOtLosses)}</td>
+              <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.roadWins)}-{formatStat(team.roadLosses)}-{formatStat(team.roadOtLosses)}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.shootoutWins)}-{formatStat(team.shootoutLosses)}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.l10Wins)}-{formatStat(team.l10Losses)}-{formatStat(team.l10OtLosses)}</td>
+              <td className="text-center border text-sm p-2">{formatStat(team.streakCode)}{formatStat(team.streakCount)}</td>
             </tr>
           ))}
         </tbody>

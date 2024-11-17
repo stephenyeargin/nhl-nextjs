@@ -12,9 +12,9 @@ const GameHeader = ({ game }) => {
 
   const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
 
-  let gameHeaderClass = 'grid grid-cols-12 my-5 border py-4 items-center';
+  let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';
   if (gameState === 'CRIT') {
-    gameHeaderClass = 'grid grid-cols-12 my-5 border border-red-500 py-4 items-center';
+    gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm border-red-500 py-4 items-center';
   }
 
   return (
