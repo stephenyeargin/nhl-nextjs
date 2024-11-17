@@ -64,3 +64,13 @@ export const formatStatValue = (stat, value) => {
       return value;
   }
 }
+
+export const formatSecondsToGameTime = (stat) => {
+  if (stat === undefined) {
+    return '--';
+  }
+
+  const minutes = Math.floor(stat / 60);
+  const seconds = Math.round(stat % 60);
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}

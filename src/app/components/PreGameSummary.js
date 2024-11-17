@@ -163,9 +163,9 @@ const PreGameSummary = ({ game }) => {
       <div className="flex justify-between">
         <div className="text-3xl font-bold underline">Team Stats</div>
         <div>
-          <div class="flex space-x-0">
+          <div className="flex space-x-0">
               <button
-                class={`flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md ${activeStatTeam === 'awayTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
+                className={`flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md ${activeStatTeam === 'awayTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
                 onClick={() => handleStatTeamClick('awayTeam')}
               >
               <Image src={logos[awayTeam.abbrev]} alt={awayTeam.name.default} className="w-6 h-6" width="24" height="24" />
@@ -174,7 +174,7 @@ const PreGameSummary = ({ game }) => {
               </div>
             </button>
             <button
-              class={`flex gap-1 items-center text-sm p-2 border rounded-r-md ${activeStatTeam === 'homeTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
+              className={`flex gap-1 items-center text-sm p-2 border rounded-r-md ${activeStatTeam === 'homeTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
               onClick={() => handleStatTeamClick('homeTeam')}
             >
               <Image src={logos[homeTeam.abbrev]} alt={homeTeam.name.default} className="w-6 h-6" width="24" height="24" />

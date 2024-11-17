@@ -348,9 +348,9 @@ const GamePage = ({ params }) => {
             <div className="mb-5">
               <div className="text-3xl font-bold underline">Shots</div>
               <div className="flex text-center">
-                <div className="w-1/4 p-2 text-bold"><Image src={game.awayTeam.logo} width={64} height={64} alt={story.awayTeam.abbrev} /></div>
+                <div className="w-1/4 p-2 text-bold"><Image src={logos[awayTeam.abbrev]} width={64} height={64} alt={awayTeam.abbrev} /></div>
                 <div className="w-1/2 p-2">&nbsp;</div>
-                <div className="w-1/4 p-2 text-bold"><Image src={game.homeTeam.logo} width={64} height={64} alt={story.homeTeam.abbrev} /></div>
+                <div className="w-1/4 p-2 text-bold"><Image src={logos[homeTeam.abbrev]} width={64} height={64} alt={homeTeam.abbrev} /></div>
               </div>
               {rightRail.shotsByPeriod.map((period, index) => (
                 <div key={index} className={`flex text-center ${index % 2 ? 'bg-slate-500/10' : ''}`}>
@@ -366,9 +366,9 @@ const GamePage = ({ params }) => {
               <div className="text-3xl font-bold underline">Game Stats</div>
               <div>
                 <div className="flex text-center">
-                  <div className="w-1/4 p-2 text-bold"><Image src={game.awayTeam.logo} width={64} height={64} alt={story.awayTeam.abbrev} /></div>
+                  <div className="w-1/4 p-2 text-bold"><Image src={logos[awayTeam.abbrev]} width={64} height={64} alt={awayTeam.abbrev} /></div>
                   <div className="w-1/2 p-2">&nbsp;</div>
-                  <div className="w-1/4 p-2 text-bold"><Image src={game.homeTeam.logo} width={64} height={64} alt={story.homeTeam.abbrev} /></div>
+                  <div className="w-1/4 p-2 text-bold"><Image src={logos[awayTeam.abbrev]} width={64} height={64} alt={homeTeam.abbrev} /></div>
                 </div>
                 {story.summary?.teamGameStats.map((stat, statIndex) => (
                   <div key={stat.category} className={`flex text-center item-center ${statIndex % 2 ? 'bg-slate-500/10' : ''}`}>

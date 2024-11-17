@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import dayjs from 'dayjs';
@@ -9,16 +9,35 @@ import { formatGameTime } from '../utils/formatters';
 import { PERIOD_DESCRIPTORS } from '../utils/constants';
 
 const GameHeader = ({ game }) => {
+  const [isSticky, setIsSticky] = useState(false);
+  const stickyRef = useRef(null);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (stickyRef.current) {
+        const { top } = stickyRef.current.getBoundingClientRect();
+        setIsSticky(top <= 0); // If the element's top is less than or equal to 0, it's sticky
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
 
   let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';
+   if (isSticky) {
+    gameHeaderClass = `grid grid-cols-12 items-center sticky top-0 pt-5 bg-white z-10 border rounded-b-lg shadow-sm`;
+  }
   if (gameState === 'CRIT') {
-    gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm border-red-500 py-4 items-center';
+    gameHeaderClass += ' border-red-500';
   }
 
+  
   return (
-    <div className={gameHeaderClass}>
+    <div className={gameHeaderClass} ref={stickyRef}>
       <div className="col-span-3 flex mx-auto gap-2">
         <div>
           <Link href={`/team/${awayTeam.abbrev}`}>
