@@ -15,12 +15,13 @@ import PreGameSummary from '@/app/components/PreGameSummary';
 import IceSurface from '@/app/components/IceSurface';
 import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES, SHOOTOUT_RESULT } from '@/app/utils/constants';
 import { formatBroadcasts, formatGameTime, formatSeriesStatus, formatStatValue } from '@/app/utils/formatters';
+import Scoreboard from '@/app/components/Scoreboard';
 
 dayjs.extend(utc);
 
 const gameIsInProgress = (game) => {
   switch (GAME_STATES[game.gameState]) {
-    case GAME_STATES.PREGAME:
+    case GAME_STATES.PRE:
     case GAME_STATES.LIVE:
     case GAME_STATES.CRIT:
       return true;
@@ -65,7 +66,7 @@ const GamePage = ({ params }) => {
     // Initial fetch on page load
     fetchGameData();
 
-    if (!['LIVE', 'PRE', 'CRIT'].includes(gameState)) {
+    if (!['PRE', 'LIVE', 'CRIT'].includes(gameState)) {
       return;
     }
 
@@ -139,7 +140,8 @@ const GamePage = ({ params }) => {
                               <Headshot
                                 src={shot.headshot}
                                 alt={`${shot.firstName} ${shot.lastName}`}
-                                className="w-16 h-16 mr-2"
+                                size="4"
+                                className="mr-2"
                               />
                               <div className="grow">
                                 <span className="font-bold">
@@ -177,7 +179,8 @@ const GamePage = ({ params }) => {
                               <Headshot
                                 src={goal.headshot}
                                 alt={`${goal.firstName.default} ${goal.lastName.default}`}
-                                className="w-16 h-16 mr-2"
+                                size="4"
+                                className="mr-2"
                               />
                               <div>
                                 <span className="font-bold">
@@ -239,7 +242,7 @@ const GamePage = ({ params }) => {
                           </div>
                         ))
                       ) : (
-                        <p className="text-slate-500">No goals scored.</p>
+                        <p className="text-slate-500 my-10">No goals scored this period.</p>
                       )}</>
                     )}
                   </div>
@@ -251,10 +254,10 @@ const GamePage = ({ params }) => {
                   {game.summary.penalties.map((period, index) => (
                     <div key={index} className="mb-5">
                       <h4 className="font-semibold">
-                        Period {period.periodDescriptor.number}
+                        {PERIOD_DESCRIPTORS[period.periodDescriptor.number]}
                       </h4>
                       {period.penalties.length === 0 ? (
-                        <p className="text-slate-500">No penalties in this period.</p>
+                        <p className="text-slate-500 my-10">No penalties in this period.</p>
                       ) : (
                         <div className="min-w-full">
                           <div className="flex flex-col">
@@ -266,7 +269,7 @@ const GamePage = ({ params }) => {
                                 <div className="w-20 p-4 text-right">
                                   {penalty.timeInPeriod}
                                 </div>
-                                <div className="w-1/4 p-2">
+                                <div className="w-1/3 p-2">
                                   <div className="flex">
                                     <Image
                                       src={logos[penalty.teamAbbrev.default]}
@@ -293,7 +296,7 @@ const GamePage = ({ params }) => {
                                 <div className="w-40 p-4">
                                   {penalty.duration ? `${penalty.duration} mins` : '-'}
                                 </div>
-                                <div className="w-1/3 p-2">
+                                <div className="w-1/4 p-2">
                                   <div className="text-xs font-light text-slate-600">
                                     {PENALTY_TYPES[penalty.type] || penalty.type}
                                   </div>
@@ -313,18 +316,19 @@ const GamePage = ({ params }) => {
               <div>
                 {summary.threeStars?.length > 0 && (
                   <div>
-                    <h3 className="text-lg font-semibold">Three Stars</h3>
+                    <h3 className="text-lg font-semibold my-4">Three Stars</h3>
                     <div className="grid grid-cols-3 gap-4">
                       {summary.threeStars.map((p) => (
                         <div key={p.playerId} className="text-center">
                           <div className="relative inline-block">
-                            <span className="absolute bottom-0 left-0 bg-white text-black rounded-full text-xs font-bold border border-slate-200 w-6 h-6 flex items-center justify-center">
+                            <span className="absolute bottom-0 left-0 bg-white text-black rounded-full font-bold border border-slate-200 w-8 h-8 flex items-center justify-center">
                               {p.star}
                             </span>
                             <Headshot
                               src={p.headshot}
                               alt={p.name.default}
-                              className="w-16 h-16 mx-auto mb-2"
+                              size="10"
+                              className="mx-auto mb-2"
                             />
                           </div>
                           <h4 className="font-semibold">{p.name.default}</h4>
@@ -344,16 +348,20 @@ const GamePage = ({ params }) => {
           )}
         </div>
         <div className="col-span-4 md:col-span-1">
+          {rightRail.linescore && (
+            <div className="mb-5">
+              <Scoreboard game={game} linescore={rightRail.linescore} />
+            </div>
+          )}
           {rightRail.shotsByPeriod && (
             <div className="mb-5">
-              <div className="text-3xl font-bold underline">Shots</div>
-              <div className="flex text-center">
-                <div className="w-1/4 p-2 text-bold"><Image src={logos[awayTeam.abbrev]} width={64} height={64} alt={awayTeam.abbrev} /></div>
-                <div className="w-1/2 p-2">&nbsp;</div>
-                <div className="w-1/4 p-2 text-bold"><Image src={logos[homeTeam.abbrev]} width={64} height={64} alt={homeTeam.abbrev} /></div>
+              <div className="flex text-center items-center">
+                <div className="w-1/4 p-2 text-bold flex justify-center"><Image src={logos[awayTeam.abbrev]} width={48} height={48} alt={awayTeam.abbrev} /></div>
+                <div className="w-1/2 p-2 text-2xl font-bold">Shots</div>
+                <div className="w-1/4 p-2 text-bold flex justify-center"><Image src={logos[homeTeam.abbrev]} width={48} height={48} alt={homeTeam.abbrev} /></div>
               </div>
               {rightRail.shotsByPeriod.map((period, index) => (
-                <div key={index} className={`flex text-center ${index % 2 ? 'bg-slate-500/10' : ''}`}>
+                <div key={index} className={`flex text-center ${index % 2 ? '' : 'bg-slate-500/10'}`}>
                   <div className="w-1/4 p-2">{period.away}</div>
                   <div className="w-1/2 p-3 text-xs">{PERIOD_DESCRIPTORS[period.periodDescriptor.number]}</div>
                   <div className="w-1/4 p-2">{period.home}</div>
@@ -363,15 +371,14 @@ const GamePage = ({ params }) => {
           )}
           {story.summary?.teamGameStats && (
             <div className="mb-5">
-              <div className="text-3xl font-bold underline">Game Stats</div>
               <div>
-                <div className="flex text-center">
-                  <div className="w-1/4 p-2 text-bold"><Image src={logos[awayTeam.abbrev]} width={64} height={64} alt={awayTeam.abbrev} /></div>
-                  <div className="w-1/2 p-2">&nbsp;</div>
-                  <div className="w-1/4 p-2 text-bold"><Image src={logos[awayTeam.abbrev]} width={64} height={64} alt={homeTeam.abbrev} /></div>
+                <div className="flex text-center items-center justify-between">
+                  <div className="w-1/4 p-2 text-bold flex justify-center"><Image src={logos[awayTeam.abbrev]} width={48} height={48} alt={awayTeam.abbrev} /></div>
+                  <div className="w-1/2 p-2 text-2xl font-bold">Game Stats</div>
+                  <div className="w-1/4 p-2 text-bold flex justify-center"><Image src={logos[homeTeam.abbrev]} width={48} height={48} alt={homeTeam.abbrev} /></div>
                 </div>
                 {story.summary?.teamGameStats.map((stat, statIndex) => (
-                  <div key={stat.category} className={`flex text-center item-center ${statIndex % 2 ? 'bg-slate-500/10' : ''}`}>
+                  <div key={stat.category} className={`flex text-center item-center ${statIndex % 2 ? '' : 'bg-slate-500/10'}`}>
                     <div className="w-1/4 p-2 text-bold">{formatStatValue(stat.category, stat.awayValue)}</div>
                     <div className="w-1/2 p-3 text-xs">{TEAM_STATS[stat.category] || stat.category}</div>
                     <div className="w-1/4 p-2 text-bold">{formatStatValue(stat.category, stat.homeValue)}</div>
@@ -388,7 +395,7 @@ const GamePage = ({ params }) => {
               </div>
               <div className="grid grid-cols-12 gap-3 py-4 items-center">
                 {rightRail.seasonSeries.map((g, i) => (
-                  <Link href={`/game/${g.id}`} key={i} className="col-span-6 p-1 mb-1 border rounded">
+                  <Link href={`/game/${g.id}`} key={i} className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded ${g.gameState === 'CRIT' ? 'border-red-500' : ''}`}>
                     <div className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}>
                       <div className="flex items-center font-bold gap-1">
                         <Image src={g.awayTeam.logo} alt="Logo" height={128} width={128} className="w-8 h-8" />
@@ -403,7 +410,7 @@ const GamePage = ({ params }) => {
                       </div>
                       <div className="text-lg font-bold">{g.homeTeam.score}</div>
                     </div>
-                    {!['OFF', 'FUT', 'FINAL'].includes(g.gameState) ? (
+                    {!['OFF', 'FUT', 'FINAL', 'PRE'].includes(g.gameState) ? (
                       <div className="flex justify-between">
                         <div>
                           <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-1 uppercase">
@@ -417,10 +424,10 @@ const GamePage = ({ params }) => {
                     ) : (
                       <div className="flex justify-between">
                         <div>
-                          {['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                          {(['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
                             <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"> Final</span>
                           )}
-                          {['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                          {(['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
                             <span className="text-xs py-1">{formatGameTime(game.startTimeUTC)}</span>
                           )}
                           {g.gameScheduleState === 'CNCL' && (

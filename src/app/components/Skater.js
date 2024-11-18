@@ -26,7 +26,8 @@ export const Skater = ({ player, game, isHomeTeam }) => {
       <Headshot
         src={player.headshot}
         alt={`${player.name.default}`}
-        className="hidden md:block w-10 h-10 m-1 mx-auto"
+        size="2"
+        className="hidden md:block m-1 mx-auto"
       />
       <div className="hidden md:block font-bold">{player.name.default}</div>
       <div className="hidden md:block text-sm my-1">

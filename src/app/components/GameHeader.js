@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPauseCircle, faWarning, faBan } from '@fortawesome/free-solid-svg-icons';
+import { faPauseCircle, faWarning, faBan, faClock } from '@fortawesome/free-solid-svg-icons';
 import GameClock from './GameClock';
 import { formatGameTime } from '../utils/formatters';
 import { PERIOD_DESCRIPTORS } from '../utils/constants';
@@ -29,7 +29,7 @@ const GameHeader = ({ game }) => {
 
   let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';
    if (isSticky) {
-    gameHeaderClass = `grid grid-cols-12 items-center sticky top-0 pt-5 bg-white z-10 border rounded-b-lg shadow-sm`;
+    gameHeaderClass = `grid grid-cols-12 items-center sticky top-0 pt-5 z-10 border rounded-b-lg shadow-sm`;
   }
   if (gameState === 'CRIT') {
     gameHeaderClass += ' border-red-500';
@@ -37,7 +37,7 @@ const GameHeader = ({ game }) => {
 
   
   return (
-    <div className={gameHeaderClass} ref={stickyRef}>
+    <div className={gameHeaderClass} ref={stickyRef} style={{ background: 'var(--background)'}}>
       <div className="col-span-3 flex mx-auto gap-2">
         <div>
           <Link href={`/team/${awayTeam.abbrev}`}>
@@ -74,8 +74,8 @@ const GameHeader = ({ game }) => {
       <div className="col-span-2 text-center content-middle">
         <div className="text-xs my-1">{venue.default}, {venueLocation.default}</div>
         {(gameState === 'LIVE' || gameState === 'CRIT') && (
-          <div className="my-3">
-            <span className="font-md font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase">
+          <div className="my-3 flex flex-wrap justify-center">
+            <span className="font-md font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase text-nowrap">
               {PERIOD_DESCRIPTORS[periodDescriptor.number]}
               {clock.inIntermission ? ' INT' : ''}
             </span>
@@ -94,13 +94,24 @@ const GameHeader = ({ game }) => {
           </div>
         )}
         {['FUT', 'PRE'].includes(gameState) && (
-          <span className="text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">{formatGameTime(startTimeUTC)}</span>
+          <div className="my-1">
+            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatGameTime(startTimeUTC)}</span>
+          </div>
+        )}
+        {gameState === 'PRE' && (
+          <div className="my-1 text-nowrap">
+            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase"><FontAwesomeIcon icon={faClock} fixedWidth /> Pregame</span>
+          </div>
         )}
         {gameScheduleState === 'CNCL' && (
-          <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+          <div className="my-1 text-nowrap">
+            <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+          </div>
         )}
         {gameScheduleState === 'PPD' && (
-          <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+          <div className="my-1 text-nowrap">
+            <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+          </div>
         )}
         {(situation && (situation.awayTeam.strength != 5 || situation?.homeTeam.strength) != 5) && (
           <div className="my-2">

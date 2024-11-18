@@ -58,7 +58,8 @@ const PreGameSummary = ({ game }) => {
           <Headshot
             src={goaltender.headshot}
             alt={`${goaltender.firstName.default} ${goaltender.lastName.default}`}
-            className="w-16 h-16 mr-2 hidden md:block"
+            className="mr-2 hidden md:block"
+            size="4"
           />
           <div className="mx-1">
             <div>{goaltender.firstName.default}</div>
@@ -104,7 +105,8 @@ const PreGameSummary = ({ game }) => {
             <Headshot
               src={leader.awayLeader.headshot}
               alt={`${leader.awayLeader.firstName.default} ${leader.awayLeader.lastName.default}`}
-              className="w-16 h-16 mr-2 hidden md:block"
+              size="4"
+              className="mr-2 hidden md:block"
             />
             <div className="mx-1">
               <div>{leader.awayLeader.firstName.default}</div>
@@ -130,7 +132,8 @@ const PreGameSummary = ({ game }) => {
             <Headshot
               src={leader.homeLeader.headshot}
               alt={`${leader.homeLeader.firstName.default} ${leader.homeLeader.lastName.default}`}
-              className="w-16 h-16 ml-2 hidden md:block"
+              size="4"
+              className="ml-2 hidden md:block"
             />
           </div>
         </div>
