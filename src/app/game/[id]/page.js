@@ -389,8 +389,8 @@ const GamePage = ({ params }) => {
           )}
           {rightRail.seasonSeries && (
             <div className="mb-5">
-              <div className="text-3xl font-bold underline">Season Series</div>
-              <div className="">
+              <div className="p-2 text-2xl font-bold text-center">Season Series</div>
+              <div className="text-center text-xs">
                 {formatSeriesStatus(game, rightRail)}
               </div>
               <div className="grid grid-cols-12 gap-3 py-4 items-center">

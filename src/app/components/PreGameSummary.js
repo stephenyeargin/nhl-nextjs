@@ -88,12 +88,14 @@ const PreGameSummary = ({ game }) => {
   }
 
   return (
-    <div>
-      <div className="text-3xl font-bold underline">Players to Watch</div>
-      <div className="text-xl">{STAT_CONTEXT[matchup.teamLeaders?.context] || matchup.teamLeaders?.context}</div>
+    <div className="my-5">
       <div className="flex justify-between">
         <div className="">
           <Image src={logos[awayTeam.abbrev]} alt={awayTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-bold underline">Players to Watch</div>
+          <div className="text-xl">{STAT_CONTEXT[matchup.teamLeaders?.context] || matchup.teamLeaders?.context}</div>
         </div>
         <div className="">
           <Image src={logos[homeTeam.abbrev]} alt={homeTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
@@ -140,7 +142,7 @@ const PreGameSummary = ({ game }) => {
       ))}
 
       <div className="my-5">
-        <div className="text-3xl font-bold underline my-3">Goalie Comparison</div>
+        <div className="text-3xl font-bold underline my-3 text-center">Goalie Comparison</div>
 
         {/* Away Team */}
         <div>
