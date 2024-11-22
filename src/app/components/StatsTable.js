@@ -1,246 +1,115 @@
-import { formatSecondsToGameTime, formatStat } from "../utils/formatters";
-import Headshot from "./Headshot";
+import React from 'react';
+import { formatStat, formatTextColorByBackgroundColor } from '../utils/formatters';
+import Headshot from './Headshot';
+import Link from 'next/link';
+import { PropTypes } from 'prop-types';
 
-const StatsTable = ({ stats }) => {
+const StatsTable = ({ stats, teamColor }) => {
+  if (!stats || stats.length === 0) {
+    return null;
+  }
+
+  // Add team color if given
+  let headerColorClass = 'bg-slate-200 dark:bg-slate-800 text-black dark:text-white';
+  let headerStyle = {};
+  if (teamColor) {
+    headerColorClass = 'text-white';
+    headerStyle = { backgroundColor: teamColor, color: formatTextColorByBackgroundColor(teamColor) };
+  }
 
   const statsAvailable = Object.keys(stats[0]);
 
+  const statHeaders = [
+    { key: 'gamesPlayed', label: 'GP', title: 'Games Played' },
+    { key: 'goals', label: 'G', title: 'Goals Scored' },
+    { key: 'assists', label: 'A', title: 'Assists' },
+    { key: 'points', label: 'P', title: 'Points' },
+    { key: 'plusMinus', label: '+/-', title: 'Plus/Minus' },
+    { key: 'pim', label: 'PIM', title: 'Penalty Minutes', altKey: 'penaltyMinutes' },
+    { key: 'powerPlayGoals', label: 'PPG', title: 'Power Play Goals' },
+    { key: 'gameWinningGoals', label: 'GWG', title: 'Game-Winning Goals' },
+    { key: 'shots', label: 'S', title: 'Shots on Goal', altKey: 'sog' },
+    { key: 'hits', label: 'H', title: 'Hits' },
+    { key: 'shifts', label: 'SH', title: 'Shifts' },
+    { key: 'takeaways', label: 'TA', title: 'Takeaways' },
+    { key: 'giveaways', label: 'GA', title: 'Giveaways' },
+    { key: 'avgTimeOnIce', label: 'TOI/G', title: 'Time On Ice per Game' },
+    { key: 'faceoffWinPctg', label: 'FO%', title: 'Faceoff Win Percentage', altKey: 'faceoffWinningPctg', precision: 3 },
+    { key: 'wins', label: 'W', title: 'Wins' },
+    { key: 'losses', label: 'L', title: 'Losses' },
+    { key: 'otLosses', label: 'OT', title: 'Overtime Losses', altKey: 'overtimeLosses' },
+    { key: 'shotsAgainst', label: 'SA', title: 'Shots Against' },
+    { key: 'saves', label: 'SV', title: 'Saves' },
+    { key: 'goalsAgainst', label: 'GA', title: 'Goals Against' },
+    { key: 'savePctg', label: 'SV%', title: 'Save Percentage', altKey: 'savePercentage', precision: 3 },
+    { key: 'goalsAgainstAvg', label: 'GAA', title: 'Goals Against Average', altKey: 'goalsAgainstAverage', precision: 3 },
+    { key: 'shutouts', label: 'SO', title: 'Shutouts' },
+    { key: 'timeOnIce', label: 'TOI', title: 'Time On Ice', altKey: 'toi' }
+  ];
+
+  const renderHeader = () => (
+    <tr className="text-xs">
+      <th className={`p-2 border text-center ${headerColorClass}`} style={headerStyle}>#</th>
+      <th className={`p-2 border text-left ${headerColorClass}`} style={headerStyle}>Name</th>
+      <th className={`p-2 border text-center ${headerColorClass}`} style={headerStyle}>POS</th>
+      {statHeaders.map(
+        ({ key, label, title, altKey }) =>
+          (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
+            <th key={key} className={`p-2 border text-center ${headerColorClass}`} style={headerStyle}>
+              <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
+            </th>
+          )
+      )}
+    </tr>
+  );
+
+  const renderRow = (skater, i) => (
+    <tr key={skater.playerId} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
+      <td className="p-2 border text-center w-10">
+        {skater.sweaterNumber ? (
+          <Link href={`/player/${skater.playerId}`} className="font-bold">{skater.sweaterNumber}</Link>
+        ) : (
+          <Headshot
+            playerId={skater.playerId}
+            src={skater.headshot}
+            alt={skater.name?.default || `${skater.firstName.default} ${skater.lastName.default}`}
+            size="2"
+            className="mx-auto"
+          />
+        )}
+      </td>
+      <td className="p-2 border text-left">
+        <Link href={`/player/${skater.playerId}`} className="font-bold">
+          {skater.name?.default ? skater.name.default : `${skater.firstName.default} ${skater.lastName.default}`}
+        </Link>
+      </td>
+      <td className="p-2 border text-center">{skater.position || skater.positionCode || 'G'}</td>
+      {statHeaders.map(
+        ({ key, altKey, precision }) =>
+          (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
+            <td key={key} className="p-2 border text-center">
+              {skater[key] !== undefined ? (
+                <>{formatStat(skater[key], precision)}</>
+              ) : (
+                <>{formatStat(skater[altKey], precision)}</>
+              )}
+            </td>
+          )
+      )}
+    </tr>
+  );
+
   return (
     <table className="text-sm w-full">
-      <thead>
-      <tr className="text-xs">
-        <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">#</th>
-        <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-left">Name</th>
-        <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">POS</th>
-        {statsAvailable.includes('gamesPlayed') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Games Played">GP</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('goals') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Goals Scored">G</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('assists') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Assists">A</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('points') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Points">P</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('plusMinus') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Plus/Minus">+/-</abbr>
-          </th>
-        )}
-        {(statsAvailable.includes('pim') || statsAvailable.includes('penaltyMinutes')) && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Penalty Minutes">PIM</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('powerPlayGoals') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Power Play Goals">PPG</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('gameWinningGoals') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Game-Winning Goals">GWG</abbr>
-          </th>
-        )}
-        {(statsAvailable.includes('shots') || statsAvailable.includes('sog')) && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Shots on Goal">S</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('hits') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Hits">H</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('shifts') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Shifts">SH</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('takeaways') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Takeaways">TA</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('giveaways') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Giveaways">GA</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('avgTimeOnIce') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Time On Ice per Game">TOI/G</abbr>
-          </th>
-        )}
-        {(statsAvailable.includes('faceoffWinningPctg') || statsAvailable.includes('faceoffWinPctg')) && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Faceoff Win Percentage">FO%</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('wins') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Wins">W</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('losses') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Losses">L</abbr>
-          </th>
-        )}
-        {(statsAvailable.includes('otLosses') || statsAvailable.includes('overtimeLosses')) && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Overtime Losses">OT</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('shotsAgainst') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Shots Against">SA</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('saves') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Saves">SV</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('goalsAgainst') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Goals Against">GA</abbr>
-          </th>
-        )}
-        {(statsAvailable.includes('savePctg') || statsAvailable.includes('savePercentage') ) && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Save Percentage">SV%</abbr>
-          </th>
-        )}
-        {(statsAvailable.includes('goalsAgainstAvg') || statsAvailable.includes('goalsAgainstAverage')) && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Goals Against Average">GAA</abbr>
-          </th>
-        )}
-        {statsAvailable.includes('shutouts') && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Shutouts">SO</abbr>
-          </th>
-        )}
-        {(statsAvailable.includes('toi') || statsAvailable.includes('timeOnIce')) && (
-          <th className="p-2 border bg-slate-200 dark:bg-slate-800 text-center">
-            <abbr className="underline decoration-dashed" title="Time On Ice">TOI</abbr>
-          </th>
-        )}
-      </tr>
-
-      </thead>
-      <tbody>
-        {stats.map((skater, i) => (
-          <tr key={skater.playerId} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
-            {skater.sweaterNumber ? (
-              <td className="p-2 border text-center">{skater.sweaterNumber}</td>
-            ) : (
-              <td className="p-2 border text-center">
-                <Headshot
-                  src={skater.headshot}
-                  alt={skater.name?.default || `${skater.firstName.default} ${skater.lastName.default}`}
-                  size="2"
-                  className="mx-auto"
-                />
-              </td>
-            )}
-            {skater.name?.default ? (
-              <td className="p-2 border text-left">{skater.name.default}</td>
-            ) : (
-              <td className="p-2 border text-left">{skater.firstName.default} {skater.lastName.default}</td>
-            ) }
-            <td className="p-2 border text-center">{skater.position || skater.positionCode || 'G'}</td>
-            {statsAvailable.includes('gamesPlayed') && (
-              <td className="p-2 border text-center">{formatStat(skater.gamesPlayed)}</td>
-            )}
-            {statsAvailable.includes('goals') && (
-              <td className="p-2 border text-center">{formatStat(skater.goals)}</td>
-            )}
-            {statsAvailable.includes('assists') && (
-              <td className="p-2 border text-center">{formatStat(skater.assists)}</td>
-            )}
-            {statsAvailable.includes('points') && (
-              <td className="p-2 border text-center">{formatStat(skater.points)}</td>
-            )}
-            {statsAvailable.includes('plusMinus') && (
-              <td className="p-2 border text-center">{formatStat(skater.plusMinus)}</td>
-            )}
-            {(statsAvailable.includes('pim') || statsAvailable.includes('penaltyMinutes')) && (
-              <td className="p-2 border text-center">{formatStat(skater.pim || skater.penaltyMinutes)}</td>
-            )}
-            {statsAvailable.includes('powerPlayGoals') && (
-              <td className="p-2 border text-center">{formatStat(skater.powerPlayGoals)}</td>
-            )}
-            {statsAvailable.includes('gameWinningGoals') && (
-              <td className="p-2 border text-center">{formatStat(skater.gameWinningGoals)}</td>
-            )}
-            {(statsAvailable.includes('shots') || statsAvailable.includes('sog')) && (
-              <td className="p-2 border text-center">{formatStat(skater.shots || skater.sog)}</td>
-            )}
-            {statsAvailable.includes('hits') && (
-              <td className="p-2 border text-center">{formatStat(skater.hits)}</td>
-            )}
-            {statsAvailable.includes('shifts') && (
-              <td className="p-2 border text-center">{formatStat(skater.shifts)}</td>
-            )}
-            {statsAvailable.includes('takeaways') && (
-              <td className="p-2 border text-center">{formatStat(skater.takeaways)}</td>
-            )}
-            {statsAvailable.includes('giveaways') && (
-              <td className="p-2 border text-center">{formatStat(skater.giveaways)}</td>
-            )}
-            {statsAvailable.includes('avgTimeOnIce') && (
-              <td className="p-2 border text-center">{formatStat(skater.avgTimeOnIce || formatSecondsToGameTime(skater.avgTimeOnIcePerGame))}</td>
-            )}
-            {(statsAvailable.includes('faceoffWinningPctg') || statsAvailable.includes('faceoffWinPctg')) && (
-              <td className="p-2 border text-center">{formatStat(skater.faceoffWinningPctg || skater.faceoffWinPctg, 3)}</td>
-            )}
-            {statsAvailable.includes('wins') && (
-              <td className="p-2 border text-center">{formatStat(skater.wins)}</td>
-            )}
-            {statsAvailable.includes('losses') && (
-              <td className="p-2 border text-center">{formatStat(skater.losses)}</td>
-            )}
-            {(statsAvailable.includes('otLosses') || statsAvailable.includes('overtimeLosses')) && (
-              <td className="p-2 border text-center">{formatStat(skater.otLosses || skater.overtimeLosses)}</td>
-            )}
-            {statsAvailable.includes('shotsAgainst') && (
-              <td className="p-2 border text-center">{formatStat(skater.shotsAgainst)}</td>
-            )}
-            {statsAvailable.includes('saves') && (
-              <td className="p-2 border text-center">{formatStat(skater.saves)}</td>
-            )}
-            {statsAvailable.includes('goalsAgainst') && (
-              <td className="p-2 border text-center">{formatStat(skater.goalsAgainst)}</td>
-            )}
-            {(statsAvailable.includes('savePctg') || statsAvailable.includes('savePercentage') ) && (
-              <td className="p-2 border text-center">{formatStat(skater.savePctg || skater.savePercentage, 3)}</td>
-            )}
-            {(statsAvailable.includes('goalsAgainstAvg') || statsAvailable.includes('goalsAgainstAverage')) && (
-              <td className="p-2 border text-center">{formatStat(skater.goalsAgainstAvg || skater.goalsAgainstAverage, 3)}</td>
-            )}
-            {statsAvailable.includes('shutouts') && (
-              <td className="p-2 border text-center">{formatStat(skater.shutouts)}</td>
-            )}
-            {(statsAvailable.includes('toi') || statsAvailable.includes('timeOnIce')) && (
-              <td className="p-2 border text-center">{formatStat(skater.toi || formatSecondsToGameTime(skater.timeOnIce))}</td>
-            )}
-          </tr>
-        ))}
-      </tbody>
+      <thead>{renderHeader()}</thead>
+      <tbody>{stats.map(renderRow)}</tbody>
     </table>
   );
+};
+
+StatsTable.propTypes = {
+  stats: PropTypes.arrayOf(PropTypes.object).isRequired,
+  teamColor: PropTypes.string
 };
 
 export default StatsTable;

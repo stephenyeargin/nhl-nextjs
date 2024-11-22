@@ -2,6 +2,7 @@ import { faClose, faRadio } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import ReactPlayer from 'react-player/lazy';
+import { PropTypes } from 'prop-types';
 
 const FloatingAudioPlayer = ({ url, label, onClose }) => {
   return (
@@ -24,15 +25,21 @@ const FloatingAudioPlayer = ({ url, label, onClose }) => {
               forceAudio: true,
               forceVideo: false,
               attributes: {
-                preload: 'auto',
-              },
-            },
+                preload: 'auto'
+              }
+            }
           }}
           controls={true}
         />
       </span>
     </div>
   );
+};
+
+FloatingAudioPlayer.propTypes = {
+  url: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 export default FloatingAudioPlayer;

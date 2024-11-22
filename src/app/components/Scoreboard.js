@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { PERIOD_DESCRIPTORS } from "../utils/constants";
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTable } from "@fortawesome/free-solid-svg-icons";
+import { PERIOD_DESCRIPTORS } from '../utils/constants';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faList, faTable } from '@fortawesome/free-solid-svg-icons';
 
 const Scoreboard = ({ game, linescore }) => {
   // Assuming game has a total period count, if not, adjust accordingly
@@ -17,13 +17,14 @@ const Scoreboard = ({ game, linescore }) => {
           {Array.from({ length: totalPeriods }).map((_, index) => {
             const periodNumber = index + 1;
             const period = linescore.byPeriod.find(p => p.periodDescriptor.number === periodNumber);
+            
             return (
               <th
                 className="w-1/12 text-center border bg-slate-200 dark:bg-slate-800 p-2"
                 key={periodNumber}
               >
                 {period ? (
-                  period.periodDescriptor.periodType === "REG" ? (
+                  period.periodDescriptor.periodType === 'REG' ? (
                     <>{PERIOD_DESCRIPTORS[period.periodDescriptor.number]}</>
                   ) : (
                     <>{period.periodDescriptor.periodType}</>
@@ -48,9 +49,10 @@ const Scoreboard = ({ game, linescore }) => {
           {Array.from({ length: totalPeriods }).map((_, index) => {
             const periodNumber = index + 1;
             const period = linescore.byPeriod.find(p => p.periodDescriptor.number === periodNumber);
+            
             return (
               <td className="text-center border p-2" key={periodNumber}>
-                {period ? period.away : "–"}
+                {period ? period.away : '–'}
               </td>
             );
           })}
@@ -68,9 +70,10 @@ const Scoreboard = ({ game, linescore }) => {
           {Array.from({ length: totalPeriods }).map((_, index) => {
             const periodNumber = index + 1;
             const period = linescore.byPeriod.find(p => p.periodDescriptor.number === periodNumber);
+            
             return (
               <td className="text-center border" key={periodNumber}>
-                {period ? period.home : "–"}
+                {period ? period.home : '–'}
               </td>
             );
           })}
@@ -79,8 +82,15 @@ const Scoreboard = ({ game, linescore }) => {
           </td>
         </tr>
       </tbody>
-      <caption className="caption-bottom text-left my-2">
-        <Link href={`/game/${game.id}/boxscore`} className="underline font-bold"><FontAwesomeIcon icon={faTable} fixedWidth className="mr-1" />Boxscore</Link>
+      <caption className="caption-bottom my-2">
+        <ul className="flex gap-2">
+          <li>
+            <Link href={`/game/${game.id}/boxscore`} className="underline font-bold"><FontAwesomeIcon icon={faTable} fixedWidth className="mr-1" />Boxscore</Link>
+          </li>
+          <li>
+            <Link href={`/game/${game.id}/play-by-play`} className="underline font-bold"><FontAwesomeIcon icon={faList} fixedWidth className="mr-1" />Play-by-play</Link>
+          </li>
+        </ul>
       </caption>
     </table>
   );

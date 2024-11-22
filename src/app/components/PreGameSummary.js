@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
-
 import { STAT_CONTEXT, PLAYER_STATS } from '../utils/constants';
 import Headshot from './Headshot';
 import StatsTable from './StatsTable';
 import { formatStat } from '../utils/formatters';
+import TeamLogo from './TeamLogo';
+import { PropTypes } from 'prop-types';
 
 const PreGameSummary = ({ game }) => {
 
@@ -24,12 +24,10 @@ const PreGameSummary = ({ game }) => {
   const renderTeamTotals = ({ team, teamAbbrev }) => (
     <div className="grid grid-cols-12 mb-0 py-2 items-center">
       <div className="col-span-4">
-        <Image
+        <TeamLogo
           src={logos[teamAbbrev]}
           alt={teamAbbrev}
           className="w-20 h-20"
-          width="100"
-          height="100"
         />
       </div>
       <div className="col-span-2 flex flex-col items-center">
@@ -56,6 +54,7 @@ const PreGameSummary = ({ game }) => {
       <div className="border grid grid-cols-12 mb-3 py-2 items-center">
         <div className="col-span-4 p-2 flex">
           <Headshot
+            playerId={goaltender.playerId}
             src={goaltender.headshot}
             alt={`${goaltender.firstName.default} ${goaltender.lastName.default}`}
             className="mr-2 hidden md:block"
@@ -85,26 +84,37 @@ const PreGameSummary = ({ game }) => {
         </div>
       </div>
     );
-  }
+  };
 
   return (
     <div className="my-5">
       <div className="flex justify-between">
         <div className="">
-          <Image src={logos[awayTeam.abbrev]} alt={awayTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
+          <TeamLogo
+            team={awayTeam.abbrev}
+            src={logos[awayTeam.abbrev]}
+            alt={awayTeam.name.default}
+            className="w-20 h-20 mx-auto mb-2"
+          />
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold underline">Players to Watch</div>
           <div className="text-xl">{STAT_CONTEXT[matchup.teamLeaders?.context] || matchup.teamLeaders?.context}</div>
         </div>
         <div className="">
-          <Image src={logos[homeTeam.abbrev]} alt={homeTeam.name.default} className="w-20 h-20 mx-auto mb-2" width="100" height="100" />
+          <TeamLogo
+            team={homeTeam.abbrev}
+            src={logos[homeTeam.abbrev]}
+            alt={homeTeam.name.default}
+            className="w-20 h-20 mx-auto mb-2"
+          />
         </div>
       </div>
       {matchup.teamLeaders?.leaders.map((leader) => (
         <div key={leader.category} className="border grid grid-cols-12 mb-3 py-2 items-center">
           <div className="col-span-3 p-2 flex">
             <Headshot
+              playerId={leader.awayLeader.playerId}
               src={leader.awayLeader.headshot}
               alt={`${leader.awayLeader.firstName.default} ${leader.awayLeader.lastName.default}`}
               size="4"
@@ -132,6 +142,7 @@ const PreGameSummary = ({ game }) => {
               <div className="text-sm">#{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}</div>
             </div>
             <Headshot
+              playerId={leader.homeLeader.playerId}
               src={leader.homeLeader.headshot}
               alt={`${leader.homeLeader.firstName.default} ${leader.homeLeader.lastName.default}`}
               size="4"
@@ -156,12 +167,12 @@ const PreGameSummary = ({ game }) => {
 
         {/* Home Team */}
         <div>
-        {renderTeamTotals({team: matchup.goalieComparison.homeTeam, teamAbbrev: homeTeam.abbrev})}
-        {matchup.goalieComparison.homeTeam.leaders.map((goaltender) => (
-          <div key={goaltender.playerId}>
-            {renderGoaltender({goaltender})}
-          </div>
-        ))}
+          {renderTeamTotals({team: matchup.goalieComparison.homeTeam, teamAbbrev: homeTeam.abbrev})}
+          {matchup.goalieComparison.homeTeam.leaders.map((goaltender) => (
+            <div key={goaltender.playerId}>
+              {renderGoaltender({goaltender})}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -169,11 +180,15 @@ const PreGameSummary = ({ game }) => {
         <div className="text-3xl font-bold underline">Team Stats</div>
         <div>
           <div className="flex space-x-0">
-              <button
-                className={`flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md ${activeStatTeam === 'awayTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
-                onClick={() => handleStatTeamClick('awayTeam')}
-              >
-              <Image src={logos[awayTeam.abbrev]} alt={awayTeam.name.default} className="w-6 h-6" width="24" height="24" />
+            <button
+              className={`flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md ${activeStatTeam === 'awayTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
+              onClick={() => handleStatTeamClick('awayTeam')}
+            >
+              <TeamLogo
+                src={logos[awayTeam.abbrev]}
+                alt={awayTeam.name.default}
+                className="w-6 h-6"
+              />
               <div>
                 {awayTeam.placeName.default} <strong>{awayTeam.name.default.replace(awayTeam.placeName.default, '')}</strong>
               </div>
@@ -182,7 +197,11 @@ const PreGameSummary = ({ game }) => {
               className={`flex gap-1 items-center text-sm p-2 border rounded-r-md ${activeStatTeam === 'homeTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
               onClick={() => handleStatTeamClick('homeTeam')}
             >
-              <Image src={logos[homeTeam.abbrev]} alt={homeTeam.name.default} className="w-6 h-6" width="24" height="24" />
+              <TeamLogo
+                src={logos[homeTeam.abbrev]}
+                alt={homeTeam.name.default}
+                className="w-6 h-6"
+              />
               <div>
                 {homeTeam.placeName.default} <strong>{homeTeam.name.default.replace(homeTeam.placeName.default, '')}</strong>
               </div>
@@ -197,7 +216,7 @@ const PreGameSummary = ({ game }) => {
         <div className="font-bold my-2">Defensemen</div>
         <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position === 'D')} />
         <div className="font-bold my-2">Goalies</div>
-        <StatsTable goalieMode stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
+        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
       </div>
 
       <div id="homeTeamStats" className={`${activeStatTeam === 'homeTeam' ? '' : 'hidden'} my-5`}>
@@ -206,10 +225,14 @@ const PreGameSummary = ({ game }) => {
         <div className="font-bold my-2">Defensemen</div>
         <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position === 'D')} />
         <div className="font-bold my-2">Goalies</div>
-        <StatsTable goalieMode stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
+        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
       </div>
     </div>
   );
+};
+
+PreGameSummary.propTypes = {
+  game: PropTypes.object.isRequired,
 }
 
 export default PreGameSummary;

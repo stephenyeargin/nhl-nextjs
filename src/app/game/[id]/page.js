@@ -1,11 +1,12 @@
 'use client';
 
-import Image from 'next/image'
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import Link from 'next/link.js';
 import utc from 'dayjs/plugin/utc';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { notFound } from 'next/navigation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faCheckCircle, faHockeyPuck, faPlayCircle, faRadio, faTelevision, faTrophy, faWarning, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import GameSkeleton from '@/app/components/GameSkeleton.js';
 import Headshot from '@/app/components/Headshot';
@@ -16,27 +17,30 @@ import IceSurface from '@/app/components/IceSurface';
 import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES, SHOOTOUT_RESULT } from '@/app/utils/constants';
 import { formatBroadcasts, formatGameTime, formatSeriesStatus, formatStatValue } from '@/app/utils/formatters';
 import Scoreboard from '@/app/components/Scoreboard';
+import PageError from '@/app/components/PageError';
+import TeamLogo from '@/app/components/TeamLogo';
 
 dayjs.extend(utc);
 
 const gameIsInProgress = (game) => {
   switch (GAME_STATES[game.gameState]) {
-    case GAME_STATES.PRE:
-    case GAME_STATES.LIVE:
-    case GAME_STATES.CRIT:
-      return true;
-    default:
-      return false;
+  case GAME_STATES.PRE:
+  case GAME_STATES.LIVE:
+  case GAME_STATES.CRIT:
+    return true;
+  default:
+    return false;
   }
-}
+};
 
 const GamePage = ({ params }) => {
-  const { id } = params;
+  const { id } = React.use(params);
   const logos = {};
 
   // Initial state for the game data
   const [gameData, setGameData] = useState(null);
   const [gameState, setGameState] = useState(null);
+  const [pageError, setPageError] = useState(null);
 
   // Function to fetch the live game data
   const fetchGameData = async () => {
@@ -47,16 +51,26 @@ const GamePage = ({ params }) => {
       const rightRailResponse = await fetch(`/api/nhl/gamecenter/${id}/right-rail`, { cache: 'no-store' });
       const storyResponse = await fetch(`/api/nhl/wsc/game-story/${id}`, { cache: 'no-store' });
 
+      if (!gameResponse.ok) {
+        throw new Error(`Game data fetch failed: ${gameResponse.status}`);
+      }
+      if (!rightRailResponse.ok) {
+        throw new Error(`Right Rail data fetch failed: ${rightRailResponse.status}`);
+      }
+      if (!storyResponse.ok) {
+        throw new Error(`Story data fetch failed: ${storyResponse.status}`);
+      }
+
       game = await gameResponse.json();
       rightRail = await rightRailResponse.json();
       story = await storyResponse.json();
     } catch (error) {
       console.error('Error fetching game data:', error);
-      return;
+      setPageError({ message: 'Failed to load the game data. Please try again later.', error });
     }
 
     // Extract relevant parts of the game data
-    const { homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup } = game;
+    const { homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup } = game || {};
     setGameData({ homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup, game, rightRail, story });
     setGameState(game.gameState);
   };
@@ -79,9 +93,25 @@ const GamePage = ({ params }) => {
     return () => clearInterval(intervalId);
   }, [ id, gameState ]); // Only re-run the effect if the `id` changes
 
+  // Error handling component
+  const handleError = () => {
+    if (pageError && pageError.error?.status === 404) {
+      notFound();
+    }
+    
+    return (
+      <PageError pageError={pageError} handleRetry={fetchGameData} />
+    );
+  };
+
+  // If error, handle
+  if (pageError) {
+    return handleError();
+  }
+
   // If game data is loading, show loading indicator
   if (!gameData) {
-    return <GameSkeleton />
+    return <GameSkeleton />;
   }
 
   // Destructure data for rendering
@@ -97,7 +127,7 @@ const GamePage = ({ params }) => {
 
       <div className="text-center my-3 text-xs font-bold">
         <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
-        <Link href={`https://www.nhl.com/gamecenter/${game.id}`} target="_blank" className="underline">NHL.com GameCenter</Link>
+        <Link href={`https://www.nhl.com/gamecenter/${game.id}`} className="underline">NHL.com GameCenter</Link>
         {game.tvBroadcasts.length > 0 && (
           <span className="ml-5">
             <FontAwesomeIcon icon={faTelevision} fixedWidth className="mr-1" /> {formatBroadcasts(game.tvBroadcasts)}
@@ -138,6 +168,7 @@ const GamePage = ({ params }) => {
                           <div key={shot.sequence} className="border grid grid-cols-12 gap-2 my-5 p-2">
                             <div className="col-span-12 flex">
                               <Headshot
+                                playerId={shot.playerId}
                                 src={shot.headshot}
                                 alt={`${shot.firstName} ${shot.lastName}`}
                                 size="4"
@@ -145,10 +176,18 @@ const GamePage = ({ params }) => {
                               />
                               <div className="grow">
                                 <span className="font-bold">
-                                  {shot.firstName} {shot.lastName || 'Unnamed'}
+                                  {shot.playerId ? (
+                                    <Link href={`/player/${shot.playerId}`}>{shot.firstName} {shot.lastName}</Link>
+                                  ) : (
+                                    <>Unnamed</>
+                                  )}
                                 </span>
                                 <div className="col-span-10 flex">
-                                  <Image src={logos[shot.teamAbbrev]} alt="Logo" height={128} width={128} className="w-8 h-8 mr-2" />
+                                  <TeamLogo
+                                    src={logos[shot.teamAbbrev]}
+                                    alt="Logo"
+                                    className="w-8 h-8 mr-2"
+                                  />
                                   <span className="capitalize">
                                     {shot.shotType} • {SHOOTOUT_RESULT[shot.result] || shot.result}
                                   </span>
@@ -177,6 +216,7 @@ const GamePage = ({ params }) => {
                           <div key={i} className="border grid grid-cols-12 gap-2 my-5 p-2">
                             <div className="col-span-12 md:col-span-5 flex">
                               <Headshot
+                                playerId={goal.playerId}
                                 src={goal.headshot}
                                 alt={`${goal.firstName.default} ${goal.lastName.default}`}
                                 size="4"
@@ -184,7 +224,7 @@ const GamePage = ({ params }) => {
                               />
                               <div>
                                 <span className="font-bold">
-                                  {goal.firstName.default} {goal.lastName.default} ({goal.goalsToDate})
+                                  <Link href={`/player/${goal.playerId}`}>{goal.firstName.default} {goal.lastName.default}</Link> ({goal.goalsToDate})
                                 </span>
                                 {goal.strength !== 'ev' && (
                                   <span className="rounded text-xs ml-2 text-white bg-red-900 p-1 uppercase">{goal.strength}G</span>
@@ -195,13 +235,14 @@ const GamePage = ({ params }) => {
                                 {goal.goalModifier == 'penalty-shot' && (
                                   <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Penalty Shot">PS</span>
                                 )}
+                                {goal.goalModifier == 'own-goal' && (
+                                  <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Own Goal">OG</span>
+                                )}
                                 <br />
                                 <div className="flex items-center">
-                                  <Image
+                                  <TeamLogo
                                     src={logos[goal.teamAbbrev.default]}
                                     alt="Logo"
-                                    height={128}
-                                    width={128}
                                     className="w-8 h-8 mr-2"
                                   />
                                   <div className="text-sm"> {goal.assists.length > 0 ? (
@@ -233,10 +274,10 @@ const GamePage = ({ params }) => {
                             </div>
                             {goal.highlightClipSharingUrl && (
                               <div className="col-span-12 md:col-span-1 md:py-5 rounded-md mx-4 text-center text-blue-500">
-                                <a href={goal.highlightClipSharingUrl} target="_blank" rel="noopener noreferrer">
+                                <Link href={goal.highlightClipSharingUrl} rel="noopener noreferrer">
                                   <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mr-2 md:mr-0" />
                                   <span className="md:hidden">Watch Highlight</span>
-                                </a>
+                                </Link>
                               </div>
                             )}
                           </div>
@@ -271,15 +312,15 @@ const GamePage = ({ params }) => {
                                 </div>
                                 <div className="w-1/3 p-2">
                                   <div className="flex">
-                                    <Image
+                                    <TeamLogo
                                       src={logos[penalty.teamAbbrev.default]}
                                       alt="Logo"
-                                      height={128}
-                                      width={128}
                                       className="w-10 h-10 mr-2"
                                     />
                                     <div>
-                                      <div className="font-bold">{penalty.committedByPlayer || penalty.teamAbbrev.default}</div>
+                                      <div className="font-bold">
+                                        {penalty.committedByPlayer || penalty.teamAbbrev.default}
+                                      </div>
                                       {penalty.drawnBy && (
                                         <div className="text-xs text-slate-600">
                                           Drawn by: {penalty.drawnBy}
@@ -325,13 +366,15 @@ const GamePage = ({ params }) => {
                               {p.star}
                             </span>
                             <Headshot
+                              playerId={p.playerId}
                               src={p.headshot}
                               alt={p.name.default}
-                              size="10"
+                              size="8"
                               className="mx-auto mb-2"
                             />
                           </div>
-                          <h4 className="font-semibold">{p.name.default}</h4>
+                          <h4 className="font-semibold">
+                            <Link href={`/player/${p.playerId}`}>{p.name.default}</Link></h4>
                           <p className="text-sm">#{p.sweaterNo} • {p.teamAbbrev} • {p.position}</p>
                           {Object(p).hasOwnProperty('goals') ? (
                             <p className="text-sm">G: {p.goals} | A: {p.assists} | P: {p.points}</p>
@@ -356,9 +399,21 @@ const GamePage = ({ params }) => {
           {rightRail.shotsByPeriod && (
             <div className="mb-5">
               <div className="flex text-center items-center">
-                <div className="w-1/4 p-2 text-bold flex justify-center"><Image src={logos[awayTeam.abbrev]} width={48} height={48} alt={awayTeam.abbrev} /></div>
+                <div className="w-1/4 p-2 text-bold flex justify-center">
+                  <TeamLogo
+                    src={logos[awayTeam.abbrev]}
+                    alt={awayTeam.abbrev}
+                    className="h-12 w-12"
+                  />
+                </div>
                 <div className="w-1/2 p-2 text-2xl font-bold">Shots</div>
-                <div className="w-1/4 p-2 text-bold flex justify-center"><Image src={logos[homeTeam.abbrev]} width={48} height={48} alt={homeTeam.abbrev} /></div>
+                <div className="w-1/4 p-2 text-bold flex justify-center">
+                  <TeamLogo
+                    src={logos[homeTeam.abbrev]}
+                    alt={homeTeam.abbrev}
+                    className="h-12 w-12"
+                  />
+                </div>
               </div>
               {rightRail.shotsByPeriod.map((period, index) => (
                 <div key={index} className={`flex text-center ${index % 2 ? '' : 'bg-slate-500/10'}`}>
@@ -373,9 +428,21 @@ const GamePage = ({ params }) => {
             <div className="mb-5">
               <div>
                 <div className="flex text-center items-center justify-between">
-                  <div className="w-1/4 p-2 text-bold flex justify-center"><Image src={logos[awayTeam.abbrev]} width={48} height={48} alt={awayTeam.abbrev} /></div>
+                  <div className="w-1/4 p-2 text-bold flex justify-center">
+                    <TeamLogo
+                      src={logos[awayTeam.abbrev]}
+                      alt={awayTeam.abbrev}
+                      className="h-12 w-12"
+                    />
+                  </div>
                   <div className="w-1/2 p-2 text-2xl font-bold">Game Stats</div>
-                  <div className="w-1/4 p-2 text-bold flex justify-center"><Image src={logos[homeTeam.abbrev]} width={48} height={48} alt={homeTeam.abbrev} /></div>
+                  <div className="w-1/4 p-2 text-bold flex justify-center">
+                    <TeamLogo
+                      src={logos[homeTeam.abbrev]}
+                      alt={homeTeam.abbrev}
+                      className="h-12 w-12"
+                    />
+                  </div>
                 </div>
                 {story.summary?.teamGameStats.map((stat, statIndex) => (
                   <div key={stat.category} className={`flex text-center item-center ${statIndex % 2 ? '' : 'bg-slate-500/10'}`}>
@@ -398,14 +465,22 @@ const GamePage = ({ params }) => {
                   <Link href={`/game/${g.id}`} key={i} className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded ${g.gameState === 'CRIT' ? 'border-red-500' : ''}`}>
                     <div className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}>
                       <div className="flex items-center font-bold gap-1">
-                        <Image src={g.awayTeam.logo} alt="Logo" height={128} width={128} className="w-8 h-8" />
+                        <TeamLogo
+                          src={g.awayTeam.logo}
+                          alt="Logo"
+                          className="w-8 h-8"
+                        />
                         {g.awayTeam.abbrev}
                       </div>
                       <div className="text-lg font-bold">{g.awayTeam.score}</div>
                     </div>
                     <div className={`flex justify-between ${g.awayTeam.score > g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}>
                       <div className="flex items-center font-bold gap-1">
-                        <Image src={g.homeTeam.logo} alt="Logo" height={128} width={128} className="w-8 h-8" />
+                        <TeamLogo
+                          src={g.homeTeam.logo}
+                          alt="Logo"
+                          className="w-8 h-8"
+                        />
                         {g.homeTeam.abbrev}
                       </div>
                       <div className="text-lg font-bold">{g.homeTeam.score}</div>

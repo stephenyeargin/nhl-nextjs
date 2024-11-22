@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import dayjs from 'dayjs';
@@ -10,18 +10,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { PERIOD_DESCRIPTORS } from '../utils/constants';
 import { formatGameTime } from '../utils/formatters';
+import TeamLogo from './TeamLogo';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
 const sortGamesByState = (games) => {
   const sortedGames = [...games].sort((a, b) => {
-    if (a.gameState === 'LIVE' || a.gameState === 'CRIT') return -1;
-    if (b.gameState === 'LIVE' || b.gameState === 'CRIT') return 1;
+    if (a.gameState === 'LIVE' || a.gameState === 'CRIT') {return -1;}
+    if (b.gameState === 'LIVE' || b.gameState === 'CRIT') {return 1;}
+    
     return 0;
   });
+  
   return sortedGames;
-}
+};
 
 const TopBarSchedule = ({ gameDate }) => {
   const [games, setGames] = useState([]);
@@ -87,17 +90,18 @@ const TopBarSchedule = ({ gameDate }) => {
             {dates.map((date) => {
               let dateClass = 'mx-1 border rounded-xl';
               if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
-                dateClass = 'mx-1 border border-blue-400 rounded-xl'
+                dateClass = 'mx-1 border border-blue-400 rounded-xl';
               }
               if (date === focusedDate) {
-                dateClass = 'active rounded-xl bg-slate-500 text-white mx-1'
+                dateClass = 'active rounded-xl bg-slate-500 text-white mx-1';
               }
+              
               return (
                 <Link key={date} href={`?date=${date}`} className={dateClass} onClick={() => handleDateClick(date)}>
                   <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
                 </Link>
-              )
-              })}
+              );
+            })}
           </div>
           <div className="overflow-x-auto scrollbar-hidden">
             <div className="flex flex-nowrap gap-4 p-4">
@@ -117,12 +121,10 @@ const TopBarSchedule = ({ gameDate }) => {
                       {/* Away Team */}
                       <div className={`flex items-center justify-between ${game.awayTeam.defeated ? 'opacity-50' : ''}`}>
                         <div className="flex items-center space-x-3">
-                          <Image 
+                          <TeamLogo 
                             src={game.awayTeam.logo} 
                             alt={`${game.awayTeam.name?.default} logo`}
                             className="w-8 h-8"
-                            width={32}
-                            height={32}
                           />
                           <span className="font-bold">
                             {game.awayTeam.name?.default}
@@ -139,12 +141,10 @@ const TopBarSchedule = ({ gameDate }) => {
                       {/* Home Team */}
                       <div className={`flex items-center justify-between ${game.homeTeam.defeated ? 'opacity-50' : ''}`}>
                         <div className="flex items-center space-x-3">
-                          <Image 
+                          <TeamLogo 
                             src={game.homeTeam.logo} 
                             alt={`${game.homeTeam.name?.default} logo`}
                             className="w-8 h-8"
-                            width={32}
-                            height={32}
                           />
                           <span className="font-bold">
                             {game.homeTeam.name?.default}
@@ -173,21 +173,21 @@ const TopBarSchedule = ({ gameDate }) => {
                           </span>
                         ) : (
                           <>
-                          {(game.gameState === 'LIVE' || game.gameState === 'CRIT') ? (
-                            <span className="text-sm">
-                              <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase">
-                                {PERIOD_DESCRIPTORS[game.periodDescriptor.number]}
-                                {game.clock.inIntermission ? ' INT' : ''}
+                            {(game.gameState === 'LIVE' || game.gameState === 'CRIT') ? (
+                              <span className="text-sm">
+                                <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase">
+                                  {PERIOD_DESCRIPTORS[game.periodDescriptor.number]}
+                                  {game.clock.inIntermission ? ' INT' : ''}
+                                </span>
+                                <span className="font-bold">{game.clock?.timeRemaining}</span>
                               </span>
-                              <span className="font-bold">{game.clock?.timeRemaining}</span>
-                            </span>
-                          ) : (
-                            <>
-                            <span className="text-sm">
-                              {formatGameTime(game.startTimeUTC)}
-                            </span>
-                            </>
-                          )}
+                            ) : (
+                              <>
+                                <span className="text-sm">
+                                  {formatGameTime(game.startTimeUTC)}
+                                </span>
+                              </>
+                            )}
                           </>
                         )}
                       </div>
@@ -232,6 +232,6 @@ const TopBarSchedule = ({ gameDate }) => {
       )}
     </div>
   );
-}
+};
 
 export default TopBarSchedule;

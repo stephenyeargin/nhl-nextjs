@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import Headshot from './Headshot';
 import GameClock from './GameClock';
 
@@ -24,12 +25,15 @@ export const Skater = ({ player, game, isHomeTeam }) => {
         {player.sweaterNumber}
       </div>
       <Headshot
+        playerId={player.playerId}
         src={player.headshot}
         alt={`${player.name.default}`}
         size="2"
         className="hidden md:block m-1 mx-auto"
       />
-      <div className="hidden md:block font-bold">{player.name.default}</div>
+      <div className="hidden md:block font-bold">
+        <Link href={`/player/${player.playerId}`} target="_blank">{player.name.default}</Link>
+      </div>
       <div className="hidden md:block text-sm my-1">
         #{player.sweaterNumber} • {player.positionCode}
         {game && player.secondsRemaining && (
@@ -38,5 +42,5 @@ export const Skater = ({ player, game, isHomeTeam }) => {
       </div>
 
     </div>
-  )
+  );
 };

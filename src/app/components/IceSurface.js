@@ -67,13 +67,13 @@ const IceSurface = ({ game }) => {
           {(summary.iceSurface?.awayTeam.penaltyBox.length > 0 || summary.iceSurface?.homeTeam.penaltyBox.length > 0) && (
             <div className="grid grid-cols-2 gap-5">
               <div className="col-span-1 flex justify-end">
-                {summary.iceSurface?.awayTeam.penaltyBox.map((p) => (
-                  <Skater key={p.playerId} player={p} game={game} isHomeTeam={false} />
+                {summary.iceSurface?.awayTeam.penaltyBox.map((p, i) => (
+                  <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={false} />
                 ))}
               </div>
               <div className="col-span-1 flex justify-start">
-                {summary.iceSurface?.homeTeam.penaltyBox.map((p) => (
-                  <Skater key={p.playerId} player={p} game={game} />
+                {summary.iceSurface?.homeTeam.penaltyBox.map((p, i) => (
+                  <Skater key={`${p.playerId}-${i}`} player={p} game={game} />
                 ))}
               </div>
             </div>
@@ -81,7 +81,7 @@ const IceSurface = ({ game }) => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
 export default IceSurface;

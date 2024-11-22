@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-const GameSkeleton = ({}) => {
+const GameSkeleton = () => {
   return (
     <div className="container mx-auto animate-pulse">
       <div className="border rounded-lg grid grid-cols-12 my-5 border py-4 gap-5">
@@ -46,7 +46,7 @@ const GameSkeleton = ({}) => {
 
           <div className="my-2 h-10 bg-slate-300 dark:bg-slate-700 animate-pulse" style={{maxWidth:'40%'}}></div>
 
-          <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"  style={{maxWidth:'30%'}}></div>
+          <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse" style={{maxWidth:'30%'}}></div>
           <div className="my-10 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
           <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
           <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
@@ -69,6 +69,6 @@ const GameSkeleton = ({}) => {
     </div>
 
   );
-}
+};
 
 export default GameSkeleton;

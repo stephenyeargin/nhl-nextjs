@@ -1,8 +1,10 @@
-import Image from "next/image";
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan, faWarning, faX } from "@fortawesome/free-solid-svg-icons";
-import { formatBroadcasts, formatGameTime, formatGameDate } from "../utils/formatters";
+import React from 'react';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { formatBroadcasts, formatGameTime, formatGameDate } from '../utils/formatters';
+import TeamLogo from './TeamLogo';
+import { PropTypes } from 'prop-types';
 
 const GameTile = ({game}) => {
 
@@ -41,19 +43,10 @@ const GameTile = ({game}) => {
         {/* Away Team */}
         <div className={`flex items-center justify-between ${game.awayTeam.defeated ? 'opacity-50' : ''}`}>
           <div className="flex items-center">
-            <Image 
+            <TeamLogo 
               src={game.awayTeam.logo} 
               alt={`${game.awayTeam.placeName?.default} logo`}
-              className="w-8 h-8 dark:hidden mr-3"
-              width={32}
-              height={32}
-            />
-            <Image 
-              src={game.awayTeam.darkLogo} 
-              alt={`${game.awayTeam.placeName?.default} logo`}
-              className="w-8 h-8 hidden dark:block mr-3"
-              width={32}
-              height={32}
+              className="w-8 h-8 mr-3"
             />
             <span className="font-bold">{game.awayTeam.placeName?.default}</span>
           </div>
@@ -65,19 +58,10 @@ const GameTile = ({game}) => {
         {/* Home Team */}
         <div className={`flex items-center justify-between ${game.homeTeam.defeated ? 'opacity-50' : ''}`}>
           <div className="flex items-center">
-            <Image 
+            <TeamLogo 
               src={game.homeTeam.logo} 
               alt={`${game.homeTeam.placeName?.default} logo`}
-              className="w-8 h-8 dark:hidden mr-3"
-              width={32}
-              height={32}
-            />
-            <Image 
-              src={game.homeTeam.darkLogo} 
-              alt={`${game.homeTeam.placeName?.default} logo`}
-              className="w-8 h-8 hidden dark:block mr-3"
-              width={32}
-              height={32}
+              className="w-8 h-8 mr-3"
             />
             <span className="font-bold">{game.homeTeam.placeName?.default}</span>
           </div>
@@ -116,7 +100,11 @@ const GameTile = ({game}) => {
         </div>
       </div>
     </Link>
-  )
-}
+  );
+};
+
+GameTile.propTypes = {
+  game: PropTypes.object.isRequired,
+};
 
 export default GameTile;

@@ -1,20 +1,21 @@
 'use client';
 
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import Link from 'next/link.js';
 import utc from 'dayjs/plugin/utc';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHockeyPuck} from '@fortawesome/free-solid-svg-icons';
 import GameSkeleton from '@/app/components/GameSkeleton.js';
 import GameHeader from '@/app/components/GameHeader.js';
 import StatsTable from '@/app/components/StatsTable';
+import TeamLogo from '@/app/components/TeamLogo';
+import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 
 dayjs.extend(utc);
 
 const BoxScore = ({ params }) => {
-  const { id } = params;
+  const { id } = use(params);
   const logos = {};
 
   // Initial state for the game data
@@ -33,6 +34,7 @@ const BoxScore = ({ params }) => {
       boxScore = await boxScoreResponse.json();
     } catch (error) {
       console.error('Error fetching game data:', error);
+      
       return;
     }
 
@@ -62,11 +64,14 @@ const BoxScore = ({ params }) => {
 
   // If game data is loading, show loading indicator
   if (!gameData) {
-    return <GameSkeleton />
+    return <GameSkeleton />;
   }
 
   // Destructure data for rendering
   const { homeTeam, awayTeam, game, boxScore } = gameData;
+
+  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev) || {};
+  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev) || {};
 
   // If no boxscore available, redirect back up
   if (!boxScore.playerByGameStats) {
@@ -95,84 +100,72 @@ const BoxScore = ({ params }) => {
         <div className="col-span-12 xl:col-span-6">
           <div className="my-3">
             <div className="flex">
-              <Image
+              <TeamLogo
                 src={logos[awayTeam.abbrev]}
                 alt={awayTeam.abbrev}
-                width="32"
-                height="32"
-                className="mr-2"
+                className="mr-2 h-8 w-8"
               />
               <div className="font-bold my-1">Forwards</div>
             </div>
           </div>
-          <StatsTable stats={boxScore.playerByGameStats.awayTeam.forwards} />
+          <StatsTable stats={boxScore.playerByGameStats.awayTeam.forwards} teamColor={awayTeam.data.teamColor} />
           <div className="my-3">
             <div className="flex">
-              <Image
+              <TeamLogo
                 src={logos[awayTeam.abbrev]}
                 alt={awayTeam.abbrev}
-                width="32"
-                height="32"
-                className="mr-2"
+                className="mr-2 h-8 w-8"
               />
               <div className="font-bold my-1">Defensemen</div>
             </div>
           </div>
-          <StatsTable stats={boxScore.playerByGameStats.awayTeam.defense} />
+          <StatsTable stats={boxScore.playerByGameStats.awayTeam.defense} teamColor={awayTeam.data.teamColor} />
           <div className="my-3">
             <div className="flex">
-              <Image
+              <TeamLogo
                 src={logos[awayTeam.abbrev]}
                 alt={awayTeam.abbrev}
-                width="32"
-                height="32"
-                className="mr-2"
+                className="mr-2 h-8 w-8"
               />
               <div className="font-bold my-1">Goalies</div>
             </div>
           </div>
-          <StatsTable stats={boxScore.playerByGameStats.awayTeam.goalies} goalieMode />
+          <StatsTable stats={boxScore.playerByGameStats.awayTeam.goalies} teamColor={awayTeam.data.teamColor} />
         </div>
         <div className="col-span-12 xl:col-span-6">
           <div className="my-3">
             <div className="flex">
-              <Image
+              <TeamLogo
                 src={logos[homeTeam.abbrev]}
                 alt={homeTeam.abbrev}
-                width="32"
-                height="32"
-                className="mr-2"
+                className="mr-2 h-8 w-8"
               />
               <div className="font-bold my-1">Forwards</div>
             </div>
           </div>
-          <StatsTable stats={boxScore.playerByGameStats.homeTeam.forwards} />
+          <StatsTable stats={boxScore.playerByGameStats.homeTeam.forwards} teamColor={homeTeam.data.teamColor} />
           <div className="my-3">
             <div className="flex">
-              <Image
+              <TeamLogo
                 src={logos[homeTeam.abbrev]}
                 alt={homeTeam.abbrev}
-                width="32"
-                height="32"
-                className="mr-2"
+                className="mr-2 h-8 w-8"
               />
               <div className="font-bold my-1">Defensemen</div>
             </div>
           </div>
-          <StatsTable stats={boxScore.playerByGameStats.homeTeam.defense} />
+          <StatsTable stats={boxScore.playerByGameStats.homeTeam.defense} teamColor={homeTeam.data.teamColor} />
           <div className="my-3">
             <div className="flex">
-              <Image
+              <TeamLogo
                 src={logos[homeTeam.abbrev]}
                 alt={homeTeam.abbrev}
-                width="32"
-                height="32"
-                className="mr-2"
+                className="mr-2 h-8 w-8"
               />
               <div className="font-bold my-1">Goalies</div>
             </div>
           </div>
-          <StatsTable stats={boxScore.playerByGameStats.homeTeam.goalies} goalieMode />
+          <StatsTable stats={boxScore.playerByGameStats.homeTeam.goalies} teamColor={homeTeam.data.teamColor} />
         </div>
       </div>
 

@@ -1,13 +1,16 @@
+import React from 'react';
+
 import StandingsTable from './components/StandingsTable';
 
 export default async function Home(request) {
   let westernConference, easternConference;
 
   try {
+    let url;
     if (request.searchQuery?.date) {
-      var url = `https://api-web.nhle.com/v1/standings/${request.searchQuery.date}`;
+      url = `https://api-web.nhle.com/v1/standings/${request.searchQuery.date}`;
     } else {
-      var url = 'https://api-web.nhle.com/v1/standings/now';
+      url = 'https://api-web.nhle.com/v1/standings/now';
     }
     const apiStandings = await fetch(url);
     if (!apiStandings.ok) {
@@ -34,5 +37,5 @@ export default async function Home(request) {
       <h2 className="text-xl py-4">Eastern Conference</h2>
       <StandingsTable standings={easternConference} />
     </div>
-  )
+  );
 }

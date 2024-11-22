@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
 
 const GameClock = ({ timeRemaining, running }) => {
   const [time, setTime] = useState(timeRemaining);
@@ -24,6 +25,7 @@ const GameClock = ({ timeRemaining, running }) => {
           if (newMinutes < 0) {
             return '00:00';
           }
+          
           return `${newMinutes.toString().padStart(2, '0')}:${newSeconds.toString().padStart(2, '0')}`;
         });
       }, 1000);
@@ -33,6 +35,15 @@ const GameClock = ({ timeRemaining, running }) => {
   }, [running, time]); // Depend on both running and time
 
   return <span>{time}</span>;
+};
+
+GameClock.propTypes = {
+  timeRemaining: PropTypes.string.isRequired,
+  running: PropTypes.bool
+};
+
+GameClock.defaultProps = {
+  running: false
 };
 
 export default GameClock;
