@@ -1,8 +1,8 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { formatStat } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
+import { PropTypes } from 'prop-types';
 
 const StandingsTable = ({ standings }) => {
   const tableRows = standings
@@ -82,6 +82,10 @@ const StandingsTable = ({ standings }) => {
       </tbody>
     </table>
   );
+};
+
+StandingsTable.propTypes = {
+  standings: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default StandingsTable;

@@ -40,7 +40,13 @@ const GameHeader = ({ game }) => {
   }
 
   const teamHasRecentGoal = (teamAbbrev, game) => {
+    // No goals if game isn't live
     if (!['LIVE', 'CRIT'].includes(game.gameState)) {
+      return false;
+    }
+
+    // No goals during intermission
+    if (game.clock.inIntermission) {
       return false;
     }
 

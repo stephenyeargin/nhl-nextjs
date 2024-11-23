@@ -1,8 +1,9 @@
 import React from 'react';
 import { Skater } from './Skater';
+import { PropTypes } from 'prop-types';
+import TeamLogo from './TeamLogo';
 
 const IceSurface = ({ game }) => {
-
   const { homeTeam, awayTeam, summary, clock } = game;
 
   const logos = {};
@@ -12,27 +13,15 @@ const IceSurface = ({ game }) => {
   return (
     <>
       {summary.iceSurface && !clock.inIntermission && (
-        <div>
+        <div className="relative">
+          <TeamLogo
+            src={logos[homeTeam.abbrev]}
+            alt="Center Ice"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-100 h-100 opacity-10"
+          />
           <div
-            className="grid grid-cols-6 p-10 border rounded-3xl mt-5 gap-0 w-full relative"
-            style={{minHeight: '30rem'}}
+            className="grid grid-cols-6 p-10 border rounded-3xl mt-5 gap-0 h-full relative bg-sky-500/[.06]"
           >
-            <style jsx>{`
-              .grid::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-image: url(${logos[homeTeam.abbrev]});
-                background-size: 300px 300px;
-                background-position: center;
-                background-repeat: no-repeat;
-                opacity: 0.2;
-                z-index: -1;
-              }
-            `}</style>
             <div className="col-span-1 self-center">
               {summary.iceSurface?.awayTeam.goalies.map((p) => (
                 <Skater key={p.playerId} player={p} isHomeTeam={false} />
@@ -82,6 +71,10 @@ const IceSurface = ({ game }) => {
       )}
     </>
   );
+};
+
+IceSurface.propTypes = {
+  game: PropTypes.object.isRequired,
 };
 
 export default IceSurface;

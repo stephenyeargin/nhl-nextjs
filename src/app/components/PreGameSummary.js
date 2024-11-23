@@ -233,6 +233,6 @@ const PreGameSummary = ({ game }) => {
 
 PreGameSummary.propTypes = {
   game: PropTypes.object.isRequired,
-}
+};
 
 export default PreGameSummary;

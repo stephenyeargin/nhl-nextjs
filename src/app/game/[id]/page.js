@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import Link from 'next/link.js';
 import utc from 'dayjs/plugin/utc';
+import PropTypes from 'prop-types';
 import { notFound } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faCheckCircle, faHockeyPuck, faPlayCircle, faRadio, faTelevision, faTrophy, faWarning, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
@@ -42,56 +42,55 @@ const GamePage = ({ params }) => {
   const [gameState, setGameState] = useState(null);
   const [pageError, setPageError] = useState(null);
 
-  // Function to fetch the live game data
-  const fetchGameData = async () => {
-    let game, rightRail, story;
-
-    try {
-      const gameResponse = await fetch(`/api/nhl/gamecenter/${id}/landing`, { cache: 'no-store' });
-      const rightRailResponse = await fetch(`/api/nhl/gamecenter/${id}/right-rail`, { cache: 'no-store' });
-      const storyResponse = await fetch(`/api/nhl/wsc/game-story/${id}`, { cache: 'no-store' });
-
-      if (!gameResponse.ok) {
-        throw new Error(`Game data fetch failed: ${gameResponse.status}`);
-      }
-      if (!rightRailResponse.ok) {
-        throw new Error(`Right Rail data fetch failed: ${rightRailResponse.status}`);
-      }
-      if (!storyResponse.ok) {
-        throw new Error(`Story data fetch failed: ${storyResponse.status}`);
-      }
-
-      game = await gameResponse.json();
-      rightRail = await rightRailResponse.json();
-      story = await storyResponse.json();
-    } catch (error) {
-      console.error('Error fetching game data:', error);
-      setPageError({ message: 'Failed to load the game data. Please try again later.', error });
-    }
-
-    // Extract relevant parts of the game data
-    const { homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup } = game || {};
-    setGameData({ homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup, game, rightRail, story });
-    setGameState(game.gameState);
-  };
-
   // Use `useEffect` to run once on initial render and set up polling
   useEffect(() => {
+    let intervalId; // Declare the intervalId variable here for cleanup
+  
+    const fetchGameData = async () => {
+      let game, rightRail, story;
+  
+      try {
+        const gameResponse = await fetch(`/api/nhl/gamecenter/${id}/landing`, { cache: 'no-store' });
+        const rightRailResponse = await fetch(`/api/nhl/gamecenter/${id}/right-rail`, { cache: 'no-store' });
+        const storyResponse = await fetch(`/api/nhl/wsc/game-story/${id}`, { cache: 'no-store' });
+  
+        if (!gameResponse.ok) {
+          throw new Error(`Game data fetch failed: ${gameResponse.status}`);
+        }
+        if (!rightRailResponse.ok) {
+          throw new Error(`Right Rail data fetch failed: ${rightRailResponse.status}`);
+        }
+        if (!storyResponse.ok) {
+          throw new Error(`Story data fetch failed: ${storyResponse.status}`);
+        }
+  
+        game = await gameResponse.json();
+        rightRail = await rightRailResponse.json();
+        story = await storyResponse.json();
+      } catch (error) {
+        console.error('Error fetching game data:', error);
+        setPageError({ message: 'Failed to load the game data. Please try again later.', error });
+      }
+  
+      // Extract relevant parts of the game data
+      const { homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup } = game || {};
+      setGameData({ homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup, game, rightRail, story });
+      setGameState(game.gameState);
+    };
+  
     // Initial fetch on page load
     fetchGameData();
-
-    if (!['PRE', 'LIVE', 'CRIT'].includes(gameState)) {
-      return;
+  
+    // Only set up polling if the game is in progress (LIVE, PRE, CRIT)
+    if (['PRE', 'LIVE', 'CRIT'].includes(gameState)) {
+      intervalId = setInterval(() => {
+        fetchGameData();
+      }, 20000); // 20 seconds polling interval
     }
-
-    // Set up polling every 30 seconds to update game data
-    const intervalId = setInterval(() => {
-      fetchGameData();
-    }, 20000); // 20 seconds polling interval
-
-    // Cleanup the interval when component unmounts
+  
+    // Cleanup the interval when component unmounts or gameState changes
     return () => clearInterval(intervalId);
-  }, [ id, gameState ]); // Only re-run the effect if the `id` changes
+  }, [ id, gameState ]); // Only depend on 'id' to avoid the infinite loop
 
   // Error handling component
   const handleError = () => {
@@ -100,7 +99,7 @@ const GamePage = ({ params }) => {
     }
     
     return (
-      <PageError pageError={pageError} handleRetry={fetchGameData} />
+      <PageError pageError={pageError} handleRetry={() => {}} />
     );
   };
 
@@ -161,7 +160,7 @@ const GamePage = ({ params }) => {
                     <h4 className="font-semibold">{PERIOD_DESCRIPTORS[period.periodDescriptor.number] || period.periodDescriptor.number}</h4>
                     {period.periodDescriptor.periodType === 'SO' ? (
                       <>
-                        {game.summary?.shootout.length == 0 && (
+                        {game.summary?.shootout.length === 0 && (
                           <p className="text-slate-500">No shots taken.</p>
                         )}
                         {game.summary?.shootout.map((shot) => (
@@ -229,13 +228,13 @@ const GamePage = ({ params }) => {
                                 {goal.strength !== 'ev' && (
                                   <span className="rounded text-xs ml-2 text-white bg-red-900 p-1 uppercase">{goal.strength}G</span>
                                 )}
-                                {goal.goalModifier == 'empty-net' && (
+                                {goal.goalModifier === 'empty-net' && (
                                   <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Empty Net">EN</span>
                                 )}
-                                {goal.goalModifier == 'penalty-shot' && (
+                                {goal.goalModifier === 'penalty-shot' && (
                                   <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Penalty Shot">PS</span>
                                 )}
-                                {goal.goalModifier == 'own-goal' && (
+                                {goal.goalModifier === 'own-goal' && (
                                   <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Own Goal">OG</span>
                                 )}
                                 <br />
@@ -376,7 +375,7 @@ const GamePage = ({ params }) => {
                           <h4 className="font-semibold">
                             <Link href={`/player/${p.playerId}`}>{p.name.default}</Link></h4>
                           <p className="text-sm">#{p.sweaterNo} • {p.teamAbbrev} • {p.position}</p>
-                          {Object(p).hasOwnProperty('goals') ? (
+                          {Object.prototype.hasOwnProperty.call(p, 'goals') ? (
                             <p className="text-sm">G: {p.goals} | A: {p.assists} | P: {p.points}</p>
                           ) : (
                             <p className="text-sm">GAA: {p.goalsAgainstAverage} | SV%: {p.savePctg}</p>
@@ -526,6 +525,10 @@ const GamePage = ({ params }) => {
       </div>
     </div>
   );
+};
+
+GamePage.propTypes = {
+  params: PropTypes.object.isRequired,
 };
 
 export default GamePage;

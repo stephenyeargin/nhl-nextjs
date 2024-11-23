@@ -5,6 +5,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import MainNav from './components/MainNav';
 import './globals.css';
 import TopBarSchedule from './components/TopBarSchedule';
+import PropTypes from 'prop-types';
 
 config.autoAddCss = false;
 
@@ -39,3 +40,7 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+RootLayout.propTypes = {
+  children: PropTypes.node.isRequired
+};

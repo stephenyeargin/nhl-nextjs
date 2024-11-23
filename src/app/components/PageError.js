@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 
 const PageError = ({handleRetry, pageError}) => {
   return (
@@ -12,6 +13,13 @@ const PageError = ({handleRetry, pageError}) => {
       </button>
     </div>
   );
+};
+
+PageError.displayName = 'PageError';
+
+PageError.propTypes = {
+  handleRetry: PropTypes.func.isRequired,
+  pageError: PropTypes.object.isRequired,
 };
 
 export default PageError;

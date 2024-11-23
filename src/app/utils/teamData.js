@@ -189,7 +189,7 @@ const teamData = [
     'name': 'Winnipeg Jets',
     'hashtag': 'GoJetsGo',
     'abbreviation': 'WPG',
-    'teamColor': '#C8102E'
+    'teamColor': '#041E42'
   }
 ];
 

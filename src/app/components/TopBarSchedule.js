@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
@@ -11,6 +10,7 @@ import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { PERIOD_DESCRIPTORS } from '../utils/constants';
 import { formatGameTime } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
+import { PropTypes } from 'prop-types';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -202,7 +202,7 @@ const TopBarSchedule = ({ gameDate }) => {
         <div className="overflow-x-auto scrollbar-hidden">
           <div className="flex text-sm py-4">
             {[0,1,2,3,4,5,6].map((i) => (
-              <div key={i} className={i == 3 ? 'active rounded-xl bg-slate-500 mx-3' : 'active rounded-xl bg-slate-100 mx-3'}>
+              <div key={i} className={i === 3 ? 'active rounded-xl bg-slate-500 mx-3' : 'active rounded-xl bg-slate-100 mx-3'}>
                 <div className="px-4">&nbsp;</div>
               </div>
             ))}
@@ -232,6 +232,10 @@ const TopBarSchedule = ({ gameDate }) => {
       )}
     </div>
   );
+};
+
+TopBarSchedule.propTypes = {
+  gameDate: PropTypes.string,
 };
 
 export default TopBarSchedule;

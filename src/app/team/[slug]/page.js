@@ -41,7 +41,7 @@ export default async function SchedulePage({ params }) {
       <h1 className="text-3xl font-bold mb-6">Team Stats</h1>
       <div className="mb-5">
         <div className="font-bold my-2">Forwards</div>
-        <StatsTable stats={teamStats.skaters.filter((t) => t.positionCode !== 'D')} teamColor={team.teamColor}/>
+        <StatsTable stats={teamStats.skaters.filter((t) => t.positionCode !== 'D')} teamColor={team.teamColor} />
         <div className="font-bold my-2">Defensemen</div>
         <StatsTable stats={teamStats.skaters.filter((t) => t.positionCode === 'D')} teamColor={team.teamColor} />
         <div className="font-bold my-2">Goalies</div>

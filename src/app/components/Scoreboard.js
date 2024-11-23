@@ -4,6 +4,8 @@ import { PERIOD_DESCRIPTORS } from '../utils/constants';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList, faTable } from '@fortawesome/free-solid-svg-icons';
+import { PropTypes } from 'prop-types';
+import TeamLogo from './TeamLogo';
 
 const Scoreboard = ({ game, linescore }) => {
   // Assuming game has a total period count, if not, adjust accordingly
@@ -42,7 +44,11 @@ const Scoreboard = ({ game, linescore }) => {
         <tr>
           <td className="p-2 text-center border p-2">
             <div className="flex items-center">
-              <img src={game.awayTeam.logo} className="w-10 mr-1" />
+              <TeamLogo
+                src={game.awayTeam.logo}
+                className="w-10 mr-1"
+                alt="Logo"
+              />
               <span className="font-bold">{game.awayTeam.abbrev}</span>
             </div>
           </td>
@@ -63,7 +69,11 @@ const Scoreboard = ({ game, linescore }) => {
         <tr>
           <td className="p-2 text-center border p-2">
             <div className="flex items-center">
-              <img src={game.homeTeam.logo} className="w-10 mr-1" />
+              <TeamLogo
+                src={game.homeTeam.logo}
+                className="w-10 mr-1"
+                alt="Logo"
+              />
               <span className="font-bold">{game.homeTeam.abbrev}</span>
             </div>
           </td>
@@ -94,6 +104,11 @@ const Scoreboard = ({ game, linescore }) => {
       </caption>
     </table>
   );
+};
+
+Scoreboard.propTypes = {
+  game: PropTypes.object.isRequired,
+  linescore: PropTypes.object.isRequired,
 };
 
 export default Scoreboard;

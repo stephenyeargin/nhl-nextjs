@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Headshot from './Headshot';
 import GameClock from './GameClock';
+import { PropTypes } from 'prop-types';
 
 export const Skater = ({ player, game, isHomeTeam }) => {
 
@@ -40,7 +41,12 @@ export const Skater = ({ player, game, isHomeTeam }) => {
           <span className="ml-1 border rounded p-1 text-xs"><GameClock timeRemaining={time} running={game.clock.running} /></span>
         )}
       </div>
-
     </div>
   );
+};
+
+Skater.propTypes = {
+  player: PropTypes.object.isRequired,
+  game: PropTypes.object,
+  isHomeTeam: PropTypes.bool
 };
