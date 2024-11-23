@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { formatStat } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
+import '@/app/components/StatsTable.css';
 
 const StandingsTable = ({ standings }) => {
   const tableRows = standings

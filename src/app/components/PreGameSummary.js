@@ -216,7 +216,7 @@ const PreGameSummary = ({ game }) => {
         <div className="font-bold my-2">Defensemen</div>
         <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position === 'D')} />
         <div className="font-bold my-2">Goalies</div>
-        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
+        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === awayTeam.id)} />
       </div>
 
       <div id="homeTeamStats" className={`${activeStatTeam === 'homeTeam' ? '' : 'hidden'} my-5`}>

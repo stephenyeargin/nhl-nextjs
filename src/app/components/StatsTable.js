@@ -7,8 +7,9 @@ import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
+
 import '@/app/assets/datatables.css';
- 
+
 const StatsTable = ({ stats, teamColor }) => {
   DataTable.use(DT);
 
@@ -27,6 +28,7 @@ const StatsTable = ({ stats, teamColor }) => {
   const statsAvailable = Object.keys(stats[0]);
 
   const statHeaders = [
+    { key: 'position', label: 'POS', title: 'Position', altKey: 'positionCode' },
     { key: 'gamesPlayed', label: 'GP', title: 'Games Played' },
     { key: 'goals', label: 'G', title: 'Goals Scored' },
     { key: 'assists', label: 'A', title: 'Assists' },
@@ -56,9 +58,8 @@ const StatsTable = ({ stats, teamColor }) => {
 
   const renderHeader = () => (
     <tr className="text-xs">
-      <th className={`p-2 border text-center ${headerColorClass}`} style={headerStyle} data-orderable="false">#</th>
+      <th className={`p-2 border text-center ${headerColorClass}`} style={headerStyle}>#</th>
       <th className={`p-2 border text-left ${headerColorClass}`} style={headerStyle}>Name</th>
-      <th className={`p-2 border text-center ${headerColorClass}`} style={headerStyle}>POS</th>
       {statHeaders.map(
         ({ key, label, title, altKey }) =>
           (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
@@ -72,7 +73,7 @@ const StatsTable = ({ stats, teamColor }) => {
 
   const renderRow = (skater, i) => (
     <tr key={skater.playerId} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
-      <td className="p-2 border text-center w-10">
+      <td className="p-2 border text-center w-10" data-order={skater?.sweaterNumber}>
         {skater.sweaterNumber ? (
           <Link href={`/player/${skater.playerId}`} className="font-bold">{skater.sweaterNumber}</Link>
         ) : (
@@ -85,12 +86,11 @@ const StatsTable = ({ stats, teamColor }) => {
           />
         )}
       </td>
-      <td className="p-2 border text-left text-nowrap">
+      <td className="p-2 border text-left text-nowrap" data-order={skater.lastName?.default || skater.name?.default}>
         <Link href={`/player/${skater.playerId}`} className="font-bold">
           {skater.name?.default ? skater.name.default : `${skater.firstName.default} ${skater.lastName.default}`}
         </Link>
       </td>
-      <td className="p-2 border text-center">{skater.position || skater.positionCode || 'G'}</td>
       {statHeaders.map(
         ({ key, altKey, precision }) =>
           (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
