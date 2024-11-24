@@ -223,7 +223,7 @@ const PlayByPlay = ({ params }) => {
               className="h-16 w-16 mr-4 hidden md:block"
             />
             <div className="leading-5">
-              <div className="font-medium text-lg mb-3">{renderPlayer(play.details.scoringPlayerId)} ({play.details.scoringPlayerTotal}) scored a goal on a {play.details.shotType} shot</div>
+              <div className="font-medium text-lg mb-3">{renderPlayer(play.details.scoringPlayerId)} ({play.details.scoringPlayerTotal}) scored a goal on a {play.details.shotType} shot to make it {play.details.awayScore}-{play.details.homeScore}</div>
               {(play.details.assist1PlayerId || play.details.assist2PlayerId) && (
                 <span>Assisted By: </span>
               )}

@@ -9,6 +9,7 @@ import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 
 import '@/app/assets/datatables.css';
+import '@/app/components/StatsTable.css';
 
 const StatsTable = ({ stats, teamColor }) => {
   DataTable.use(DT);
@@ -72,7 +73,7 @@ const StatsTable = ({ stats, teamColor }) => {
   );
 
   const renderRow = (skater, i) => (
-    <tr key={skater.playerId} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
+    <tr key={skater.playerId}>
       <td className="p-2 border text-center w-10" data-order={skater?.sweaterNumber}>
         {skater.sweaterNumber ? (
           <Link href={`/player/${skater.playerId}`} className="font-bold">{skater.sweaterNumber}</Link>

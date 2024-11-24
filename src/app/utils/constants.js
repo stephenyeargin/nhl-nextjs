@@ -322,6 +322,17 @@ export const GAME_EVENTS = {
   wrist: 'Wrist'
 };
 
+export const GOAL_MODIFIERS = {
+  'awarded': { label: 'AWD', title: 'Awarded Goal' },
+  'awarded-empty-net': { label: 'AWD, EN', title: 'Awared Goal (Empty Net)' },
+  'empty-net': { label: 'EN', title: 'Empty Net' },
+  'game-winning-goal': { label: 'GWG', title: 'Game Winning Goal' },
+  'none': { label: '', title: 'None' },
+  'own-goal': { label: 'OWN', title: 'Own Goal' },
+  'own-goal-empty-net': { label: 'OWN, EN', title: 'Own Goal (Empty Net)' },
+  'penalty-shot': { label: 'PS', title: 'Penalty Shot' }
+}
+
 export const STOPPAGE_DESCRIPTIONS = {
 
 };

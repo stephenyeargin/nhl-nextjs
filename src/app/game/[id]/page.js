@@ -14,7 +14,7 @@ import RadioLink from '@/app/components/RadioLink.js';
 import GameHeader from '@/app/components/GameHeader.js';
 import PreGameSummary from '@/app/components/PreGameSummary';
 import IceSurface from '@/app/components/IceSurface';
-import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES, SHOOTOUT_RESULT } from '@/app/utils/constants';
+import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
 import { formatBroadcasts, formatGameTime, formatSeriesStatus, formatStatValue } from '@/app/utils/formatters';
 import Scoreboard from '@/app/components/Scoreboard';
 import PageError from '@/app/components/PageError';
@@ -228,14 +228,8 @@ const GamePage = ({ params }) => {
                                 {goal.strength !== 'ev' && (
                                   <span className="rounded text-xs ml-2 text-white bg-red-900 p-1 uppercase">{goal.strength}G</span>
                                 )}
-                                {goal.goalModifier === 'empty-net' && (
-                                  <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Empty Net">EN</span>
-                                )}
-                                {goal.goalModifier === 'penalty-shot' && (
-                                  <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Penalty Shot">PS</span>
-                                )}
-                                {goal.goalModifier === 'own-goal' && (
-                                  <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title="Own Goal">OG</span>
+                                {goal.goalModifier !== 'none' && (
+                                  <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title={GOAL_MODIFIERS[goal.goalModifier]?.title}>{GOAL_MODIFIERS[goal.goalModifier]?.label}</span>
                                 )}
                                 <br />
                                 <div className="flex items-center">

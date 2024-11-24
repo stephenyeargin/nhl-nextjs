@@ -1,3 +1,8 @@
-td.sorting_1 {
-    background: navy;
+.dataTable td.sorting_1 {
+    background-color: lightblue;
+    color: black;
+}
+
+.dataTable tr:nth-child(even) {
+    background-color: rgba(100, 100, 100, .1);
 }
