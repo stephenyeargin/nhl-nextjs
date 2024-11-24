@@ -10,11 +10,18 @@ import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
 import Image from 'next/image';
+import { useGameContext } from '../contexts/GameContext';
 
-const GameHeader = ({ game }) => {
+const GameHeader = () => {
   const [isSticky, setIsSticky] = useState(false);
   const stickyRef = useRef(null);
+
+  const { gameData } = useGameContext();
   
+  // Destructure data for rendering
+  const { game } = gameData;
+  const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
+
   useEffect(() => {
     const handleScroll = () => {
       if (stickyRef.current) {
@@ -29,7 +36,6 @@ const GameHeader = ({ game }) => {
     };
   }, []);
 
-  const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
 
   let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';
   if (isSticky) {

@@ -7,7 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "lint:fix": "next lint --fix",
+    "test": "echo 'TODO'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint:fix",
+      "pre-push": "npm test"
+    }
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.0",
@@ -27,6 +34,7 @@
     "eslint-config-next": "^15.0.3",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
+    "husky": "^9.1.7",
     "postcss": "^8",
     "tailwindcss": "^3.4.15"
   }

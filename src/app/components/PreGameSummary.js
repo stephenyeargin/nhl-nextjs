@@ -1,3 +1,5 @@
+'use-client';
+
 import React, { useState } from 'react';
 import { STAT_CONTEXT, PLAYER_STATS } from '../utils/constants';
 import Headshot from './Headshot';

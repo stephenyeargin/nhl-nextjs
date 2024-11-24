@@ -1,96 +1,36 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 import Link from 'next/link.js';
 import utc from 'dayjs/plugin/utc';
 import PropTypes from 'prop-types';
 import { notFound } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faCheckCircle, faHockeyPuck, faPlayCircle, faRadio, faTelevision, faTrophy, faWarning, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faHockeyPuck, faPlayCircle, faRadio, faTelevision, faTrophy, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+import { useGameContext } from '@/app/contexts/GameContext.js';
 import GameSkeleton from '@/app/components/GameSkeleton.js';
 import Headshot from '@/app/components/Headshot';
 import RadioLink from '@/app/components/RadioLink.js';
 import GameHeader from '@/app/components/GameHeader.js';
 import PreGameSummary from '@/app/components/PreGameSummary';
 import IceSurface from '@/app/components/IceSurface';
-import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, TEAM_STATS, GAME_STATES, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
-import { formatBroadcasts, formatGameTime, formatSeriesStatus, formatStatValue } from '@/app/utils/formatters';
-import Scoreboard from '@/app/components/Scoreboard';
+import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
+import { formatBroadcasts } from '@/app/utils/formatters';
 import PageError from '@/app/components/PageError';
 import TeamLogo from '@/app/components/TeamLogo';
+import GameSidebar from '@/app/components/GameSidebar';
 
 dayjs.extend(utc);
 
-const gameIsInProgress = (game) => {
-  switch (GAME_STATES[game.gameState]) {
-  case GAME_STATES.PRE:
-  case GAME_STATES.LIVE:
-  case GAME_STATES.CRIT:
-    return true;
-  default:
-    return false;
+const GamePage = () => {
+  const { gameData, pageError } = useGameContext();
+
+  if (!gameData) {
+    return <GameSkeleton />;
   }
-};
 
-const GamePage = ({ params }) => {
-  const { id } = React.use(params);
   const logos = {};
-
-  // Initial state for the game data
-  const [gameData, setGameData] = useState(null);
-  const [gameState, setGameState] = useState(null);
-  const [pageError, setPageError] = useState(null);
-
-  // Use `useEffect` to run once on initial render and set up polling
-  useEffect(() => {
-    let intervalId; // Declare the intervalId variable here for cleanup
-  
-    const fetchGameData = async () => {
-      let game, rightRail, story;
-  
-      try {
-        const gameResponse = await fetch(`/api/nhl/gamecenter/${id}/landing`, { cache: 'no-store' });
-        const rightRailResponse = await fetch(`/api/nhl/gamecenter/${id}/right-rail`, { cache: 'no-store' });
-        const storyResponse = await fetch(`/api/nhl/wsc/game-story/${id}`, { cache: 'no-store' });
-  
-        if (!gameResponse.ok) {
-          throw new Error(`Game data fetch failed: ${gameResponse.status}`);
-        }
-        if (!rightRailResponse.ok) {
-          throw new Error(`Right Rail data fetch failed: ${rightRailResponse.status}`);
-        }
-        if (!storyResponse.ok) {
-          throw new Error(`Story data fetch failed: ${storyResponse.status}`);
-        }
-  
-        game = await gameResponse.json();
-        rightRail = await rightRailResponse.json();
-        story = await storyResponse.json();
-      } catch (error) {
-        console.error('Error fetching game data:', error);
-        setPageError({ message: 'Failed to load the game data. Please try again later.', error });
-      }
-  
-      // Extract relevant parts of the game data
-      const { homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup } = game || {};
-      setGameData({ homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup, game, rightRail, story });
-      setGameState(game.gameState);
-    };
-  
-    // Initial fetch on page load
-    fetchGameData();
-  
-    // Only set up polling if the game is in progress (LIVE, PRE, CRIT)
-    if (['PRE', 'LIVE', 'CRIT'].includes(gameState)) {
-      intervalId = setInterval(() => {
-        fetchGameData();
-      }, 20000); // 20 seconds polling interval
-    }
-  
-    // Cleanup the interval when component unmounts or gameState changes
-    return () => clearInterval(intervalId);
-  }, [ id, gameState ]); // Only depend on 'id' to avoid the infinite loop
 
   // Error handling component
   const handleError = () => {
@@ -108,13 +48,8 @@ const GamePage = ({ params }) => {
     return handleError();
   }
 
-  // If game data is loading, show loading indicator
-  if (!gameData) {
-    return <GameSkeleton />;
-  }
-
   // Destructure data for rendering
-  const { homeTeam, awayTeam, summary, matchup, game, rightRail, story } = gameData;
+  const { homeTeam, awayTeam, summary, matchup, game } = gameData;
 
   // Update logo map
   logos[homeTeam.abbrev] = homeTeam.logo;
@@ -384,137 +319,7 @@ const GamePage = ({ params }) => {
           )}
         </div>
         <div className="col-span-4 md:col-span-1">
-          {rightRail.linescore && (
-            <div className="mb-5">
-              <Scoreboard game={game} linescore={rightRail.linescore} />
-            </div>
-          )}
-          {rightRail.shotsByPeriod && (
-            <div className="mb-5">
-              <div className="flex text-center items-center">
-                <div className="w-1/4 p-2 text-bold flex justify-center">
-                  <TeamLogo
-                    src={logos[awayTeam.abbrev]}
-                    alt={awayTeam.abbrev}
-                    className="h-12 w-12"
-                  />
-                </div>
-                <div className="w-1/2 p-2 text-2xl font-bold">Shots</div>
-                <div className="w-1/4 p-2 text-bold flex justify-center">
-                  <TeamLogo
-                    src={logos[homeTeam.abbrev]}
-                    alt={homeTeam.abbrev}
-                    className="h-12 w-12"
-                  />
-                </div>
-              </div>
-              {rightRail.shotsByPeriod.map((period, index) => (
-                <div key={index} className={`flex text-center ${index % 2 ? '' : 'bg-slate-500/10'}`}>
-                  <div className="w-1/4 p-2">{period.away}</div>
-                  <div className="w-1/2 p-3 text-xs">{PERIOD_DESCRIPTORS[period.periodDescriptor.number]}</div>
-                  <div className="w-1/4 p-2">{period.home}</div>
-                </div>
-              ))}
-            </div>
-          )}
-          {story.summary?.teamGameStats && (
-            <div className="mb-5">
-              <div>
-                <div className="flex text-center items-center justify-between">
-                  <div className="w-1/4 p-2 text-bold flex justify-center">
-                    <TeamLogo
-                      src={logos[awayTeam.abbrev]}
-                      alt={awayTeam.abbrev}
-                      className="h-12 w-12"
-                    />
-                  </div>
-                  <div className="w-1/2 p-2 text-2xl font-bold">Game Stats</div>
-                  <div className="w-1/4 p-2 text-bold flex justify-center">
-                    <TeamLogo
-                      src={logos[homeTeam.abbrev]}
-                      alt={homeTeam.abbrev}
-                      className="h-12 w-12"
-                    />
-                  </div>
-                </div>
-                {story.summary?.teamGameStats.map((stat, statIndex) => (
-                  <div key={stat.category} className={`flex text-center item-center ${statIndex % 2 ? '' : 'bg-slate-500/10'}`}>
-                    <div className="w-1/4 p-2 text-bold">{formatStatValue(stat.category, stat.awayValue)}</div>
-                    <div className="w-1/2 p-3 text-xs">{TEAM_STATS[stat.category] || stat.category}</div>
-                    <div className="w-1/4 p-2 text-bold">{formatStatValue(stat.category, stat.homeValue)}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {rightRail.seasonSeries && (
-            <div className="mb-5">
-              <div className="p-2 text-2xl font-bold text-center">Season Series</div>
-              <div className="text-center text-xs">
-                {formatSeriesStatus(game, rightRail)}
-              </div>
-              <div className="grid grid-cols-12 gap-3 py-4 items-center">
-                {rightRail.seasonSeries.map((g, i) => (
-                  <Link href={`/game/${g.id}`} key={i} className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded ${g.gameState === 'CRIT' ? 'border-red-500' : ''}`}>
-                    <div className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}>
-                      <div className="flex items-center font-bold gap-1">
-                        <TeamLogo
-                          src={g.awayTeam.logo}
-                          alt="Logo"
-                          className="w-8 h-8"
-                        />
-                        {g.awayTeam.abbrev}
-                      </div>
-                      <div className="text-lg font-bold">{g.awayTeam.score}</div>
-                    </div>
-                    <div className={`flex justify-between ${g.awayTeam.score > g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}>
-                      <div className="flex items-center font-bold gap-1">
-                        <TeamLogo
-                          src={g.homeTeam.logo}
-                          alt="Logo"
-                          className="w-8 h-8"
-                        />
-                        {g.homeTeam.abbrev}
-                      </div>
-                      <div className="text-lg font-bold">{g.homeTeam.score}</div>
-                    </div>
-                    {!['OFF', 'FUT', 'FINAL', 'PRE'].includes(g.gameState) ? (
-                      <div className="flex justify-between">
-                        <div>
-                          <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-1 uppercase">
-                            {PERIOD_DESCRIPTORS[g.periodDescriptor?.number]}
-                            {g.clock?.inIntermission ? ' INT' : ''}
-                          </span>
-                          <span className="text-xs font-bold">{g.clock?.timeRemaining}</span>
-                        </div>
-                        <div className="text-xs py-1 text-right">{dayjs(g.startTimeUTC).format('MMM D')}</div>
-                      </div>
-                    ) : (
-                      <div className="flex justify-between">
-                        <div>
-                          {(['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
-                            <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"> Final</span>
-                          )}
-                          {(['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
-                            <span className="text-xs py-1">{formatGameTime(game.startTimeUTC)}</span>
-                          )}
-                          {g.gameScheduleState === 'CNCL' && (
-                            <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
-                          )}
-                          {g.gameScheduleState === 'PPD' && (
-                            <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
-                          )}
-                        </div>
-                        <div>
-                          <span className="text-xs py-1">{dayjs(g.startTimeUTC).format('MMM D')}</span>
-                        </div>
-                      </div>
-                    )}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+          <GameSidebar />
         </div>
       </div>
     </div>

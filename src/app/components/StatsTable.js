@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { formatStat, formatTextColorByBackgroundColor } from '../utils/formatters';
 import Headshot from './Headshot';
@@ -72,7 +70,7 @@ const StatsTable = ({ stats, teamColor }) => {
     </tr>
   );
 
-  const renderRow = (skater, i) => (
+  const renderRow = (skater) => (
     <tr key={skater.playerId}>
       <td className="p-2 border text-center w-10" data-order={skater?.sweaterNumber}>
         {skater.sweaterNumber ? (

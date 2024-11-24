@@ -7,6 +7,12 @@ const Headshot = ({ src, alt, className, size, playerId }) => {
 
   className += ' rounded-full bg-gradient-to-tr from-gray-500 via-gray-300 to-gray-100';
 
+  if (!src) {
+    return (
+      <div className={className} />
+    );
+  }
+
   const image = (
     <Image
       src={src}

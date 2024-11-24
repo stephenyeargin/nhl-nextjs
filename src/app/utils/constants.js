@@ -331,7 +331,7 @@ export const GOAL_MODIFIERS = {
   'own-goal': { label: 'OWN', title: 'Own Goal' },
   'own-goal-empty-net': { label: 'OWN, EN', title: 'Own Goal (Empty Net)' },
   'penalty-shot': { label: 'PS', title: 'Penalty Shot' }
-}
+};
 
 export const STOPPAGE_DESCRIPTIONS = {
 

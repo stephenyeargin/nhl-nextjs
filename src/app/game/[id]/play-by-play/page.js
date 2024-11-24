@@ -6,7 +6,6 @@ import Link from 'next/link.js';
 import utc from 'dayjs/plugin/utc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle} from '@fortawesome/free-solid-svg-icons';
-import GameSkeleton from '@/app/components/GameSkeleton.js';
 import GameHeader from '@/app/components/GameHeader.js';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
@@ -17,48 +16,45 @@ import Image from 'next/image';
 import Headshot from '@/app/components/Headshot';
 import { PropTypes } from 'prop-types';
 import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
+import { useGameContext } from '@/app/contexts/GameContext';
+import GameSkeleton from '@/app/components/GameSkeleton';
+import GameSidebar from '@/app/components/GameSidebar';
 
 dayjs.extend(utc);
 
 const PlayByPlay = ({ params }) => {
+  const { gameData } = useGameContext();
+
   const { id } = use(params);
   const logos = {};
 
   // Initial state for the game data
-  const [gameData, setGameData] = useState(null);
-  const [gameState, setGameState] = useState(null);
+  const [playByPlay, setPlayByPlay] = useState(null);
   const [activePeriod, setActivePeriod] = useState(null);
 
   // Use `useEffect` to run once on initial render and set up polling
   useEffect(() => {
+    let playByPlayData;
     // Function to fetch the live game data
     const fetchGameData = async () => {
-      let game, playByPlay;
-
       try {
-        const gameResponse = await fetch(`/api/nhl/gamecenter/${id}/landing`, { cache: 'no-store' });
         const playByPlayResponse = await fetch(`/api/nhl/gamecenter/${id}/play-by-play`, { cache: 'no-store' });
+        const playByPlayData = await playByPlayResponse.json();
 
-        game = await gameResponse.json();
-        playByPlay = await playByPlayResponse.json();
+        setPlayByPlay(playByPlayData);
+        setActivePeriod(playByPlayData.periodDescriptor?.number);
       } catch (error) {
         console.error('Error fetching game data:', error);
 
         return;
       }
-
-      // Extract relevant parts of the game data
-      const { homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup } = game;
-      setGameData({ homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup, game, playByPlay });
-      setActivePeriod(game.periodDescriptor?.number);
-      setGameState(game.gameState);
     };
 
     // Initial fetch on page load
     fetchGameData();
 
     // Only set up polling if gameState is one of the following values: 'PRE', 'LIVE', 'CRIT'
-    if (['PRE', 'LIVE', 'CRIT'].includes(gameState)) {
+    if (playByPlayData && ['PRE', 'LIVE', 'CRIT'].includes(playByPlayData.gameState)) {
       const intervalId = setInterval(() => {
         fetchGameData();
       }, 20000); // 20 seconds polling interval
@@ -66,23 +62,18 @@ const PlayByPlay = ({ params }) => {
       // Cleanup the interval when component unmounts or gameState changes
       return () => clearInterval(intervalId);
     }
-  }, [ gameState, id ]);
+  }, [ id ]);
 
-  // If game data is loading, show loading indicator
-  if (!gameData) {
+  // If no boxscore available, redirect back up
+  if (!gameData || !playByPlay) {
     return <GameSkeleton />;
   }
 
   // Destructure data for rendering
-  const { homeTeam, awayTeam, game, playByPlay } = gameData;
+  const { homeTeam, awayTeam, game } = gameData;
 
-  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev) || {};
-  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev) || {};
-
-  // If no boxscore available, redirect back up
-  if (!playByPlay.plays) {
-    return window.location.href = `/game/${id}`;
-  }
+  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev) || {};
+  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev) || {};
 
   // Update logo map
   logos[homeTeam.abbrev] = homeTeam.logo;
@@ -207,23 +198,16 @@ const PlayByPlay = ({ params }) => {
       );
     case 'goal':
       return (
-        <div className="p-1 flex justify-between items-center">
-          <div className="flex items-center">
-            <Image
-              src={SirenOnSVG}
-              className="h-6 w-6 mr-4 hidden md:block"
-              height={250}
-              width={250}
-              alt="Goal Icon"
-            />
+        <div className="p-2 gap-4 rounded-lg flex justify-between items-center bg-red-900/80 text-white">
+          <div className="flex gap-4 items-center">
             <Headshot
               playerId={play.details.scoringPlayerId}
               src={(lookupPlayerData(play.details.scoringPlayerId)).headshot}
               alt="Player Headshot"
-              className="h-16 w-16 mr-4 hidden md:block"
+              className="h-16 w-16 hidden md:block"
             />
-            <div className="leading-5">
-              <div className="font-medium text-lg mb-3">{renderPlayer(play.details.scoringPlayerId)} ({play.details.scoringPlayerTotal}) scored a goal on a {play.details.shotType} shot to make it {play.details.awayScore}-{play.details.homeScore}</div>
+            <div className="">
+              <div className="font-medium text-lg mb-3">{renderPlayer(play.details.scoringPlayerId)} ({play.details.scoringPlayerTotal}) scored</div>
               {(play.details.assist1PlayerId || play.details.assist2PlayerId) && (
                 <span>Assisted By: </span>
               )}
@@ -238,6 +222,9 @@ const PlayByPlay = ({ params }) => {
               )}
             </div>
           </div>
+          <div>
+            {play.details.awayScore}-{play.details.homeScore}
+          </div>
           {play.details?.highlightClipSharingUrl && (
             <div className="text-center text-white">
               <Link href={play.details?.highlightClipSharingUrl} rel="noopener noreferrer">
@@ -250,35 +237,33 @@ const PlayByPlay = ({ params }) => {
       );
     case 'penalty':
       return (
-        <div className="">
-          <div className="flex gap-4 items-center">
-            <Headshot
-              playerId={play.details.committedByPlayerId}
-              src={(lookupPlayerData(play.details.committedByPlayerId)).headshot}
-              alt="Player Headshot"
-              className="h-16 w-16 hidden md:block"
-            />
-            <div className="w-1/3">
-              {play.details.committedByPlayerId ? (
-                <div className="font-medium text-lg mb-3">{renderPlayer(play.details.committedByPlayerId)}</div>
-              ) : (
-                <div className="font-medium text-lg mb-3">Team Penalty</div>
-              )}
-              {play.details.servedByPlayerId && (
-                <div className="text-xs">Served by: {renderPlayer(play.details.servedByPlayerId)}</div>
-              )}
-              {play.details.drawnByPlayerId && (
-                <div className="text-xs">Drawn By: {renderPlayer(play.details.drawnByPlayerId)}</div>
-              )}
-            </div>
-            <div className="w-1/3">
-              <div className="text-xs font-light text-slate-600">Duration</div>
-              <div>{play.details.duration} minutes</div>
-            </div>
-            <div className="w-1/3">
-              <div className="text-xs font-light text-slate-600">{PENALTY_TYPES[play.details.typeCode]}</div>
-              <div>{PENALTY_DESCRIPTIONS[play.details.descKey]}</div>
-            </div>
+        <div className="p-2 gap-4 rounded-lg flex justify items-center bg-slate-900/80 text-white">
+          <Headshot
+            playerId={play.details.committedByPlayerId}
+            src={(lookupPlayerData(play.details.committedByPlayerId)).headshot}
+            alt="Player Headshot"
+            className="h-16 w-16 hidden md:block"
+          />
+          <div className="w-1/4">
+            {play.details.committedByPlayerId ? (
+              <div className="font-medium text-lg mb-3">{renderPlayer(play.details.committedByPlayerId)}</div>
+            ) : (
+              <div className="font-medium text-lg mb-3">Team Penalty</div>
+            )}
+            {play.details.servedByPlayerId && (
+              <div className="text-xs">Served by: {renderPlayer(play.details.servedByPlayerId)}</div>
+            )}
+            {play.details.drawnByPlayerId && (
+              <div className="text-xs">Drawn By: {renderPlayer(play.details.drawnByPlayerId)}</div>
+            )}
+          </div>
+          <div className="w-1/4">
+            <div className="text-xs font-light">Duration</div>
+            <div>{play.details.duration} minutes</div>
+          </div>
+          <div className="w-1/4">
+            <div className="text-xs font-light">{PENALTY_TYPES[play.details.typeCode]}</div>
+            <div>{PENALTY_DESCRIPTIONS[play.details.descKey]}</div>
           </div>
         </div>
       );
@@ -311,59 +296,67 @@ const PlayByPlay = ({ params }) => {
 
   return (
     <div className="container mx-auto">
-      <GameHeader game={game} />
+      <GameHeader />
 
       <GameSubPageNavigation game={game} />
 
-      <div className="flex justify-center my-5">
-        <PeriodSelector periodsPlayed={game.periodDescriptor?.number} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} />
-      </div>
+      <div className="grid grid-cols-4 gap-10">
+        <div className="col-span-4 md:col-span-3">
+          <div className="flex justify-center my-5">
+            <PeriodSelector periodsPlayed={game.periodDescriptor?.number} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} />
+          </div>
 
-      <div className="overflow-x-auto">
-        <table className="text-xs min-w-full table-auto">
-          <thead>
-            <tr className="hidden">
-              <th className="p-2 border text-center">Time</th>
-              <th className="p-2 border text-center">Event Type</th>
-              <th className="p-2 border text-center">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedPlays.map((play) => {
-              let eventRowStyle = '';
-              switch(play.typeDescKey) {
-              case 'goal':
-                eventRowStyle = 'bg-red-900/80 text-white';
-                break;
-              case 'penalty':
-                eventRowStyle = 'bg-gray-900/80 text-white';
-                break;
-              }
-              
-              return(
-                <tr key={play.eventId} className={eventRowStyle}>
-                  <td className="p-2 text-center">
-                    <span className="m-1 border rounded p-1 font-bold text-xs">{play.timeRemaining}</span>
-                    <div className="p-2">{PERIOD_DESCRIPTORS[play.periodDescriptor.number]}</div>
-                  </td>
-                  <td className="p-2 flex flex-wrap gap-2 items-center">
-                    <div className="w-10 h-10">
-                      {play.details?.eventOwnerTeamId && renderTeamLogo(play.details?.eventOwnerTeamId)}
-                    </div>
-                    <div>
-                      <span className="hidden md:block p-1 border rounded font-bold text-xs uppercase">
-                        {GAME_EVENTS[play.typeDescKey]}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="p-2 text-sm">
-                    {renderPlayByPlayEvent(play, game)}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="text-xs min-w-full table-auto">
+              <thead>
+                <tr className="hidden">
+                  <th className="p-2 border text-center">Time</th>
+                  <th className="p-2 border text-center">Event Type</th>
+                  <th className="p-2 border text-center">Details</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {sortedPlays.map((play) => {
+                  return(
+                    <tr key={play.eventId}>
+                      <td className="p-2 text-center">
+                        <span className="m-1 border rounded p-1 font-bold text-xs">{play.timeRemaining}</span>
+                        <div className="p-2">{PERIOD_DESCRIPTORS[play.periodDescriptor.number]}</div>
+                      </td>
+                      <td className="p-2 flex flex-wrap gap-2 items-center">
+                        <div className="w-10 h-10">
+                          {play.details?.eventOwnerTeamId && renderTeamLogo(play.details?.eventOwnerTeamId)}
+                        </div>
+                        <div>
+                          <span className="hidden md:block p-1 border rounded font-bold text-xs uppercase">
+                            {GAME_EVENTS[play.typeDescKey]}
+                          </span>
+                          {play.typeDescKey === 'goal' && (
+                            <div>
+                              <Image
+                                src={SirenOnSVG}
+                                className="p-2 w-12 h-12 animate-pulse mx-auto"
+                                width={200}
+                                heigh={200}
+                                alt="Goal"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-2 text-sm">
+                        {renderPlayByPlayEvent(play, game)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="col-span-4 md:col-span-1">
+          <GameSidebar />
+        </div>
       </div>
     </div>
   );
