@@ -18,10 +18,6 @@ const GameHeader = () => {
 
   const { gameData } = useGameContext();
   
-  // Destructure data for rendering
-  const { game } = gameData;
-  const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
-
   useEffect(() => {
     const handleScroll = () => {
       if (stickyRef.current) {
@@ -35,6 +31,14 @@ const GameHeader = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  if (!gameData) { 
+    return <></>;
+  }
+
+  // Destructure data for rendering
+  const { game } = gameData;
+  const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
 
 
   let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';

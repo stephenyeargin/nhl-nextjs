@@ -43,7 +43,11 @@ export const formatGameTime = (timeString) => {
   });
 };
 
-export const formatStat = (value, precision) => {
+export const formatStat = (value, precision, unit) => {
+  if (unit === 'time') {
+    return formatSecondsToGameTime(value);
+  }
+
   if (precision) {
     if (!value || value === 0) {
       return '--';
@@ -66,6 +70,8 @@ export const formatStatValue = (stat, value) => {
   switch (stat) {
   case 'powerPlayPctg':
   case 'faceoffWinningPctg':
+  case 'ppPctg':
+  case 'pkPctg':
     return `${(value * 100).toFixed(1)}%`;
   default:
     return value;
@@ -77,6 +83,10 @@ export const formatSecondsToGameTime = (stat) => {
     return '--';
   }
 
+  if (typeof stat === 'string' && stat.includes(':')) {
+    return stat;
+  }
+  
   const minutes = Math.floor(stat / 60);
   const seconds = Math.round(stat % 60);
   

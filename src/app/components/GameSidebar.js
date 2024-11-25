@@ -25,6 +25,10 @@ const gameIsInProgress = (game) => {
 const GameSidebar = () => {
   const { gameData } = useGameContext();
 
+  if (!gameData) { 
+    return <></>;
+  }
+
   // Destructure data for rendering
   const { homeTeam, awayTeam, game, rightRail, story } = gameData;
 
@@ -99,6 +103,40 @@ const GameSidebar = () => {
               </div>
             ))}
           </div>
+        </div>
+      )}
+      {rightRail.teamSeasonStats !== undefined && (
+        <div className="mb-5">
+          <div className="flex text-center items-center justify-between">
+            <div className="w-1/4 p-2 text-bold flex justify-center">
+              <TeamLogo
+                src={logos[awayTeam.abbrev]}
+                alt={awayTeam.abbrev}
+                className="h-12 w-12"
+              />
+            </div>
+            <div className="w-1/2 p-2 text-2xl font-bold">Season Stats</div>
+            <div className="w-1/4 p-2 text-bold flex justify-center">
+              <TeamLogo
+                src={logos[homeTeam.abbrev]}
+                alt={homeTeam.abbrev}
+                className="h-12 w-12"
+              />
+            </div>
+          </div>
+          {Object.keys(TEAM_STATS).map((stat, statIndex) => {
+            if (rightRail.teamSeasonStats.awayTeam[stat] === undefined) {
+              return false;
+            }
+            
+            return (
+              <div key={stat} className={`flex text-center item-center ${statIndex % 2 ? '' : 'bg-slate-500/10'}`}>
+                <div className="w-1/4 p-2 text-bold">{formatStatValue(stat, rightRail.teamSeasonStats.awayTeam[stat])}</div>
+                <div className="w-1/2 p-3 text-xs">{TEAM_STATS[stat] || stat}</div>
+                <div className="w-1/4 p-2 text-bold">{formatStatValue(stat, rightRail.teamSeasonStats.homeTeam[stat])}</div>
+              </div>
+            );
+          })}
         </div>
       )}
       {rightRail.seasonSeries && (

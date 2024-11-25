@@ -1,0 +1,8 @@
+.statsTable td.sorting_1 {
+    background-color: lightblue;
+    color: black;
+}
+
+.statsTable tr:nth-child(even) {
+    background-color: rgba(128, 128, 128, .25);
+}

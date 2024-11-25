@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { formatStat } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
-import '@/app/components/StatsTable.css';
 
 const StandingsTable = ({ standings }) => {
   const tableRows = standings
@@ -22,27 +21,27 @@ const StandingsTable = ({ standings }) => {
   const wildcardRankings = ['1', '2', '3', '1', '2', '3', 'WC1', 'WC2', '', '', '', '', '', '', '', ''];
 
   return (
-    <table className="w-full table-auto border-collapse border">
+    <table className="w-full table-auto border-collapse border statsTable">
       <thead>
-        <tr className="">
-          <th className="text-sm w-10 text-center border bg-slate-200 dark:bg-slate-800 p-2"></th>
-          <th className="text-sm text-center border bg-slate-200 dark:bg-slate-800 p-2">Team</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">GP</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">W</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">L</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">OT</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">PTS</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">P%</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">RW</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">ROW</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">GF</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">GA</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">DIFF</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">HOME</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2 hidden md:table-cell">AWAY</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">S/O</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">L10</th>
-          <th className="text-sm w-15 text-center border bg-slate-200 dark:bg-slate-800 p-2">STRK</th>
+        <tr className="text-sm border bg-slate-200 dark:bg-slate-800">
+          <th className="p-2 w-10 text-center"></th>
+          <th className="p-2 text-center">Team</th>
+          <th className="p-2 w-15 text-center">GP</th>
+          <th className="p-2 w-15 text-center">W</th>
+          <th className="p-2 w-15 text-center">L</th>
+          <th className="p-2 w-15 text-center">OT</th>
+          <th className="p-2 w-15 text-center">PTS</th>
+          <th className="p-2 w-15 text-center">P%</th>
+          <th className="p-2 w-15 text-center hidden md:table-cell">RW</th>
+          <th className="p-2 w-15 text-center hidden md:table-cell">ROW</th>
+          <th className="p-2 w-15 text-center hidden md:table-cell">GF</th>
+          <th className="p-2 w-15 text-center hidden md:table-cell">GA</th>
+          <th className="p-2 w-15 text-center hidden md:table-cell">DIFF</th>
+          <th className="p-2 w-15 text-center hidden md:table-cell">HOME</th>
+          <th className="p-2 w-15 text-center hidden md:table-cell">AWAY</th>
+          <th className="p-2 w-15 text-center">S/O</th>
+          <th className="p-2 w-15 text-center">L10</th>
+          <th className="p-2 w-15 text-center">STRK</th>
         </tr>
       </thead>
       <tbody>

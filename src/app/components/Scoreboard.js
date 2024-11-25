@@ -1,9 +1,6 @@
 import React from 'react';
 
 import { PERIOD_DESCRIPTORS } from '../utils/constants';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faList, faTable } from '@fortawesome/free-solid-svg-icons';
 import { PropTypes } from 'prop-types';
 import TeamLogo from './TeamLogo';
 
@@ -92,16 +89,6 @@ const Scoreboard = ({ game, linescore }) => {
           </td>
         </tr>
       </tbody>
-      <caption className="caption-bottom my-2">
-        <ul className="flex gap-2">
-          <li>
-            <Link href={`/game/${game.id}/boxscore`} className="underline font-bold"><FontAwesomeIcon icon={faTable} fixedWidth className="mr-1" />Boxscore</Link>
-          </li>
-          <li>
-            <Link href={`/game/${game.id}/play-by-play`} className="underline font-bold"><FontAwesomeIcon icon={faList} fixedWidth className="mr-1" />Play-by-play</Link>
-          </li>
-        </ul>
-      </caption>
     </table>
   );
 };

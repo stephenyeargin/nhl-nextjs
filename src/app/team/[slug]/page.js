@@ -7,7 +7,8 @@ import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import { formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 
 export const metadata = {
-  title: 'Stats & Schedule',
+  title: 'Team Schedule & Stats',
+  description: 'View the schedule and stats for a team in the NHL.',
 };
 
 export default async function SchedulePage({ params }) {
@@ -20,7 +21,7 @@ export default async function SchedulePage({ params }) {
     </div>;
   }
 
-  metadata.title = `${team.name} Stats & Schedule`;
+  metadata.title = `${team.name} - Stats & Schedule`;
 
   const teamStatsResponse = await fetch(`https://api-web.nhle.com/v1/club-stats/${slug}/now`, { cache: 'no-store' });
   const scheduleResponse = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${slug}/now`, { cache: 'no-store' });

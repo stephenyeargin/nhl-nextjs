@@ -7,19 +7,18 @@ import utc from 'dayjs/plugin/utc';
 import PropTypes from 'prop-types';
 import { notFound } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faHockeyPuck, faPlayCircle, faRadio, faTelevision, faTrophy, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faPlayCircle, faTrophy, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import { useGameContext } from '@/app/contexts/GameContext.js';
 import GameSkeleton from '@/app/components/GameSkeleton.js';
 import Headshot from '@/app/components/Headshot';
-import RadioLink from '@/app/components/RadioLink.js';
 import GameHeader from '@/app/components/GameHeader.js';
 import PreGameSummary from '@/app/components/PreGameSummary';
 import IceSurface from '@/app/components/IceSurface';
 import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
-import { formatBroadcasts } from '@/app/utils/formatters';
 import PageError from '@/app/components/PageError';
 import TeamLogo from '@/app/components/TeamLogo';
 import GameSidebar from '@/app/components/GameSidebar';
+import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
 
 dayjs.extend(utc);
 
@@ -59,24 +58,7 @@ const GamePage = () => {
     <div className="container mx-auto">
       <GameHeader game={game} />
 
-      <div className="text-center my-3 text-xs font-bold">
-        <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
-        <Link href={`https://www.nhl.com/gamecenter/${game.id}`} className="underline">NHL.com GameCenter</Link>
-        {game.tvBroadcasts.length > 0 && (
-          <span className="ml-5">
-            <FontAwesomeIcon icon={faTelevision} fixedWidth className="mr-1" /> {formatBroadcasts(game.tvBroadcasts)}
-          </span>
-        )}
-        {game.homeTeam.radioLink && (
-          <span className="ml-5">
-            <FontAwesomeIcon icon={faRadio} fixedWidth className="mr-1" />
-            {' '}{' '}
-            <RadioLink m3u8Url={game.homeTeam.radioLink} label="Home" />
-            {' '}|{' '}
-            <RadioLink m3u8Url={game.awayTeam.radioLink} label="Away" />
-          </span>
-        )}
-      </div>
+      <GameSubPageNavigation game={game} />
       
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">

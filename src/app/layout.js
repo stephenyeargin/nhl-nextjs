@@ -20,11 +20,6 @@ const geistMono = localFont({
   weight: '100 900'
 });
 
-export const metadata = {
-  title: 'Gamecenter',
-  description: 'NHL Gamecenter clone in Next.js'
-};
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

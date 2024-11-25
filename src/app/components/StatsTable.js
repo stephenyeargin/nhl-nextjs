@@ -3,15 +3,11 @@ import { formatStat, formatTextColorByBackgroundColor } from '../utils/formatter
 import Headshot from './Headshot';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
-import DataTable from 'datatables.net-react';
-import DT from 'datatables.net-dt';
 
 import '@/app/assets/datatables.css';
-import '@/app/components/StatsTable.css';
+import '@/app/components/StatsTable.scss';
 
 const StatsTable = ({ stats, teamColor }) => {
-  DataTable.use(DT);
-
   if (!stats || stats.length === 0) {
     return null;
   }
@@ -24,7 +20,12 @@ const StatsTable = ({ stats, teamColor }) => {
     headerStyle = { backgroundColor: teamColor, color: formatTextColorByBackgroundColor(teamColor) };
   }
 
-  const statsAvailable = Object.keys(stats[0]);
+  // Get all possible stats in the set
+  const properties = new Set();
+  stats.forEach(player => {
+    Object.keys(player).forEach(key => properties.add(key));
+  });
+  const statsAvailable = Array.from(properties);
 
   const statHeaders = [
     { key: 'position', label: 'POS', title: 'Position', altKey: 'positionCode' },
@@ -52,7 +53,7 @@ const StatsTable = ({ stats, teamColor }) => {
     { key: 'savePctg', label: 'SV%', title: 'Save Percentage', altKey: 'savePercentage', precision: 3 },
     { key: 'goalsAgainstAvg', label: 'GAA', title: 'Goals Against Average', altKey: 'goalsAgainstAverage', precision: 3 },
     { key: 'shutouts', label: 'SO', title: 'Shutouts' },
-    { key: 'timeOnIce', label: 'TOI', title: 'Time On Ice', altKey: 'toi' }
+    { key: 'timeOnIce', label: 'TOI', title: 'Time On Ice', altKey: 'toi', unit: 'time' }
   ];
 
   const renderHeader = () => (
@@ -91,13 +92,13 @@ const StatsTable = ({ stats, teamColor }) => {
         </Link>
       </td>
       {statHeaders.map(
-        ({ key, altKey, precision }) =>
+        ({ key, altKey, precision, unit }) =>
           (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
             <td key={key} className="p-2 border text-center">
               {skater[key] !== undefined ? (
-                <>{formatStat(skater[key], precision)}</>
+                <>{formatStat(skater[key], precision, unit)}</>
               ) : (
-                <>{formatStat(skater[altKey], precision)}</>
+                <>{formatStat(skater[altKey], precision, unit)}</>
               )}
             </td>
           )
@@ -107,10 +108,10 @@ const StatsTable = ({ stats, teamColor }) => {
 
   return (
     <div className="overflow-x-auto">
-      <DataTable className="text-sm w-full" options={{ paging: false, searching: false, pageLength: 1000, info: false, order: ['P'] }}>
+      <table className="text-sm w-full statsTable">
         <thead>{renderHeader()}</thead>
         <tbody>{stats.map(renderRow)}</tbody>
-      </DataTable>
+      </table>
     </div>
   );
 };

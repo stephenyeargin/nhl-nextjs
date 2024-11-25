@@ -151,15 +151,24 @@ export const PENALTY_DESCRIPTIONS = {
 };
 
 export const TEAM_STATS = {
-  sog: 'Shots on Goal',
-  faceoffWinningPctg: 'Faceoff Winning %',
-  powerPlay: 'Power Play',
+  goalsForPerGamePlayed: 'Goals For / Game Played',
+  goalsAgainstPerGamePlayed: 'Goals Against / Game Played',
   powerPlayPctg: 'Power Play %',
-  pim: 'Penalty Minutes',
+  ppPctg: 'Power Play %',
+  pkPctg: 'Penalty Kill %',
+  faceoffWinningPctg: 'Face Off Win %',
+  ppPctgRank: 'Power Play % Rank',
+  pkPctgRank: 'Penalty Kill % Rank',
+  goalsForPerGamePlayedRank: 'Goals For / Game Played Rank',
+  goalsAgainstPerGamePlayedRank: 'Goals Against / Game Played Rank',
+  faceOffPctgRank: 'Face Off Win % Rank',
+  sog: 'Shots on Goal',
   hits: 'Hits',
   blockedShots: 'Blocked Shots',
+  takeaways: 'Takeaways',
   giveaways: 'Giveaways',
-  takeaways: 'Takeaways'
+  pim: 'Penalty Minutes',
+  powerPlay: 'Power Plays',
 };
 
 export const PLAYER_STATS = {
@@ -191,15 +200,15 @@ export const GAME_EVENTS = {
   'bottom-left': 'Bottom Left',
   'bottom-middle': 'Bottom Middle',
   'bottom-right': 'Bottom Right',
-  'chlg-hm-goal-interference': 'Chlg Hm - goal interference',
-  'chlg-hm-missed-stoppage': 'Chlg Hm - Missed stoppage',
-  'chlg-hm-off-side': 'Chlg Hm - off-side',
-  'chlg-league-goal-interference': 'Chlg League - goal interference',
-  'chlg-league-missed-stoppage': 'Chlg League - Missed stoppage',
-  'chlg-league-off-side': 'Chlg League - off-side',
-  'chlg-vis-goal-interference': 'Chlg Vis - goal interference',
-  'chlg-vis-missed-stoppage': 'Chlg Vis - Missed stoppage',
-  'chlg-vis-off-side': 'Chlg Vis - off-side',
+  'chlg-hm-goal-interference': 'Challenge (Home) - Goal Interference',
+  'chlg-hm-missed-stoppage': 'Challenge (Home) - Missed Stoppage',
+  'chlg-hm-off-side': 'Challenge (Home) - Off-side',
+  'chlg-league-goal-interference': 'Challenge (League) - Goal Interference',
+  'chlg-league-missed-stoppage': 'Challenge (League) - Missed Stoppage',
+  'chlg-league-off-side': 'Challenge (League) - off-side',
+  'chlg-vis-goal-interference': 'Challenge (Visitor) - Goal Interference',
+  'chlg-vis-missed-stoppage': 'Challenge (Visitor) - Missed Stoppage',
+  'chlg-vis-off-side': 'Challenge (Visitor) - Off-side',
   'clock-problem': 'Clock Problem',
   'defensive-zone': 'Defensive Zone',
   'delayed-penalty': 'Delayed Penalty',
@@ -333,6 +342,21 @@ export const GOAL_MODIFIERS = {
   'penalty-shot': { label: 'PS', title: 'Penalty Shot' }
 };
 
-export const STOPPAGE_DESCRIPTIONS = {
+export const ZONE_DESCRIPTIONS = {
+  D: 'defensive zone',
+  O: 'offensive zone',
+  N: 'neutral zone'
+};
 
+export const MISS_TYPES = {
+  'short': 'short side',
+  'wide-right': 'wide right',
+  'wide-left': 'wide left',
+  'hit-crossbar': 'hit crossbar',
+  'hit-left-post': 'hit left post',
+  'hit-right-post': 'hit right post',
+  'high-and-wide-left': 'high and wide left',
+  'high-and-wide-right': 'high and wide right',
+  'above-crossbar': 'above the crossbar',
+  'failed-bank-attempt': 'failed bank attempt',
 };

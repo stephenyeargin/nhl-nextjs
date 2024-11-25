@@ -7,6 +7,7 @@ import StatsTable from './StatsTable';
 import { formatStat } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
+import { getTeamDataByAbbreviation } from '../utils/teamData';
 
 const PreGameSummary = ({ game }) => {
 
@@ -18,6 +19,9 @@ const PreGameSummary = ({ game }) => {
   const logos = {};
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
+
+  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev) || {};
+  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev) || {};
 
   const handleStatTeamClick = (team) => {
     setActiveStatTeam(team);
@@ -214,20 +218,20 @@ const PreGameSummary = ({ game }) => {
 
       <div id="awayTeamStats" className={`${activeStatTeam === 'awayTeam' ? '' : 'hidden'} my-5`}>
         <div className="font-bold my-2">Forwards</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position !== 'D')} />
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position !== 'D')} teamColor={awayTeam.data.teamColor} />
         <div className="font-bold my-2">Defensemen</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position === 'D')} />
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position === 'D')} teamColor={awayTeam.data.teamColor} />
         <div className="font-bold my-2">Goalies</div>
-        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === awayTeam.id)} />
+        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === awayTeam.id)} teamColor={awayTeam.data.teamColor} />
       </div>
 
       <div id="homeTeamStats" className={`${activeStatTeam === 'homeTeam' ? '' : 'hidden'} my-5`}>
         <div className="font-bold my-2">Forwards</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position !== 'D')} />
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position !== 'D')} teamColor={homeTeam.data.teamColor} />
         <div className="font-bold my-2">Defensemen</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position === 'D')} />
+        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position === 'D')} teamColor={homeTeam.data.teamColor} />
         <div className="font-bold my-2">Goalies</div>
-        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} />
+        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} teamColor={homeTeam.data.teamColor} />
       </div>
     </div>
   );

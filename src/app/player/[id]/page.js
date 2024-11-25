@@ -9,11 +9,11 @@ import TeamLogo from '@/app/components/TeamLogo';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHockeyPuck, faTrophy } from '@fortawesome/free-solid-svg-icons';
-import Head from 'next/head';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 
 export const metadata = {
-  title: 'Player Bio & Stats',
+  title: 'Player Stats',
+  description: 'Statistics and awards for an NHL player',
 };
 
 export default async function PlayerPage({ params }) {
@@ -183,9 +183,6 @@ export default async function PlayerPage({ params }) {
   
   return (
     <div className="container mx-auto">
-      <Head>
-        <title>{firstName.default} {lastName.default}</title>
-      </Head>
       <div className="text-4xl my-4 flex items-center">
         <span className="px-3 border-r">{firstName.default} <span className="font-bold">{lastName.default}</span></span>
         {teamLogo && (

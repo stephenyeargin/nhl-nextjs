@@ -8,6 +8,8 @@ import GameSkeleton from '@/app/components/GameSkeleton';
 const GameLayout = ({ children, params }) => {
   const { id: gameId } = use(params);
 
+  window.document.title = `Game #${gameId}`;
+
   return (
     <GameProvider gameId={gameId}>
       <Suspense fallback={<GameSkeleton />}>

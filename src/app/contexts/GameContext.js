@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { PropTypes } from 'prop-types';
+import { GAME_STATES } from '../utils/constants';
 
 const GameContext = createContext();
 
@@ -39,16 +40,23 @@ export const GameProvider = ({ gameId, children }) => {
 
     // Initial fetch
     fetchGameData();
-
+   
     // Polling interval (only if the game is in progress)
     if (['PRE', 'LIVE', 'CRIT'].includes(gameState)) {
       intervalId = setInterval(() => {
         fetchGameData();
       }, 20000); // 20 seconds
     }
-
+    
     return () => clearInterval(intervalId);
   }, [gameId, gameState]); // only re-run if gameState or gameId changes
+
+  // Set page title
+  window.document.title = gameData ? `${gameData.homeTeam.abbrev} vs ${gameData.awayTeam.abbrev}` : 'NHL Game';
+  if (gameData && gameState !== 'FUT') {
+    const { homeTeam, awayTeam } = gameData;
+    window.document.title = `${awayTeam.abbrev} (${awayTeam.score}) vs ${homeTeam.abbrev} (${homeTeam.score}) - ${GAME_STATES[gameState]}`;
+  }
 
   return (
     <GameContext.Provider value={{ gameData, gameState, pageError }}>

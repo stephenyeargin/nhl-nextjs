@@ -9,7 +9,7 @@ import { faPlayCircle} from '@fortawesome/free-solid-svg-icons';
 import GameHeader from '@/app/components/GameHeader.js';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import { GAME_EVENTS, PENALTY_DESCRIPTIONS, PENALTY_TYPES, PERIOD_DESCRIPTORS } from '@/app/utils/constants';
+import { GAME_EVENTS, MISS_TYPES, PENALTY_DESCRIPTIONS, PENALTY_TYPES, PERIOD_DESCRIPTORS, ZONE_DESCRIPTIONS } from '@/app/utils/constants';
 import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
 import PeriodSelector from '@/app/components/PeriodSelector';
 import Image from 'next/image';
@@ -19,6 +19,7 @@ import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
 import { useGameContext } from '@/app/contexts/GameContext';
 import GameSkeleton from '@/app/components/GameSkeleton';
 import GameSidebar from '@/app/components/GameSidebar';
+import { notFound } from 'next/navigation';
 
 dayjs.extend(utc);
 
@@ -30,19 +31,21 @@ const PlayByPlay = ({ params }) => {
 
   // Initial state for the game data
   const [playByPlay, setPlayByPlay] = useState(null);
+  const [gameState, setGameState] = useState(null);
   const [activePeriod, setActivePeriod] = useState(null);
 
   // Use `useEffect` to run once on initial render and set up polling
   useEffect(() => {
-    let playByPlayData;
-    // Function to fetch the live game data
     const fetchGameData = async () => {
       try {
         const playByPlayResponse = await fetch(`/api/nhl/gamecenter/${id}/play-by-play`, { cache: 'no-store' });
         const playByPlayData = await playByPlayResponse.json();
 
         setPlayByPlay(playByPlayData);
-        setActivePeriod(playByPlayData.periodDescriptor?.number);
+        setGameState(playByPlayData.gameState);
+        if (!activePeriod) {
+          setActivePeriod(playByPlayData.periodDescriptor?.number);
+        }
       } catch (error) {
         console.error('Error fetching game data:', error);
 
@@ -50,11 +53,10 @@ const PlayByPlay = ({ params }) => {
       }
     };
 
-    // Initial fetch on page load
     fetchGameData();
 
     // Only set up polling if gameState is one of the following values: 'PRE', 'LIVE', 'CRIT'
-    if (playByPlayData && ['PRE', 'LIVE', 'CRIT'].includes(playByPlayData.gameState)) {
+    if (['PRE', 'LIVE', 'CRIT'].includes(gameState)) {
       const intervalId = setInterval(() => {
         fetchGameData();
       }, 20000); // 20 seconds polling interval
@@ -62,11 +64,16 @@ const PlayByPlay = ({ params }) => {
       // Cleanup the interval when component unmounts or gameState changes
       return () => clearInterval(intervalId);
     }
-  }, [ id ]);
+  }, [ id, gameState, activePeriod ]);
 
   // If no boxscore available, redirect back up
   if (!gameData || !playByPlay) {
     return <GameSkeleton />;
+  }
+
+  // No reason to render future games
+  if (['FUT'].includes(gameState)) {
+    return notFound();
   }
 
   // Destructure data for rendering
@@ -90,13 +97,18 @@ const PlayByPlay = ({ params }) => {
     return playByPlay.rosterSpots.find((player) => player.playerId === playerId) || defaultPlayer;
   };
 
-  const renderTeamLogo = (teamId) => {
+  const renderTeamLogo = (teamId, size) => {
+    let className = 'h-10 w-10';
+    if (size) {
+      className = `h-${size} w-${size}`;
+    }
+
     if (teamId === awayTeam.id) {
       return (
         <TeamLogo
           src={logos[awayTeam.abbrev]}
           alt={awayTeam.abbrev}
-          className="h-10 w-10"
+          className={className}
         />
       );
     }
@@ -105,7 +117,7 @@ const PlayByPlay = ({ params }) => {
         <TeamLogo
           src={logos[homeTeam.abbrev]}
           alt={homeTeam.abbrev}
-          className="h-10 w-10"
+          className={className}
         />
       );
     }
@@ -116,13 +128,16 @@ const PlayByPlay = ({ params }) => {
     
     return (
       <>
-        {/* <span className="p-1 border rounded text-xs">#{player.sweaterNumber}</span> */}
+        {/* <span className="p-1 border rounded text-xs mx-1">#{player.sweaterNumber}</span>{' '} */}
         <Link href={`/player/${player.playerId}`} className="font-bold">{player.firstName.default} {player.lastName.default}</Link>
       </>
     );
   };
 
   const renderPlayByPlayEvent = (play) => {
+
+    const e = play.details;
+
     switch (play.typeDescKey) {
     case 'period-start':
       return (
@@ -136,15 +151,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(play.details.winningPlayerId)} won faceoff against {renderPlayer(play.details.losingPlayerId)}
-          </div>
-        </div>
-      );
-    case 'takeaway':
-      return (
-        <div className="">
-          <div className="">
-            {renderPlayer(play.details.playerId)} took the puck away
+            {renderPlayer(e.winningPlayerId)} won a faceoff against {renderPlayer(e.losingPlayerId)} in the {ZONE_DESCRIPTIONS[e.zoneCode]}
           </div>
         </div>
       );
@@ -152,7 +159,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(play.details.blockingPlayerId)} blocked a shot from {renderPlayer(play.details.shootingPlayerId)}
+            {renderPlayer(e.blockingPlayerId)} blocked a shot from {renderPlayer(e.shootingPlayerId)}
           </div>
         </div>
       );
@@ -160,7 +167,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(play.details.shootingPlayerId)} took a shot on {renderPlayer(play.details.goalieInNetId)}
+            {renderPlayer(e.shootingPlayerId)} took a shot on {renderPlayer(e.goalieInNetId)}
           </div>
         </div>
       );
@@ -168,7 +175,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {GAME_EVENTS[play.details.reason]}
+            {GAME_EVENTS[e.reason]}
           </div>
         </div>
       );
@@ -176,7 +183,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(play.details.hittingPlayerId)} hit {renderPlayer(play.details.hitteePlayerId)}
+            {renderPlayer(e.hittingPlayerId)} hit {renderPlayer(e.hitteePlayerId)} in the {ZONE_DESCRIPTIONS[e.zoneCode]}
           </div>
         </div>
       );
@@ -184,7 +191,15 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(play.details.playerId)} gave the puck away
+            {renderPlayer(e.playerId)} gave the puck away in the {ZONE_DESCRIPTIONS[e.zoneCode]}
+          </div>
+        </div>
+      );
+    case 'takeaway':
+      return (
+        <div className="">
+          <div className="">
+            {renderPlayer(e.playerId)} took the puck away in hte {ZONE_DESCRIPTIONS[e.zoneCode]}
           </div>
         </div>
       );
@@ -192,7 +207,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(play.details.shootingPlayerId)} missed a shot
+            {renderPlayer(e.shootingPlayerId)} missed a {e.shotType} shot ({MISS_TYPES[e.reason] || e.reason})
           </div>
         </div>
       );
@@ -201,35 +216,34 @@ const PlayByPlay = ({ params }) => {
         <div className="p-2 gap-4 rounded-lg flex justify-between items-center bg-red-900/80 text-white">
           <div className="flex gap-4 items-center">
             <Headshot
-              playerId={play.details.scoringPlayerId}
-              src={(lookupPlayerData(play.details.scoringPlayerId)).headshot}
+              playerId={e.scoringPlayerId}
+              src={(lookupPlayerData(e.scoringPlayerId)).headshot}
               alt="Player Headshot"
               className="h-16 w-16 hidden md:block"
             />
             <div className="">
-              <div className="font-medium text-lg mb-3">{renderPlayer(play.details.scoringPlayerId)} ({play.details.scoringPlayerTotal}) scored</div>
-              {(play.details.assist1PlayerId || play.details.assist2PlayerId) && (
+              <div className="font-medium text-lg mb-3">{renderPlayer(e.scoringPlayerId)} ({e.scoringPlayerTotal}) scored ({GAME_EVENTS[e.shotType]?.toLowerCase()})</div>
+              {(e.assist1PlayerId || e.assist2PlayerId) && (
                 <span>Assisted By: </span>
               )}
-              {play.details.assist1PlayerId && (
-                <span>{renderPlayer(play.details.assist1PlayerId)} ({play.details.assist1PlayerTotal})</span>
+              {e.assist1PlayerId && (
+                <span>{renderPlayer(e.assist1PlayerId)} ({e.assist1PlayerTotal})</span>
               )}
-              {play.details.assist2PlayerId && (
-                <span> and {renderPlayer(play.details.assist2PlayerId)} ({play.details.assist2PlayerTotal})</span>
+              {e.assist2PlayerId && (
+                <span> and {renderPlayer(e.assist2PlayerId)} ({e.assist2PlayerTotal})</span>
               )}
-              {!play.details.assist1PlayerId && !play.details.assist2PlayerId && (
+              {!e.assist1PlayerId && !e.assist2PlayerId && (
                 <span>Unassisted</span>
               )}
             </div>
           </div>
           <div>
-            {play.details.awayScore}-{play.details.homeScore}
+            {e.awayScore}-{e.homeScore}
           </div>
           {play.details?.highlightClipSharingUrl && (
             <div className="text-center text-white">
               <Link href={play.details?.highlightClipSharingUrl} rel="noopener noreferrer">
-                <div className="my-2">Watch Highlight</div>
-                <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mr-2 md:mr-0" />
+                <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mx-auto" />
               </Link>
             </div>
           )}
@@ -238,32 +252,39 @@ const PlayByPlay = ({ params }) => {
     case 'penalty':
       return (
         <div className="p-2 gap-4 rounded-lg flex justify items-center bg-slate-900/80 text-white">
-          <Headshot
-            playerId={play.details.committedByPlayerId}
-            src={(lookupPlayerData(play.details.committedByPlayerId)).headshot}
-            alt="Player Headshot"
-            className="h-16 w-16 hidden md:block"
-          />
+          {e.committedByPlayerId ? (
+            <Headshot
+              playerId={e.committedByPlayerId}
+              src={(lookupPlayerData(e.committedByPlayerId)).headshot}
+              alt="Player Headshot"
+              className="h-16 w-16 hidden md:block"
+            />
+          ) : (
+            <div className="bg-white rounded-full h-16 w-16 hidden md:block">
+              {renderTeamLogo(play.details?.eventOwnerTeamId, 16)}
+            </div>
+          )}
+
           <div className="w-1/4">
-            {play.details.committedByPlayerId ? (
-              <div className="font-medium text-lg mb-3">{renderPlayer(play.details.committedByPlayerId)}</div>
+            {e.committedByPlayerId ? (
+              <div className="font-medium text-lg mb-3">{renderPlayer(e.committedByPlayerId)}</div>
             ) : (
               <div className="font-medium text-lg mb-3">Team Penalty</div>
             )}
-            {play.details.servedByPlayerId && (
-              <div className="text-xs">Served by: {renderPlayer(play.details.servedByPlayerId)}</div>
+            {e.servedByPlayerId && (
+              <div className="text-xs">Served by: {renderPlayer(e.servedByPlayerId)}</div>
             )}
-            {play.details.drawnByPlayerId && (
-              <div className="text-xs">Drawn By: {renderPlayer(play.details.drawnByPlayerId)}</div>
+            {e.drawnByPlayerId && (
+              <div className="text-xs">Drawn By: {renderPlayer(e.drawnByPlayerId)}</div>
             )}
           </div>
           <div className="w-1/4">
             <div className="text-xs font-light">Duration</div>
-            <div>{play.details.duration} minutes</div>
+            <div>{e.duration} minutes</div>
           </div>
           <div className="w-1/4">
-            <div className="text-xs font-light">{PENALTY_TYPES[play.details.typeCode]}</div>
-            <div>{PENALTY_DESCRIPTIONS[play.details.descKey]}</div>
+            <div className="text-xs font-light">{PENALTY_TYPES[e.typeCode]}</div>
+            <div>{PENALTY_DESCRIPTIONS[e.descKey]}</div>
           </div>
         </div>
       );
@@ -316,10 +337,10 @@ const PlayByPlay = ({ params }) => {
                 </tr>
               </thead>
               <tbody>
-                {sortedPlays.map((play) => {
+                {sortedPlays.map((play, i) => {
                   return(
-                    <tr key={play.eventId}>
-                      <td className="p-2 text-center">
+                    <tr key={play.eventId} className={i % 2 === 0 ? 'bg-slate-500/10' : ''}>
+                      <td className="p-3 text-center">
                         <span className="m-1 border rounded p-1 font-bold text-xs">{play.timeRemaining}</span>
                         <div className="p-2">{PERIOD_DESCRIPTORS[play.periodDescriptor.number]}</div>
                       </td>

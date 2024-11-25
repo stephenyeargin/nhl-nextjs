@@ -21,7 +21,7 @@ const IceSurface = ({ game }) => {
           />
           <div
             className="grid grid-cols-6 border rounded-3xl mt-5 gap-0 h-full relative bg-sky-500/[.06]"
-            style={{ height: '30rem' }}
+            style={{ height: '32rem' }}
           >
             <div className="col-span-1 self-center">
               {summary.iceSurface?.awayTeam.goalies.map((p) => (
