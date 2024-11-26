@@ -126,8 +126,8 @@ const TopBarSchedule = ({ gameDate }) => {
                             alt={`${game.awayTeam.name?.default} logo`}
                             className="w-8 h-8"
                           />
-                          <span className="font-bold">
-                            {game.awayTeam.name?.default}
+                          <span className="font-light">
+                            {game.awayTeam.placeNameWithPreposition?.default} <strong className="font-bold">{game.awayTeam.commonName?.default.replace(game.awayTeam.placeNameWithPreposition?.default, '')}</strong>
                             {game.situation?.awayTeam.situationDescriptions?.map((code) => (
                               <span key={code} className="text-sm font-medium px-2 py-1 bg-red-900 text-white rounded ml-2">{code}</span>
                             ))}
@@ -146,8 +146,8 @@ const TopBarSchedule = ({ gameDate }) => {
                             alt={`${game.homeTeam.name?.default} logo`}
                             className="w-8 h-8"
                           />
-                          <span className="font-bold">
-                            {game.homeTeam.name?.default}
+                          <span className="font-light">
+                            {game.homeTeam.placeNameWithPreposition?.default} <strong className="font-bold">{game.homeTeam.commonName?.default.replace(game.homeTeam.placeNameWithPreposition?.default, '')}</strong>
                             {game.situation?.homeTeam.situationDescriptions?.map((code) => (
                               <span key={code} className="text-sm font-medium px-2 py-1 bg-red-900 text-white rounded ml-2">{code}</span>
                             ))}

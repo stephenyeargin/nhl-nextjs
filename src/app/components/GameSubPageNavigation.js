@@ -21,9 +21,9 @@ const GameSubPageNavigation = ({ game }) => {
           className={`text-sm p-3 ${activeRoute === `/game/${id}` ? activeClasses : ''}`}
         >
           <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
-          {game.gameState !== 'FUT' ? 'Summary' : 'Preview'}
+          {!['FUT', 'PRE'].includes(game.gameState) ? 'Summary' : 'Preview'}
         </Link>
-        {game.gameState !== 'FUT' && (
+        {!['FUT', 'PRE'].includes(game.gameState) && (
           <Link
             href={`/game/${id}/boxscore`}
             className={`text-sm p-3 ${activeRoute === `/game/${id}/boxscore` ? activeClasses : ''}`}
@@ -32,7 +32,7 @@ const GameSubPageNavigation = ({ game }) => {
             Box Score
           </Link>
         )}
-        {game.gameState !== 'FUT' && (
+        {!['FUT', 'PRE'].includes(game.gameState) && (
           <Link
             href={`/game/${id}/play-by-play`}
             className={`text-sm p-3 ${activeRoute === `/game/${id}/play-by-play` ? activeClasses : ''}`}

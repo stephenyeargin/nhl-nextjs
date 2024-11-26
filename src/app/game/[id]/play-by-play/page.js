@@ -72,7 +72,7 @@ const PlayByPlay = ({ params }) => {
   }
 
   // No reason to render future games
-  if (['FUT'].includes(gameState)) {
+  if (['PRE', 'FUT'].includes(gameState)) {
     return notFound();
   }
 
@@ -97,7 +97,7 @@ const PlayByPlay = ({ params }) => {
     return playByPlay.rosterSpots.find((player) => player.playerId === playerId) || defaultPlayer;
   };
 
-  const renderTeamLogo = (teamId, size) => {
+  const renderTeamLogo = (teamId, size, theme) => {
     let className = 'h-10 w-10';
     if (size) {
       className = `h-${size} w-${size}`;
@@ -109,6 +109,7 @@ const PlayByPlay = ({ params }) => {
           src={logos[awayTeam.abbrev]}
           alt={awayTeam.abbrev}
           className={className}
+          colorMode={theme}
         />
       );
     }
@@ -118,6 +119,7 @@ const PlayByPlay = ({ params }) => {
           src={logos[homeTeam.abbrev]}
           alt={homeTeam.abbrev}
           className={className}
+          colorMode={theme}
         />
       );
     }
@@ -125,10 +127,18 @@ const PlayByPlay = ({ params }) => {
 
   const renderPlayer = (playerId) => {
     const player = lookupPlayerData(playerId);
-    
+
+    if (!player.playerId) {
+      return (
+        <>
+          <span href={`/player/${player.playerId}`} className="font-bold">{player.firstName.default} {player.lastName.default}</span>
+        </>
+      );
+    }
+
     return (
       <>
-        {/* <span className="p-1 border rounded text-xs mx-1">#{player.sweaterNumber}</span>{' '} */}
+        <span className="p-1 border rounded text-xs mx-1">#{player.sweaterNumber}</span>{' '}
         <Link href={`/player/${player.playerId}`} className="font-bold">{player.firstName.default} {player.lastName.default}</Link>
       </>
     );
@@ -151,7 +161,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(e.winningPlayerId)} won a faceoff against {renderPlayer(e.losingPlayerId)} in the {ZONE_DESCRIPTIONS[e.zoneCode]}
+            {renderPlayer(e.winningPlayerId)} won a faceoff against {renderPlayer(e.losingPlayerId)} {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
           </div>
         </div>
       );
@@ -183,7 +193,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(e.hittingPlayerId)} hit {renderPlayer(e.hitteePlayerId)} in the {ZONE_DESCRIPTIONS[e.zoneCode]}
+            {renderPlayer(e.hittingPlayerId)} hit {renderPlayer(e.hitteePlayerId)} {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
           </div>
         </div>
       );
@@ -191,7 +201,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(e.playerId)} gave the puck away in the {ZONE_DESCRIPTIONS[e.zoneCode]}
+            {renderPlayer(e.playerId)} gave the puck away {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
           </div>
         </div>
       );
@@ -199,7 +209,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(e.playerId)} took the puck away in hte {ZONE_DESCRIPTIONS[e.zoneCode]}
+            {renderPlayer(e.playerId)} took the puck away {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
           </div>
         </div>
       );
@@ -207,7 +217,7 @@ const PlayByPlay = ({ params }) => {
       return (
         <div className="">
           <div className="">
-            {renderPlayer(e.shootingPlayerId)} missed a {e.shotType} shot ({MISS_TYPES[e.reason] || e.reason})
+            {renderPlayer(e.shootingPlayerId)} missed a {e.shotType} shot {e.reason ? `(${MISS_TYPES[e.reason] || e.reason})` : '' }
           </div>
         </div>
       );
@@ -222,7 +232,7 @@ const PlayByPlay = ({ params }) => {
               className="h-16 w-16 hidden md:block"
             />
             <div className="">
-              <div className="font-medium text-lg mb-3">{renderPlayer(e.scoringPlayerId)} ({e.scoringPlayerTotal}) scored ({GAME_EVENTS[e.shotType]?.toLowerCase()})</div>
+              <div className="font-medium text-lg mb-3">{renderPlayer(e.scoringPlayerId)} ({e.scoringPlayerTotal}) scored {e.shotType ? `(${GAME_EVENTS[e.shotType]?.toLowerCase()})` : ''}</div>
               {(e.assist1PlayerId || e.assist2PlayerId) && (
                 <span>Assisted By: </span>
               )}
@@ -237,7 +247,7 @@ const PlayByPlay = ({ params }) => {
               )}
             </div>
           </div>
-          <div>
+          <div className="text-2xl font-bold">
             {e.awayScore}-{e.homeScore}
           </div>
           {play.details?.highlightClipSharingUrl && (
@@ -260,22 +270,22 @@ const PlayByPlay = ({ params }) => {
               className="h-16 w-16 hidden md:block"
             />
           ) : (
-            <div className="bg-white rounded-full h-16 w-16 hidden md:block">
-              {renderTeamLogo(play.details?.eventOwnerTeamId, 16)}
+            <div className="bg-slate-100 rounded-full h-16 w-16 hidden md:block">
+              {renderTeamLogo(play.details?.eventOwnerTeamId, 16, 'light')}
             </div>
           )}
 
-          <div className="w-1/4">
+          <div className="w-1/3">
             {e.committedByPlayerId ? (
               <div className="font-medium text-lg mb-3">{renderPlayer(e.committedByPlayerId)}</div>
             ) : (
               <div className="font-medium text-lg mb-3">Team Penalty</div>
             )}
             {e.servedByPlayerId && (
-              <div className="text-xs">Served by: {renderPlayer(e.servedByPlayerId)}</div>
+              <div className="text-xs leading-9">Served by: {renderPlayer(e.servedByPlayerId)}</div>
             )}
             {e.drawnByPlayerId && (
-              <div className="text-xs">Drawn By: {renderPlayer(e.drawnByPlayerId)}</div>
+              <div className="text-xs leading-9">Drawn By: {renderPlayer(e.drawnByPlayerId)}</div>
             )}
           </div>
           <div className="w-1/4">

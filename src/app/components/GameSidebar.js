@@ -139,6 +139,43 @@ const GameSidebar = () => {
           })}
         </div>
       )}
+
+      {rightRail.last10Record && (
+        <div className="mb-5">
+          <div className="flex text-center items-center justify-between">
+            <div className="w-1/4 p-2 text-bold flex justify-center">
+              <TeamLogo
+                src={logos[awayTeam.abbrev]}
+                alt={awayTeam.abbrev}
+                className="h-12 w-12"
+              />
+            </div>
+            <div className="w-1/2 p-2 text-2xl font-bold">Last 10 Games</div>
+            <div className="w-1/4 p-2 text-bold flex justify-center">
+              <TeamLogo
+                src={logos[homeTeam.abbrev]}
+                alt={homeTeam.abbrev}
+                className="h-12 w-12"
+              />
+            </div>
+          </div>
+          <div className="flex text-center">
+            <div className="w-1/2">{rightRail.last10Record.awayTeam.record} ({rightRail.last10Record.awayTeam.streakType}{rightRail.last10Record.awayTeam.streak})</div>
+            <div className="w-1/2">{rightRail.last10Record.homeTeam.record} ({rightRail.last10Record.homeTeam.streakType}{rightRail.last10Record.homeTeam.streak})</div>
+          </div>
+          {rightRail.last10Record.awayTeam.pastGameResults.map((_g, i) => (
+            <div key={i} className={`flex text-center text-xs my-1 gap-1 ${i % 2 ? '' : 'bg-slate-500/10'}`}>
+              <div className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record.awayTeam.pastGameResults[i].gameResult) ? 'font-bold' : 'opacity-50'}`} style={{ borderWidth: '1pt', borderColor:  awayTeam.data.teamColor }}>
+                {rightRail.last10Record.awayTeam.pastGameResults[i].opponentAbbrev} ({rightRail.last10Record.awayTeam.pastGameResults[i].gameResult})
+              </div>
+              <div className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record.homeTeam.pastGameResults[i].gameResult) ? 'font-bold' : 'opacity-50'}`} style={{ borderWidth: '1pt', borderColor:  homeTeam.data.teamColor }}>
+                {rightRail.last10Record.homeTeam.pastGameResults[i].opponentAbbrev} ({rightRail.last10Record.homeTeam.pastGameResults[i].gameResult})
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {rightRail.seasonSeries && (
         <div className="mb-5">
           <div className="p-2 text-2xl font-bold text-center">Season Series</div>

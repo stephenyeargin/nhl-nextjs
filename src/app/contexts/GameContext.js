@@ -52,10 +52,10 @@ export const GameProvider = ({ gameId, children }) => {
   }, [gameId, gameState]); // only re-run if gameState or gameId changes
 
   // Set page title
-  window.document.title = gameData ? `${gameData.homeTeam.abbrev} vs ${gameData.awayTeam.abbrev}` : 'NHL Game';
-  if (gameData && gameState !== 'FUT') {
+  window.document.title = gameData ? `${gameData.homeTeam.abbrev} vs. ${gameData.awayTeam.abbrev}` : 'NHL Game';
+  if (gameData && !['FUT', 'PRE'].includes(gameState)) {
     const { homeTeam, awayTeam } = gameData;
-    window.document.title = `${awayTeam.abbrev} (${awayTeam.score}) vs ${homeTeam.abbrev} (${homeTeam.score}) - ${GAME_STATES[gameState]}`;
+    window.document.title = `${awayTeam.abbrev} (${awayTeam.score}) vs. ${homeTeam.abbrev} (${homeTeam.score}) - ${GAME_STATES[gameState]}`;
   }
 
   return (

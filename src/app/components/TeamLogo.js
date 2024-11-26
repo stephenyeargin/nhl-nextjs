@@ -5,8 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 
-const TeamLogo = ({ src, alt, className, team }) => {
-  const [theme, setTheme] = useState('light');
+const TeamLogo = ({ src, alt, className, team, colorMode }) => {
+  const [theme, setTheme] = useState(colorMode);
 
   // Detecting the theme on initial load and whenever it changes
   useEffect(() => {
@@ -20,9 +20,16 @@ const TeamLogo = ({ src, alt, className, team }) => {
     handleThemeChange();
 
     return () => mediaQuery.removeEventListener('change', handleThemeChange);
-  }, []);
+  }, [ colorMode ]);
 
-  const updatedSrc = theme === 'dark' ? src.replace('_light', '_dark') : src;
+  // colorMode setting overrides theme
+  let updatedSrc;
+  if (colorMode) {
+    updatedSrc = (colorMode === 'dark') ? src.replace('_light', '_dark') : src.replace('_dark', '_light');
+  } else {
+    updatedSrc = (theme === 'dark') ? src.replace('_light', '_dark') : src.replace('_dark', '_light');
+  }
+  
   
   const image = (
     <Image
@@ -49,7 +56,8 @@ TeamLogo.propTypes = {
   src: PropTypes.string.required,
   alt: PropTypes.string.required,
   className: PropTypes.string,
-  team: PropTypes.string
+  team: PropTypes.string,
+  colorMode: PropTypes.string,
 };
 
 export default TeamLogo;

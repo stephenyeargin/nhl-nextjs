@@ -12,7 +12,7 @@ import { useGameContext } from '@/app/contexts/GameContext.js';
 import GameSkeleton from '@/app/components/GameSkeleton.js';
 import Headshot from '@/app/components/Headshot';
 import GameHeader from '@/app/components/GameHeader.js';
-import PreGameSummary from '@/app/components/PreGameSummary';
+import GamePreview from '@/app/components/GamePreview';
 import IceSurface from '@/app/components/IceSurface';
 import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
 import PageError from '@/app/components/PageError';
@@ -63,7 +63,7 @@ const GamePage = () => {
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
           {matchup && (
-            <PreGameSummary game={game} />
+            <GamePreview game={game} />
           )}
           {summary && (
             <div>

@@ -11,6 +11,7 @@ import { PropTypes } from 'prop-types';
 import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
 import Image from 'next/image';
 import { useGameContext } from '../contexts/GameContext';
+import { getTeamDataByAbbreviation } from '../utils/teamData';
 
 const GameHeader = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -40,6 +41,8 @@ const GameHeader = () => {
   const { game } = gameData;
   const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
 
+  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev);
+  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev);
 
   let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';
   if (isSticky) {
@@ -48,6 +51,10 @@ const GameHeader = () => {
   if (gameState === 'CRIT') {
     gameHeaderClass += ' border-red-500';
   }
+
+  const gameHeaderStyle = { background: 'var(--background)' };
+  gameHeaderStyle.borderLeft = `solid 25px ${awayTeam.data.teamColor}`;
+  gameHeaderStyle.borderRight = `solid 25px ${homeTeam.data.teamColor}`;
 
   const teamHasRecentGoal = (teamAbbrev, game) => {
     // No goals if game isn't live
@@ -95,7 +102,7 @@ const GameHeader = () => {
   };
   
   return (
-    <div className={gameHeaderClass} ref={stickyRef} style={{ background: 'var(--background)'}}>
+    <div className={gameHeaderClass} ref={stickyRef} style={gameHeaderStyle}>
       <div className="col-span-3 flex mx-auto gap-2">
         <div>
           <TeamLogo
@@ -158,7 +165,7 @@ const GameHeader = () => {
         )}
         {gameState === 'PRE' && (
           <div className="my-1 text-nowrap">
-            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase"><FontAwesomeIcon icon={faClock} fixedWidth /> Pregame</span>
+            <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase"><FontAwesomeIcon icon={faClock} fixedWidth /> Pregame</span>
           </div>
         )}
         {gameScheduleState === 'CNCL' && (

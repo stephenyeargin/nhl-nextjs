@@ -8,8 +8,9 @@ import { formatStat } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
+import TeamToggle from './TeamToggle';
 
-const PreGameSummary = ({ game }) => {
+const GamePreview = ({ game }) => {
 
   const [activeStatTeam, setActiveStatTeam] = useState('awayTeam');
 
@@ -184,36 +185,12 @@ const PreGameSummary = ({ game }) => {
 
       <div className="flex justify-between">
         <div className="text-3xl font-bold underline">Team Stats</div>
-        <div>
-          <div className="flex space-x-0">
-            <button
-              className={`flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md ${activeStatTeam === 'awayTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
-              onClick={() => handleStatTeamClick('awayTeam')}
-            >
-              <TeamLogo
-                src={logos[awayTeam.abbrev]}
-                alt={awayTeam.name.default}
-                className="w-6 h-6"
-              />
-              <div>
-                {awayTeam.placeName.default} <strong>{awayTeam.name.default.replace(awayTeam.placeName.default, '')}</strong>
-              </div>
-            </button>
-            <button
-              className={`flex gap-1 items-center text-sm p-2 border rounded-r-md ${activeStatTeam === 'homeTeam' ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
-              onClick={() => handleStatTeamClick('homeTeam')}
-            >
-              <TeamLogo
-                src={logos[homeTeam.abbrev]}
-                alt={homeTeam.name.default}
-                className="w-6 h-6"
-              />
-              <div>
-                {homeTeam.placeName.default} <strong>{homeTeam.name.default.replace(homeTeam.placeName.default, '')}</strong>
-              </div>
-            </button>
-          </div>
-        </div>
+        <TeamToggle
+          homeTeam={homeTeam}
+          awayTeam={awayTeam}
+          handleStatTeamClick={handleStatTeamClick}
+          activeStatTeam={activeStatTeam}
+        />
       </div>
 
       <div id="awayTeamStats" className={`${activeStatTeam === 'awayTeam' ? '' : 'hidden'} my-5`}>
@@ -237,8 +214,8 @@ const PreGameSummary = ({ game }) => {
   );
 };
 
-PreGameSummary.propTypes = {
+GamePreview.propTypes = {
   game: PropTypes.object.isRequired,
 };
 
-export default PreGameSummary;
+export default GamePreview;

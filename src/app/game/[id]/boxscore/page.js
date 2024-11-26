@@ -10,6 +10,7 @@ import { PropTypes } from 'prop-types';
 import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
 import GameSidebar from '@/app/components/GameSidebar';
 import { notFound } from 'next/navigation';
+import TeamToggle from '@/app/components/TeamToggle';
 
 const BoxScore = ({ params }) => {
   const { id } = use(params);
@@ -18,6 +19,7 @@ const BoxScore = ({ params }) => {
   // Initial state for the game data
   const [gameData, setGameData] = useState(null);
   const [gameState, setGameState] = useState(null);
+  const [activeStatTeam, setActiveStatTeam] = useState('awayTeam');
 
   // Use `useEffect` to run once on initial render and set up polling
   useEffect(() => {
@@ -62,7 +64,7 @@ const BoxScore = ({ params }) => {
     return <GameSkeleton />;
   }
 
-  if (['FUT'].includes(gameState)) {
+  if (['PRE', 'FUT'].includes(gameState)) {
     return notFound();
   }
 
@@ -76,6 +78,10 @@ const BoxScore = ({ params }) => {
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
 
+  const handleStatTeamClick = (team) => {
+    setActiveStatTeam(team);
+  };
+
   return (
     <div className="container mx-auto">
       <GameHeader game={game} />
@@ -84,84 +90,93 @@ const BoxScore = ({ params }) => {
 
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 xl:col-span-6">
-              <div className="my-3">
-                <div className="flex">
-                  <TeamLogo
-                    src={logos[awayTeam.abbrev]}
-                    alt={awayTeam.abbrev}
-                    className="mr-2 h-8 w-8"
-                  />
-                  <div className="font-bold my-1">Forwards</div>
-                </div>
+
+          <div className="flex justify-end">
+            <TeamToggle
+              awayTeam={awayTeam}
+              homeTeam={homeTeam}
+              handleStatTeamClick={handleStatTeamClick}
+              activeStatTeam={activeStatTeam}
+            />
+          </div>
+
+          <div id="awayTeamStats" className={ activeStatTeam === 'awayTeam' ? 'block' : 'hidden'}>
+            <div className="my-3">
+              <div className="flex">
+                <TeamLogo
+                  src={logos[awayTeam.abbrev]}
+                  alt={awayTeam.abbrev}
+                  className="mr-2 h-8 w-8"
+                />
+                <div className="font-bold my-1">Forwards</div>
               </div>
-              <StatsTable stats={boxScore.playerByGameStats?.awayTeam.forwards} teamColor={awayTeam.data.teamColor} />
-              <div className="my-3">
-                <div className="flex">
-                  <TeamLogo
-                    src={logos[awayTeam.abbrev]}
-                    alt={awayTeam.abbrev}
-                    className="mr-2 h-8 w-8"
-                  />
-                  <div className="font-bold my-1">Defensemen</div>
-                </div>
-              </div>
-              <StatsTable stats={boxScore.playerByGameStats?.awayTeam.defense} teamColor={awayTeam.data.teamColor} />
-              <div className="my-3">
-                <div className="flex">
-                  <TeamLogo
-                    src={logos[awayTeam.abbrev]}
-                    alt={awayTeam.abbrev}
-                    className="mr-2 h-8 w-8"
-                  />
-                  <div className="font-bold my-1">Goalies</div>
-                </div>
-              </div>
-              <StatsTable stats={boxScore.playerByGameStats?.awayTeam.goalies} teamColor={awayTeam.data.teamColor} />
             </div>
-            <div className="col-span-12 xl:col-span-6">
-              <div className="my-3">
-                <div className="flex">
-                  <TeamLogo
-                    src={logos[homeTeam.abbrev]}
-                    alt={homeTeam.abbrev}
-                    className="mr-2 h-8 w-8"
-                  />
-                  <div className="font-bold my-1">Forwards</div>
-                </div>
+            <StatsTable stats={boxScore.playerByGameStats?.awayTeam.forwards} teamColor={awayTeam.data.teamColor} />
+            <div className="my-3">
+              <div className="flex">
+                <TeamLogo
+                  src={logos[awayTeam.abbrev]}
+                  alt={awayTeam.abbrev}
+                  className="mr-2 h-8 w-8"
+                />
+                <div className="font-bold my-1">Defensemen</div>
               </div>
-              <StatsTable stats={boxScore.playerByGameStats?.homeTeam.forwards} teamColor={homeTeam.data.teamColor} />
-              <div className="my-3">
-                <div className="flex">
-                  <TeamLogo
-                    src={logos[homeTeam.abbrev]}
-                    alt={homeTeam.abbrev}
-                    className="mr-2 h-8 w-8"
-                  />
-                  <div className="font-bold my-1">Defensemen</div>
-                </div>
-              </div>
-              <StatsTable stats={boxScore.playerByGameStats?.homeTeam.defense} teamColor={homeTeam.data.teamColor} />
-              <div className="my-3">
-                <div className="flex">
-                  <TeamLogo
-                    src={logos[homeTeam.abbrev]}
-                    alt={homeTeam.abbrev}
-                    className="mr-2 h-8 w-8"
-                  />
-                  <div className="font-bold my-1">Goalies</div>
-                </div>
-              </div>
-              <StatsTable stats={boxScore.playerByGameStats?.homeTeam.goalies} teamColor={homeTeam.data.teamColor} />
             </div>
+            <StatsTable stats={boxScore.playerByGameStats?.awayTeam.defense} teamColor={awayTeam.data.teamColor} />
+            <div className="my-3">
+              <div className="flex">
+                <TeamLogo
+                  src={logos[awayTeam.abbrev]}
+                  alt={awayTeam.abbrev}
+                  className="mr-2 h-8 w-8"
+                />
+                <div className="font-bold my-1">Goalies</div>
+              </div>
+            </div>
+            <StatsTable stats={boxScore.playerByGameStats?.awayTeam.goalies} teamColor={awayTeam.data.teamColor} />
+          </div>
+
+          <div id="homeTeamStats" className={ activeStatTeam === 'homeTeam' ? 'block' : 'hidden'}>
+            <div className="my-3">
+              <div className="flex">
+                <TeamLogo
+                  src={logos[homeTeam.abbrev]}
+                  alt={homeTeam.abbrev}
+                  className="mr-2 h-8 w-8"
+                />
+                <div className="font-bold my-1">Forwards</div>
+              </div>
+            </div>
+            <StatsTable stats={boxScore.playerByGameStats?.homeTeam.forwards} teamColor={homeTeam.data.teamColor} />
+            <div className="my-3">
+              <div className="flex">
+                <TeamLogo
+                  src={logos[homeTeam.abbrev]}
+                  alt={homeTeam.abbrev}
+                  className="mr-2 h-8 w-8"
+                />
+                <div className="font-bold my-1">Defensemen</div>
+              </div>
+            </div>
+            <StatsTable stats={boxScore.playerByGameStats?.homeTeam.defense} teamColor={homeTeam.data.teamColor} />
+            <div className="my-3">
+              <div className="flex">
+                <TeamLogo
+                  src={logos[homeTeam.abbrev]}
+                  alt={homeTeam.abbrev}
+                  className="mr-2 h-8 w-8"
+                />
+                <div className="font-bold my-1">Goalies</div>
+              </div>
+            </div>
+            <StatsTable stats={boxScore.playerByGameStats?.homeTeam.goalies} teamColor={homeTeam.data.teamColor} />
           </div>
         </div>
         <div>
           <GameSidebar />
         </div>
       </div>
-    </div>   
+    </div>
   );
 };
 

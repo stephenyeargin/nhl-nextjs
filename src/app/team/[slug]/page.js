@@ -37,6 +37,7 @@ export default async function SchedulePage({ params }) {
           src={`https://assets.nhle.com/logos/nhl/svg/${slug}_dark.svg`}
           className="w-64 h-64 mx-auto"
         />
+        <h1 className="text-5xl font-bold opacity-25 p-5 italic">#{team.hashtag}</h1>
       </div>
 
       <h1 className="text-3xl font-bold mb-6">Team Stats</h1>
