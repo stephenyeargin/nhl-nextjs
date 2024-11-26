@@ -5,8 +5,8 @@ import { useGameContext } from '../contexts/GameContext';
 import Scoreboard from './Scoreboard';
 import TeamLogo from './TeamLogo';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
-import { PERIOD_DESCRIPTORS, TEAM_STATS, GAME_STATES } from '../utils/constants';
-import { formatStatValue, formatSeriesStatus, formatGameTime } from '../utils/formatters';
+import { TEAM_STATS, GAME_STATES } from '../utils/constants';
+import { formatStatValue, formatSeriesStatus, formatGameTime, formatPeriodLabel } from '../utils/formatters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
 
@@ -69,7 +69,7 @@ const GameSidebar = () => {
           {rightRail.shotsByPeriod.map((period, index) => (
             <div key={index} className={`flex text-center ${index % 2 ? '' : 'bg-slate-500/10'}`}>
               <div className="w-1/4 p-2">{period.away}</div>
-              <div className="w-1/2 p-3 text-xs">{PERIOD_DESCRIPTORS[period.periodDescriptor.number]}</div>
+              <div className="w-1/2 p-3 text-xs">{formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor?.number })}</div>
               <div className="w-1/4 p-2">{period.home}</div>
             </div>
           ))}
@@ -211,7 +211,7 @@ const GameSidebar = () => {
                   <div className="flex justify-between">
                     <div>
                       <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-1 uppercase">
-                        {PERIOD_DESCRIPTORS[g.periodDescriptor?.number]}
+                        {formatPeriodLabel(g.periodDescriptor)}
                         {g.clock?.inIntermission ? ' INT' : ''}
                       </span>
                       <span className="text-xs font-bold">{g.clock?.timeRemaining}</span>
@@ -222,7 +222,7 @@ const GameSidebar = () => {
                   <div className="flex justify-between">
                     <div>
                       {(['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"> Final</span>
+                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">Final</span>
                       )}
                       {(['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
                         <span className="text-xs py-1">{formatGameTime(game.startTimeUTC)}</span>

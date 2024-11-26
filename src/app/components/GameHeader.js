@@ -4,8 +4,7 @@ import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPauseCircle, faWarning, faBan, faClock } from '@fortawesome/free-solid-svg-icons';
 import GameClock from './GameClock';
-import { formatGameTime } from '../utils/formatters';
-import { PERIOD_DESCRIPTORS } from '../utils/constants';
+import { formatGameTime, formatPeriodLabel } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
@@ -141,7 +140,7 @@ const GameHeader = () => {
         {(gameState === 'LIVE' || gameState === 'CRIT') && (
           <div className="my-3 flex flex-wrap justify-center">
             <span className="font-md font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase text-nowrap">
-              {PERIOD_DESCRIPTORS[periodDescriptor.number]}
+              {formatPeriodLabel(periodDescriptor)}
               {clock.inIntermission ? ' INT' : ''}
             </span>
             <span className="font-bold text-xl">

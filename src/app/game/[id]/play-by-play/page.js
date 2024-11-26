@@ -5,11 +5,11 @@ import dayjs from 'dayjs';
 import Link from 'next/link.js';
 import utc from 'dayjs/plugin/utc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlayCircle} from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faPlayCircle} from '@fortawesome/free-solid-svg-icons';
 import GameHeader from '@/app/components/GameHeader.js';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import { GAME_EVENTS, MISS_TYPES, PENALTY_DESCRIPTIONS, PENALTY_TYPES, PERIOD_DESCRIPTORS, ZONE_DESCRIPTIONS } from '@/app/utils/constants';
+import { GAME_EVENTS, MISS_TYPES, PENALTY_DESCRIPTIONS, PENALTY_TYPES, ZONE_DESCRIPTIONS } from '@/app/utils/constants';
 import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
 import PeriodSelector from '@/app/components/PeriodSelector';
 import Image from 'next/image';
@@ -20,6 +20,7 @@ import { useGameContext } from '@/app/contexts/GameContext';
 import GameSkeleton from '@/app/components/GameSkeleton';
 import GameSidebar from '@/app/components/GameSidebar';
 import { notFound } from 'next/navigation';
+import { formatPeriodLabel } from '@/app/utils/formatters';
 
 dayjs.extend(utc);
 
@@ -152,73 +153,55 @@ const PlayByPlay = ({ params }) => {
     case 'period-start':
       return (
         <div className="">
-          <div className="">
-            Start of {PERIOD_DESCRIPTORS[play.periodDescriptor.number]} Period
-          </div>
+          Start of {formatPeriodLabel({ ...game.periodDescriptor, number: play.periodDescriptor.number }, true)}
         </div>
       );
     case 'faceoff':
       return (
         <div className="">
-          <div className="">
-            {renderPlayer(e.winningPlayerId)} won a faceoff against {renderPlayer(e.losingPlayerId)} {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
-          </div>
+          {renderPlayer(e.winningPlayerId)} won a faceoff against {renderPlayer(e.losingPlayerId)} {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
         </div>
       );
     case 'blocked-shot':
       return (
         <div className="">
-          <div className="">
-            {renderPlayer(e.blockingPlayerId)} blocked a shot from {renderPlayer(e.shootingPlayerId)}
-          </div>
+          {renderPlayer(e.blockingPlayerId)} blocked a shot from {renderPlayer(e.shootingPlayerId)}
         </div>
       );
     case 'shot-on-goal':
       return (
         <div className="">
-          <div className="">
-            {renderPlayer(e.shootingPlayerId)} took a shot on {renderPlayer(e.goalieInNetId)}
-          </div>
+          {renderPlayer(e.shootingPlayerId)} took a shot on {renderPlayer(e.goalieInNetId)}
         </div>
       );
     case 'stoppage':
       return (
         <div className="">
-          <div className="">
-            {GAME_EVENTS[e.reason]}
-          </div>
+          {GAME_EVENTS[e.reason]}
         </div>
       );
     case 'hit':
       return (
         <div className="">
-          <div className="">
-            {renderPlayer(e.hittingPlayerId)} hit {renderPlayer(e.hitteePlayerId)} {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
-          </div>
+          {renderPlayer(e.hittingPlayerId)} hit {renderPlayer(e.hitteePlayerId)} {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
         </div>
       );
     case 'giveaway':
       return (
         <div className="">
-          <div className="">
-            {renderPlayer(e.playerId)} gave the puck away {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
-          </div>
+          {renderPlayer(e.playerId)} gave the puck away {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
         </div>
       );
     case 'takeaway':
       return (
         <div className="">
-          <div className="">
-            {renderPlayer(e.playerId)} took the puck away {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
-          </div>
+          {renderPlayer(e.playerId)} took the puck away {e.zoneCode ? `in the ${ZONE_DESCRIPTIONS[e.zoneCode]}` : '' }
         </div>
       );
     case 'missed-shot':
       return (
         <div className="">
-          <div className="">
-            {renderPlayer(e.shootingPlayerId)} missed a {e.shotType} shot {e.reason ? `(${MISS_TYPES[e.reason] || e.reason})` : '' }
-          </div>
+          {renderPlayer(e.shootingPlayerId)} missed a {e.shotType} shot {e.reason ? `(${MISS_TYPES[e.reason] || e.reason})` : '' }
         </div>
       );
     case 'goal':
@@ -247,8 +230,13 @@ const PlayByPlay = ({ params }) => {
               )}
             </div>
           </div>
-          <div className="text-2xl font-bold">
-            {e.awayScore}-{e.homeScore}
+          <div className="w-10">
+            {play.periodDescriptor?.periodType === 'SO' ? (
+              <div className="text-2xl text-yellow-500"><FontAwesomeIcon icon={faCheckCircle} /></div>
+            ) : (
+              <div className="text-2xl font-bold">{e.awayScore}-{e.homeScore}</div>
+            )}
+            
           </div>
           {play.details?.highlightClipSharingUrl && (
             <div className="text-center text-white">
@@ -301,25 +289,25 @@ const PlayByPlay = ({ params }) => {
     case 'period-end':
       return (
         <div className="">
-          <div className="">
-            End of {PERIOD_DESCRIPTORS[play.periodDescriptor.number]} period
-          </div>
+          End of {formatPeriodLabel({ ...game.periodDescriptor, number: play.periodDescriptor.number }, true)}
+        </div>
+      );
+    case 'shootout-complete':
+      return (
+        <div className="">
+          Shootout complete
         </div>
       );
     case 'delayed-penalty':
       return (
         <div className="">
-          <div className="">
-            Delayed penalty
-          </div>
+          Delayed penalty
         </div>
       );
     case 'game-end':
       return (
         <div className="">
-          <div className="">
-            End of game
-          </div>
+          End of game
         </div>
       );
     }
@@ -334,7 +322,7 @@ const PlayByPlay = ({ params }) => {
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
           <div className="flex justify-center my-5">
-            <PeriodSelector periodsPlayed={game.periodDescriptor?.number} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} />
+            <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} />
           </div>
 
           <div className="overflow-x-auto">
@@ -352,7 +340,7 @@ const PlayByPlay = ({ params }) => {
                     <tr key={play.eventId} className={i % 2 === 0 ? 'bg-slate-500/10' : ''}>
                       <td className="p-3 text-center">
                         <span className="m-1 border rounded p-1 font-bold text-xs">{play.timeRemaining}</span>
-                        <div className="p-2">{PERIOD_DESCRIPTORS[play.periodDescriptor.number]}</div>
+                        <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
                       </td>
                       <td className="p-2 flex flex-wrap gap-2 items-center">
                         <div className="w-10 h-10">

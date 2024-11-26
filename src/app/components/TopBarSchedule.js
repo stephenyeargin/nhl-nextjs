@@ -7,8 +7,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
-import { PERIOD_DESCRIPTORS } from '../utils/constants';
-import { formatGameTime } from '../utils/formatters';
+import { formatGameTime, formatPeriodLabel } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 
@@ -176,7 +175,7 @@ const TopBarSchedule = ({ gameDate }) => {
                             {(game.gameState === 'LIVE' || game.gameState === 'CRIT') ? (
                               <span className="text-sm">
                                 <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase">
-                                  {PERIOD_DESCRIPTORS[game.periodDescriptor.number]}
+                                  {formatPeriodLabel(game.periodDescriptor)}
                                   {game.clock.inIntermission ? ' INT' : ''}
                                 </span>
                                 <span className="font-bold">{game.clock?.timeRemaining}</span>

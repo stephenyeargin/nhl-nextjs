@@ -14,12 +14,12 @@ const TeamToggle = ({ homeTeam, awayTeam, activeStatTeam, handleStatTeamClick })
     <div>
       <div className="flex space-x-0">
         <button
-          className="flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md"
-          style={{ backgroundColor: activeStatTeam === 'awayTeam' ? awayTeam.data.teamColor : 'inherit', color: activeStatTeam === 'awayTeam' ? formatTextColorByBackgroundColor(awayTeam.data.teamColor) : 'inherit' }}
+          className="flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md bg-slate-200 text-black"
+          style={{ backgroundColor: activeStatTeam === 'awayTeam' ? awayTeam.data.teamColor : '', color: activeStatTeam === 'awayTeam' ? formatTextColorByBackgroundColor(awayTeam.data.teamColor) : '' }}
           onClick={() => handleStatTeamClick('awayTeam')}
         >
           <TeamLogo
-            colorMode={activeStatTeam === 'awayTeam' ? 'dark' : 'away'}
+            colorMode={activeStatTeam === 'awayTeam' ? 'dark' : 'light'}
             src={logos[awayTeam.abbrev]}
             alt={awayTeam.name.default}
             className="w-6 h-6"
@@ -29,12 +29,12 @@ const TeamToggle = ({ homeTeam, awayTeam, activeStatTeam, handleStatTeamClick })
           </div>
         </button>
         <button
-          className="flex gap-1 items-center text-sm p-2 border rounded-r-md"
-          style={{ backgroundColor: activeStatTeam === 'homeTeam' ? homeTeam.data.teamColor : 'inherit', color: activeStatTeam === 'homeTeam' ? formatTextColorByBackgroundColor(homeTeam.data.teamColor) : 'inherit' }}
+          className="flex gap-1 items-center text-sm p-2 border rounded-r-md bg-slate-200 text-black"
+          style={{ backgroundColor: activeStatTeam === 'homeTeam' ? homeTeam.data.teamColor : '', color: activeStatTeam === 'homeTeam' ? formatTextColorByBackgroundColor(homeTeam.data.teamColor) : '' }}
           onClick={() => handleStatTeamClick('homeTeam')}
         >
           <TeamLogo
-            colorMode={activeStatTeam === 'homeTeam' ? 'dark' : 'away'}
+            colorMode={activeStatTeam === 'homeTeam' ? 'dark' : 'light'}
             src={logos[homeTeam.abbrev]}
             alt={homeTeam.name.default}
             className="w-6 h-6"

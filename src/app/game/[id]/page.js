@@ -14,11 +14,12 @@ import Headshot from '@/app/components/Headshot';
 import GameHeader from '@/app/components/GameHeader.js';
 import GamePreview from '@/app/components/GamePreview';
 import IceSurface from '@/app/components/IceSurface';
-import { PERIOD_DESCRIPTORS, PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
+import { PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
 import PageError from '@/app/components/PageError';
 import TeamLogo from '@/app/components/TeamLogo';
 import GameSidebar from '@/app/components/GameSidebar';
 import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
+import { formatPeriodLabel } from '@/app/utils/formatters';
 
 dayjs.extend(utc);
 
@@ -74,7 +75,7 @@ const GamePage = () => {
                 <h3 className="text-xl font-semibold my-3">Scoring Summary</h3>
                 {summary.scoring.map((period, index) => (
                   <div key={index} className="mb-2">
-                    <h4 className="font-semibold">{PERIOD_DESCRIPTORS[period.periodDescriptor.number] || period.periodDescriptor.number}</h4>
+                    <h4 className="font-semibold">{formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number }, true)}</h4>
                     {period.periodDescriptor.periodType === 'SO' ? (
                       <>
                         {game.summary?.shootout.length === 0 && (
@@ -205,7 +206,7 @@ const GamePage = () => {
                   {game.summary.penalties.map((period, index) => (
                     <div key={index} className="mb-5">
                       <h4 className="font-semibold">
-                        {PERIOD_DESCRIPTORS[period.periodDescriptor.number]}
+                        {formatPeriodLabel({...game.periodDescriptor, number: index + 1}, true)}
                       </h4>
                       {period.penalties.length === 0 ? (
                         <p className="text-slate-500 my-10">No penalties in this period.</p>

@@ -14,7 +14,7 @@ const GameSubPageNavigation = ({ game }) => {
   const activeClasses = 'bg-slate-500/10 border-slate-500 border-b-4';
 
   return (
-    <div className="text-center my-3 text-xs font-bold flex justify-between items-center border-b">
+    <div className="text-center my-5 text-xs font-bold flex justify-between items-center border-b">
       <div className="text-sm">
         <Link
           href={`/game/${id}`}

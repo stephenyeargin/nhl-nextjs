@@ -1,17 +1,17 @@
 import React from 'react';
-const { PERIOD_DESCRIPTORS } = require('../utils/constants');
 import { PropTypes } from 'prop-types';
+import { formatPeriodLabel } from '../utils/formatters';
 
-const PeriodSelector = ({ activePeriod, periodsPlayed, handlePeriodChange }) => {
+const PeriodSelector = ({ periodData, activePeriod, handlePeriodChange }) => {
   return (
     <>
-      {Array.from({ length: periodsPlayed }, (_, index) => index + 1).map((period, i) => (
+      {Array.from({ length: periodData.number }, (_, index) => index + 1).map((period, i) => (
         <button
           key={period}
-          className={`p-2 w-20 border text-xs ${i === 0 ? 'rounded-l-md' : '' } ${i + 1 === periodsPlayed ? 'rounded-r-md' : '' } ${activePeriod !== period ? '' : 'text-black dark:text-white bg-slate-200 dark:bg-slate-800'}`}
+          className={`p-2 w-20 border text-xs ${i === 0 ? 'rounded-l-md' : '' } ${i + 1 === periodData.number ? 'rounded-r-md' : '' } ${activePeriod !== period ? '' : 'text-black dark:text-white bg-slate-200 dark:bg-slate-800'}`}
           onClick={() => handlePeriodChange(period)}
         >
-          {PERIOD_DESCRIPTORS[period]}
+          {formatPeriodLabel({...periodData, number: period })}
         </button>
       ))}
     </>
@@ -19,9 +19,9 @@ const PeriodSelector = ({ activePeriod, periodsPlayed, handlePeriodChange }) => 
 };
 
 PeriodSelector.propTypes = {
+  periodData: PropTypes.object.isRequired,
   activePeriod: PropTypes.number.isRequired,
-  periodsPlayed: PropTypes.number.isRequired,
-  handlePeriodChange: PropTypes.func.isRequired,
+  handlePeriodChange: PropTypes.func.isRequired
 };
 
 export default PeriodSelector;

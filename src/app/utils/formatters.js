@@ -1,25 +1,23 @@
 import React from 'react';
 
 export const formatSeriesStatus = (game, rightRail) => {
-  if (rightRail.seasonSeriesWins.homeTeamWins === rightRail.seasonSeriesWins.awayTeamWins) {
-    if (rightRail.seasonSeriesWins.homeTeamWins === 0) {
-      return (
-        <></>
-      );
-    }
+  const { homeTeamWins, awayTeamWins, neededToWin } = rightRail.seasonSeriesWins;
+  const isTied = homeTeamWins === awayTeamWins;
+
+  if (isTied) {
+    if (homeTeamWins === 0) {return <></>;}
     
-    return (
-      <>Series tied.</>
-    );
+    return <>Series tied.</>;
   }
-  if (rightRail.seasonSeriesWins.homeTeamWins > rightRail.seasonSeriesWins.awayTeamWins) {
-    return (
-      <>{game.homeTeam.placeName.default} leads {rightRail.seasonSeriesWins.homeTeamWins}-{rightRail.seasonSeriesWins.awayTeamWins}</>
-    );
-  }
+
+  const leadingTeam = homeTeamWins > awayTeamWins ? game.homeTeam : game.awayTeam;
+  const leadingWins = homeTeamWins > awayTeamWins ? homeTeamWins : awayTeamWins;
+  const trailingWins = homeTeamWins > awayTeamWins ? awayTeamWins : homeTeamWins;
+  
+  const status = neededToWin === leadingWins ? 'wins' : 'leads';
   
   return (
-    <>{game.awayTeam.placeName.default} leads {rightRail.seasonSeriesWins.awayTeamWins}-{rightRail.seasonSeriesWins.homeTeamWins}</>
+    <>{leadingTeam.placeName.default} {status} {leadingWins}-{trailingWins}</>
   );
 };
 
@@ -126,4 +124,33 @@ export const formatTextColorByBackgroundColor = (backgroundColor) => {
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 
   return brightness > 125 ? '#000' : '#FFF';
+};
+
+export const formatPeriodLabel = (periodData, long=false) => {
+  const { number, periodType, otPeriods } = periodData;
+
+  const ordinalSuffix = (n) => {
+    if (n === 1) {return 'st';}
+    if (n === 2) {return 'nd';}
+    if (n === 3) {return 'rd';}
+    
+    return 'th';
+  };
+
+  switch (true) {
+  case number === 1:
+    return long ? `1${ordinalSuffix(number)} Period` : `1${ordinalSuffix(number)}`;
+  case number === 2:
+    return long ? `2${ordinalSuffix(number)} Period` : `2${ordinalSuffix(number)}`;
+  case number === 3:
+    return long ? `3${ordinalSuffix(number)} Period` : `3${ordinalSuffix(number)}`;
+  case number === 4 && !otPeriods:
+    return long ? 'Overtime' : 'OT';
+  case number === 5 && periodType === 'SO':
+    return long ? 'Shootout' : 'SO';
+  case number > 3 && periodType === 'OT':
+    return long ? `${number - 3}${ordinalSuffix(number - 3)} Overtime` : `${number - 3}OT`;
+  default:
+    return '';
+  }
 };

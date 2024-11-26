@@ -8,14 +8,6 @@ export const GAME_STATES = {
   CRIT: 'Critical'
 };
 
-export const PERIOD_DESCRIPTORS = {
-  1: '1st',
-  2: '2nd',
-  3: '3rd',
-  4: 'Overtime',
-  5: 'Shootout'
-};
-
 export const PENALTY_TYPES = {
   'BEN': 'Bench Minor',
   'GAM': 'Game Misconduct',

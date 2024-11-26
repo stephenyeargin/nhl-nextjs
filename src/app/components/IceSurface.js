@@ -20,7 +20,7 @@ const IceSurface = ({ game }) => {
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-100 h-100 opacity-10"
           />
           <div
-            className="grid grid-cols-6 border rounded-3xl mt-5 gap-0 h-full relative bg-sky-500/[.06]"
+            className="grid grid-cols-6 border rounded-3xl gap-0 h-full relative bg-sky-500/[.06]"
             style={{ height: '32rem' }}
           >
             <div className="col-span-1 self-center">
