@@ -57,13 +57,13 @@ const StatsTable = ({ stats, teamColor }) => {
   ];
 
   const renderHeader = () => (
-    <tr className="text-xs">
-      <th className={`p-2 border text-center ${headerColorClass}`} style={headerStyle}>#</th>
-      <th className={`p-2 border text-left ${headerColorClass}`} style={headerStyle}>Name</th>
+    <tr className="text-xs border">
+      <th className={`p-2 text-center ${headerColorClass}`} style={headerStyle}>#</th>
+      <th className={`p-2 text-left ${headerColorClass}`} style={headerStyle}>Name</th>
       {statHeaders.map(
         ({ key, label, title, altKey }) =>
           (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
-            <th key={key} className={`p-2 border text-center ${headerColorClass}`} style={headerStyle}>
+            <th key={key} className={`p-2 text-center ${headerColorClass}`} style={headerStyle}>
               <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
             </th>
           )

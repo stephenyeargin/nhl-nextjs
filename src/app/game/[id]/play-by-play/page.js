@@ -98,6 +98,17 @@ const PlayByPlay = ({ params }) => {
     return playByPlay.rosterSpots.find((player) => player.playerId === playerId) || defaultPlayer;
   };
 
+  const lookupTeamDataByTeamId = (teamId) => {
+    if (teamId === awayTeam.id) {
+      return getTeamDataByAbbreviation(awayTeam.abbrev);
+    }
+    if (teamId === homeTeam.id) {
+      return getTeamDataByAbbreviation(homeTeam.abbrev);
+    }
+
+    return {};
+  };
+
   const renderTeamLogo = (teamId, size, theme) => {
     let className = 'h-10 w-10';
     if (size) {
@@ -147,7 +158,8 @@ const PlayByPlay = ({ params }) => {
 
   const renderPlayByPlayEvent = (play) => {
 
-    const e = play.details;
+    const e = play.details || {};
+    const eventTeamData = lookupTeamDataByTeamId(e.eventOwnerTeamId);
 
     switch (play.typeDescKey) {
     case 'period-start':
@@ -206,13 +218,13 @@ const PlayByPlay = ({ params }) => {
       );
     case 'goal':
       return (
-        <div className="p-2 gap-4 rounded-lg flex justify-between items-center bg-red-900/80 text-white">
+        <div className="p-2 gap-4 rounded-lg flex justify-between items-center bg-red-900/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}` }}>
           <div className="flex gap-4 items-center">
             <Headshot
               playerId={e.scoringPlayerId}
               src={(lookupPlayerData(e.scoringPlayerId)).headshot}
               alt="Player Headshot"
-              className="h-16 w-16 hidden md:block"
+              className="h-16 w-16 hidden lg:block"
             />
             <div className="">
               <div className="font-medium text-lg mb-3">{renderPlayer(e.scoringPlayerId)} ({e.scoringPlayerTotal}) scored {e.shotType ? `(${GAME_EVENTS[e.shotType]?.toLowerCase()})` : ''}</div>
@@ -249,16 +261,16 @@ const PlayByPlay = ({ params }) => {
       );
     case 'penalty':
       return (
-        <div className="p-2 gap-4 rounded-lg flex justify items-center bg-slate-900/80 text-white">
+        <div className="p-2 gap-4 rounded-lg flex justify items-center bg-slate-600/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}`}}>
           {e.committedByPlayerId ? (
             <Headshot
               playerId={e.committedByPlayerId}
               src={(lookupPlayerData(e.committedByPlayerId)).headshot}
               alt="Player Headshot"
-              className="h-16 w-16 hidden md:block"
+              className="h-16 w-16 hidden lg:block"
             />
           ) : (
-            <div className="bg-slate-100 rounded-full h-16 w-16 hidden md:block">
+            <div className="bg-slate-100 rounded-full h-16 w-16 hidden lg:block">
               {renderTeamLogo(play.details?.eventOwnerTeamId, 16, 'light')}
             </div>
           )}
@@ -270,10 +282,10 @@ const PlayByPlay = ({ params }) => {
               <div className="font-medium text-lg mb-3">Team Penalty</div>
             )}
             {e.servedByPlayerId && (
-              <div className="text-xs leading-9">Served by: {renderPlayer(e.servedByPlayerId)}</div>
+              <div className="text-xs my-2">Served by: {renderPlayer(e.servedByPlayerId)}</div>
             )}
             {e.drawnByPlayerId && (
-              <div className="text-xs leading-9">Drawn By: {renderPlayer(e.drawnByPlayerId)}</div>
+              <div className="text-xs my-2">Drawn By: {renderPlayer(e.drawnByPlayerId)}</div>
             )}
           </div>
           <div className="w-1/4">
@@ -329,9 +341,9 @@ const PlayByPlay = ({ params }) => {
             <table className="text-xs min-w-full table-auto">
               <thead>
                 <tr className="hidden">
-                  <th className="p-2 border text-center">Time</th>
-                  <th className="p-2 border text-center">Event Type</th>
-                  <th className="p-2 border text-center">Details</th>
+                  <th className="p-2 text-center">Time</th>
+                  <th className="p-2 text-center">Event Type</th>
+                  <th className="p-2 text-center">Details</th>
                 </tr>
               </thead>
               <tbody>
@@ -347,7 +359,7 @@ const PlayByPlay = ({ params }) => {
                           {play.details?.eventOwnerTeamId && renderTeamLogo(play.details?.eventOwnerTeamId)}
                         </div>
                         <div>
-                          <span className="hidden md:block p-1 border rounded font-bold text-xs uppercase">
+                          <span className="hidden lg:block p-1 border rounded font-bold text-xs uppercase">
                             {GAME_EVENTS[play.typeDescKey]}
                           </span>
                           {play.typeDescKey === 'goal' && (

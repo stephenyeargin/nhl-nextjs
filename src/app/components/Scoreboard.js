@@ -17,8 +17,8 @@ const Scoreboard = ({ game, linescore }) => {
   return (
     <table className="w-full text-sm">
       <thead>
-        <tr>
-          <th className="w-3/12 border bg-slate-200 dark:bg-slate-800 p-2"></th>
+        <tr className="border">
+          <th className="w-3/12 bg-slate-200 dark:bg-slate-800 p-2"></th>
           {Array.from({ length: totalPeriods }).map((_, index) => {
             const periodNumber = index + 1;
             const period = linescore.byPeriod.find(p => p.periodDescriptor.number === periodNumber);
@@ -30,14 +30,14 @@ const Scoreboard = ({ game, linescore }) => {
 
             return (
               <th
-                className="w-1/12 text-center border bg-slate-200 dark:bg-slate-800 p-2"
+                className="w-1/12 text-center bg-slate-200 dark:bg-slate-800 p-2"
                 key={`period-${periodNumber}`}
               >
                 {formatPeriodLabel({ ...game.periodDescriptor, number: periodNumber })}
               </th>
             );
           })}
-          <th className="w-1/12 text-center border bg-slate-200 dark:bg-slate-800 p-2">T</th>
+          <th className="w-1/12 text-center bg-slate-200 dark:bg-slate-800 p-2">T</th>
         </tr>
       </thead>
       <tbody>

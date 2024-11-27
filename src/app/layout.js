@@ -20,6 +20,11 @@ const geistMono = localFont({
   weight: '100 900'
 });
 
+export const metadata = {
+  title: 'NHL Next.js',
+  description: 'NHL Next.js',
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

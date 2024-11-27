@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { PropTypes } from 'prop-types';
 import { GAME_STATES } from '../utils/constants';
+import { formatHeadTitle } from '../utils/formatters';
 
 const GameContext = createContext();
 
@@ -28,6 +29,12 @@ export const GameProvider = ({ gameId, children }) => {
         game = await gameResponse.json();
         rightRail = await rightRailResponse.json();
         story = await storyResponse.json();
+
+        // Set page title
+        formatHeadTitle(`${game.homeTeam.abbrev} vs. ${game.awayTeam.abbrev}`);
+        if (game.gameState && !['FUT', 'PRE'].includes(game.gameState)) {
+          formatHeadTitle(`${game.awayTeam.abbrev} (${game.awayTeam.score}) vs. ${game.homeTeam.abbrev} (${game.homeTeam.score}) - ${GAME_STATES[game.gameState]}`);
+        }
       } catch (error) {
         setPageError({ message: 'Failed to load the game data. Please try again later.', error });
         console.error('Error fetching game data:', error);
@@ -50,13 +57,6 @@ export const GameProvider = ({ gameId, children }) => {
     
     return () => clearInterval(intervalId);
   }, [gameId, gameState]); // only re-run if gameState or gameId changes
-
-  // Set page title
-  window.document.title = gameData ? `${gameData.homeTeam.abbrev} vs. ${gameData.awayTeam.abbrev}` : 'NHL Game';
-  if (gameData && !['FUT', 'PRE'].includes(gameState)) {
-    const { homeTeam, awayTeam } = gameData;
-    window.document.title = `${awayTeam.abbrev} (${awayTeam.score}) vs. ${homeTeam.abbrev} (${homeTeam.score}) - ${GAME_STATES[gameState]}`;
-  }
 
   return (
     <GameContext.Provider value={{ gameData, gameState, pageError }}>

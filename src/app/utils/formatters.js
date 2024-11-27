@@ -154,3 +154,7 @@ export const formatPeriodLabel = (periodData, long=false) => {
     return '';
   }
 };
+
+export const formatHeadTitle = (value) => {
+  window.document.title = value || undefined;
+};

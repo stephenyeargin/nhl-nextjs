@@ -1,30 +1,44 @@
-import React from 'react';
+'use client';
+
+import React, { use, useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import Headshot from '@/app/components/Headshot';
-import { formatStat, formatSeason, formatOrdinalNumber, formatGameDate, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
+import { formatStat, formatSeason, formatOrdinalNumber, formatGameDate, formatTextColorByBackgroundColor, formatHeadTitle } from '@/app/utils/formatters';
 import GameSkeleton from '@/app/components/GameSkeleton';
 import TeamLogo from '@/app/components/TeamLogo';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHockeyPuck, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
+import LeagueToggle from '@/app/components/LeagueToggle';
 
-export const metadata = {
-  title: 'Player Stats',
-  description: 'Statistics and awards for an NHL player',
-};
+export default function PlayerPage({ params }) {
+  const { id } = use(params);
 
-export default async function PlayerPage({ params }) {
-  const { id } = await params;
+  const [player, setPlayer] = useState(null);
+  const [activeLeague, setActiveLeague] = useState('nhl');
 
-  const playerResponse = await fetch(`https://api-web.nhle.com/v1/player/${id}/landing`, { cache: 'no-store' });
+  useEffect(() => {
+    const fetchPlayer = async () => {
+      const playerResponse = await fetch(`/api/nhl/player/${id}/landing`, { cache: 'no-store' });
 
-  if (!playerResponse.ok) {
-    return notFound();
+      if (!playerResponse.ok) {
+        return notFound();
+      }
+      const playerData = await playerResponse.json();
+      setPlayer(playerData);
+
+      formatHeadTitle(`${playerData.firstName.default} ${playerData.lastName.default} | #${playerData.sweaterNumber} | ${playerData.position}`);
+    };
+
+    fetchPlayer();
+  }, [id]);
+
+  if (!player) {
+    return (<GameSkeleton />);
   }
-  const player = await playerResponse.json();
 
   const {
     firstName,
@@ -47,8 +61,6 @@ export default async function PlayerPage({ params }) {
     careerTotals,
     awards
   } = player;
-
-  metadata.title = `${firstName.default} ${lastName.default} | #${sweaterNumber} | ${position}`;
 
   const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
   const formattedHeight = `${Math.floor(heightInInches / 12)}′${heightInInches % 12}″`;
@@ -131,16 +143,16 @@ export default async function PlayerPage({ params }) {
     return (
       <table className="text-sm w-full">
         <thead>
-          <tr className={`text-xs ${headerColorClass}`} style={headerStyle} >
-            <th className={'p-2 border text-center'}>Season</th>
-            <th className={'p-2 border text-left'}>Team</th>
+          <tr className={`text-xs border ${headerColorClass}`} style={headerStyle} >
+            <th className={'p-2 text-center'}>Season</th>
+            <th className={'p-2 text-left'}>Team</th>
             {showLeague && (
-              <th className={'p-2 border text-left'} style={headerStyle}>League</th>
+              <th className={'p-2 text-left'} style={headerStyle}>League</th>
             )}
             {statHeaders.map(
               ({ key, label, title, altKey }) =>
                 (Object.keys(seasonTotals[seasonTotals.length-1]).includes(key) || (altKey && Object.keys(seasonTotals[seasonTotals.length-1]).includes(altKey))) && (
-                  <th key={key} className={`p-2 border text-center ${headerColorClass}`} style={headerStyle}>
+                  <th key={key} className={`p-2 text-center ${headerColorClass}`} style={headerStyle}>
                     <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
                   </th>
                 )
@@ -180,7 +192,11 @@ export default async function PlayerPage({ params }) {
       </table>
     );
   };
-  
+
+  const handleChangeLeagues = (league) => {
+    setActiveLeague(league);
+  };
+
   return (
     <div className="container mx-auto">
       <div className="text-4xl my-4 flex items-center">
@@ -285,13 +301,13 @@ export default async function PlayerPage({ params }) {
           <div className="text-3xl font-bold underline my-3">Last Five Games</div>
           <table className="text-sm w-full">
             <thead>
-              <tr className={`text-xs ${headerColorClass}`} style={headerStyle}>
-                <th className="p-2 border text-center w-10">Date</th>
-                <th className="p-2 border text-left">Opponent</th>
+              <tr className={`text-xs border ${headerColorClass}`} style={headerStyle}>
+                <th className="p-2 text-center w-10">Date</th>
+                <th className="p-2 text-left">Opponent</th>
                 {statHeaders.map(
                   ({ key, label, title, altKey }) =>
                     (Object.keys(last5Games[0]).includes(key) || (altKey && Object.keys(last5Games[0]).includes(altKey))) && (
-                      <th key={key} className="p-2 border text-center">
+                      <th key={key} className="p-2 text-center">
                         <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
                       </th>
                     )
@@ -329,16 +345,22 @@ export default async function PlayerPage({ params }) {
       )}
       
       {seasonTotals && (
-        <div>
+        <div id="seasonTotals">
+
+          <div className="flex justify-between">
+            <div className="text-3xl font-bold underline my-3">Season Totals</div>
+            {nhlStats.length > 0 && otherLeagueStats.length > 0 && (
+              <LeagueToggle handleChangeLeagues={handleChangeLeagues} activeLeague={activeLeague} />
+            )}
+          </div>
+
           {nhlStats.length > 0 && (
-            <div>
-              <div className="text-3xl font-bold underline my-3">Season Totals</div>
+            <div className={otherLeagueStats.length === 0 || activeLeague === 'nhl' ? 'block': 'hidden'}>
               {renderStatsTable({ stats: nhlStats, showLeague: false })}
             </div>
           )}
           {otherLeagueStats.length > 0 && (
-            <div>
-              <div className="text-3xl font-bold underline my-3">Other League Season Totals</div>
+            <div className={nhlStats.length === 0 || activeLeague === 'other' ? 'block' : 'hidden'}>
               {renderStatsTable({ stats: otherLeagueStats, showLeague: true })}
             </div>
           )}
@@ -382,5 +404,5 @@ export default async function PlayerPage({ params }) {
 PlayerPage.propTypes = {
   params: PropTypes.shape({
     id: PropTypes.string.isRequired,
-  }).isRequired,
+  }).isRequired
 };
