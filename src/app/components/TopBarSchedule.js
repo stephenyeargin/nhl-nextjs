@@ -85,7 +85,7 @@ const TopBarSchedule = ({ gameDate }) => {
     <div>
       {games?.length > 0 ? (
         <>
-          <div className="flex text-xs py-4">
+          <div className="flex text-xs py-4 overflow-x-auto">
             {dates.map((date) => {
               let dateClass = 'mx-1 border rounded-xl';
               if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {

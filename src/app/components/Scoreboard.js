@@ -42,11 +42,11 @@ const Scoreboard = ({ game, linescore }) => {
       </thead>
       <tbody>
         <tr>
-          <td className="p-2 text-center border p-2">
-            <div className="flex items-center">
+          <td className="p-2 text-center border">
+            <div className="flex items-center gap-1">
               <TeamLogo
                 src={game.awayTeam.logo}
-                className="w-10 mr-1"
+                className="w-10"
                 alt="Logo"
               />
               <span className="font-bold">{game.awayTeam.abbrev}</span>
@@ -72,11 +72,11 @@ const Scoreboard = ({ game, linescore }) => {
           </td>
         </tr>
         <tr>
-          <td className="p-2 text-center border p-2">
-            <div className="flex items-center">
+          <td className="p-2 text-center border">
+            <div className="flex items-center gap-1">
               <TeamLogo
                 src={game.homeTeam.logo}
-                className="w-10 mr-1"
+                className="w-10"
                 alt="Logo"
               />
               <span className="font-bold">{game.homeTeam.abbrev}</span>

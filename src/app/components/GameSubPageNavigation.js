@@ -11,11 +11,11 @@ const GameSubPageNavigation = ({ game }) => {
 
   const { id } = game;
   const activeRoute = usePathname();  
-  const activeClasses = 'bg-slate-500/10 border-slate-500 border-b-4';
+  const activeClasses = 'bg-slate-500/10 border-slate-500 border-b-2';
 
   return (
-    <div className="text-center my-5 text-xs font-bold flex justify-between items-center border-b">
-      <div className="text-sm">
+    <div className="my-5 text-xs font-bold flex flex-wrap md:justify-between items-center border-b-2">
+      <div className="text-sm flex items-center justify-left">
         <Link
           href={`/game/${id}`}
           className={`text-sm p-3 ${activeRoute === `/game/${id}` ? activeClasses : ''}`}
@@ -42,16 +42,18 @@ const GameSubPageNavigation = ({ game }) => {
           </Link>
         )}
       </div>
-      <div className="p-3 flex-fill text-right">
-        <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
-        <Link href={`https://www.nhl.com/gamecenter/${game.id}`} className="underline">NHL.com GameCenter</Link>
+      <div className="order-first md:order-last p-3 flex-fill text-center flex gap-4 mb-3 md:mb-0 justify-center lg:justify-end">
+        <span className="">
+          <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
+          <Link href={`https://www.nhl.com/gamecenter/${game.id}`} className="underline">NHL.com GameCenter</Link>
+        </span>
         {game.tvBroadcasts.length > 0 && (
-          <span className="ml-5">
+          <span className="text-center">
             <FontAwesomeIcon icon={faTelevision} fixedWidth className="mr-1" /> {formatBroadcasts(game.tvBroadcasts)}
           </span>
         )}
         {game.homeTeam.radioLink && (
-          <span className="ml-5">
+          <span className="text-center">
             <FontAwesomeIcon icon={faRadio} fixedWidth className="mr-1" />
             {' '}{' '}
             <RadioLink m3u8Url={game.homeTeam.radioLink} label="Home" />

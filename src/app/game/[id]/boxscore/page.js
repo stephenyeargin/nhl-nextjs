@@ -172,7 +172,7 @@ const BoxScore = ({ params }) => {
             <StatsTable stats={boxScore.playerByGameStats?.homeTeam.goalies} teamColor={homeTeam.data.teamColor} />
           </div>
         </div>
-        <div>
+        <div className="col-span-4 md:col-span-1">
           <GameSidebar />
         </div>
       </div>

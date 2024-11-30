@@ -3,8 +3,9 @@ import Link from 'next/link';
 import Headshot from './Headshot';
 import GameClock from './GameClock';
 import { PropTypes } from 'prop-types';
+import { formatTextColorByBackgroundColor } from '../utils/formatters';
 
-export const Skater = ({ player, game, isHomeTeam }) => {
+export const Skater = ({ player, game, isHomeTeam, teamColor }) => {
 
   // Add time remaining
   let time = '0:00';
@@ -17,14 +18,20 @@ export const Skater = ({ player, game, isHomeTeam }) => {
     time = `${paddedMinutes}:${paddedSeconds}`;
   }
 
+  let skaterStyle = { backgroundColor: teamColor, color: formatTextColorByBackgroundColor(teamColor) };
+  if (!isHomeTeam) {
+    skaterStyle = { backgroundColor: '#FFF', color: '#000', border: `solid 2px ${teamColor}`};
+  }
+
   return (
     <div key={player.playerId} className="text-xs text-center m-5">
-      <div
+      <Link
+        href={`/player/${player.playerId}`} target="_blank"
         title={player.name.default}
-        className={`md:hidden font-bold border rounded-full w-10 h-10 p-3 ${isHomeTeam === false ? 'text-black bg-white' : 'text-white bg-black'}`}
+        className="md:hidden font-bold rounded-full p-2 w-10 h-10" style={skaterStyle}
       >
-        {player.sweaterNumber}
-      </div>
+        {player.sweaterNumber.toString().padStart(2, '0')}
+      </Link>
       <Headshot
         playerId={player.playerId}
         src={player.headshot}
@@ -48,5 +55,11 @@ export const Skater = ({ player, game, isHomeTeam }) => {
 Skater.propTypes = {
   player: PropTypes.object.isRequired,
   game: PropTypes.object,
-  isHomeTeam: PropTypes.bool
+  isHomeTeam: PropTypes.bool,
+  teamColor: PropTypes.string
+};
+
+Skater.defaults = {
+  isHomeTeam: true,
+  teamColor: '#000000',
 };

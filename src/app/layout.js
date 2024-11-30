@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <MainNav />
-        <section id="root" className="py-5">
+        <section id="root" className="px-3 md:px-0 py-3">
           <TopBarSchedule />
           {children}
         </section>
