@@ -142,60 +142,62 @@ export default function PlayerPage({ params }) {
 
   const renderStatsTable = ({ stats, showLeague }) => {
     return (
-      <table className="statsTable">
-        <thead>
-          <tr className={`text-xs border ${headerColorClass}`} >
-            <th className={'p-2 text-center'} style={headerStyle}>Season</th>
-            <th className={'p-2 text-left'} style={headerStyle}>Team</th>
-            {showLeague && (
-              <th className={'p-2 text-left'} style={headerStyle}>League</th>
-            )}
-            {statHeaders.map(
-              ({ key, label, title, altKey }) =>
-                (Object.keys(seasonTotals[seasonTotals.length-1]).includes(key) || (altKey && Object.keys(seasonTotals[seasonTotals.length-1]).includes(altKey))) && (
-                  <th key={key} className={`p-2 text-center ${headerColorClass}`} style={headerStyle}>
-                    <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
-                  </th>
-                )
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {stats.map((season, i) => (
-            <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
-              <td className="p-2 border text-center">
-                {formatSeason(season.season)}
-                {season.gameTypeId === 2 ? '' : <div className="text-xs">Postseason</div>}
-              </td>
-              <td className="">
-                <div className="flex gap-1 items-center">
-                  {season.leagueAbbrev === 'NHL' && (
-                    <TeamLogo team={season.teamName?.default} className="h-8 w-8" alt={season.season.teamName?.default} />
-                  )}
-                  {season.teamName?.default}
-                </div>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="statsTable">
+          <thead>
+            <tr className={`text-xs border ${headerColorClass}`} >
+              <th className={'p-2 text-center'} style={headerStyle}>Season</th>
+              <th className={'p-2 text-left'} style={headerStyle}>Team</th>
               {showLeague && (
-                <td className="text-left">
-                  {season.leagueAbbrev}
-                </td>
+                <th className={'p-2 text-left'} style={headerStyle}>League</th>
               )}
               {statHeaders.map(
-                ({ key, altKey, precision }) =>
+                ({ key, label, title, altKey }) =>
                   (Object.keys(seasonTotals[seasonTotals.length-1]).includes(key) || (altKey && Object.keys(seasonTotals[seasonTotals.length-1]).includes(altKey))) && (
-                    <td key={key} className="p-2 border text-center text-xs">
-                      {season[key] !== undefined ? (
-                        <>{formatStat(season[key], precision)}</>
-                      ) : (
-                        <>{formatStat(season[altKey], precision)}</>
-                      )}
-                    </td>
+                    <th key={key} className={`p-2 text-center ${headerColorClass}`} style={headerStyle}>
+                      <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
+                    </th>
                   )
               )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {stats.map((season, i) => (
+              <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
+                <td className="p-2 border text-center">
+                  {formatSeason(season.season)}
+                  {season.gameTypeId === 2 ? '' : <div className="text-xs">Postseason</div>}
+                </td>
+                <td className="">
+                  <div className="flex gap-1 items-center">
+                    {season.leagueAbbrev === 'NHL' && (
+                      <TeamLogo team={season.teamName?.default} className="h-8 w-8 hidden md:block" alt={season.season.teamName?.default} />
+                    )}
+                    {season.teamName?.default}
+                  </div>
+                </td>
+                {showLeague && (
+                  <td className="text-left">
+                    {season.leagueAbbrev}
+                  </td>
+                )}
+                {statHeaders.map(
+                  ({ key, altKey, precision }) =>
+                    (Object.keys(seasonTotals[seasonTotals.length-1]).includes(key) || (altKey && Object.keys(seasonTotals[seasonTotals.length-1]).includes(altKey))) && (
+                      <td key={key} className="p-2 border text-center text-xs">
+                        {season[key] !== undefined ? (
+                          <>{formatStat(season[key], precision)}</>
+                        ) : (
+                          <>{formatStat(season[altKey], precision)}</>
+                        )}
+                      </td>
+                    )
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     );
   };
 
@@ -305,58 +307,60 @@ export default function PlayerPage({ params }) {
       {last5Games && (
         <div className="my-5">
           <div className="text-3xl font-bold underline my-3">Last Five Games</div>
-          <table className="text-sm w-full">
-            <thead>
-              <tr className={`text-xs border ${headerColorClass}`} style={headerStyle}>
-                <th className="p-2 text-center w-10">Date</th>
-                <th className="p-2 text-left">Opponent</th>
-                {statHeaders.map(
-                  ({ key, label, title, altKey }) =>
-                    (Object.keys(last5Games[0]).includes(key) || (altKey && Object.keys(last5Games[0]).includes(altKey))) && (
-                      <th key={key} className="p-2 text-center">
-                        <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
-                      </th>
-                    )
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {last5Games.map((g, i) => (
-                <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
-                  <td className="p-2 border text-center">{formatGameDate(g.gameDate)}</td>
-                  <td className="p-2 border text-left">
-                    <div className="font-bold underline">
-                      {g.homeRoadFlag !== 'H' ? (
-                        <div className="flex items-center gap-2">
-                          <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
-                          <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.teamAbbrev}@{g.opponentAbbrev}</Link>
-                          <TeamLogo team={g.opponentAbbrev} className="h-8 w-8" alt={g.opponentAbbrev} />
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <TeamLogo team={g.opponentAbbrev} className="h-8 w-8" alt={g.opponentAbbrev} />
-                          <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.opponentAbbrev}@{g.teamAbbrev}</Link>
-                          <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
-                        </div>
-                      )}
-                    </div>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="text-sm w-full">
+              <thead>
+                <tr className={`text-xs border ${headerColorClass}`} style={headerStyle}>
+                  <th className="p-2 text-center w-10">Date</th>
+                  <th className="p-2 text-left">Opponent</th>
                   {statHeaders.map(
-                    ({ key, altKey, precision }) =>
+                    ({ key, label, title, altKey }) =>
                       (Object.keys(last5Games[0]).includes(key) || (altKey && Object.keys(last5Games[0]).includes(altKey))) && (
-                        <td key={key} className="p-2 border text-center text-xs">
-                          {g[key] !== undefined ? (
-                            <>{formatStat(g[key], precision)}</>
-                          ) : (
-                            <>{formatStat(g[altKey], precision)}</>
-                          )}
-                        </td>
+                        <th key={key} className="p-2 text-center">
+                          <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
+                        </th>
                       )
                   )}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {last5Games.map((g, i) => (
+                  <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
+                    <td className="p-2 border text-center">{formatGameDate(g.gameDate)}</td>
+                    <td className="p-2 border text-left">
+                      <div className="font-bold underline">
+                        {g.homeRoadFlag !== 'H' ? (
+                          <div className="flex items-center gap-2">
+                            <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
+                            <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.teamAbbrev}@{g.opponentAbbrev}</Link>
+                            <TeamLogo team={g.opponentAbbrev} className="h-8 w-8" alt={g.opponentAbbrev} />
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <TeamLogo team={g.opponentAbbrev} className="h-8 w-8" alt={g.opponentAbbrev} />
+                            <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.opponentAbbrev}@{g.teamAbbrev}</Link>
+                            <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    {statHeaders.map(
+                      ({ key, altKey, precision }) =>
+                        (Object.keys(last5Games[0]).includes(key) || (altKey && Object.keys(last5Games[0]).includes(altKey))) && (
+                          <td key={key} className="p-2 border text-center text-xs">
+                            {g[key] !== undefined ? (
+                              <>{formatStat(g[key], precision)}</>
+                            ) : (
+                              <>{formatStat(g[altKey], precision)}</>
+                            )}
+                          </td>
+                        )
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
       
