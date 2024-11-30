@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
+import { getTeamDataByAbbreviation, getTeamDataByCommonName } from '../utils/teamData';
 
 const TeamLogo = ({ src, alt, className, team, colorMode }) => {
   const [theme, setTheme] = useState(colorMode);
@@ -22,14 +23,27 @@ const TeamLogo = ({ src, alt, className, team, colorMode }) => {
     return () => mediaQuery.removeEventListener('change', handleThemeChange);
   }, [ colorMode ]);
 
-  // colorMode setting overrides theme
-  let updatedSrc;
-  if (colorMode) {
-    updatedSrc = (colorMode === 'dark') ? src.replace('_light', '_dark') : src.replace('_dark', '_light');
-  } else {
-    updatedSrc = (theme === 'dark') ? src.replace('_light', '_dark') : src.replace('_dark', '_light');
+  // If src is empty, extract from team name
+  let updatedSrc = src ? src : 'https://assets.nhle.com/logos/nhl/svg/NHL_light.svg';
+  let teamData = {};
+  if (!src && team) {
+    teamData = getTeamDataByAbbreviation(team);
+    if (teamData) {
+      updatedSrc = `https://assets.nhle.com/logos/nhl/svg/${team}_light.svg`;
+    } else {
+      teamData = getTeamDataByCommonName(team);
+      if (teamData) {
+        updatedSrc = `https://assets.nhle.com/logos/nhl/svg/${teamData.abbreviation}_light.svg`;
+      }
+    }
   }
-  
+
+  // colorMode setting overrides theme
+  if (colorMode) {
+    updatedSrc = (colorMode === 'dark') ? updatedSrc.replace('_light', '_dark') : updatedSrc.replace('_dark', '_light');
+  } else {
+    updatedSrc = (theme === 'dark') ? updatedSrc.replace('_light', '_dark') : updatedSrc.replace('_dark', '_light');
+  }
   
   const image = (
     <Image
@@ -41,7 +55,7 @@ const TeamLogo = ({ src, alt, className, team, colorMode }) => {
     />
   );
 
-  if (team) {
+  if (team && team.length < 5) {
     return (
       <Link href={`/team/${team}`}>
         {image}

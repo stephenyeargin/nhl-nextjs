@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { formatStat } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
+import '@/app/components/StandingsTable.scss';
 
 const StandingsTable = ({ standings }) => {
   const tableRows = standings
@@ -21,27 +22,27 @@ const StandingsTable = ({ standings }) => {
   const wildcardRankings = ['1', '2', '3', '1', '2', '3', 'WC1', 'WC2', '', '', '', '', '', '', '', ''];
 
   return (
-    <table className="w-full table-auto border-collapse border statsTable">
+    <table className="standingsTable">
       <thead>
         <tr className="text-sm border bg-slate-200 dark:bg-slate-800">
-          <th className="p-2 w-10 text-center"></th>
-          <th className="p-2 text-center">Team</th>
-          <th className="p-2 w-15 text-center">GP</th>
-          <th className="p-2 w-15 text-center">W</th>
-          <th className="p-2 w-15 text-center">L</th>
-          <th className="p-2 w-15 text-center">OT</th>
-          <th className="p-2 w-15 text-center">PTS</th>
-          <th className="p-2 w-15 text-center">P%</th>
-          <th className="p-2 w-15 text-center hidden md:table-cell">RW</th>
-          <th className="p-2 w-15 text-center hidden md:table-cell">ROW</th>
-          <th className="p-2 w-15 text-center hidden md:table-cell">GF</th>
-          <th className="p-2 w-15 text-center hidden md:table-cell">GA</th>
-          <th className="p-2 w-15 text-center hidden md:table-cell">DIFF</th>
-          <th className="p-2 w-15 text-center hidden md:table-cell">HOME</th>
-          <th className="p-2 w-15 text-center hidden md:table-cell">AWAY</th>
-          <th className="p-2 w-15 text-center">S/O</th>
-          <th className="p-2 w-15 text-center">L10</th>
-          <th className="p-2 w-15 text-center">STRK</th>
+          <th className="w-10 text-center"></th>
+          <th className="text-center">Team</th>
+          <th className="w-15 text-center">GP</th>
+          <th className="w-15 text-center">W</th>
+          <th className="w-15 text-center">L</th>
+          <th className="w-15 text-center">OT</th>
+          <th className="w-15 text-center">PTS</th>
+          <th className="w-15 text-center">P%</th>
+          <th className="w-15 text-center hidden md:table-cell">RW</th>
+          <th className="w-15 text-center hidden md:table-cell">ROW</th>
+          <th className="w-15 text-center hidden md:table-cell">GF</th>
+          <th className="w-15 text-center hidden md:table-cell">GA</th>
+          <th className="w-15 text-center hidden md:table-cell">DIFF</th>
+          <th className="w-15 text-center hidden md:table-cell">HOME</th>
+          <th className="w-15 text-center hidden md:table-cell">AWAY</th>
+          <th className="w-15 text-center">S/O</th>
+          <th className="w-15 text-center">L10</th>
+          <th className="w-15 text-center">STRK</th>
         </tr>
       </thead>
       <tbody>
@@ -61,22 +62,22 @@ const StandingsTable = ({ standings }) => {
                 </div>
               </Link>
             </td>
-            <td className="text-center border text-sm p-2">{formatStat(team.gamesPlayed)}</td>
-            <td className="text-center border text-sm p-2">{formatStat(team.wins)}</td>
-            <td className="text-center border text-sm p-2">{formatStat(team.losses)}</td>
-            <td className="text-center border text-sm p-2">{formatStat(team.otLosses)}</td>
-            <td className="text-center border text-sm p-2">{formatStat(team.points)}</td>
-            <td className="text-center border text-sm p-2">{formatStat(team.pointPctg,3)}</td>
-            <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.roadWins)}</td>
-            <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.regulationPlusOtWins)}</td>
-            <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.goalFor)}</td>
-            <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.goalAgainst)}</td>
-            <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.goalDifferential)}</td>
-            <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.homeWins)}-{formatStat(team.homeLosses)}-{formatStat(team.homeOtLosses)}</td>
-            <td className="text-center border text-sm p-2 hidden md:table-cell">{formatStat(team.roadWins)}-{formatStat(team.roadLosses)}-{formatStat(team.roadOtLosses)}</td>
-            <td className="text-center border text-sm p-2">{formatStat(team.shootoutWins)}-{formatStat(team.shootoutLosses)}</td>
-            <td className="text-center border text-sm p-2">{formatStat(team.l10Wins)}-{formatStat(team.l10Losses)}-{formatStat(team.l10OtLosses)}</td>
-            <td className="text-center border text-sm p-2">{formatStat(team.streakCode)}{formatStat(team.streakCount)}</td>
+            <td className="text-center">{formatStat(team.gamesPlayed)}</td>
+            <td className="text-center">{formatStat(team.wins)}</td>
+            <td className="text-center">{formatStat(team.losses)}</td>
+            <td className="text-center">{formatStat(team.otLosses)}</td>
+            <td className="text-center">{formatStat(team.points)}</td>
+            <td className="text-center">{formatStat(team.pointPctg,3)}</td>
+            <td className="text-center hidden md:table-cell">{formatStat(team.roadWins)}</td>
+            <td className="text-center hidden md:table-cell">{formatStat(team.regulationPlusOtWins)}</td>
+            <td className="text-center hidden md:table-cell">{formatStat(team.goalFor)}</td>
+            <td className="text-center hidden md:table-cell">{formatStat(team.goalAgainst)}</td>
+            <td className="text-center hidden md:table-cell">{formatStat(team.goalDifferential)}</td>
+            <td className="text-center hidden md:table-cell">{formatStat(team.homeWins)}-{formatStat(team.homeLosses)}-{formatStat(team.homeOtLosses)}</td>
+            <td className="text-center hidden md:table-cell">{formatStat(team.roadWins)}-{formatStat(team.roadLosses)}-{formatStat(team.roadOtLosses)}</td>
+            <td className="text-center">{formatStat(team.shootoutWins)}-{formatStat(team.shootoutLosses)}</td>
+            <td className="text-center">{formatStat(team.l10Wins)}-{formatStat(team.l10Losses)}-{formatStat(team.l10OtLosses)}</td>
+            <td className="text-center">{formatStat(team.streakCode)}{formatStat(team.streakCount)}</td>
           </tr>
         ))}
       </tbody>

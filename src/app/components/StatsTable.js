@@ -13,10 +13,8 @@ const StatsTable = ({ stats, teamColor }) => {
   }
 
   // Add team color if given
-  let headerColorClass = 'bg-slate-200 dark:bg-slate-800 text-black dark:text-white';
   let headerStyle = {};
   if (teamColor) {
-    headerColorClass = 'text-white';
     headerStyle = { backgroundColor: teamColor, color: formatTextColorByBackgroundColor(teamColor) };
   }
 
@@ -57,13 +55,13 @@ const StatsTable = ({ stats, teamColor }) => {
   ];
 
   const renderHeader = () => (
-    <tr className="text-xs border">
-      <th className={`p-2 text-center ${headerColorClass}`} style={headerStyle}>#</th>
-      <th className={`p-2 text-left ${headerColorClass}`} style={headerStyle}>Name</th>
+    <tr>
+      <th className="text-center" style={headerStyle}>#</th>
+      <th className="text-left" style={headerStyle}>Name</th>
       {statHeaders.map(
         ({ key, label, title, altKey }) =>
           (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
-            <th key={key} className={`p-2 text-center ${headerColorClass}`} style={headerStyle}>
+            <th key={key} className="text-center" style={headerStyle}>
               <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
             </th>
           )
@@ -73,7 +71,7 @@ const StatsTable = ({ stats, teamColor }) => {
 
   const renderRow = (skater) => (
     <tr key={skater.playerId}>
-      <td className="p-2 border text-center w-10" data-order={skater?.sweaterNumber}>
+      <td className="text-center w-10" data-order={skater?.sweaterNumber}>
         {skater.sweaterNumber ? (
           <Link href={`/player/${skater.playerId}`} className="font-bold">{skater.sweaterNumber}</Link>
         ) : (
@@ -86,7 +84,7 @@ const StatsTable = ({ stats, teamColor }) => {
           />
         )}
       </td>
-      <td className="p-2 border text-left text-nowrap" data-order={skater.lastName?.default || skater.name?.default}>
+      <td className="text-left text-nowrap" data-order={skater.lastName?.default || skater.name?.default}>
         <Link href={`/player/${skater.playerId}`} className="font-bold">
           {skater.name?.default ? skater.name.default : `${skater.firstName.default} ${skater.lastName.default}`}
         </Link>
@@ -94,7 +92,7 @@ const StatsTable = ({ stats, teamColor }) => {
       {statHeaders.map(
         ({ key, altKey, precision, unit }) =>
           (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
-            <td key={key} className="p-2 border text-center">
+            <td key={key} className="text-center">
               {skater[key] !== undefined ? (
                 <>{formatStat(skater[key], precision, unit)}</>
               ) : (
@@ -108,7 +106,7 @@ const StatsTable = ({ stats, teamColor }) => {
 
   return (
     <div className="overflow-x-auto">
-      <table className="text-sm w-full statsTable">
+      <table className="statsTable">
         <thead>{renderHeader()}</thead>
         <tbody>{stats.map(renderRow)}</tbody>
       </table>

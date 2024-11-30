@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 @layer components {
-    .statsTable {
-        @apply w-full table-auto border-collapse border text-xs;
+    .standingsTable {
+        @apply text-xs w-full table-auto border-collapse border;
 
         th {
-            @apply p-2 bg-slate-200 dark:bg-slate-800 text-black dark:text-white;
+            @apply p-2;
         }
 
         td {

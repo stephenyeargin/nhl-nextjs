@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHockeyPuck, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import LeagueToggle from '@/app/components/LeagueToggle';
+import '@/app/components/StatsTable.scss';
 
 export default function PlayerPage({ params }) {
   const { id } = use(params);
@@ -141,11 +142,11 @@ export default function PlayerPage({ params }) {
 
   const renderStatsTable = ({ stats, showLeague }) => {
     return (
-      <table className="text-sm w-full">
+      <table className="statsTable">
         <thead>
-          <tr className={`text-xs border ${headerColorClass}`} style={headerStyle} >
-            <th className={'p-2 text-center'}>Season</th>
-            <th className={'p-2 text-left'}>Team</th>
+          <tr className={`text-xs border ${headerColorClass}`} >
+            <th className={'p-2 text-center'} style={headerStyle}>Season</th>
+            <th className={'p-2 text-left'} style={headerStyle}>Team</th>
             {showLeague && (
               <th className={'p-2 text-left'} style={headerStyle}>League</th>
             )}
@@ -166,11 +167,16 @@ export default function PlayerPage({ params }) {
                 {formatSeason(season.season)}
                 {season.gameTypeId === 2 ? '' : <div className="text-xs">Postseason</div>}
               </td>
-              <td className="p-2 border text-left">
-                {season.teamName?.default}
+              <td className="">
+                <div className="flex gap-1 items-center">
+                  {season.leagueAbbrev === 'NHL' && (
+                    <TeamLogo team={season.teamName?.default} className="h-8 w-8" alt={season.season.teamName?.default} />
+                  )}
+                  {season.teamName?.default}
+                </div>
               </td>
               {showLeague && (
-                <td className="p-2 border text-left">
+                <td className="text-left">
                   {season.leagueAbbrev}
                 </td>
               )}
@@ -319,11 +325,21 @@ export default function PlayerPage({ params }) {
                 <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
                   <td className="p-2 border text-center">{formatGameDate(g.gameDate)}</td>
                   <td className="p-2 border text-left">
-                    {g.homeRoadFlag === 'H' ? (
-                      <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.opponentAbbrev} @ {g.teamAbbrev}</Link>
-                    ) : (
-                      <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.teamAbbrev} @ {g.opponentAbbrev}</Link>
-                    )}
+                    <div className="font-bold underline">
+                      {g.homeRoadFlag !== 'H' ? (
+                        <div className="flex items-center gap-2">
+                          <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
+                          <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.teamAbbrev}@{g.opponentAbbrev}</Link>
+                          <TeamLogo team={g.opponentAbbrev} className="h-8 w-8" alt={g.opponentAbbrev} />
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <TeamLogo team={g.opponentAbbrev} className="h-8 w-8" alt={g.opponentAbbrev} />
+                          <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.opponentAbbrev}@{g.teamAbbrev}</Link>
+                          <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
+                        </div>
+                      )}
+                    </div>
                   </td>
                   {statHeaders.map(
                     ({ key, altKey, precision }) =>

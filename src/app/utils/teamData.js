@@ -84,7 +84,7 @@ const teamData = [
     'teamColor': '#154734'
   },
   {
-    'name': 'Montreal Canadiens',
+    'name': 'Montréal Canadiens',
     'hashtag': 'GoHabsGo',
     'abbreviation': 'MTL',
     'teamColor': '#AF1E2D'
@@ -195,6 +195,12 @@ const teamData = [
 
 export const getTeamDataByAbbreviation = (abbreviation) => {
   const team = teamData.find((t) => t.abbreviation === abbreviation);
+
+  return team ? team : false;
+};
+
+export const getTeamDataByCommonName = (name) => {
+  const team = teamData.find((t) => t.name === name);
 
   return team ? team : false;
 };
