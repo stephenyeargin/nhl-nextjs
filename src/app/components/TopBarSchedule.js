@@ -132,9 +132,11 @@ const TopBarSchedule = ({ gameDate }) => {
                             ))}
                           </span>
                         </div>
-                        <span className="text-lg font-semibold">
-                          {game.gameState !== 'FUT' ? game.awayTeam.score : ''}
-                        </span>
+                        {game.gameState !== 'FUT' ? (
+                          <span className="text-lg font-semibold">{game.awayTeam.score}</span>
+                        ) : (
+                          <span className="text-sm font-light">{game.awayTeam.record}</span>
+                        )}
                       </div>
 
                       {/* Home Team */}
@@ -152,9 +154,11 @@ const TopBarSchedule = ({ gameDate }) => {
                             ))}
                           </span>
                         </div>
-                        <span className="text-lg font-semibold">
-                          {game.gameState !== 'FUT' ? game.homeTeam.score : ''}
-                        </span>
+                        {game.gameState !== 'FUT' ? (
+                          <span className="text-lg font-semibold">{game.homeTeam.score}</span>
+                        ) : (
+                          <span className="text-sm font-light">{game.homeTeam.record}</span>
+                        )}
                       </div>
                     </div>
                     <div className="mt-2 pt-3 border-t">

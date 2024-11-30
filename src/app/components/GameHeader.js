@@ -102,7 +102,7 @@ const GameHeader = () => {
   
   return (
     <div className={gameHeaderClass} ref={stickyRef} style={gameHeaderStyle}>
-      <div className="col-span-3 flex mx-auto gap-2">
+      <div className="col-span-3 flex flex-wrap mx-auto gap-2 justify-center">
         <div>
           <TeamLogo
             team={awayTeam.abbrev}
@@ -204,8 +204,8 @@ const GameHeader = () => {
           <span key={code} className="mx-2 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
         ))}
       </div>
-      <div className="col-span-3 flex mx-auto gap-2">
-        <div className="text-right">
+      <div className="col-span-3 flex flex-wrap mx-auto gap-2 justify-center">
+        <div className="text-right order-2 md:order-1">
           <Link href={`/team/${homeTeam.abbrev}`}>
             <div className="text-xl font-black block md:hidden">{homeTeam.abbrev}</div>
             <div className="text-lg hidden md:block">
@@ -219,7 +219,7 @@ const GameHeader = () => {
             <div className="text-sm">{homeTeam.record}</div>
           )}
         </div>
-        <div>
+        <div className="text-right order-1 md:order-2">
           <TeamLogo
             team={homeTeam.abbrev}
             src={homeTeam.logo}
