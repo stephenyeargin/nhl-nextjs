@@ -28,6 +28,15 @@ const StatsTable = ({ stats, teamColor }) => {
   const statHeaders = [
     { key: 'position', label: 'POS', title: 'Position', altKey: 'positionCode' },
     { key: 'gamesPlayed', label: 'GP', title: 'Games Played' },
+    { key: 'wins', label: 'W', title: 'Wins' },
+    { key: 'losses', label: 'L', title: 'Losses' },
+    { key: 'otLosses', label: 'OT', title: 'Overtime Losses', altKey: 'overtimeLosses' },
+    { key: 'shotsAgainst', label: 'SA', title: 'Shots Against' },
+    { key: 'saves', label: 'SV', title: 'Saves' },
+    { key: 'goalsAgainst', label: 'GA', title: 'Goals Against' },
+    { key: 'savePctg', label: 'SV%', title: 'Save Percentage', altKey: 'savePercentage', precision: 3 },
+    { key: 'goalsAgainstAvg', label: 'GAA', title: 'Goals Against Average', altKey: 'goalsAgainstAverage', precision: 3 },
+    { key: 'shutouts', label: 'SO', title: 'Shutouts' },
     { key: 'goals', label: 'G', title: 'Goals Scored' },
     { key: 'assists', label: 'A', title: 'Assists' },
     { key: 'points', label: 'P', title: 'Points' },
@@ -42,15 +51,6 @@ const StatsTable = ({ stats, teamColor }) => {
     { key: 'giveaways', label: 'GA', title: 'Giveaways' },
     { key: 'avgTimeOnIce', label: 'TOI/G', title: 'Time On Ice per Game' },
     { key: 'faceoffWinPctg', label: 'FO%', title: 'Faceoff Win Percentage', altKey: 'faceoffWinningPctg', precision: 3 },
-    { key: 'wins', label: 'W', title: 'Wins' },
-    { key: 'losses', label: 'L', title: 'Losses' },
-    { key: 'otLosses', label: 'OT', title: 'Overtime Losses', altKey: 'overtimeLosses' },
-    { key: 'shotsAgainst', label: 'SA', title: 'Shots Against' },
-    { key: 'saves', label: 'SV', title: 'Saves' },
-    { key: 'goalsAgainst', label: 'GA', title: 'Goals Against' },
-    { key: 'savePctg', label: 'SV%', title: 'Save Percentage', altKey: 'savePercentage', precision: 3 },
-    { key: 'goalsAgainstAvg', label: 'GAA', title: 'Goals Against Average', altKey: 'goalsAgainstAverage', precision: 3 },
-    { key: 'shutouts', label: 'SO', title: 'Shutouts' },
     { key: 'timeOnIce', label: 'TOI', title: 'Time On Ice', altKey: 'toi', unit: 'time' }
   ];
 

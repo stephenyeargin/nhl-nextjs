@@ -78,6 +78,17 @@ export default function PlayerPage({ params }) {
 
   const statHeaders = [
     { key: 'gamesPlayed', label: 'GP', title: 'Games Played' },
+    { key: 'gamesStarted', label: 'GS', title: 'Games Started' },
+    { key: 'decision', label: 'D', title: 'Decision' },
+    { key: 'wins', label: 'W', title: 'Wins' },
+    { key: 'losses', label: 'L', title: 'Losses' },
+    { key: 'otLosses', label: 'OT', title: 'Overtime Losses', altKey: 'overtimeLosses' },
+    { key: 'shotsAgainst', label: 'SA', title: 'Shots Against' },
+    { key: 'saves', label: 'SV', title: 'Saves' },
+    { key: 'goalsAgainst', label: 'GA', title: 'Goals Against' },
+    { key: 'savePctg', label: 'SV%', title: 'Save Percentage', altKey: 'savePercentage', precision: 3 },
+    { key: 'goalsAgainstAvg', label: 'GAA', title: 'Goals Against Average', altKey: 'goalsAgainstAverage', precision: 3 },
+    { key: 'shutouts', label: 'SO', title: 'Shutouts' },
     { key: 'goals', label: 'G', title: 'Goals Scored' },
     { key: 'assists', label: 'A', title: 'Assists' },
     { key: 'points', label: 'P', title: 'Points' },
@@ -97,15 +108,6 @@ export default function PlayerPage({ params }) {
     { key: 'shorthandedGoals', label: 'SHG', title: 'Shorthanded Goals' },
     { key: 'shorthandedPoints', label: 'SHP', title: 'Shorthanded Points' },
     { key: 'S', label: 'S', title: 'Shots' },
-    { key: 'wins', label: 'W', title: 'Wins' },
-    { key: 'losses', label: 'L', title: 'Losses' },
-    { key: 'otLosses', label: 'OT', title: 'Overtime Losses', altKey: 'overtimeLosses' },
-    { key: 'shotsAgainst', label: 'SA', title: 'Shots Against' },
-    { key: 'saves', label: 'SV', title: 'Saves' },
-    { key: 'goalsAgainst', label: 'GA', title: 'Goals Against' },
-    { key: 'savePctg', label: 'SV%', title: 'Save Percentage', altKey: 'savePercentage', precision: 3 },
-    { key: 'goalsAgainstAvg', label: 'GAA', title: 'Goals Against Average', altKey: 'goalsAgainstAverage', precision: 3 },
-    { key: 'shutouts', label: 'SO', title: 'Shutouts' },
     { key: 'timeOnIce', label: 'TOI', title: 'Time On Ice', altKey: 'toi' }
   ];
 

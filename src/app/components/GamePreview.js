@@ -9,6 +9,7 @@ import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
 import TeamToggle from './TeamToggle';
+import Link from 'next/link';
 
 const GamePreview = ({ game }) => {
 
@@ -68,9 +69,11 @@ const GamePreview = ({ game }) => {
             size="4"
           />
           <div className="mx-1">
-            <div>{goaltender.firstName.default}</div>
-            <div className="font-bold">{goaltender.lastName.default}</div>
-            <div className="text-sm">#{goaltender.sweaterNumber} • {goaltender.positionCode}</div>
+            <Link href={`/player/${goaltender.playerId}`}>
+              <div>{goaltender.firstName.default}</div>
+              <div className="font-bold">{goaltender.lastName.default}</div>
+              <div className="text-sm">#{goaltender.sweaterNumber} • {goaltender.positionCode}</div>
+            </Link>
           </div>
         </div>
         <div className="col-span-2 flex flex-col items-center">
@@ -128,9 +131,11 @@ const GamePreview = ({ game }) => {
               className="mr-2 hidden md:block"
             />
             <div className="mx-1">
-              <div>{leader.awayLeader.firstName.default}</div>
-              <div className="font-bold">{leader.awayLeader.lastName.default}</div>
-              <div className="text-sm">#{leader.awayLeader.sweaterNumber} • {leader.awayLeader.positionCode}</div>
+              <Link href={`/player/${leader.awayLeader.playerId}`}>
+                <div>{leader.awayLeader.firstName.default}</div>
+                <div className="font-bold">{leader.awayLeader.lastName.default}</div>
+                <div className="text-sm">#{leader.awayLeader.sweaterNumber} • {leader.awayLeader.positionCode}</div>
+              </Link>
             </div>
           </div>
           <div className="col-span-2 text-center text-xl md:text-5xl font-black">
@@ -144,9 +149,11 @@ const GamePreview = ({ game }) => {
           </div>
           <div className="col-span-3 p-2 flex justify-end">
             <div className="mx-1 text-right">
-              <div>{leader.homeLeader.firstName.default}</div>
-              <div className="font-bold">{leader.homeLeader.lastName.default}</div>
-              <div className="text-sm">#{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}</div>
+              <Link href={`/player/${leader.homeLeader.playerId}`}>
+                <div>{leader.homeLeader.firstName.default}</div>
+                <div className="font-bold">{leader.homeLeader.lastName.default}</div>
+                <div className="text-sm">#{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}</div>
+              </Link>
             </div>
             <Headshot
               playerId={leader.homeLeader.playerId}
