@@ -35,9 +35,9 @@ export default async function SchedulePage({ params }) {
         <h1 className="text-3xl font-bold p-5" style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}>{team.name}</h1>
         <TeamLogo
           src={`https://assets.nhle.com/logos/nhl/svg/${slug}_dark.svg`}
-          className="w-64 h-64 mx-auto"
+          className="w-64 h-64 mx-auto hidden md:block"
         />
-        <h1 className="text-5xl font-bold opacity-25 p-5 italic">#{team.hashtag}</h1>
+        <h1 className="text-5xl font-bold opacity-25 p-5 italic hidden lg:block">#{team.hashtag}</h1>
       </div>
 
       <h1 className="text-3xl font-bold mb-6">Team Stats</h1>
