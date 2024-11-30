@@ -115,7 +115,7 @@ const TopBarSchedule = ({ gameDate }) => {
                 }
 
                 return (
-                  <Link key={game.id} href={`/game/${game.id}`} className={itemClass} style={{minWidth: '380px'}}>
+                  <Link key={game.id} href={`/game/${game.id}`} className={itemClass} style={{minWidth: '360px'}}>
                     <div className="space-y-2">
                       {/* Away Team */}
                       <div className={`flex items-center justify-between ${game.awayTeam.defeated ? 'opacity-50' : ''}`}>

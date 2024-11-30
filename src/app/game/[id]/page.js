@@ -219,7 +219,9 @@ const GamePage = () => {
                                 className={`my-1 flex ${penaltyIndex % 2 ? '' : 'bg-slate-500/10'}`}
                               >
                                 <div className="w-20 p-4 text-right">
-                                  {penalty.timeInPeriod}
+                                  <span className="m-1 border rounded p-1 font-bold text-xs">
+                                    {penalty.timeInPeriod}
+                                  </span>
                                 </div>
                                 <div className="w-1/3 p-2">
                                   <div className="flex">
