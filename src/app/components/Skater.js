@@ -44,10 +44,12 @@ export const Skater = ({ player, game, isHomeTeam, teamColor }) => {
       <div className="hidden lg:block font-bold">
         <Link href={`/player/${player.playerId}`} target="_blank">{player.name.default}</Link>
       </div>
-      <div className="hidden lg:block text-sm my-1">
-        <span className="hidden xl:block">#{player.sweaterNumber} • {player.positionCode}</span>
+      <div className="">
+        <div className="hidden xl:block">#{player.sweaterNumber} • {player.positionCode}</div>
         {game && player.secondsRemaining && (
-          <span className="ml-1 border rounded p-1 text-xs"><GameClock timeRemaining={time} running={game.clock.running} /></span>
+          <div className="pt-1">
+            <span className="border rounded p-1"><GameClock timeRemaining={time} running={game.clock.running} /></span>
+          </div>
         )}
       </div>
     </div>

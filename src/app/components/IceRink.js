@@ -6,12 +6,13 @@ import RinkSvg from '@/app/assets/rink.svg';
 import { PropTypes } from 'prop-types';
 import TeamLogo from './TeamLogo';
 import { Skater } from './Skater';
+import { GAME_EVENTS } from '../utils/constants';
 
 const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => {
   const [playBoxContent, setPlayBoxContent] = useState(null);
   const [activePlay, setActivePlay] = useState(null);
 
-  let mappedPlays = plays.filter((p) => p.details?.xCoord && p.details?.yCoord) || [];
+  let mappedPlays = plays.filter((p) => p.details?.xCoord !== undefined && p.details?.yCoord !== undefined) || [];
   mappedPlays = mappedPlays.sort((a, b) => b.sortOrder - a.sortOrder);
 
   const mappedPlayMostRecent = mappedPlays[0]?.eventId;
@@ -70,9 +71,10 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
               top: `${play.details?.yCoord + 50}%`,
               left: `${play.details?.xCoord/2.1 + 50}%`,
               transform: 'translate(-50%, -50%)',
-              opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.25
+              opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.25,
+              zIndex: index < 3 || play.typeDescKey === 'goal' ? 1 : 0
             }}
-            title={`${play.typeDescKey} ${play.details.xCoord},${play.details.yCoord}`}
+            title={`${GAME_EVENTS[play.typeDescKey] || play.typeDescKey} @ ${play.timeInPeriod} (${play.details.xCoord},${play.details.yCoord})`}
             data-index={index}
           >
             <svg width="10" height="10" viewBox="0 0 10 10" onClick={handleMarkerAction} onMouseOver={handleMarkerAction} onMouseOut={() => setPlayBoxContent(null)} style={{ cursor: 'pointer' }}>
@@ -85,7 +87,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
           </div>
         ))}
         {!plays.length > 0 && game?.summary?.iceSurface && (
-          <div className="absolute top-5 bottom-5 left-0 right-0 grid grid-cols-6 items-center">
+          <div className="absolute top-2 bottom-2 left-0 right-0 grid grid-cols-6 items-center">
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.awayTeam.goalies.map((p) => (
                 <Skater key={p.playerId} player={p} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
@@ -119,13 +121,13 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
           </div>
         )}
       </div>
-      <div id="playBox" className="my-5 text-sm flex items-center justify-center">
+      <div id="playBox" className="my-2 text-sm flex items-center justify-center">
         <div>{playBoxContent || <span className="leading-10">&nbsp;</span>}</div>
-        {(game?.summary.iceSurface?.awayTeam.penaltyBox.length > 0 || game?.summary.iceSurface?.homeTeam.penaltyBox.length > 0) && (
+        {!plays.length > 0 && (game?.summary.iceSurface?.awayTeam.penaltyBox.length > 0 || game?.summary.iceSurface?.homeTeam.penaltyBox.length > 0) && (
           <div className="grid grid-cols-2 gap-5">
             <div className="col-span-1 flex gap-2 justify-end">
               {game.summary.iceSurface?.awayTeam.penaltyBox.map((p, i) => (
-                <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={false} teamColor={homeTeam.data.teamColor} />
+                <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
               ))}
             </div>
             <div className="col-span-1 flex gap-2 justify-start">
