@@ -82,14 +82,14 @@ const TopBarSchedule = ({ gameDate }) => {
   };
 
   return (
-    <div>
+    <div className="px-2">
       {games?.length > 0 ? (
         <>
-          <div className="flex text-xs py-4 overflow-x-auto">
+          <div className="flex text-xs gap-4 overflow-x-auto">
             {dates.map((date) => {
-              let dateClass = 'mx-1 border rounded-xl';
+              let dateClass = 'border rounded-xl';
               if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
-                dateClass = 'mx-1 border border-blue-400 rounded-xl';
+                dateClass = 'border border-blue-400 rounded-xl';
               }
               if (date === focusedDate) {
                 dateClass = 'active rounded-xl bg-slate-500 text-white mx-1';
@@ -102,8 +102,8 @@ const TopBarSchedule = ({ gameDate }) => {
               );
             })}
           </div>
-          <div className="overflow-x-auto scrollbar-hidden">
-            <div className="flex flex-nowrap gap-4 p-4">
+          <div className="overflow-x-auto scrollbar-hidden my-3">
+            <div className="flex flex-nowrap gap-4">
               {games.map((game) => {
 
                 game.awayTeam.defeated = game.awayTeam.score < game.homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
@@ -132,7 +132,7 @@ const TopBarSchedule = ({ gameDate }) => {
                             ))}
                           </span>
                         </div>
-                        {game.gameState !== 'FUT' ? (
+                        {!['FUT', 'PRE'].includes(game.gameState) ? (
                           <span className="text-lg font-semibold">{game.awayTeam.score}</span>
                         ) : (
                           <span className="text-sm font-light">{game.awayTeam.record}</span>
@@ -154,7 +154,7 @@ const TopBarSchedule = ({ gameDate }) => {
                             ))}
                           </span>
                         </div>
-                        {game.gameState !== 'FUT' ? (
+                        {!['FUT', 'PRE'].includes(game.gameState) ? (
                           <span className="text-lg font-semibold">{game.homeTeam.score}</span>
                         ) : (
                           <span className="text-sm font-light">{game.homeTeam.record}</span>

@@ -1,8 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { formatStat } from '../utils/formatters';
-import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
+import TeamLogo from '@/app/components/TeamLogo';
+import { formatStat } from '@/app/utils/formatters';
+
+import '@/app/assets/datatables.css';
 import '@/app/components/StandingsTable.scss';
 
 const StandingsTable = ({ standings }) => {

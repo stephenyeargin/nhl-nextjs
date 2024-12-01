@@ -1,8 +1,8 @@
 import React from 'react';
-import { formatStat, formatTextColorByBackgroundColor } from '../utils/formatters';
-import Headshot from './Headshot';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
+import Headshot from '@/app/components/Headshot';
+import { formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 
 import '@/app/assets/datatables.css';
 import '@/app/components/StatsTable.scss';

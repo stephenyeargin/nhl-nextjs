@@ -1,35 +1,41 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    rewrites: async () => {
-        return [
-          {
-            source: '/api/nhl/:path*',
-            destination: 'https://api-web.nhle.com/v1/:path*',
-          },
-        ]
+  compilerOptions: {
+    baseUrl: '.',
+    paths: {
+      '@/*': ['./src/*']
+    }
+  },
+  rewrites: async () => {
+    return [
+      {
+        source: '/api/nhl/:path*',
+        destination: 'https://api-web.nhle.com/v1/:path*',
       },
-    images: {
-        remotePatterns: [
-          {
-            protocol: 'https',
-            hostname: 'via.placeholder.com',
-            port: '',
-            pathname: '/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'api-web.nhle.com',
-            port: '',
-            pathname: '/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'assets.nhle.com',
-            port: '',
-            pathname: '/**',
-          },
-        ],
+    ];
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'api-web.nhle.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets.nhle.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

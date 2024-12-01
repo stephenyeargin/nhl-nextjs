@@ -21,6 +21,7 @@ import GameSkeleton from '@/app/components/GameSkeleton';
 import GameSidebar from '@/app/components/GameSidebar';
 import { notFound } from 'next/navigation';
 import { formatPeriodLabel } from '@/app/utils/formatters';
+import IceRink from '@/app/components/IceRink';
 
 dayjs.extend(utc);
 
@@ -87,9 +88,10 @@ const PlayByPlay = ({ params }) => {
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
 
-  let sortedPlays = playByPlay.plays?.filter((p) => p.periodDescriptor.number === activePeriod) || [];
+  const filteredPlays = playByPlay.plays?.filter((p) => p.periodDescriptor.number === activePeriod) || [];
+  let sortedPlays = filteredPlays;
   if (['LIVE', 'CRIT'].includes(playByPlay.gameState)) {
-    sortedPlays = sortedPlays.sort((a, b) => b.sortOrder - a.sortOrder);
+    sortedPlays = filteredPlays.sort((a, b) => b.sortOrder - a.sortOrder);
   }
 
   const lookupPlayerData = (playerId) => {
@@ -218,8 +220,8 @@ const PlayByPlay = ({ params }) => {
       );
     case 'goal':
       return (
-        <div className="p-2 gap-4 rounded-lg flex justify-between items-center bg-red-900/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}` }}>
-          <div className="flex gap-4 items-center">
+        <div className="p-2 gap-4 rounded-lg flex flex-wrap justify-center md:justify-between items-center bg-red-900/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}` }}>
+          <div className="flex gap-4 items-center justify-start">
             <Headshot
               playerId={e.scoringPlayerId}
               src={(lookupPlayerData(e.scoringPlayerId)).headshot}
@@ -261,7 +263,7 @@ const PlayByPlay = ({ params }) => {
       );
     case 'penalty':
       return (
-        <div className="p-2 gap-4 rounded-lg flex justify items-center bg-slate-600/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}`}}>
+        <div className="p-2 gap-4 rounded-lg flex flex-wrap justify-center md:justify-start items-center bg-slate-500/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}`}}>
           {e.committedByPlayerId ? (
             <Headshot
               playerId={e.committedByPlayerId}
@@ -274,8 +276,7 @@ const PlayByPlay = ({ params }) => {
               {renderTeamLogo(play.details?.eventOwnerTeamId, 16, 'light')}
             </div>
           )}
-
-          <div className="w-1/3">
+          <div className="">
             {e.committedByPlayerId ? (
               <div className="font-medium text-lg mb-3">{renderPlayer(e.committedByPlayerId)}</div>
             ) : (
@@ -288,11 +289,11 @@ const PlayByPlay = ({ params }) => {
               <div className="text-xs my-2">Drawn By: {renderPlayer(e.drawnByPlayerId)}</div>
             )}
           </div>
-          <div className="w-1/4">
+          <div className="">
             <div className="text-xs font-light">Duration</div>
             <div>{e.duration} minutes</div>
           </div>
-          <div className="w-1/4">
+          <div className="">
             <div className="text-xs font-light">{PENALTY_TYPES[e.typeCode]}</div>
             <div>{PENALTY_DESCRIPTIONS[e.descKey]}</div>
           </div>
@@ -330,12 +331,13 @@ const PlayByPlay = ({ params }) => {
       <GameHeader />
 
       <GameSubPageNavigation game={game} />
-
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
           <div className="flex justify-center my-5">
             <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} />
           </div>
+
+          <IceRink plays={filteredPlays} homeTeam={homeTeam} awayTeam={awayTeam} renderPlayByPlayEvent={renderPlayByPlayEvent} />
 
           <div className="overflow-x-auto">
             <table className="text-xs min-w-full table-auto">
