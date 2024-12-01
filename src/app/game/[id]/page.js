@@ -13,13 +13,13 @@ import GameSkeleton from '@/app/components/GameSkeleton.js';
 import Headshot from '@/app/components/Headshot';
 import GameHeader from '@/app/components/GameHeader.js';
 import GamePreview from '@/app/components/GamePreview';
-import IceSurface from '@/app/components/IceSurface';
 import { PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
 import PageError from '@/app/components/PageError';
 import TeamLogo from '@/app/components/TeamLogo';
 import GameSidebar from '@/app/components/GameSidebar';
 import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
 import { formatPeriodLabel } from '@/app/utils/formatters';
+import IceRink from '@/app/components/IceRink';
 
 dayjs.extend(utc);
 
@@ -68,8 +68,9 @@ const GamePage = () => {
           )}
           {summary && (
             <div>
-              <IceSurface game={game} />
-
+              {game.summary.iceSurface && (
+                <IceRink game={game} plays={[]} homeTeam={homeTeam} awayTeam={awayTeam} />
+              )}
               <div className="text-3xl font-bold underline my-4">Game Summary</div>
               <div className="mb-4">
                 <h3 className="text-xl font-semibold my-3">Scoring Summary</h3>

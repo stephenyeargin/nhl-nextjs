@@ -5,18 +5,21 @@ import Image from 'next/image';
 import RinkSvg from '@/app/assets/rink.svg';
 import { PropTypes } from 'prop-types';
 import TeamLogo from './TeamLogo';
+import { Skater } from './Skater';
 
-const IceRink = ({ plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => {
+const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => {
   const [playBoxContent, setPlayBoxContent] = useState(null);
   const [activePlay, setActivePlay] = useState(null);
 
   let mappedPlays = plays.filter((p) => p.details?.xCoord && p.details?.yCoord) || [];
   mappedPlays = mappedPlays.sort((a, b) => b.sortOrder - a.sortOrder);
 
+  const mappedPlayMostRecent = mappedPlays[0]?.eventId;
+
   useEffect(() => {
-    setActivePlay(mappedPlays[0].eventId);
+    setActivePlay(mappedPlayMostRecent);
     setPlayBoxContent(null);
-  }, [mappedPlays]);
+  }, [mappedPlayMostRecent]);
 
   const logos = {};
   logos[homeTeam.abbrev] = homeTeam.logo;
@@ -49,7 +52,7 @@ const IceRink = ({ plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => {
         <TeamLogo
           src={logos[homeTeam.abbrev]}
           alt="Center Ice"
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-20"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-50"
         />
 
         <Image
@@ -81,15 +84,64 @@ const IceRink = ({ plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => {
             </svg>
           </div>
         ))}
+        {!plays.length > 0 && game?.summary?.iceSurface && (
+          <div className="absolute top-5 bottom-5 left-0 right-0 grid grid-cols-6 items-center">
+            <div className="col-span-1 text-center">
+              {game.summary.iceSurface.awayTeam.goalies.map((p) => (
+                <Skater key={p.playerId} player={p} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
+              ))}
+            </div>
+            <div className="col-span-1 text-center">
+              {game.summary.iceSurface.awayTeam.defensemen.map((p) => (
+                <Skater key={p.playerId} player={p} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
+              ))}
+            </div>
+            <div className="col-span-1 text-center">
+              {game.summary.iceSurface.awayTeam.forwards.map((p) => (
+                <Skater key={p.playerId} player={p} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
+              ))}
+            </div>
+            <div className="col-span-1 text-center">
+              {game.summary.iceSurface.homeTeam.forwards.map((p) => (
+                <Skater key={p.playerId} player={p} isHomeTeam={true} teamColor={homeTeam.data.teamColor} />
+              ))}
+            </div>
+            <div className="col-span-1 text-center">
+              {game.summary.iceSurface.homeTeam.defensemen.map((p) => (
+                <Skater key={p.playerId} player={p} isHomeTeam={true} teamColor={homeTeam.data.teamColor} />
+              ))}
+            </div>
+            <div className="col-span-1 text-center">
+              {game.summary.iceSurface.homeTeam.goalies.map((p) => (
+                <Skater key={p.playerId} player={p} isHomeTeam={true} teamColor={homeTeam.data.teamColor} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div id="playBox" className="my-5 text-sm flex items-center justify-center">
         <div>{playBoxContent || <span className="leading-10">&nbsp;</span>}</div>
+        {(game?.summary.iceSurface?.awayTeam.penaltyBox.length > 0 || game?.summary.iceSurface?.homeTeam.penaltyBox.length > 0) && (
+          <div className="grid grid-cols-2 gap-5">
+            <div className="col-span-1 flex gap-2 justify-end">
+              {game.summary.iceSurface?.awayTeam.penaltyBox.map((p, i) => (
+                <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={false} teamColor={homeTeam.data.teamColor} />
+              ))}
+            </div>
+            <div className="col-span-1 flex gap-2 justify-start">
+              {game.summary.iceSurface?.homeTeam.penaltyBox.map((p, i) => (
+                <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={true} teamColor={homeTeam.data.teamColor} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 IceRink.propTypes = {
+  game: PropTypes.object.isRequired,
   plays: PropTypes.array,
   homeTeam: PropTypes.object.isRequired,
   awayTeam: PropTypes.object.isRequired,
@@ -97,7 +149,8 @@ IceRink.propTypes = {
 };
 
 IceRink.defaultProps = {
-  plays: []
+  plays: [],
+  players: []
 };
 
 export default IceRink;

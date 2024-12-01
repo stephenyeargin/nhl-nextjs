@@ -180,11 +180,13 @@ const GameHeader = () => {
         {(situation && (situation.awayTeam.strength !== 5 || situation?.homeTeam.strength) !== 5) && (
           <div className="my-2">
             {situation?.timeRemaining && (
-              <span className="text-sm font-medium px-2 py-1 border text-slate-900 dark:text-slate-100 rounded">
-                <GameClock timeRemaining={situation?.timeRemaining} running={clock?.running && !clock?.inIntermission} />
-              </span>
+              <div>
+                <span className="text-sm font-medium px-2 py-1 border text-slate-900 dark:text-slate-100 rounded">
+                  <GameClock timeRemaining={situation?.timeRemaining} running={clock?.running && !clock?.inIntermission} />
+                </span>
+              </div>
             )}
-            <span className="text-md font-bold px-2 py-1 text-red-900 rounded uppercase">
+            <span className="text-sm md:text-sm font-bold px-2 py-1 text-red-900 rounded uppercase text-nowrap">
               {situation?.awayTeam.strength}-on-{situation?.homeTeam.strength}
             </span>
           </div>

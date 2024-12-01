@@ -24,26 +24,28 @@ export const Skater = ({ player, game, isHomeTeam, teamColor }) => {
   }
 
   return (
-    <div key={player.playerId} className="text-xs text-center m-5">
-      <Link
-        href={`/player/${player.playerId}`} target="_blank"
-        title={player.name.default}
-        className="md:hidden font-bold rounded-full p-2 w-10 h-10" style={skaterStyle}
-      >
-        {player.sweaterNumber.toString().padStart(2, '0')}
-      </Link>
+    <div key={player.playerId} className="text-xs text-center">
+      <div className="lg:hidden my-3">
+        <Link
+          href={`/player/${player.playerId}`} target="_blank"
+          title={player.name.default}
+          className="font-bold rounded-full p-2 w-10 h-10" style={skaterStyle}
+        >
+          {player.sweaterNumber.toString().padStart(2, '0')}
+        </Link>
+      </div>
       <Headshot
         playerId={player.playerId}
         src={player.headshot}
         alt={`${player.name.default}`}
         size="2"
-        className="hidden md:block m-1 mx-auto"
+        className="hidden lg:block m-1 mx-auto"
       />
-      <div className="hidden md:block font-bold">
+      <div className="hidden lg:block font-bold">
         <Link href={`/player/${player.playerId}`} target="_blank">{player.name.default}</Link>
       </div>
-      <div className="hidden md:block text-sm my-1">
-        #{player.sweaterNumber} • {player.positionCode}
+      <div className="hidden lg:block text-sm my-1">
+        <span className="hidden xl:block">#{player.sweaterNumber} • {player.positionCode}</span>
         {game && player.secondsRemaining && (
           <span className="ml-1 border rounded p-1 text-xs"><GameClock timeRemaining={time} running={game.clock.running} /></span>
         )}

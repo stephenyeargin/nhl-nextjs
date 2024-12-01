@@ -337,7 +337,7 @@ const PlayByPlay = ({ params }) => {
             <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} />
           </div>
 
-          <IceRink plays={filteredPlays} homeTeam={homeTeam} awayTeam={awayTeam} renderPlayByPlayEvent={renderPlayByPlayEvent} />
+          <IceRink game={game} plays={filteredPlays} homeTeam={homeTeam} awayTeam={awayTeam} renderPlayByPlayEvent={renderPlayByPlayEvent} />
 
           <div className="overflow-x-auto">
             <table className="text-xs min-w-full table-auto">
