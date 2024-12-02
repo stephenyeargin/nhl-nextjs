@@ -20,6 +20,7 @@ import GameSidebar from '@/app/components/GameSidebar';
 import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
 import { formatPeriodLabel } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
+import GameStory from '@/app/components/GameStory';
 
 dayjs.extend(utc);
 
@@ -63,6 +64,10 @@ const GamePage = () => {
       
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
+          {['OFF', 'FINAL'].includes(game.gameState) && (
+            <GameStory game={game} />
+          )}
+
           {matchup && (
             <GamePreview game={game} />
           )}

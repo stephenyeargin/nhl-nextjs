@@ -34,6 +34,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'media.d3.nhle.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
