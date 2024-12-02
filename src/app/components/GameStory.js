@@ -12,7 +12,7 @@ const GameStory = ({ game }) => {
 
   useEffect(() => {
     const fetchGameStory = async () => {
-      const contentResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=gameid-${game.id}&tags.slug=game-recap&context.slug=nhl`);
+      const contentResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=gameid-${game.id}&context.slug=nhl`);
       const content = await contentResponse.json();
   
       setStoryContent(content);
@@ -22,7 +22,7 @@ const GameStory = ({ game }) => {
   }, [game.id]);
 
   if (!content || !content.items || content.items.length === 0) {
-    return null;
+    return (<></>);
   }
 
   return (

@@ -64,10 +64,9 @@ const GamePage = () => {
       
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
-          {['OFF', 'FINAL'].includes(game.gameState) && (
+          {['FUT', 'PRE', 'OFF', 'FINAL'].includes(game.gameState) && (
             <GameStory game={game} />
           )}
-
           {matchup && (
             <GamePreview game={game} />
           )}

@@ -10,7 +10,7 @@ const LeagueToggle = ({ activeLeague, handleChangeLeagues }) => {
     <div>
       <div className="flex space-x-0">
         <button
-          className="flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md bg-slate-200 text-black"
+          className="flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md bg-slate-200 dark:bg-slate-800 text-black dark:text-white"
           style={{ backgroundColor: activeLeague === 'nhl' ? '#111' : '', color: activeLeague === 'nhl' ? '#eee' : '' }}
           onClick={() => handleChangeLeagues('nhl')}
         >
@@ -25,16 +25,10 @@ const LeagueToggle = ({ activeLeague, handleChangeLeagues }) => {
           </div>
         </button>
         <button
-          className="flex gap-1 items-center text-sm p-2 border rounded-r-md bg-slate-200 text-black"
+          className="flex gap-1 items-center text-sm p-2 border rounded-r-md bg-slate-200 dark:bg-slate-800 text-black dark:text-white"
           style={{ backgroundColor: activeLeague === 'other' ? '#111' : '', color: activeLeague === 'other' ? '#eee' : '' }}
           onClick={() => handleChangeLeagues('other')}
         >
-          <TeamLogo
-            colorMode={activeLeague === 'other' ? 'dark' : 'light'}
-            src={'https://assets.nhle.com/logos/nhl/svg/NHL_light.svg'}
-            alt="NHL Logo"
-            className="w-6 h-6"
-          />
           <div>
             Other Leagues
           </div>
