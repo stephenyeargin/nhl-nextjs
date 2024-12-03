@@ -81,7 +81,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
               top: `${play.details?.yCoord/0.88 + 50}%`,
               left: `${play.details?.xCoord/2.02 + 50}%`,
               transform: 'translate(-50%, -50%)',
-              opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.6,
+              opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.5,
               zIndex: index < 3 || play.typeDescKey === 'goal' ? 1 : 0
             }}
             title={`Event #${play.eventId}: ${GAME_EVENTS[play.typeDescKey] || play.typeDescKey} @ ${play.timeInPeriod} (${play.details.xCoord},${play.details.yCoord})`}
@@ -91,12 +91,12 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
               {play.typeDescKey	 === 'goal' ? (
                 <>
                   <circle cx="5" cy="5" r="5" fill={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data.teamColor : awayTeam.data.teamColor} />
-                  <text x={2} y={7} fill="white" style={{ fontFamily: 'Arial,sans-serif', fontSize: '7pt', fontWeight: 'bold', textTransform: 'uppercase'}}>★</text>
+                  <text x={1} y={8} className="fill-white font-sans" style={{ fontSize: '6pt' }}>★</text>
                 </>
               ) : (
                 <>
                   <path d="M5 0C2.24 0 0 2.24 0 5C0 7.76 2.24 10 5 10C7.76 10 10 7.76 10 5C10 2.24 7.76 0 5 0ZM5 8C3.34 8 2 6.66 2 5C2 3.34 3.34 2 5 2C6.66 2 8 3.34 8 5C8 6.66 6.66 8 5 8Z" fill={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data.teamColor : awayTeam.data.teamColor} />
-                  <text x={2.75} y={7.5} className="font-sans font-extrabold fill-black dark:fill-white uppercase" style={{ fontSize: '6px' }}>{play.typeDescKey.substr(0,1)}</text>
+                  <text x={3} y={6.75} className="font-sans font-extrabold fill-black dark:fill-white uppercase" style={{ fontSize: '5px' }}>{play.typeDescKey.substr(0,1)}</text>
                 </>
               )}
             </svg>

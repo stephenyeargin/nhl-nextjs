@@ -5,7 +5,7 @@ import React from 'react';
 const GameSkeleton = () => {
   return (
     <div className="container mx-auto animate-pulse">
-      <div className="border rounded-lg grid grid-cols-12 my-5 border py-4 gap-5">
+      <div className="border rounded-lg grid grid-cols-12 my-5 py-4 gap-5">
         <div className="col-span-3 flex mx-auto">
           <div className="w-40 h-20 bg-slate-300 dark:bg-slate-700"></div>
           <div className="mx-4">

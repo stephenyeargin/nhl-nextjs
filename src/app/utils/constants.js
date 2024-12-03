@@ -325,7 +325,7 @@ export const GAME_EVENTS = {
 
 export const GOAL_MODIFIERS = {
   'awarded': { label: 'AWD', title: 'Awarded Goal' },
-  'awarded-empty-net': { label: 'AWD, EN', title: 'Awared Goal (Empty Net)' },
+  'awarded-empty-net': { label: 'AWD, EN', title: 'Awarded Goal (Empty Net)' },
   'empty-net': { label: 'EN', title: 'Empty Net' },
   'game-winning-goal': { label: 'GWG', title: 'Game Winning Goal' },
   'none': { label: '', title: 'None' },
