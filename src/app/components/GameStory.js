@@ -27,9 +27,11 @@ const GameStory = ({ game }) => {
 
   return (
     <div className="p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded leading-2">
-      <Link href={`https://www.nhl.com/news/${content.items[0].slug}`}>
-        <Image src={content.items[0].thumbnail.thumbnailUrl} width="416" height="416" alt="Story Photo" />
-      </Link>
+      {content.items[0].thumbnail && (
+        <Link href={`https://www.nhl.com/news/${content.items[0].slug}`}>
+          <Image src={content.items[0].thumbnail.thumbnailUrl} width="416" height="416" alt="Story Photo" />
+        </Link>
+      )}
       <div>
         <h1 className="text-2xl font-bold mb-2"><Link href={`https://www.nhl.com/news/${content.items[0].slug}`}>{content.items[0].headline}</Link></h1>
         <h2 className="text-lg text-slate-500 mb-2">{content.items[0].fields?.description}</h2>
