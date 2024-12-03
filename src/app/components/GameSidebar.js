@@ -5,7 +5,7 @@ import { useGameContext } from '../contexts/GameContext';
 import Scoreboard from './Scoreboard';
 import TeamLogo from './TeamLogo';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
-import { TEAM_STATS, GAME_STATES } from '../utils/constants';
+import { TEAM_STATS, GAME_STATES, GAME_REPORT_NAMES } from '../utils/constants';
 import { formatStatValue, formatSeriesStatus, formatGameTime, formatPeriodLabel } from '../utils/formatters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
@@ -244,6 +244,20 @@ const GameSidebar = () => {
           </div>
         </div>
       )}
+
+      {rightRail.gameReports && (
+        <div>
+          <div className="p-2 text-2xl font-bold text-center">Game Reports</div>
+          <ul className="text-xs font-bold underline flex flex-wrap mt-2">
+            {Object.keys(rightRail.gameReports).map((reportKey) => (
+              <li key={reportKey} className="p-1 w-1/2 text-center">
+                <Link href={rightRail.gameReports[reportKey]}>{GAME_REPORT_NAMES[reportKey]}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
     </div>
   );
 };

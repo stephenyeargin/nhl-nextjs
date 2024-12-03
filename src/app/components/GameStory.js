@@ -9,17 +9,18 @@ import Link from 'next/link';
 
 const GameStory = ({ game }) => {
   const [content, setStoryContent] = useState(null);
+  const type = game.gameState === 'FINAL' || game.gameState === 'OFF' ? 'game-recap' : 'game-preview';
 
   useEffect(() => {
     const fetchGameStory = async () => {
-      const contentResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=gameid-${game.id}&context.slug=nhl`);
+      const contentResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=gameid-${game.id}&tags.slug=${type}&context.slug=nhl`);
       const content = await contentResponse.json();
   
       setStoryContent(content);
     };
 
     fetchGameStory();
-  }, [game.id]);
+  }, [game.id, type]);
 
   if (!content || !content.items || content.items.length === 0) {
     return (<></>);

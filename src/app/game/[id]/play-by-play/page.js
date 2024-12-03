@@ -179,7 +179,7 @@ const PlayByPlay = ({ params }) => {
     case 'blocked-shot':
       return (
         <div className="">
-          {renderPlayer(e.blockingPlayerId)} blocked a shot from {renderPlayer(e.shootingPlayerId)}
+          {renderPlayer(e.blockingPlayerId)} blocked a shot from {e.reason === 'teammate-blocked' ? 'teammate' : ''} {renderPlayer(e.shootingPlayerId)}
         </div>
       );
     case 'shot-on-goal':
@@ -191,7 +191,7 @@ const PlayByPlay = ({ params }) => {
     case 'stoppage':
       return (
         <div className="">
-          {GAME_EVENTS[e.reason]}
+          {GAME_EVENTS[e.reason]}{e.secondaryReason ? `, ${GAME_EVENTS[e.secondaryReason]}` : ''}
         </div>
       );
     case 'hit':

@@ -352,3 +352,16 @@ export const MISS_TYPES = {
   'above-crossbar': 'above the crossbar',
   'failed-bank-attempt': 'failed bank attempt',
 };
+
+export const GAME_REPORT_NAMES = {
+  gameSummary: 'Game Summary',
+  eventSummary: 'Event Summary',
+  playByPlay: 'Full Play-By-Play',
+  faceoffSummary: 'Face-off Summary',
+  faceoffComparison: 'Face-off Comparison',
+  rosters: 'Roster Report',
+  shotSummary: 'Shot Report',
+  shiftChart: 'Shift Chart',
+  toiAway: 'Time on Ice: Away',
+  toiHome: 'Time on Ice: Home',
+};
