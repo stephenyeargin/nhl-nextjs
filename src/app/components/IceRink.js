@@ -47,6 +47,8 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
     );
   };
 
+  const isHomeDefendingLeft = plays && plays[0]?.homeTeamDefendingSide !== 'left';
+
   return (
     <div>
       <div className="relative m-4">
@@ -62,17 +64,30 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
           alt="Center Ice"
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-25"
         />
-        {plays && plays[0]?.homeTeamDefendingSide !== 'left' ? (
-          <div className="text-lg md:text-2xl font-bold text-center">
-            <div className="absolute -rotate-90" style={{ width: '40%', top: '45.5%', left: '-17.5%', color: awayTeam.data.teamColor }}>{awayTeam.abbrev}</div>
-            <div className="absolute rotate-90" style={{ width: '40%', top: '45.5%', right: '-17.5%', color: homeTeam.data.teamColor }}>{homeTeam.abbrev}</div>
+        <div className="text-lg md:text-2xl font-bold text-center opacity-25">
+          <div
+            className={`absolute ${isHomeDefendingLeft ? '-rotate-90' : 'rotate-90'}`}
+            style={{
+              width: '40%',
+              top: '45.5%',
+              left: isHomeDefendingLeft ? '-17.5%' : 'unset',
+              right: !isHomeDefendingLeft ? '-17.5%' : 'unset',
+            }}
+          >
+            {awayTeam.abbrev}
           </div>
-        ) : (
-          <div className="text-lg md:text-2xl font-bold text-center">
-            <div className="text-center absolute rotate-90" style={{ width: '40%', top: '45%', right: '-17.5%', color: awayTeam.data.teamColor }}>{awayTeam.abbrev}</div>
-            <div className="text-center absolute -rotate-90" style={{ width: '40%', top: '45%', left: '-17.5%', color: homeTeam.data.teamColor }}>{homeTeam.abbrev}</div>  
+          <div
+            className={`absolute ${isHomeDefendingLeft ? 'rotate-90' : '-rotate-90'}`}
+            style={{
+              width: '40%',
+              top: '45.5%',
+              left: !isHomeDefendingLeft ? '-17.5%' : 'unset',
+              right: isHomeDefendingLeft ? '-17.5%' : 'unset',
+            }}
+          >
+            {homeTeam.abbrev}
           </div>
-        )}
+        </div>
         {mappedPlays.map((play, index) => (
           <div
             key={index}

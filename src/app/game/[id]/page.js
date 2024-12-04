@@ -18,7 +18,7 @@ import PageError from '@/app/components/PageError';
 import TeamLogo from '@/app/components/TeamLogo';
 import GameSidebar from '@/app/components/GameSidebar';
 import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
-import { formatPeriodLabel } from '@/app/utils/formatters';
+import { formatPeriodLabel, formatStat } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
 import GameStory from '@/app/components/GameStory';
 
@@ -287,7 +287,7 @@ const GamePage = () => {
                               playerId={p.playerId}
                               src={p.headshot}
                               alt={p.name.default}
-                              size="8"
+                              size="6"
                               className="mx-auto mb-2"
                             />
                           </div>
@@ -297,7 +297,7 @@ const GamePage = () => {
                           {Object.prototype.hasOwnProperty.call(p, 'goals') ? (
                             <p className="text-sm">G: {p.goals} | A: {p.assists} | P: {p.points}</p>
                           ) : (
-                            <p className="text-sm">GAA: {p.goalsAgainstAverage} | SV%: {p.savePctg}</p>
+                            <p className="text-sm">GAA: {formatStat(p.goalsAgainstAverage, 2)} | SV%: {formatStat(p.savePctg, 3)}</p>
                           )}
                         </div>
                       ))}

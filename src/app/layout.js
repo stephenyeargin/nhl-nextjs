@@ -37,7 +37,9 @@ export default function RootLayout({ children }) {
           <TopBarSchedule />
           {children}
         </section>
-        <div className="mt-5 bg-slate-200 dark:bg-slate-800 p-5 text-xs text-center">All trademarks are property of their respective owners. | <Link href="https://github.com/stephenyeargin/nhl-nextjs" className="font-bold underline">Source Code</Link></div>
+        <div className="mt-20 bg-slate-200 dark:bg-slate-800 p-5">
+          <div className="text-xs text-center">All trademarks are property of their respective owners. | <Link href="https://github.com/stephenyeargin/nhl-nextjs" className="font-bold underline">Source Code</Link></div>
+        </div>
       </body>
     </html>
   );

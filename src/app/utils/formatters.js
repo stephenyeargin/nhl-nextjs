@@ -47,7 +47,7 @@ export const formatStat = (value, precision, unit) => {
   }
 
   if (precision) {
-    if (!value || value === 0) {
+    if (value === undefined) {
       return '--';
     }
     if (value === 1) {
