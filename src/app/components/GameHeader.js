@@ -45,7 +45,7 @@ const GameHeader = () => {
 
   let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';
   if (isSticky) {
-    gameHeaderClass = 'grid grid-cols-12 items-center md:sticky top-0 pt-5 z-10 border rounded-b-lg shadow-sm';
+    gameHeaderClass = 'grid grid-cols-12 items-center md:sticky top-0 pt-5 z-10 border rounded-b-lg shadow-sm pb-5';
   }
   if (gameState === 'CRIT') {
     gameHeaderClass += ' border-red-500';
@@ -102,13 +102,13 @@ const GameHeader = () => {
   
   return (
     <div className={gameHeaderClass} ref={stickyRef} style={gameHeaderStyle}>
-      <div className="col-span-3 flex flex-wrap mx-auto gap-2 justify-center">
+      <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
         <div>
           <TeamLogo
             team={awayTeam.abbrev}
             src={awayTeam.logo}
             alt={awayTeam.name.default}
-            className="w-20 h-20 mx-auto mb-2"
+            className="w-20 h-20 mx-auto"
           />
         </div>
         <div>
@@ -151,7 +151,7 @@ const GameHeader = () => {
         )}
         {(gameState === 'FINAL' || gameState === 'OFF') && (
           <div className="text-center my-2 uppercase">
-            <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
+            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
               Final
               {periodDescriptor.periodType	!== 'REG' && `/${periodDescriptor.periodType}`}
             </span>
@@ -206,7 +206,7 @@ const GameHeader = () => {
           <span key={code} className="mx-2 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
         ))}
       </div>
-      <div className="col-span-3 flex flex-wrap mx-auto gap-2 justify-center">
+      <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
         <div className="text-right order-2 md:order-1">
           <Link href={`/team/${homeTeam.abbrev}`}>
             <div className="text-xl font-black block md:hidden">{homeTeam.abbrev}</div>
@@ -226,7 +226,7 @@ const GameHeader = () => {
             team={homeTeam.abbrev}
             src={homeTeam.logo}
             alt={homeTeam.name.default}
-            className="w-20 h-20 mx-auto mb-2"
+            className="w-20 h-20 mx-auto"
           />
         </div>
       </div>

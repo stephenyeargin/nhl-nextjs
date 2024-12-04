@@ -85,14 +85,14 @@ const TopBarSchedule = ({ gameDate }) => {
     <div className="px-2">
       {games?.length > 0 ? (
         <>
-          <div className="flex text-xs gap-4 overflow-x-auto">
+          <div className="flex text-xs gap-2 overflow-x-auto scrollbar-hidden">
             {dates.map((date) => {
               let dateClass = 'border rounded-xl';
               if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
                 dateClass = 'border border-blue-400 rounded-xl';
               }
               if (date === focusedDate) {
-                dateClass = 'active rounded-xl bg-slate-500 text-white mx-1';
+                dateClass = 'active rounded-xl bg-slate-500 text-white';
               }
               
               return (
