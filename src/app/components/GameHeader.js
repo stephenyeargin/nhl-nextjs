@@ -107,7 +107,7 @@ const GameHeader = () => {
           <TeamLogo
             team={awayTeam.abbrev}
             src={awayTeam.logo}
-            alt={awayTeam.name.default}
+            alt={awayTeam.commonName.default}
             className="w-20 h-20 mx-auto"
           />
         </div>
@@ -116,7 +116,7 @@ const GameHeader = () => {
             <div className="text-xl font-black block md:hidden">{awayTeam.abbrev}</div>
             <div className="text-lg hidden md:block">
               <div className="text-sm">{awayTeam.placeName.default}</div>
-              <div className="text-xl font-black">{awayTeam.name.default.replace(awayTeam.placeName.default, '')}</div>
+              <div className="text-xl font-black">{awayTeam.commonName.default.replace(awayTeam.placeName.default, '')}</div>
             </div>
           </Link>
           {gameState !== 'FUT' ? (
@@ -212,7 +212,7 @@ const GameHeader = () => {
             <div className="text-xl font-black block md:hidden">{homeTeam.abbrev}</div>
             <div className="text-lg hidden md:block">
               <div className="text-sm">{homeTeam.placeName.default}</div>
-              <div className="text-xl font-black">{homeTeam.name.default.replace(homeTeam.placeName.default, '')}</div>
+              <div className="text-xl font-black">{homeTeam.commonName.default.replace(homeTeam.placeName.default, '')}</div>
             </div>
           </Link>
           {gameState !== 'FUT' ? (
@@ -225,7 +225,7 @@ const GameHeader = () => {
           <TeamLogo
             team={homeTeam.abbrev}
             src={homeTeam.logo}
-            alt={homeTeam.name.default}
+            alt={homeTeam.commonName.default}
             className="w-20 h-20 mx-auto"
           />
         </div>

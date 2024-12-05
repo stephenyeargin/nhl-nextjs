@@ -48,7 +48,7 @@ const GameTile = ({game}) => {
               alt={`${game.awayTeam.placeName?.default} logo`}
               className="w-8 h-8 mr-3"
             />
-            <span className="font-bold">{game.awayTeam.placeName?.default}</span>
+            <span className="font-bold">{game.awayTeam.placeName?.default ?? game.awayTeam.commonName.default}</span>
           </div>
           <span className="text-lg font-semibold">
             {game.gameState !== 'FUT' ? game.awayTeam.score : ''}
@@ -63,7 +63,7 @@ const GameTile = ({game}) => {
               alt={`${game.homeTeam.placeName?.default} logo`}
               className="w-8 h-8 mr-3"
             />
-            <span className="font-bold">{game.homeTeam.placeName?.default}</span>
+            <span className="font-bold">{game.homeTeam.placeName?.default ?? game.homeTeam.commonName.default}</span>
           </div>
           <span className="text-lg font-semibold">
             {game.homeTeam.score}
@@ -78,7 +78,7 @@ const GameTile = ({game}) => {
             <div>
               <span className="text-sm mr-2">{formatGameDate(game.gameDate)}</span>
               <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
-                FINAL{game.gameOutcome?.lastPeriodType !== 'REG' ? `/${game.gameOutcome?.lastPeriodType}` : ''}
+                FINAL{(game.gameOutcome?.lastPeriodType !== 'REG' && game.periodDescriptor?.periodType !== 'REG') ? `/${game.gameOutcome?.lastPeriodType ?? game.periodDescriptor?.periodType}` : ''}
               </span>
             </div>
           )}

@@ -93,7 +93,8 @@ const teamData = [
     'name': 'Nashville Predators',
     'hashtag': 'Smashville',
     'abbreviation': 'NSH',
-    'teamColor': '#FFB81C'
+    'teamColor': '#FFB81C',
+    'teamId': 18,
   },
   {
     'name': 'New Jersey Devils',

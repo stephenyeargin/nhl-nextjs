@@ -103,7 +103,7 @@ const GamePreview = ({ game }) => {
           <TeamLogo
             team={awayTeam.abbrev}
             src={logos[awayTeam.abbrev]}
-            alt={awayTeam.name.default}
+            alt={awayTeam.commonName.default}
             className="w-20 h-20 mx-auto mb-2"
           />
         </div>
@@ -115,7 +115,7 @@ const GamePreview = ({ game }) => {
           <TeamLogo
             team={homeTeam.abbrev}
             src={logos[homeTeam.abbrev]}
-            alt={homeTeam.name.default}
+            alt={homeTeam.commonName.default}
             className="w-20 h-20 mx-auto mb-2"
           />
         </div>

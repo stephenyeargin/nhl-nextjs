@@ -21,11 +21,11 @@ const TeamToggle = ({ homeTeam, awayTeam, activeStatTeam, handleStatTeamClick })
           <TeamLogo
             colorMode={activeStatTeam === 'awayTeam' ? 'dark' : 'light'}
             src={logos[awayTeam.abbrev]}
-            alt={awayTeam.name.default}
+            alt={awayTeam.commonName.default}
             className="w-6 h-6"
           />
           <div>
-            {awayTeam.placeName.default} <strong>{awayTeam.name.default.replace(awayTeam.placeName.default, '')}</strong>
+            {awayTeam.placeName.default} <strong>{awayTeam.commonName.default.replace(awayTeam.placeName.default, '')}</strong>
           </div>
         </button>
         <button
@@ -36,11 +36,11 @@ const TeamToggle = ({ homeTeam, awayTeam, activeStatTeam, handleStatTeamClick })
           <TeamLogo
             colorMode={activeStatTeam === 'homeTeam' ? 'dark' : 'light'}
             src={logos[homeTeam.abbrev]}
-            alt={homeTeam.name.default}
+            alt={homeTeam.commonName.default}
             className="w-6 h-6"
           />
           <div>
-            {homeTeam.placeName.default} <strong>{homeTeam.name.default.replace(homeTeam.placeName.default, '')}</strong>
+            {homeTeam.placeName.default} <strong>{homeTeam.commonName.default.replace(homeTeam.placeName.default, '')}</strong>
           </div>
         </button>
       </div>
