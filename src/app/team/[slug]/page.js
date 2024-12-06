@@ -1,13 +1,18 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import GameTile from '@/app/components/GameTile';
 import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { PropTypes } from 'prop-types';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import { formatBroadcasts, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
+import { formatBroadcasts, formatGameDate, formatGameTime, formatOrdinalNumber, formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 import Image from 'next/image';
 import Link from 'next/link';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const metadata = {
   title: 'Team Schedule & Stats',
@@ -32,19 +37,30 @@ export default async function SchedulePage({ params }) {
   metadata.title = `${team.name} - Stats & Schedule`;
 
   const teamStatsResponse = await fetch(`https://api-web.nhle.com/v1/club-stats/${slug}/now`, { cache: 'no-store' });
+  const standingsResponse = await fetch('https://api-web.nhle.com/v1/standings/now', { cache: 'no-store' });
   const scheduleResponse = await fetch(`https://api-web.nhle.com/v1/scoreboard/${slug}/now`, { cache: 'no-store' });
   const fullSeasonScheduleResponse = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${slug}/now`, { cache: 'no-store' });
   const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=teamid-${team.teamId}&context.slug=nhl`, { cache: 'no-store' });
 
   const schedule = await scheduleResponse.json();
+  const standings = await standingsResponse.json();
   const fullSeasonSchedule = await fullSeasonScheduleResponse.json();
   const teamStats = await teamStatsResponse.json();
   const news = await newsResponse.json();
 
+  const teamStanding = standings.standings.find((standing) => standing.teamAbbrev.default === slug.toUpperCase());
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div style={{ backgroundColor: team.teamColor }} className="mb-5 flex items-center rounded-xl">
-        <h1 className="text-3xl font-bold p-5" style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}>{team.name}</h1>
+        <div className="p-5">
+          <h1 className="text-3xl font-bold mb-3" style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}>{team.name}</h1>
+          <div className="flex gap-2">
+            <div className="">{formatOrdinalNumber(teamStanding.conferenceSequence)} {teamStanding.conferenceName} Conference</div>
+            <div className="hidden sm:block">•</div>
+            <div className="">{formatOrdinalNumber(teamStanding.divisionSequence)} {teamStanding.divisionName} Division</div>
+          </div>
+        </div>
         <TeamLogo
           src={`https://assets.nhle.com/logos/nhl/svg/${slug}_dark.svg`}
           className="w-64 h-64 mx-auto hidden md:block"
@@ -52,7 +68,73 @@ export default async function SchedulePage({ params }) {
         <h1 className="text-5xl font-bold opacity-25 p-5 italic hidden lg:block">#{team.hashtag}</h1>
       </div>
 
-      <h1 className="text-3xl font-bold mb-6">Upcoming Games</h1>
+      {/* { "conferenceAbbrev": "W", "conferenceHomeSequence": 10, "conferenceL10Sequence": 15, "conferenceName": "Western", "conferenceRoadSequence": 16, "conferenceSequence": 15, "date": "2024-12-05", "divisionAbbrev": "C", "divisionHomeSequence": 5, "divisionL10Sequence": 7, "divisionName": "Central", "divisionRoadSequence": 8, "divisionSequence": 7, "gameTypeId": 2, "gamesPlayed": 27, "goalDifferential": -25, "goalDifferentialPctg": -0.925926, "goalAgainst": 85, "goalFor": 60, "goalsForPctg": 2.222222, "homeGamesPlayed": 13, "homeGoalDifferential": -4, "homeGoalsAgainst": 40, "homeGoalsFor": 36, "homeLosses": 6, "homeOtLosses": 2, "homePoints": 12, "homeRegulationPlusOtWins": 5, "homeRegulationWins": 4, "homeTies": 0, "homeWins": 5, "l10GamesPlayed": 10, "l10GoalDifferential": -10, "l10GoalsAgainst": 29, "l10GoalsFor": 19, "l10Losses": 5, "l10OtLosses": 3, "l10Points": 7, "l10RegulationPlusOtWins": 2, "l10RegulationWins": 2, "l10Ties": 0, "l10Wins": 2, "leagueHomeSequence": 25, "leagueL10Sequence": 31, "leagueRoadSequence": 31, "leagueSequence": 31, "losses": 14, "otLosses": 6, "placeName": { "default": "Nashville" }, "pointPctg": 0.37037, "points": 20, "regulationPlusOtWinPctg": 0.259259, "regulationPlusOtWins": 7, "regulationWinPctg": 0.222222, "regulationWins": 6, "roadGamesPlayed": 14, "roadGoalDifferential": -21, "roadGoalsAgainst": 45, "roadGoalsFor": 24, "roadLosses": 8, "roadOtLosses": 4, "roadPoints": 8, "roadRegulationPlusOtWins": 2, "roadRegulationWins": 2, "roadTies": 0, "roadWins": 2, "seasonId": 20242025, "shootoutLosses": 0, "shootoutWins": 0, "streakCode": "L", "streakCount": 2, "teamName": { "default": "Nashville Predators", "fr": "Predators de Nashville" }, "teamCommonName": { "default": "Predators" }, "teamAbbrev": { "default": "NSH" }, "teamLogo": "https://assets.nhle.com/logos/nhl/svg/NSH_light.svg", "ties": 0, "waiversSequence": 2, "wildcardSequence": 9, "winPctg": 0.259259, "wins": 7 } */}
+
+      {teamStanding && (
+        <div className="mb-5 overflow-x-scroll scrollbar-hidden">
+          <div className="flex flex-row mb-5 gap-2">
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.gamesPlayed}</div>
+              <div className="text-xs font-light">Games Played</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.wins}-{teamStanding.losses}-{teamStanding.otLosses}</div>
+              <div className="text-xs font-light">Overall Record</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.points}</div>
+              <div className="text-xs font-light">Points</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{formatStat(teamStanding.pointPctg, 3)}</div>
+              <div className="text-xs font-light">Points %</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.regulationWins}</div>
+              <div className="text-xs font-light">Regulation Wins</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.regulationPlusOtWins}</div>
+              <div className="text-xs font-light">R+OT Wins</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.goalFor}</div>
+              <div className="text-xs font-light">Goals For</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.goalAgainst}</div>
+              <div className="text-xs font-light">Goals Against</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.goalDifferential}</div>
+              <div className="text-xs font-light">Goal Differential</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.homeWins}-{teamStanding.homeLosses}-{teamStanding.homeOtLosses}</div>
+              <div className="text-xs font-light">Home Record</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.roadWins}-{teamStanding.roadLosses}-{teamStanding.roadOtLosses}</div>
+              <div className="text-xs font-light">Road Record</div>
+            </div>
+            {/* Shootout Record */}
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.shootoutWins}-{teamStanding.shootoutLosses}</div>
+              <div className="text-xs font-light">Shootout Record</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.l10Wins}-{teamStanding.l10Losses}-{teamStanding.l10OtLosses}</div>
+              <div className="text-xs font-light">Last 10 Record</div>
+            </div>
+            <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
+              <div className="text-2xl capitalize">{teamStanding.streakCode}{teamStanding.streakCount}</div>
+              <div className="text-xs font-light">Streak</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <h1 className="text-3xl font-bold mb-6">Recent &amp; Upcoming Games</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
         {schedule.gamesByDate?.map((date) => (
           date.games.map((game) => (
@@ -109,7 +191,7 @@ export default async function SchedulePage({ params }) {
           <tbody>
             {fullSeasonSchedule.games.map((game) => (
               <tr key={game.id}>
-                <td>{dayjs(game.startTimeUTC).format('M/D/YYYY h:mm a')}</td>
+                <td>{formatGameDate(game.startTimeUTC)} {formatGameTime(game.startTimeUTC)}</td>
                 <td>
                   <div className="flex gap-2 items-center">
                     {game.gameType === 1 && (

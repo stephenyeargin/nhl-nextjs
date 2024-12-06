@@ -35,6 +35,7 @@ const PlayByPlay = ({ params }) => {
   const [playByPlay, setPlayByPlay] = useState(null);
   const [gameState, setGameState] = useState(null);
   const [activePeriod, setActivePeriod] = useState(null);
+  const [eventFilter, setEventFilter] = useState(null);
 
   // Use `useEffect` to run once on initial render and set up polling
   useEffect(() => {
@@ -88,7 +89,17 @@ const PlayByPlay = ({ params }) => {
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
 
-  const filteredPlays = playByPlay.plays?.filter((p) => p.periodDescriptor.number === activePeriod) || [];
+  const filteredPlays = playByPlay.plays?.filter((p) => {
+    if (p.periodDescriptor.number !== activePeriod) {
+      return false;
+    }
+
+    if (eventFilter && eventFilter !== 'all') {
+      return p.typeDescKey === eventFilter;
+    }
+    
+    return true;
+  });
   let sortedPlays = filteredPlays;
   if (['LIVE', 'CRIT'].includes(playByPlay.gameState)) {
     sortedPlays = filteredPlays.sort((a, b) => b.sortOrder - a.sortOrder);
@@ -326,6 +337,10 @@ const PlayByPlay = ({ params }) => {
     }
   };
 
+  const handleFilterChange = (e) => {
+    setEventFilter(e.target.value);
+  };
+
   return (
     <div className="container mx-auto">
       <GameHeader />
@@ -333,8 +348,27 @@ const PlayByPlay = ({ params }) => {
       <GameSubPageNavigation game={game} />
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
-          <div className="flex justify-center my-5">
+          <div className="flex justify-center items-center my-5">
             <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} />
+            <div className="mx-5">
+              <select 
+                className="p-2 text-sm min-w-[200px] border rounded text-black dark:text-white bg-white dark:bg-black" 
+                value={eventFilter || 'all'}
+                onChange={handleFilterChange}
+              >
+                <option value="all">All Events</option>
+                <option value="goal">Goals</option>
+                <option value="shot-on-goal">Shots on Goal</option>
+                <option value="blocked-shot">Blocks</option>
+                <option value="hit">Hits</option>
+                <option value="missed-shot">Misses</option>
+                <option value="giveaway">Giveaways</option>
+                <option value="takeaway">Takeaways</option>
+                <option value="penalty">Penalties</option>
+                <option value="faceoff">Faceoffs</option>
+              </select>
+            </div>
+
           </div>
 
           <IceRink game={game} plays={filteredPlays} homeTeam={homeTeam} awayTeam={awayTeam} renderPlayByPlayEvent={renderPlayByPlayEvent} />

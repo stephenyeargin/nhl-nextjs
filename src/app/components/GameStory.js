@@ -27,19 +27,25 @@ const GameStory = ({ game }) => {
   }
 
   return (
-    <div className="p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded leading-2">
-      {content.items[0].thumbnail && (
-        <Link href={`https://www.nhl.com/news/${content.items[0].slug}`}>
-          <Image src={content.items[0].thumbnail.thumbnailUrl} width="416" height="416" alt="Story Photo" />
-        </Link>
-      )}
-      <div>
-        <h1 className="text-2xl font-bold mb-2"><Link href={`https://www.nhl.com/news/${content.items[0].slug}`}>{content.items[0].headline}</Link></h1>
-        <h2 className="text-lg text-slate-500 mb-2">{content.items[0].fields?.description}</h2>
-        <p className="text-md mb-2">{content.items[0].summary}</p>
-        <Link href={`https://www.nhl.com/news/${content.items[0].slug}`} className="font-bold underline">Read Story</Link>
-      </div>
-    </div>
+    <>
+      {content.items.map((item) => (
+        <div key={item.id} className="mb-4 p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded leading-2">
+          {item.thumbnail?.thumbnailUrl && (
+            <Link href={`https://www.nhl.com/news/${item.slug}`}>
+              <Image src={item.thumbnail.thumbnailUrl} width="416" height="416" alt="Story Photo" />
+            </Link>
+          )}
+          <div>
+            <h1 className="text-2xl font-bold mb-2">
+              <Link href={`https://www.nhl.com/news/${item.slug}`}>{item.headline}</Link>
+            </h1>
+            <h2 className="text-lg text-slate-500 mb-2">{item.fields?.description}</h2>
+            <p className="text-md mb-2">{item.summary}</p>
+            <Link href={`https://www.nhl.com/news/${item.slug}`} className="font-bold underline">Read Story</Link>
+          </div>
+        </div>
+      ))}
+    </>
   );
 };
 

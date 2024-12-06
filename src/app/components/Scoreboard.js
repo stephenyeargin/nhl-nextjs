@@ -43,13 +43,13 @@ const Scoreboard = ({ game, linescore }) => {
       <tbody>
         <tr>
           <td className="p-2 text-center border">
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center gap-1">
               <TeamLogo
                 src={game.awayTeam.logo}
                 className="w-10"
                 alt="Logo"
               />
-              <span className="font-bold">{game.awayTeam.abbrev}</span>
+              <div className="font-bold">{game.awayTeam.abbrev}</div>
             </div>
           </td>
           {Array.from({ length: totalPeriods }).map((_, index) => {
@@ -73,13 +73,13 @@ const Scoreboard = ({ game, linescore }) => {
         </tr>
         <tr>
           <td className="p-2 text-center border">
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center gap-1">
               <TeamLogo
                 src={game.homeTeam.logo}
                 className="w-10"
                 alt="Logo"
               />
-              <span className="font-bold">{game.homeTeam.abbrev}</span>
+              <div className="font-bold">{game.homeTeam.abbrev}</div>
             </div>
           </td>
           {Array.from({ length: totalPeriods }).map((_, index) => {

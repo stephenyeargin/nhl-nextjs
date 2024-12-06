@@ -48,7 +48,10 @@ const GameTile = ({game}) => {
               alt={`${game.awayTeam.placeName?.default} logo`}
               className="w-8 h-8 mr-3"
             />
-            <span className="font-bold">{game.awayTeam.placeName?.default ?? game.awayTeam.commonName.default}</span>
+            <div>
+              <span className="font-light">{game.awayTeam.placeNameWithPreposition?.default}</span>{' '}
+              <span className="font-bold">{game.awayTeam.commonName?.default.replace(game.awayTeam.placeNameWithPreposition?.default, '')}</span>
+            </div>
           </div>
           <span className="text-lg font-semibold">
             {game.gameState !== 'FUT' ? game.awayTeam.score : ''}
@@ -63,7 +66,10 @@ const GameTile = ({game}) => {
               alt={`${game.homeTeam.placeName?.default} logo`}
               className="w-8 h-8 mr-3"
             />
-            <span className="font-bold">{game.homeTeam.placeName?.default ?? game.homeTeam.commonName.default}</span>
+            <div>
+              <span className="font-light">{game.homeTeam.placeNameWithPreposition?.default}</span>{' '}
+              <span className="font-bold">{game.homeTeam.commonName?.default.replace(game.homeTeam.placeNameWithPreposition?.default, '')}</span>
+            </div>
           </div>
           <span className="text-lg font-semibold">
             {game.homeTeam.score}

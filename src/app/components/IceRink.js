@@ -96,7 +96,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
               top: `${play.details?.yCoord/0.88 + 50}%`,
               left: `${play.details?.xCoord/2.02 + 50}%`,
               transform: 'translate(-50%, -50%)',
-              opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.5,
+              opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.75,
               zIndex: index < 3 || play.typeDescKey === 'goal' ? 1 : 0
             }}
             title={`Event #${play.eventId}: ${GAME_EVENTS[play.typeDescKey] || play.typeDescKey} @ ${play.timeInPeriod} (${play.details.xCoord},${play.details.yCoord})`}
