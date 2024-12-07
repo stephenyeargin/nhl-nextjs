@@ -46,7 +46,7 @@ const PlayByPlay = ({ params }) => {
 
         setPlayByPlay(playByPlayData);
         setGameState(playByPlayData.gameState);
-        if (!activePeriod) {
+        if (activePeriod === null) {
           setActivePeriod(playByPlayData.periodDescriptor?.number);
         }
       } catch (error) {
@@ -90,7 +90,7 @@ const PlayByPlay = ({ params }) => {
   logos[awayTeam.abbrev] = awayTeam.logo;
 
   const filteredPlays = playByPlay.plays?.filter((p) => {
-    if (p.periodDescriptor.number !== activePeriod) {
+    if (activePeriod && p.periodDescriptor.number !== activePeriod) {
       return false;
     }
 
@@ -202,7 +202,7 @@ const PlayByPlay = ({ params }) => {
     case 'stoppage':
       return (
         <div className="">
-          {GAME_EVENTS[e.reason]}{e.secondaryReason ? `, ${GAME_EVENTS[e.secondaryReason]}` : ''}
+          {GAME_EVENTS[e.reason]}{(e.secondaryReason && e.secondaryReason !== e.reason) ? `, ${GAME_EVENTS[e.secondaryReason]}` : ''}
         </div>
       );
     case 'hit':
@@ -349,7 +349,7 @@ const PlayByPlay = ({ params }) => {
       <div className="grid grid-cols-4 gap-10">
         <div className="col-span-4 md:col-span-3">
           <div className="flex justify-center items-center my-5">
-            <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} />
+            <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} includeAll={true} />
             <div className="mx-5">
               <select 
                 className="p-2 text-sm min-w-[200px] border rounded text-black dark:text-white bg-white dark:bg-black" 
@@ -359,13 +359,14 @@ const PlayByPlay = ({ params }) => {
                 <option value="all">All Events</option>
                 <option value="goal">Goals</option>
                 <option value="shot-on-goal">Shots on Goal</option>
-                <option value="blocked-shot">Blocks</option>
+                <option value="missed-shot">Missed Shots</option>
+                <option value="blocked-shot">Blocked Shots</option>
                 <option value="hit">Hits</option>
-                <option value="missed-shot">Misses</option>
                 <option value="giveaway">Giveaways</option>
                 <option value="takeaway">Takeaways</option>
                 <option value="penalty">Penalties</option>
                 <option value="faceoff">Faceoffs</option>
+                <option value="stoppage">Stoppage</option>
               </select>
             </div>
 

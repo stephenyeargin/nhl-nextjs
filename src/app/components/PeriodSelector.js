@@ -2,9 +2,17 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { formatPeriodLabel } from '../utils/formatters';
 
-const PeriodSelector = ({ periodData, activePeriod, handlePeriodChange }) => {
+const PeriodSelector = ({ periodData, activePeriod, handlePeriodChange, includeAll }) => {
   return (
     <>
+      {includeAll && (
+        <button
+          className={`p-2 w-20 border text-xs rounded-md mr-1 ${activePeriod === 0 ? 'text-black dark:text-white bg-slate-200 dark:bg-slate-800' : ''}`}
+          onClick={() => handlePeriodChange(0)}
+        >
+          All Periods
+        </button>
+      )}
       {Array.from({ length: periodData.number }, (_, index) => index + 1).map((period, i) => (
         <button
           key={period}
@@ -21,7 +29,8 @@ const PeriodSelector = ({ periodData, activePeriod, handlePeriodChange }) => {
 PeriodSelector.propTypes = {
   periodData: PropTypes.object.isRequired,
   activePeriod: PropTypes.number.isRequired,
-  handlePeriodChange: PropTypes.func.isRequired
+  handlePeriodChange: PropTypes.func.isRequired,
+  includeAll: PropTypes.bool,
 };
 
 export default PeriodSelector;

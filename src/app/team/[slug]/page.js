@@ -36,11 +36,11 @@ export default async function SchedulePage({ params }) {
 
   metadata.title = `${team.name} - Stats & Schedule`;
 
-  const teamStatsResponse = await fetch(`https://api-web.nhle.com/v1/club-stats/${slug}/now`, { cache: 'no-store' });
+  const teamStatsResponse = await fetch(`https://api-web.nhle.com/v1/club-stats/${team.abbreviation}/now`, { cache: 'no-store' });
   const standingsResponse = await fetch('https://api-web.nhle.com/v1/standings/now', { cache: 'no-store' });
-  const scheduleResponse = await fetch(`https://api-web.nhle.com/v1/scoreboard/${slug}/now`, { cache: 'no-store' });
-  const fullSeasonScheduleResponse = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${slug}/now`, { cache: 'no-store' });
-  const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=teamid-${team.teamId}&context.slug=nhl`, { cache: 'no-store' });
+  const scheduleResponse = await fetch(`https://api-web.nhle.com/v1/scoreboard/${team.abbreviation}/now`, { cache: 'no-store' });
+  const fullSeasonScheduleResponse = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${team.abbreviation}/now`, { cache: 'no-store' });
+  const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=teamid-${team.teamId}&context.team.abbreviation=nhl`, { cache: 'no-store' });
 
   const schedule = await scheduleResponse.json();
   const standings = await standingsResponse.json();
@@ -48,7 +48,7 @@ export default async function SchedulePage({ params }) {
   const teamStats = await teamStatsResponse.json();
   const news = await newsResponse.json();
 
-  const teamStanding = standings.standings.find((standing) => standing.teamAbbrev.default === slug.toUpperCase());
+  const teamStanding = standings.standings.find((standing) => standing.teamAbbrev.default === team.abbreviation.toUpperCase());
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -62,13 +62,11 @@ export default async function SchedulePage({ params }) {
           </div>
         </div>
         <TeamLogo
-          src={`https://assets.nhle.com/logos/nhl/svg/${slug}_dark.svg`}
+          src={`https://assets.nhle.com/logos/nhl/svg/${team.abbreviation}_dark.svg`}
           className="w-64 h-64 mx-auto hidden md:block"
         />
         <h1 className="text-5xl font-bold opacity-25 p-5 italic hidden lg:block">#{team.hashtag}</h1>
       </div>
-
-      {/* { "conferenceAbbrev": "W", "conferenceHomeSequence": 10, "conferenceL10Sequence": 15, "conferenceName": "Western", "conferenceRoadSequence": 16, "conferenceSequence": 15, "date": "2024-12-05", "divisionAbbrev": "C", "divisionHomeSequence": 5, "divisionL10Sequence": 7, "divisionName": "Central", "divisionRoadSequence": 8, "divisionSequence": 7, "gameTypeId": 2, "gamesPlayed": 27, "goalDifferential": -25, "goalDifferentialPctg": -0.925926, "goalAgainst": 85, "goalFor": 60, "goalsForPctg": 2.222222, "homeGamesPlayed": 13, "homeGoalDifferential": -4, "homeGoalsAgainst": 40, "homeGoalsFor": 36, "homeLosses": 6, "homeOtLosses": 2, "homePoints": 12, "homeRegulationPlusOtWins": 5, "homeRegulationWins": 4, "homeTies": 0, "homeWins": 5, "l10GamesPlayed": 10, "l10GoalDifferential": -10, "l10GoalsAgainst": 29, "l10GoalsFor": 19, "l10Losses": 5, "l10OtLosses": 3, "l10Points": 7, "l10RegulationPlusOtWins": 2, "l10RegulationWins": 2, "l10Ties": 0, "l10Wins": 2, "leagueHomeSequence": 25, "leagueL10Sequence": 31, "leagueRoadSequence": 31, "leagueSequence": 31, "losses": 14, "otLosses": 6, "placeName": { "default": "Nashville" }, "pointPctg": 0.37037, "points": 20, "regulationPlusOtWinPctg": 0.259259, "regulationPlusOtWins": 7, "regulationWinPctg": 0.222222, "regulationWins": 6, "roadGamesPlayed": 14, "roadGoalDifferential": -21, "roadGoalsAgainst": 45, "roadGoalsFor": 24, "roadLosses": 8, "roadOtLosses": 4, "roadPoints": 8, "roadRegulationPlusOtWins": 2, "roadRegulationWins": 2, "roadTies": 0, "roadWins": 2, "seasonId": 20242025, "shootoutLosses": 0, "shootoutWins": 0, "streakCode": "L", "streakCount": 2, "teamName": { "default": "Nashville Predators", "fr": "Predators de Nashville" }, "teamCommonName": { "default": "Predators" }, "teamAbbrev": { "default": "NSH" }, "teamLogo": "https://assets.nhle.com/logos/nhl/svg/NSH_light.svg", "ties": 0, "waiversSequence": 2, "wildcardSequence": 9, "winPctg": 0.259259, "wins": 7 } */}
 
       {teamStanding && (
         <div className="mb-5 overflow-x-scroll scrollbar-hidden">
@@ -197,7 +195,7 @@ export default async function SchedulePage({ params }) {
                     {game.gameType === 1 && (
                       <span className="text-xs p-1 border rounded">Preseason</span>
                     )}
-                    <TeamLogo team={game.awayTeam.abbrev !== slug ? game.awayTeam.abbrev : game.homeTeam.abbrev } className="h-8 w-8" />
+                    <TeamLogo team={game.awayTeam.abbrev !== team.abbreviation ? game.awayTeam.abbrev : game.homeTeam.abbrev } className="h-8 w-8" />
                     <Link href={`/game/${game.id}`} className="underline">{game.awayTeam.placeName.default} @ {game.homeTeam.placeName.default}</Link>                   
                   </div>
                 </td>
@@ -205,7 +203,7 @@ export default async function SchedulePage({ params }) {
                   {(game.gameState === 'OFF' || game.gameState === 'FINAL') && (
                     <>
                       {game.gameOutcome?.lastPeriodType !== 'REG' ? game.gameOutcome?.lastPeriodType : '' }
-                      {(slug === game.awayTeam.abbrev && game.awayTeam.score > game.homeTeam.score) ? 'W' : (slug === game.homeTeam.abbrev && game.homeTeam.score > game.awayTeam.score) ? 'W' : 'L'}
+                      {(team.abbreviation === game.awayTeam.abbrev && game.awayTeam.score > game.homeTeam.score) ? 'W' : (team.abbreviation === game.homeTeam.abbrev && game.homeTeam.score > game.awayTeam.score) ? 'W' : 'L'}
                     </>
                   )}
                 </td>

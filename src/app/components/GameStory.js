@@ -29,7 +29,7 @@ const GameStory = ({ game }) => {
   return (
     <>
       {content.items.map((item) => (
-        <div key={item.id} className="mb-4 p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded leading-2">
+        <div key={item._entityId} className="mb-4 p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded leading-2">
           {item.thumbnail?.thumbnailUrl && (
             <Link href={`https://www.nhl.com/news/${item.slug}`}>
               <Image src={item.thumbnail.thumbnailUrl} width="416" height="416" alt="Story Photo" />

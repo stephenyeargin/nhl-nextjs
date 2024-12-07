@@ -27,7 +27,7 @@ export const Skater = ({ player, game, isHomeTeam, teamColor }) => {
     <div key={player.playerId} className="text-xs text-center">
       <div className="lg:hidden my-3">
         <Link
-          href={`/player/${player.playerId}`} target="_blank"
+          href={`/player/${player.playerId}`}
           title={player.name.default}
           className="font-bold rounded-full p-2 w-10 h-10" style={skaterStyle}
         >
@@ -39,10 +39,10 @@ export const Skater = ({ player, game, isHomeTeam, teamColor }) => {
         src={player.headshot}
         alt={`${player.name.default}`}
         size="2"
-        className="hidden lg:block m-1 mx-auto"
+        className="hidden lg:block m-1"
       />
       <div className="hidden lg:block font-bold">
-        <Link href={`/player/${player.playerId}`} target="_blank">{player.name.default}</Link>
+        <Link href={`/player/${player.playerId}`}>{player.name.default}</Link>
       </div>
       <div className="">
         <div className="hidden xl:block">#{player.sweaterNumber} • {player.positionCode}</div>

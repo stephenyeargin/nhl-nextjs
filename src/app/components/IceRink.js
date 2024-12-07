@@ -62,7 +62,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
         <TeamLogo
           src={logos[homeTeam.abbrev]}
           alt="Center Ice"
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-25"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 opacity-50"
         />
         <div className="text-lg md:text-2xl font-bold text-center opacity-25">
           <div
@@ -106,7 +106,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
               {play.typeDescKey	 === 'goal' ? (
                 <>
                   <circle cx="5" cy="5" r="5" fill={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data.teamColor : awayTeam.data.teamColor} />
-                  <text x={1} y={8} className="fill-white font-sans" style={{ fontSize: '6pt' }}>★</text>
+                  <text x={1} y={8} className="fill-white font-sans" style={{ fontSize: '6pt' }}>{play.periodDescriptor.periodType !== 'SO' ? '★' : '✓' }</text>
                 </>
               ) : (
                 <>

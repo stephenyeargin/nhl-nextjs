@@ -27,9 +27,11 @@ const Headshot = ({ src, alt, className, size, playerId }) => {
   // Wrap in player link
   if (playerId > 0) {
     return (
-      <Link href={`/player/${playerId}`}>
-        {image}
-      </Link>
+      <div className="flex justify-center">
+        <Link href={`/player/${playerId}`}>
+          {image}
+        </Link>
+      </div>
     );
   }
 
