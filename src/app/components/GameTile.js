@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
-import { formatBroadcasts, formatGameTime, formatGameDate } from '../utils/formatters';
+import { formatBroadcasts, formatLocalizedTime, formatLocalizedDate } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 
@@ -82,7 +82,7 @@ const GameTile = ({game}) => {
           <span className="text-sm text-slate-600">{game.venue.default}</span>
           {(game.gameState === 'FINAL' || game.gameState === 'OFF') && (
             <div>
-              <span className="text-sm mr-2">{formatGameDate(game.gameDate)}</span>
+              <span className="text-sm mr-2">{formatLocalizedDate(game.gameDate)}</span>
               <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
                 FINAL{(game.gameOutcome?.lastPeriodType !== 'REG' && game.periodDescriptor?.periodType !== 'REG') ? `/${game.gameOutcome?.lastPeriodType ?? game.periodDescriptor?.periodType}` : ''}
               </span>
@@ -98,9 +98,9 @@ const GameTile = ({game}) => {
           ))}
           {game.gameState === 'FUT' && (
             <span className="text-sm">
-              {formatGameTime(game.startTimeUTC)}
+              {formatLocalizedTime(game.startTimeUTC)}
               {' '}
-              {formatGameDate(game.gameDate)}
+              {formatLocalizedDate(game.gameDate)}
             </span>
           )}
         </div>

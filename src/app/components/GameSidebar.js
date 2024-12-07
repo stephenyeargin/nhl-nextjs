@@ -6,7 +6,7 @@ import Scoreboard from './Scoreboard';
 import TeamLogo from './TeamLogo';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
 import { TEAM_STATS, GAME_STATES, GAME_REPORT_NAMES } from '../utils/constants';
-import { formatStatValue, formatSeriesStatus, formatGameTime, formatPeriodLabel } from '../utils/formatters';
+import { formatStatValue, formatSeriesStatus, formatLocalizedTime, formatPeriodLabel } from '../utils/formatters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
 
@@ -225,7 +225,7 @@ const GameSidebar = () => {
                         <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">Final</span>
                       )}
                       {(['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
-                        <span className="text-xs py-1">{formatGameTime(game.startTimeUTC)}</span>
+                        <span className="text-xs py-1">{formatLocalizedTime(game.startTimeUTC)}</span>
                       )}
                       {g.gameScheduleState === 'CNCL' && (
                         <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>

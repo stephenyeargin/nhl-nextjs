@@ -1,41 +1,37 @@
 import React from 'react';
+import dayjs from 'dayjs';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import StoryCard from './components/StoryCard';
+import { PropTypes } from 'prop-types';
 
-import StandingsTable from './components/StandingsTable';
+dayjs.extend(LocalizedFormat);
 
-export default async function Home(request) {
-  let westernConference, easternConference;
+const NewsPage = async ({ searchParams }) => {
+  const { tag } = await searchParams;
 
-  try {
-    let url;
-    if (request.searchQuery?.date) {
-      url = `https://api-web.nhle.com/v1/standings/${request.searchQuery.date}`;
-    } else {
-      url = 'https://api-web.nhle.com/v1/standings/now';
-    }
-    const apiStandings = await fetch(url);
-    if (!apiStandings.ok) {
-      throw new Error('Failed to fetch data');
-    }
-    const jsonStandings = await apiStandings.json();
-    westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
-    easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
-    
-  } catch (error) {
-    return (
-      <div className="container mx-auto">
-        <div className="text-3xl font-bold underline">Standings</div>
-        <div className="text-lg py-2">{error.message}</div>
-      </div>
-    );
-  }
+  const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${tag || 'news'}`, { cache: 'no-store' });
+  const news = await newsResponse.json();
 
   return (
-    <div className="container mx-auto">
-      <div className="text-3xl font-bold underline">Standings</div>
-      <h2 className="text-xl py-4">Western Conference</h2>
-      <StandingsTable standings={westernConference} />
-      <h2 className="text-xl py-4">Eastern Conference</h2>
-      <StandingsTable standings={easternConference} />
+    <div className="container mx-auto px-4 py-8">
+      {news.items?.length > 0 && (
+        <>
+          <h1 className="text-3xl font-bold mb-6">News</h1>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
+            {news.items.map((item) => (
+              <StoryCard key={item.id} item={item} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
+
+NewsPage.propTypes = {
+  searchParams: PropTypes.shape({
+    tag: PropTypes.string,
+  }).isRequired,
+};
+
+export default NewsPage;

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import Headshot from '@/app/components/Headshot';
-import { formatStat, formatSeason, formatOrdinalNumber, formatGameDate, formatTextColorByBackgroundColor, formatHeadTitle } from '@/app/utils/formatters';
+import { formatStat, formatSeason, formatOrdinalNumber, formatLocalizedDate, formatTextColorByBackgroundColor, formatHeadTitle } from '@/app/utils/formatters';
 import GameSkeleton from '@/app/components/GameSkeleton';
 import TeamLogo from '@/app/components/TeamLogo';
 import Link from 'next/link';
@@ -328,7 +328,7 @@ export default function PlayerPage({ params }) {
               <tbody>
                 {last5Games.map((g, i) => (
                   <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
-                    <td className="p-2 border text-center">{formatGameDate(g.gameDate)}</td>
+                    <td className="p-2 border text-center">{formatLocalizedDate(g.gameDate)}</td>
                     <td className="p-2 border text-left">
                       <div className="font-bold underline">
                         {g.homeRoadFlag !== 'H' ? (

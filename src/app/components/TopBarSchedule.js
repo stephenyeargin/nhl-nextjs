@@ -7,7 +7,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
-import { formatGameTime, formatPeriodLabel } from '../utils/formatters';
+import { formatLocalizedTime, formatPeriodLabel } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 
@@ -187,7 +187,7 @@ const TopBarSchedule = ({ gameDate }) => {
                             ) : (
                               <>
                                 <span className="text-sm">
-                                  {formatGameTime(game.startTimeUTC)}
+                                  {formatLocalizedTime(game.startTimeUTC)}
                                 </span>
                               </>
                             )}

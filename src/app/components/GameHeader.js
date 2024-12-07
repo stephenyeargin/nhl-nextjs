@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPauseCircle, faWarning, faBan, faClock } from '@fortawesome/free-solid-svg-icons';
 import GameClock from './GameClock';
-import { formatGameTime, formatPeriodLabel } from '../utils/formatters';
+import { formatLocalizedTime, formatPeriodLabel } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
@@ -159,7 +159,7 @@ const GameHeader = () => {
         )}
         {['FUT', 'PRE'].includes(gameState) && (
           <div className="my-1">
-            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatGameTime(startTimeUTC)}</span>
+            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatLocalizedTime(startTimeUTC)}</span>
           </div>
         )}
         {gameState === 'PRE' && (

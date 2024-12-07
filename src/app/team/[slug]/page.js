@@ -1,18 +1,12 @@
 import React from 'react';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import GameTile from '@/app/components/GameTile';
 import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { PropTypes } from 'prop-types';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import { formatBroadcasts, formatGameDate, formatGameTime, formatOrdinalNumber, formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
-import Image from 'next/image';
+import { formatBroadcasts, formatLocalizedDate, formatLocalizedTime, formatOrdinalNumber, formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 import Link from 'next/link';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import StoryCard from '@/app/components/StoryCard';
 
 export const metadata = {
   title: 'Team Schedule & Stats',
@@ -147,17 +141,7 @@ export default async function SchedulePage({ params }) {
           <h1 className="text-3xl font-bold mb-6">News</h1>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
             {news.items.slice(0, 8).map((item) => (
-              <div key={item.id} className="mb-4">
-                <Link href={`https://nhl.com/news/${item.slug}`} className="">
-                  <Image src={item.thumbnail.thumbnailUrl} width="416" height="416" alt="Story Photo" className="mb-2" />
-                </Link>
-                <p className="text-sm opacity-50">{dayjs(item.contentDate).format('M/D/YYYY')}</p>
-                <Link href={`https://nhl.com/news/${item.slug}`} className="">
-                  <h2 className="text-xl font-bold">{item.headline}</h2>
-                </Link>
-                <p className="text-justify line-clamp-4">{item.summary}</p>
-                <Link href={`https://nhl.com/news/${item.slug}`} className="block font-bold py-3 underline">Read Story</Link>
-              </div>
+              <StoryCard key={item.entityId} item={item} />
             ))}
           </div>
         </>
@@ -189,7 +173,7 @@ export default async function SchedulePage({ params }) {
           <tbody>
             {fullSeasonSchedule.games.map((game) => (
               <tr key={game.id}>
-                <td>{formatGameDate(game.startTimeUTC)} {formatGameTime(game.startTimeUTC)}</td>
+                <td>{formatLocalizedDate(game.startTimeUTC)} {formatLocalizedTime(game.startTimeUTC)}</td>
                 <td>
                   <div className="flex gap-2 items-center">
                     {game.gameType === 1 && (

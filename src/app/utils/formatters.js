@@ -29,11 +29,11 @@ export const formatBroadcasts = (broadcasts) => {
   return broadcasts.map((b) => `${b.network} (${b.market})`).join(', ');
 };
 
-export const formatGameDate = (dateString) => {
+export const formatLocalizedDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('en-US');
 };
 
-export const formatGameTime = (timeString) => {
+export const formatLocalizedTime = (timeString) => {
   return new Date(timeString).toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
