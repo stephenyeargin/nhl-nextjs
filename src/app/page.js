@@ -1,10 +1,6 @@
 import React from 'react';
-import dayjs from 'dayjs';
-import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import StoryCard from './components/StoryCard';
 import { PropTypes } from 'prop-types';
-
-dayjs.extend(LocalizedFormat);
 
 const NewsPage = async ({ searchParams }) => {
   const { tag } = await searchParams;

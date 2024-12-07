@@ -1,13 +1,11 @@
 'use client';
 
 import React from 'react';
-import dayjs from 'dayjs';
-import Link from 'next/link.js';
-import utc from 'dayjs/plugin/utc';
 import PropTypes from 'prop-types';
 import { notFound } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPlayCircle, faTrophy, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 import { useGameContext } from '@/app/contexts/GameContext.js';
 import GameSkeleton from '@/app/components/GameSkeleton.js';
 import Headshot from '@/app/components/Headshot';
@@ -21,8 +19,6 @@ import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
 import { formatPeriodLabel, formatStat } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
 import GameStory from '@/app/components/GameStory';
-
-dayjs.extend(utc);
 
 const GamePage = () => {
   const { gameData, pageError } = useGameContext();

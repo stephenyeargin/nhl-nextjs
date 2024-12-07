@@ -7,6 +7,10 @@ import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import { formatBroadcasts, formatLocalizedDate, formatLocalizedTime, formatOrdinalNumber, formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 import Link from 'next/link';
 import StoryCard from '@/app/components/StoryCard';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 export const metadata = {
   title: 'Team Schedule & Stats',
@@ -173,7 +177,7 @@ export default async function SchedulePage({ params }) {
           <tbody>
             {fullSeasonSchedule.games.map((game) => (
               <tr key={game.id}>
-                <td>{formatLocalizedDate(game.startTimeUTC)} {formatLocalizedTime(game.startTimeUTC)}</td>
+                <td>{formatLocalizedDate(dayjs(game.startTimeUTC).utc())} {formatLocalizedTime(dayjs(game.startTimeUTC).utc())}</td>
                 <td>
                   <div className="flex gap-2 items-center">
                     {game.gameType === 1 && (

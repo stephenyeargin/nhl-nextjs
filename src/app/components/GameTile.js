@@ -2,9 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { formatBroadcasts, formatLocalizedTime, formatLocalizedDate } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
+
+dayjs.extend(utc);
 
 const GameTile = ({game}) => {
 
@@ -98,7 +102,7 @@ const GameTile = ({game}) => {
           ))}
           {game.gameState === 'FUT' && (
             <span className="text-sm">
-              {formatLocalizedTime(game.startTimeUTC)}
+              {formatLocalizedTime(dayjs(game.startTimeUTC).utc())}
               {' '}
               {formatLocalizedDate(game.gameDate)}
             </span>

@@ -193,7 +193,7 @@ const GameHeader = () => {
         )}
         {!['LIVE', 'CRIT'].includes(gameState) && (
           <div className="text-xs my-2">
-            <div>{dayjs(startTimeUTC).format('MMMM D, YYYY')}</div>
+            <div>{dayjs(startTimeUTC).utc().format('MMMM D, YYYY')}</div>
           </div>
         )}
       </div>

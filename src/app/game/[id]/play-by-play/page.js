@@ -1,9 +1,7 @@
 'use client';
 
 import React, { use, useEffect, useState } from 'react';
-import dayjs from 'dayjs';
 import Link from 'next/link.js';
-import utc from 'dayjs/plugin/utc';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPlayCircle} from '@fortawesome/free-solid-svg-icons';
 import GameHeader from '@/app/components/GameHeader.js';
@@ -22,8 +20,6 @@ import GameSidebar from '@/app/components/GameSidebar';
 import { notFound } from 'next/navigation';
 import { formatPeriodLabel } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
-
-dayjs.extend(utc);
 
 const PlayByPlay = ({ params }) => {
   const { gameData } = useGameContext();
