@@ -26,7 +26,7 @@ const NewsPage = async ({ searchParams }) => {
       )}
     </div>
   );
-}
+};
 
 NewsPage.propTypes = {
   searchParams: PropTypes.shape({
