@@ -7,6 +7,7 @@ import { PropTypes } from 'prop-types';
 import TeamLogo from './TeamLogo';
 import { Skater } from './Skater';
 import { GAME_EVENTS } from '../utils/constants';
+import { formatPeriodLabel } from '../utils/formatters';
 
 const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => {
   const [playBoxContent, setPlayBoxContent] = useState(null);
@@ -31,18 +32,19 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
 
     setPlayBoxContent(
       <div className="flex gap-2 items-center">
-        <div className="">
-          <span className="p-1 text-xs font-bold border rounded">{play.timeRemaining}</span>
+        <div className="mt-3 text-xs text-center">
+          <div className="">
+            <span className="p-1 font-bold border rounded">{play.timeRemaining}</span>
+          </div>
+          <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>  
         </div>
-        <div className="">
-          <TeamLogo
-            team={play.details.eventOwnerTeamId === homeTeam.id
-              ? homeTeam.data.abbreviation
-              : awayTeam.data.abbreviation}
-            className="h-16 w-16"
-          />
-        </div>
-        <div className="">{renderPlayByPlayEvent(play)}</div>
+        <TeamLogo
+          team={play.details.eventOwnerTeamId === homeTeam.id
+            ? homeTeam.data.abbreviation
+            : awayTeam.data.abbreviation}
+          className="h-16 w-16"
+        />
+        {renderPlayByPlayEvent(play)}
       </div>
     );
   };
@@ -58,6 +60,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
           width={2000}
           height={850}
           className="my-4 dark:invert dark:grayscale opacity-25"
+          onClick={() => setPlayBoxContent(null)}
         />
         <TeamLogo
           src={logos[homeTeam.abbrev]}
@@ -102,7 +105,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
             title={`Event #${play.eventId}: ${GAME_EVENTS[play.typeDescKey] || play.typeDescKey} @ ${play.timeInPeriod} (${play.details.xCoord},${play.details.yCoord})`}
             data-index={index}
           >
-            <svg width={play.typeDescKey !== 'goal' ? 20 : 25} height={play.typeDescKey !== 'goal' ? 20 : 25} viewBox="0 0 10 10" onClick={handleMarkerAction} onMouseOver={handleMarkerAction} onMouseOut={() => setPlayBoxContent(null)} style={{ cursor: 'pointer' }}>
+            <svg width={play.typeDescKey !== 'goal' ? 20 : 25} height={play.typeDescKey !== 'goal' ? 20 : 25} viewBox="0 0 10 10" onClick={handleMarkerAction} style={{ cursor: 'pointer' }}>
               {play.typeDescKey	 === 'goal' ? (
                 <>
                   <circle cx="5" cy="5" r="5" fill={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data.teamColor : awayTeam.data.teamColor} />

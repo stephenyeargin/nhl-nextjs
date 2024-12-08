@@ -1,4 +1,14 @@
 import React from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import timezone from 'dayjs/plugin/timezone';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
+dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
 
 export const formatSeriesStatus = (game, rightRail) => {
   const { homeTeamWins, awayTeamWins, neededToWin } = rightRail.seasonSeriesWins;
@@ -23,22 +33,18 @@ export const formatSeriesStatus = (game, rightRail) => {
 
 export const formatBroadcasts = (broadcasts) => {
   if (!broadcasts || broadcasts.length === 0) {
-    return '';
+    return 'No Broadcasts';
   }
   
   return broadcasts.map((b) => `${b.network} (${b.market})`).join(', ');
 };
 
-export const formatLocalizedDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US');
+export const formatLocalizedDate = (dateString, format='l') => {
+  return dayjs(dateString).utc(true).format(format);
 };
 
 export const formatLocalizedTime = (timeString) => {
-  return new Date(timeString).toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZoneName: 'short'
-  });
+  return dayjs(timeString).utc(true).format('LT z');
 };
 
 export const formatStat = (value, precision, unit) => {

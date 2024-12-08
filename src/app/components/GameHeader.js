@@ -1,10 +1,11 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPauseCircle, faWarning, faBan, faClock } from '@fortawesome/free-solid-svg-icons';
 import GameClock from './GameClock';
-import { formatLocalizedTime, formatPeriodLabel } from '../utils/formatters';
+import { formatLocalizedDate, formatLocalizedTime, formatPeriodLabel } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
 import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
@@ -193,7 +194,7 @@ const GameHeader = () => {
         )}
         {!['LIVE', 'CRIT'].includes(gameState) && (
           <div className="text-xs my-2">
-            <div>{dayjs(startTimeUTC).utc().format('MMMM D, YYYY')}</div>
+            <div>{formatLocalizedDate(startTimeUTC, 'MMMM D, YYYY')}</div>
           </div>
         )}
       </div>

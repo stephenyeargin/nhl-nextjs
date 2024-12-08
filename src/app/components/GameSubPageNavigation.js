@@ -1,17 +1,35 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHockeyPuck, faList, faRadio, faTable, faTelevision } from '@fortawesome/free-solid-svg-icons';
 import { usePathname } from 'next/navigation';
 import { formatBroadcasts } from '../utils/formatters';
-import RadioLink from './RadioLink';
+import FloatingAudioPlayer from './FloatingAudioPlayer';
 
 const GameSubPageNavigation = ({ game }) => {
+  const [audioPlayerUrl, setAudioPlayerUrl] = useState(null);
+  const [audioPlayerLabel, setAudioPlayerLabel] = useState(null);
+  const [isAudioPlayerVisible, setAudioPlayerVisible] = useState(false);
+  const [isAudioPlayerPlaying, setAudioPlayerPlaying] = useState(true);
 
   const { id } = game;
   const activeRoute = usePathname();  
   const activeClasses = 'bg-slate-500/10 border-slate-500 border-b-2';
+
+  const handleAudioPlayerStop = () => {
+    setAudioPlayerPlaying(false);
+  };
+
+  const handleAudioPlayerClose = () => {
+    setAudioPlayerVisible(false);
+  };
+
+  const handleTogglePlaying = () => {
+    setAudioPlayerPlaying(!isAudioPlayerPlaying);
+  };
 
   return (
     <div className="my-5 text-xs font-bold flex flex-wrap md:justify-between items-center border-b-2">
@@ -42,7 +60,7 @@ const GameSubPageNavigation = ({ game }) => {
           </Link>
         )}
       </div>
-      <div className="order-first md:order-last p-3 flex-fill text-center flex gap-4 mb-3 md:mb-0 justify-center lg:justify-end">
+      <div className="order-first md:order-last p-3 flex-fill text-center flex gap-4 mb-3 md:mb-0 justify-center items-center lg:justify-end">
         <span className="">
           <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
           <Link href={`https://www.nhl.com/gamecenter/${game.id}`} className="underline">NHL.com GameCenter</Link>
@@ -56,12 +74,33 @@ const GameSubPageNavigation = ({ game }) => {
           <span className="text-center">
             <FontAwesomeIcon icon={faRadio} fixedWidth className="mr-1" />
             {' '}{' '}
-            <RadioLink m3u8Url={game.homeTeam.radioLink} label="Home" />
+            <button
+              className="font-bold underline"
+              onClick={() => {
+                setAudioPlayerUrl(game.homeTeam.radioLink);
+                setAudioPlayerLabel(game.homeTeam.placeName.default);
+                setAudioPlayerPlaying(true);
+                setAudioPlayerVisible(true);
+              }}
+            >
+              Home
+            </button>
             {' '}|{' '}
-            <RadioLink m3u8Url={game.awayTeam.radioLink} label="Away" />
+            <button
+              className="font-bold underline"
+              onClick={() => {
+                setAudioPlayerUrl(game.awayTeam.radioLink);
+                setAudioPlayerLabel(game.awayTeam.placeName.default);
+                setAudioPlayerPlaying(true);
+                setAudioPlayerVisible(true);
+              }}
+            >
+              Away
+            </button>
           </span>
         )}
       </div>
+      <FloatingAudioPlayer isVisible={isAudioPlayerVisible} isPlaying={isAudioPlayerPlaying} url={audioPlayerUrl} label={audioPlayerLabel} onStop={handleAudioPlayerStop} onTogglePlay={handleTogglePlaying} onClose={handleAudioPlayerClose} />
     </div>
   );
 };

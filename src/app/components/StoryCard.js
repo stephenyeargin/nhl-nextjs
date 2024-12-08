@@ -1,16 +1,14 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import { PropTypes } from 'prop-types';
 import { formatLocalizedDate, formatLocalizedTime } from '../utils/formatters';
 
-dayjs.extend(utc);
-
 const StoryCard = ({ item }) => (
-  <div key={item.id} className="mb-4">
-    <p className="text-sm opacity-50">{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(dayjs(item.contentDate).utc())}</p>
+  <div key={item.entityId} className="mb-4">
+    <p className="text-sm opacity-50" suppressHydrationWarning>{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(item.contentDate)}</p>
     <Link href={`https://nhl.com/news/${item.slug}`} className="">
       {item.thumbnail ? (               
         <Image src={item.thumbnail?.thumbnailUrl} width="416" height="416" alt="Story Photo" className="mb-2" />

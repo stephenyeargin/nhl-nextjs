@@ -1,17 +1,14 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import { formatBroadcasts, formatLocalizedTime, formatLocalizedDate } from '../utils/formatters';
-import TeamLogo from './TeamLogo';
 import { PropTypes } from 'prop-types';
+import { formatLocalizedTime, formatLocalizedDate, formatPeriodLabel } from '@/app/utils/formatters';
+import TeamLogo from '@/app/components/TeamLogo';
 
-dayjs.extend(utc);
-
-const GameTile = ({game}) => {
-
+const GameTile = ({game, hideDate, style}) => {
   game.awayTeam.defeated = game.awayTeam.score < game.homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
   game.homeTeam.defeated = game.homeTeam.score < game.awayTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
 
@@ -19,28 +16,19 @@ const GameTile = ({game}) => {
     <Link
       href={`/game/${game.id}`}
       key={game.id} 
-      className={`border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''}`}
+      className={`border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-500' : ''}`}
+      style={style}
     >
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-lg">
-          {game.gameType === 1 && (
-            <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1 uppercase">Preseason</span>
-          )}
-          {game.gameScheduleState === 'CNCL' && (
-            <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
-          )}
-          {game.gameScheduleState === 'PPD' && (
-            <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
-          )}
-          {(game.gameState === 'LIVE' || game.gameState === 'CRIT') && (
-            <span className="text-sm font-medium px-2 py-1 bg-red-900 text-white rounded mr-1">LIVE</span>
-          )}         
-        </div>
-        {game.gameState === 'FUT' && (
-          <div className="text-sm text-right text-slate-600">
-            {formatBroadcasts(game.tvBroadcasts)}
-          </div>
+      <div className="text-lg">
+        {game.gameType === 1 && (
+          <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1 uppercase">Preseason</span>
         )}
+        {game.gameScheduleState === 'CNCL' && (
+          <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+        )}
+        {game.gameScheduleState === 'PPD' && (
+          <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+        )} 
       </div>
 
       <div className="space-y-2">
@@ -57,9 +45,11 @@ const GameTile = ({game}) => {
               <span className="font-bold">{game.awayTeam.commonName?.default.replace(game.awayTeam.placeNameWithPreposition?.default, '')}</span>
             </div>
           </div>
-          <span className="text-lg font-semibold">
-            {game.gameState !== 'FUT' ? game.awayTeam.score : ''}
-          </span>
+          {game.gameState !== 'FUT' ? (
+            <span className="text-lg font-semibold">{game.awayTeam.score}</span>
+          ) : (
+            <span className="text-sm font-light">{game.awayTeam.record}</span>
+          )}
         </div>
 
         {/* Home Team */}
@@ -75,9 +65,11 @@ const GameTile = ({game}) => {
               <span className="font-bold">{game.homeTeam.commonName?.default.replace(game.homeTeam.placeNameWithPreposition?.default, '')}</span>
             </div>
           </div>
-          <span className="text-lg font-semibold">
-            {game.homeTeam.score}
-          </span>
+          {game.gameState !== 'FUT' ? (
+            <span className="text-lg font-semibold">{game.homeTeam.score}</span>
+          ) : (
+            <span className="text-sm font-light">{game.homeTeam.record}</span>
+          )}
         </div>
       </div>
 
@@ -86,25 +78,27 @@ const GameTile = ({game}) => {
           <span className="text-sm text-slate-600">{game.venue.default}</span>
           {(game.gameState === 'FINAL' || game.gameState === 'OFF') && (
             <div>
-              <span className="text-sm mr-2">{formatLocalizedDate(game.gameDate)}</span>
+              <span className="text-sm mr-2" suppressHydrationWarning>{hideDate ? null : formatLocalizedDate(game.startTimeUTC)}</span>
               <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
                 FINAL{(game.gameOutcome?.lastPeriodType !== 'REG' && game.periodDescriptor?.periodType !== 'REG') ? `/${game.gameOutcome?.lastPeriodType ?? game.periodDescriptor?.periodType}` : ''}
               </span>
             </div>
           )}
-          {(game.gameState === 'LIVE' || game.gameState === 'CRIT' && (
-            <span className="text-sm font-medium px-2 py-1 bg-red-900 text-white rounded">
-              {game.periodDescriptor?.number}
-              {game.clock?.inIntermission ? ' INT' : ''}
-              {' '}
-              {game.clock?.timeRemaining}
+          {(game.gameState === 'LIVE' || game.gameState === 'CRIT') && (
+            <span>
+              <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded uppercase mr-2">
+                {formatPeriodLabel(game.periodDescriptor)}{game.clock?.inIntermission ? ' INT' : ''}
+              </span>
+              <span className="text-sm font-bold">
+                {game.clock?.timeRemaining}
+              </span>
             </span>
-          ))}
+          )}
           {game.gameState === 'FUT' && (
             <span className="text-sm">
-              {formatLocalizedTime(dayjs(game.startTimeUTC).utc())}
+              <span suppressHydrationWarning>{formatLocalizedTime(game.startTimeUTC)}</span>
               {' '}
-              {formatLocalizedDate(game.gameDate)}
+              {hideDate ? null : formatLocalizedDate(game.startTimeUTC)}
             </span>
           )}
         </div>
@@ -115,6 +109,13 @@ const GameTile = ({game}) => {
 
 GameTile.propTypes = {
   game: PropTypes.object.isRequired,
+  hideDate: PropTypes.bool,
+  style: PropTypes.object,
+};
+
+GameTile.defaultProps = {
+  hideDate: false,
+  style: {},
 };
 
 export default GameTile;

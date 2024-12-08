@@ -24,10 +24,10 @@ const StandingsTable = ({ standings }) => {
   const wildcardRankings = ['1', '2', '3', '1', '2', '3', 'WC1', 'WC2', '', '', '', '', '', '', '', ''];
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto scrollbar-hidden">
       <table className="standingsTable">
         <thead>
-          <tr className="text-sm border bg-slate-200 dark:bg-slate-800">
+          <tr className="text-sm text-nowrap border bg-slate-200 dark:bg-slate-800">
             <th className="w-10 text-center"></th>
             <th className="text-center">Team</th>
             <th className="w-15 text-center">GP</th>
@@ -36,13 +36,13 @@ const StandingsTable = ({ standings }) => {
             <th className="w-15 text-center">OT</th>
             <th className="w-15 text-center">PTS</th>
             <th className="w-15 text-center">P%</th>
-            <th className="w-15 text-center hidden md:table-cell">RW</th>
-            <th className="w-15 text-center hidden md:table-cell">ROW</th>
-            <th className="w-15 text-center hidden md:table-cell">GF</th>
-            <th className="w-15 text-center hidden md:table-cell">GA</th>
-            <th className="w-15 text-center hidden md:table-cell">DIFF</th>
-            <th className="w-15 text-center hidden md:table-cell">HOME</th>
-            <th className="w-15 text-center hidden md:table-cell">AWAY</th>
+            <th className="w-15 text-center">RW</th>
+            <th className="w-15 text-center">ROW</th>
+            <th className="w-15 text-center">GF</th>
+            <th className="w-15 text-center">GA</th>
+            <th className="w-15 text-center">DIFF</th>
+            <th className="w-15 text-center">HOME</th>
+            <th className="w-15 text-center">AWAY</th>
             <th className="w-15 text-center">S/O</th>
             <th className="w-15 text-center">L10</th>
             <th className="w-15 text-center">STRK</th>
@@ -71,13 +71,13 @@ const StandingsTable = ({ standings }) => {
               <td className="text-center">{formatStat(team.otLosses)}</td>
               <td className="text-center">{formatStat(team.points)}</td>
               <td className="text-center">{formatStat(team.pointPctg,3)}</td>
-              <td className="text-center hidden md:table-cell">{formatStat(team.roadWins)}</td>
-              <td className="text-center hidden md:table-cell">{formatStat(team.regulationPlusOtWins)}</td>
-              <td className="text-center hidden md:table-cell">{formatStat(team.goalFor)}</td>
-              <td className="text-center hidden md:table-cell">{formatStat(team.goalAgainst)}</td>
-              <td className="text-center hidden md:table-cell">{formatStat(team.goalDifferential)}</td>
-              <td className="text-center hidden md:table-cell">{formatStat(team.homeWins)}-{formatStat(team.homeLosses)}-{formatStat(team.homeOtLosses)}</td>
-              <td className="text-center hidden md:table-cell">{formatStat(team.roadWins)}-{formatStat(team.roadLosses)}-{formatStat(team.roadOtLosses)}</td>
+              <td className="text-center">{formatStat(team.roadWins)}</td>
+              <td className="text-center">{formatStat(team.regulationPlusOtWins)}</td>
+              <td className="text-center">{formatStat(team.goalFor)}</td>
+              <td className="text-center">{formatStat(team.goalAgainst)}</td>
+              <td className="text-center">{formatStat(team.goalDifferential)}</td>
+              <td className="text-center">{formatStat(team.homeWins)}-{formatStat(team.homeLosses)}-{formatStat(team.homeOtLosses)}</td>
+              <td className="text-center">{formatStat(team.roadWins)}-{formatStat(team.roadLosses)}-{formatStat(team.roadOtLosses)}</td>
               <td className="text-center">{formatStat(team.shootoutWins)}-{formatStat(team.shootoutLosses)}</td>
               <td className="text-center">{formatStat(team.l10Wins)}-{formatStat(team.l10Losses)}-{formatStat(team.l10OtLosses)}</td>
               <td className="text-center">{formatStat(team.streakCode)}{formatStat(team.streakCount)}</td>

@@ -380,12 +380,21 @@ const PlayByPlay = ({ params }) => {
                 </tr>
               </thead>
               <tbody>
+                {sortedPlays.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="p-2 text-center">No matching plays.</td>
+                  </tr>
+                )}
                 {sortedPlays.map((play, i) => {
                   return(
                     <tr key={play.eventId} className={i % 2 === 0 ? 'bg-slate-500/10' : ''}>
-                      <td className="p-3 text-center">
-                        <span className="m-1 border rounded p-1 font-bold text-xs">{play.timeRemaining}</span>
-                        <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
+                      <td className="p-2 text-xs text-center">
+                        <div className="mt-1">
+                          <span className="p-1 mx-auto font-bold border rounded">{play.timeRemaining}</span>
+                        </div>
+                        {activePeriod === 0 && (
+                          <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
+                        )}
                       </td>
                       <td className="p-2 flex flex-wrap gap-2 items-center">
                         <div className="w-10 h-10">

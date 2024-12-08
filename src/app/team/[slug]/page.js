@@ -4,13 +4,9 @@ import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { PropTypes } from 'prop-types';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import { formatBroadcasts, formatLocalizedDate, formatLocalizedTime, formatOrdinalNumber, formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
-import Link from 'next/link';
+import { formatOrdinalNumber, formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 import StoryCard from '@/app/components/StoryCard';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
-dayjs.extend(utc);
+import TeamSchedule from '@/app/components/TeamSchedule';
 
 export const metadata = {
   title: 'Team Schedule & Stats',
@@ -113,7 +109,6 @@ export default async function SchedulePage({ params }) {
               <div className="text-2xl capitalize">{teamStanding.roadWins}-{teamStanding.roadLosses}-{teamStanding.roadOtLosses}</div>
               <div className="text-xs font-light">Road Record</div>
             </div>
-            {/* Shootout Record */}
             <div className="flex flex-col p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
               <div className="text-2xl capitalize">{teamStanding.shootoutWins}-{teamStanding.shootoutLosses}</div>
               <div className="text-xs font-light">Shootout Record</div>
@@ -142,7 +137,7 @@ export default async function SchedulePage({ params }) {
 
       {news.items?.length > 0 && (
         <>
-          <h1 className="text-3xl font-bold mb-6">News</h1>
+          <h1 className="text-3xl font-bold mb-6">Latest News</h1>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
             {news.items.slice(0, 8).map((item) => (
               <StoryCard key={item.entityId} item={item} />
@@ -164,55 +159,7 @@ export default async function SchedulePage({ params }) {
 
       <h1 className="text-3xl font-bold mb-6">Season Schedule</h1>
       
-      <div className="overflow-x-auto">
-        <table className="statsTable">
-          <thead>
-            <tr>
-              <th style={headerStyle} className="text-left">Date</th>
-              <th style={headerStyle} className="text-left">Matchup</th>
-              <th style={headerStyle} className="" colSpan={2}>Result</th>
-              <th style={headerStyle} className="">Broadcasts</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fullSeasonSchedule.games.map((game) => (
-              <tr key={game.id}>
-                <td>{formatLocalizedDate(dayjs(game.startTimeUTC).utc())} {formatLocalizedTime(dayjs(game.startTimeUTC).utc())}</td>
-                <td>
-                  <div className="flex gap-2 items-center">
-                    {game.gameType === 1 && (
-                      <span className="text-xs p-1 border rounded">Preseason</span>
-                    )}
-                    <TeamLogo team={game.awayTeam.abbrev !== team.abbreviation ? game.awayTeam.abbrev : game.homeTeam.abbrev } className="h-8 w-8" />
-                    <Link href={`/game/${game.id}`} className="underline">{game.awayTeam.placeName.default} @ {game.homeTeam.placeName.default}</Link>                   
-                  </div>
-                </td>
-                <td className="text-center">
-                  {(game.gameState === 'OFF' || game.gameState === 'FINAL') && (
-                    <>
-                      {game.gameOutcome?.lastPeriodType !== 'REG' ? game.gameOutcome?.lastPeriodType : '' }
-                      {(team.abbreviation === game.awayTeam.abbrev && game.awayTeam.score > game.homeTeam.score) ? 'W' : (team.abbreviation === game.homeTeam.abbrev && game.homeTeam.score > game.awayTeam.score) ? 'W' : 'L'}
-                    </>
-                  )}
-                </td>
-                <td>
-                  {(game.gameState === 'OFF' || game.gameState === 'FINAL') && (
-                    <Link href={`/game/${game.id}`} className="underline">
-                      {game.awayTeam.abbrev} {game.awayTeam.score}-{game.homeTeam.score} {game.homeTeam.abbrev}
-                    </Link>
-                  )}
-                  {game.gameScheduleState	 === 'CNCL' && (
-                    <span className="p-1 text-xs border rounded">Canceled</span>
-                  )}
-                </td>
-                <td>
-                  {formatBroadcasts(game.tvBroadcasts)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <TeamSchedule team={team} fullSeasonSchedule={fullSeasonSchedule} headerStyle={headerStyle} />
     </div>
   );
 }

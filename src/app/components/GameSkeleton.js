@@ -6,13 +6,13 @@ const GameSkeleton = () => {
   return (
     <div className="container mx-auto animate-pulse">
       <div className="border rounded-lg grid grid-cols-12 my-5 py-4 gap-5">
-        <div className="col-span-3 flex mx-auto">
+        <div className="col-span-3 flex justify-center ms-5">
           <div className="w-40 h-20 bg-slate-300 dark:bg-slate-700"></div>
           <div className="mx-4">
             <div className="h-4 bg-slate-300 dark:bg-slate-700"></div>
           </div>
         </div>
-        <div className="col-span-2 flex mx-auto">
+        <div className="col-span-2 flex justify-end">
           <div className="w-20 h-20 bg-slate-300 dark:bg-slate-700"></div>
           <div className="mx-4">
             <div className="h-4 bg-slate-300 dark:bg-slate-700"></div>
@@ -23,13 +23,13 @@ const GameSkeleton = () => {
           <div className="my-2 h-4 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
           <div className="my-2 h-4 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
         </div>
-        <div className="col-span-2 flex mx-auto">
+        <div className="col-span-2 flex">
           <div className="w-20 h-20 bg-slate-300 dark:bg-slate-700"></div>
           <div className="mx-4">
             <div className="h-4 bg-slate-300 dark:bg-slate-700"></div>
           </div>
         </div>
-        <div className="col-span-3 flex mx-auto">
+        <div className="col-span-3 flex justify-center me-5">
           <div className="w-40 h-20 bg-slate-300 dark:bg-slate-700"></div>
           <div className="mx-4">
             <div className="h-4 bg-slate-300 dark:bg-slate-700"></div>
