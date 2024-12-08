@@ -29,6 +29,9 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
 
   const handleMarkerAction = (e) => {
     const play = mappedPlays[e.target.closest('div').getAttribute('data-index')] || {};
+    if (!play) {
+      return;
+    }
 
     setPlayBoxContent(
       <div className="flex gap-2 items-center">
@@ -52,7 +55,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
   const isHomeDefendingLeft = plays && plays[0]?.homeTeamDefendingSide !== 'left';
 
   return (
-    <div>
+    <div id="iceRink">
       <div className="relative m-4">
         <Image
           src={RinkSvg}
@@ -96,7 +99,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
             key={index}
             className={`absolute ${activePlay === play.eventId ? 'animate-pulse border-2 border-slate-800 dark:border-slate-200 rounded-full' : ''}`}
             style={{
-              top: `${play.details?.yCoord/0.88 + 50}%`,
+              top: `${-1 * play.details?.yCoord/0.88 + 50}%`,
               left: `${play.details?.xCoord/2.02 + 50}%`,
               transform: 'translate(-50%, -50%)',
               opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.75,
