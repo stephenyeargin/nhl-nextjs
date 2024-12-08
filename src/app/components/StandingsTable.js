@@ -76,7 +76,7 @@ const StandingsTable = ({ standings }) => {
               <td className="text-center">{formatStat(team.goalFor)}</td>
               <td className="text-center">{formatStat(team.goalAgainst)}</td>
               <td className="text-center">{formatStat(team.goalDifferential)}</td>
-             <td className="text-center">{formatStat(team.homeWins)}-{formatStat(team.homeLosses)}-{formatStat(team.homeOtLosses)}</td>
+              <td className="text-center">{formatStat(team.homeWins)}-{formatStat(team.homeLosses)}-{formatStat(team.homeOtLosses)}</td>
               <td className="text-center">{formatStat(team.roadWins)}-{formatStat(team.roadLosses)}-{formatStat(team.roadOtLosses)}</td>
               <td className="text-center">{formatStat(team.shootoutWins)}-{formatStat(team.shootoutLosses)}</td>
               <td className="text-center">{formatStat(team.l10Wins)}-{formatStat(team.l10Losses)}-{formatStat(team.l10OtLosses)}</td>
