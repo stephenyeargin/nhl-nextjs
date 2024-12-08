@@ -368,7 +368,7 @@ const PlayByPlay = ({ params }) => {
 
           </div>
 
-          <IceRink game={game} plays={filteredPlays} homeTeam={homeTeam} awayTeam={awayTeam} renderPlayByPlayEvent={renderPlayByPlayEvent} />
+          <IceRink game={game} plays={filteredPlays} homeTeam={homeTeam} awayTeam={awayTeam} renderPlayByPlayEvent={renderPlayByPlayEvent} renderTeamLogo={renderTeamLogo} />
 
           <div className="overflow-x-auto">
             <table className="text-xs min-w-full table-auto">

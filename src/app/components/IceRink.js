@@ -9,9 +9,10 @@ import { Skater } from './Skater';
 import { GAME_EVENTS } from '../utils/constants';
 import { formatPeriodLabel } from '../utils/formatters';
 
-const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => {
+const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, renderTeamLogo }) => {
   const [playBoxContent, setPlayBoxContent] = useState(null);
   const [activePlay, setActivePlay] = useState(null);
+  const [hoverPlay, setHoverPlay] = useState(null);
 
   let mappedPlays = plays.filter((p) => p.details?.xCoord !== undefined && p.details?.yCoord !== undefined) || [];
   mappedPlays = mappedPlays.sort((a, b) => b.sortOrder - a.sortOrder);
@@ -53,6 +54,24 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
   };
 
   const isHomeDefendingLeft = plays && plays[0]?.homeTeamDefendingSide !== 'left';
+
+  let hoverTimeOut;
+
+  const handleHoverEnter = (e) => {
+    if (hoverTimeOut) {
+      clearTimeout(hoverTimeOut);
+    }
+    const play = mappedPlays[e.target.closest('div').getAttribute('data-index')] || {};
+    setHoverPlay(play);
+  };
+
+  const handleHoverLeave = () => {
+    hoverTimeOut = setTimeout(() => {
+      if (hoverPlay) {
+        setHoverPlay(null);
+      }
+    }, 7500);
+  };
 
   return (
     <div id="iceRink">
@@ -103,12 +122,20 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
               left: `${play.details?.xCoord/2.02 + 50}%`,
               transform: 'translate(-50%, -50%)',
               opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.75,
-              zIndex: index < 3 || play.typeDescKey === 'goal' ? 1 : 0
+              zIndex: index < 3 || play.typeDescKey === 'goal' ? 1 : 0,
+              cursor: 'pointer',
             }}
-            title={`Event #${play.eventId}: ${GAME_EVENTS[play.typeDescKey] || play.typeDescKey} @ ${play.timeInPeriod} (${play.details.xCoord},${play.details.yCoord})`}
+            data-debug={`Event #${play.eventId}: ${GAME_EVENTS[play.typeDescKey] || play.typeDescKey} @ ${play.timeInPeriod} (${play.details.xCoord},${play.details.yCoord})`}
             data-index={index}
+            onClick={handleMarkerAction}
+            onMouseEnter={handleHoverEnter}
+            onMouseOut={handleHoverLeave}
           >
-            <svg width={play.typeDescKey !== 'goal' ? 20 : 25} height={play.typeDescKey !== 'goal' ? 20 : 25} viewBox="0 0 10 10" onClick={handleMarkerAction} style={{ cursor: 'pointer' }}>
+            <svg
+              width={play.typeDescKey !== 'goal' ? 20 : 25}
+              height={play.typeDescKey !== 'goal' ? 20 : 25}
+              viewBox="0 0 10 10"
+            >
               {play.typeDescKey	 === 'goal' ? (
                 <>
                   <circle cx="5" cy="5" r="5" fill={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data.teamColor : awayTeam.data.teamColor} />
@@ -123,6 +150,32 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent }) => 
             </svg>
           </div>
         ))}
+        {hoverPlay && (
+          <div
+            className="absolute m-20"
+            style={{
+              top: `${-1 * hoverPlay.details?.yCoord/0.88 + 45}%`,
+              left: `${hoverPlay.details?.xCoord/2.02 + 45}%`,
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1000,
+            }}
+          >
+            <div className="bg-slate-200 dark:bg-slate-800 p-4 rounded-lg shadow-lg flex gap-2 items-center">
+              <div className="text-xs text-center">
+                <div className="p-1" style={{width: '75px'}}>
+                  <span className="text-xs p-1 border rounded font-bold">{hoverPlay.timeInPeriod}</span>
+                </div>
+                <div className="mt-1">{formatPeriodLabel(hoverPlay.periodDescriptor, true)}</div>
+              </div>
+              <div style={{width: '50px'}}>
+                {renderTeamLogo(hoverPlay.details?.eventOwnerTeamId)}
+              </div>
+              <div className="text-lg font-bold" style={{minWidth: '100px'}}>
+                {GAME_EVENTS[hoverPlay.typeDescKey]}
+              </div>
+            </div>
+          </div>
+        )}
         {!plays.length > 0 && game?.summary?.iceSurface && (
           <div className="absolute top-2 bottom-2 left-0 right-0 grid grid-cols-6 items-center">
             <div className="col-span-1 text-center">
@@ -184,7 +237,8 @@ IceRink.propTypes = {
   plays: PropTypes.array,
   homeTeam: PropTypes.object.isRequired,
   awayTeam: PropTypes.object.isRequired,
-  renderPlayByPlayEvent: PropTypes.func.isRequired
+  renderPlayByPlayEvent: PropTypes.func.isRequired,
+  renderTeamLogo: PropTypes.func.isRequired
 };
 
 IceRink.defaultProps = {
