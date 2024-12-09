@@ -186,7 +186,7 @@ const PlayByPlay = ({ params }) => {
     case 'blocked-shot':
       return (
         <div className="">
-          {renderPlayer(e.blockingPlayerId)} blocked a shot from {e.reason === 'teammate-blocked' ? 'teammate' : ''} {renderPlayer(e.shootingPlayerId)}
+          {renderPlayer(e.shootingPlayerId)}&apos;s shot was blocked by {e.reason === 'teammate-blocked' ? 'teammate' : ''} {renderPlayer(e.blockingPlayerId)}
         </div>
       );
     case 'shot-on-goal':

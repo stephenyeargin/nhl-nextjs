@@ -49,7 +49,7 @@ const GameHeader = () => {
     gameHeaderClass = 'grid grid-cols-12 items-center md:sticky top-0 pt-5 z-10 border rounded-b-lg shadow-sm pb-5';
   }
   if (gameState === 'CRIT') {
-    gameHeaderClass += ' border-red-500';
+    gameHeaderClass += ' border-red-900';
   }
 
   const gameHeaderStyle = { background: 'var(--background)' };

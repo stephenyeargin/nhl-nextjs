@@ -163,7 +163,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
             <div className="bg-slate-200 dark:bg-slate-800 p-4 rounded-lg shadow-lg flex gap-2 items-center">
               <div className="text-xs text-center">
                 <div className="p-1" style={{width: '75px'}}>
-                  <span className="text-xs p-1 border rounded font-bold">{hoverPlay.timeInPeriod}</span>
+                  <span className="text-xs p-1 border rounded font-bold">{hoverPlay.timeRemaining}</span>
                 </div>
                 <div className="mt-1">{formatPeriodLabel(hoverPlay.periodDescriptor, true)}</div>
               </div>

@@ -184,7 +184,7 @@ const GameSidebar = () => {
           </div>
           <div className="grid grid-cols-12 gap-3 py-4 items-center">
             {rightRail.seasonSeries.map((g, i) => (
-              <Link href={`/game/${g.id}`} key={i} className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded ${g.gameState === 'CRIT' ? 'border-red-500' : ''}`}>
+              <Link href={`/game/${g.id}`} key={i} className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded ${g.gameState === 'CRIT' ? 'border-red-900' : ''}`}>
                 <div className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}>
                   <div className="flex items-center font-bold gap-1">
                     <TeamLogo

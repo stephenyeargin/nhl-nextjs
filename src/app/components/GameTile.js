@@ -16,7 +16,7 @@ const GameTile = ({game, hideDate, style}) => {
     <Link
       href={`/game/${game.id}`}
       key={game.id} 
-      className={`border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-500' : ''}`}
+      className={`border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-900' : ''}`}
       style={style}
     >
       <div className="text-lg">

@@ -46,9 +46,12 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }) => {
                     {(team.abbreviation === game.awayTeam.abbrev && game.awayTeam.score > game.homeTeam.score) ? 'W' : (team.abbreviation === game.homeTeam.abbrev && game.homeTeam.score > game.awayTeam.score) ? 'W' : 'L'}
                   </>
                 )}
+                {['LIVE', 'CRIT'].includes(game.gameState) && (
+                  <span className="p-1 text-xs font-bold rounded text-white bg-red-900 uppercase">Live</span>
+                )}
               </td>
               <td>
-                {(game.gameState === 'OFF' || game.gameState === 'FINAL') && (
+                {['OFF', 'FINAL', 'LIVE', 'CRIT'].includes(game.gameState) && (
                   <Link href={`/game/${game.id}`} className="underline">
                     {game.awayTeam.abbrev} {game.awayTeam.score}-{game.homeTeam.score} {game.homeTeam.abbrev}
                   </Link>
