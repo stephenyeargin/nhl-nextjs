@@ -20,6 +20,12 @@ export default function PlayerPage({ params }) {
 
   const [player, setPlayer] = useState(null);
   const [activeLeague, setActiveLeague] = useState('nhl');
+  const [seasonType, setSeasonType] = useState(2); // [2: Regular season, 3: Post-season]
+
+  const SEASON_TYPES = {
+    2: 'regularSeason',
+    3: 'playoffs'
+  };
 
   useEffect(() => {
     const fetchPlayer = async () => {
@@ -139,8 +145,8 @@ export default function PlayerPage({ params }) {
     };
   }
 
-  const nhlStats = seasonTotals.filter((l) => l.leagueAbbrev === 'NHL');
-  const otherLeagueStats = seasonTotals.filter((l) => l.leagueAbbrev !== 'NHL');
+  const nhlStats = seasonTotals.filter((l) => l.leagueAbbrev === 'NHL' && l.gameTypeId === seasonType);
+  const otherLeagueStats = seasonTotals.filter((l) => l.leagueAbbrev !== 'NHL' && l.gameTypeId === seasonType);
 
   const renderStatsTable = ({ stats, showLeague }) => {
     return (
@@ -168,7 +174,6 @@ export default function PlayerPage({ params }) {
               <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
                 <td className="p-2 border text-center">
                   {formatSeason(season.season)}
-                  {season.gameTypeId === 2 ? '' : <div className="text-xs">Postseason</div>}
                 </td>
                 <td className="">
                   <div className="flex gap-1 items-center">
@@ -267,33 +272,35 @@ export default function PlayerPage({ params }) {
               </div>
             </div>
             <div className="col-span-12 lg:col-span-7">
-              {featuredStats?.season && (
+              {featuredStats?.season && seasonType === 2 && (
                 <div className="my-1 text-xl font-bold">{formatSeason(featuredStats.season)}</div>
               )}
-              {featuredStats?.regularSeason?.subSeason && (
+              {featuredStats?.[SEASON_TYPES[seasonType]]?.subSeason && (
                 <div className="gap-2 flex flex-nowrap overflow-x-auto scrollbar-hidden">
                   {statHeaders.map((stat) => {
-                    if (featuredStats.regularSeason?.subSeason[stat.key] === undefined) {
+                    if (featuredStats?.[SEASON_TYPES[seasonType]]?.subSeason[stat.key] === undefined) {
                       return;
                     }
-                    
-                    return renderStatBox(stat.key, featuredStats.regularSeason?.subSeason[stat.key]);
+
+                    return renderStatBox(stat.key, featuredStats?.[SEASON_TYPES[seasonType]]?.subSeason[stat.key]);
                   })}
                 </div>
               )}
               {careerTotals && (
-                <div className="my-1 text-xl font-bold">Career</div>
+                <div className="my-1 text-xl font-bold">{seasonType === 3 ? 'Career Playoffs' : 'Career Regular Season'}</div>
               )}
-              {careerTotals?.regularSeason && (
+              {careerTotals?.[SEASON_TYPES[seasonType]] ? (
                 <div className="gap-2 flex flex-nowrap overflow-x-auto scrollbar-hidden">
                   {statHeaders.map((stat) => {
-                    if (careerTotals.regularSeason[stat.key] === undefined) {
+                    if (careerTotals?.[SEASON_TYPES[seasonType]][stat.key] === undefined) {
                       return;
                     }
                     
-                    return renderStatBox(stat.key, careerTotals.regularSeason[stat.key]);
+                    return renderStatBox(stat.key, careerTotals?.[SEASON_TYPES[seasonType]][stat.key]);
                   })}
                 </div>
+              ) : (
+                <>No statistics recorded for {seasonType === 3 ? 'playoffs' : 'regular season'}.</>
               )}
             </div>
           </div>
@@ -301,9 +308,15 @@ export default function PlayerPage({ params }) {
         </div>
       </div>
 
-      <div className="text-center my-3 text-xs font-bold">
-        <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
-        <Link href={`https://www.nhl.com/player/${player.playerId}`} className="underline">NHL.com Player Profile</Link>
+      <div className="my-3 flex justify-center gap-5 items-center">
+        <div className="text-xs font-bold">
+          <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
+          <Link href={`https://www.nhl.com/player/${player.playerId}`} className="underline">NHL.com Player Profile</Link>
+        </div>
+        <div className="text-xs">
+          <button className={`font-bold p-1 border rounded-l ${seasonType === 2 ? headerColorClass : ''}`} style={seasonType === 2 ? headerStyle : null} onClick={() => setSeasonType(2)}>Regular Season</button>
+          <button className={`font-bold p-1 border rounded-r ${seasonType === 3 ? headerColorClass : ''}`} style={seasonType === 3 ? headerStyle : null} onClick={() => setSeasonType(3)}>Playoffs</button>
+        </div>
       </div>
 
       {last5Games && (
@@ -370,7 +383,7 @@ export default function PlayerPage({ params }) {
         <div id="seasonTotals">
 
           <div className="flex justify-between">
-            <div className="text-3xl font-bold underline my-3">Season Totals</div>
+            <div className="text-3xl font-bold underline my-3">{seasonType === 2 ? 'Season Totals' : 'Playoff Totals'}</div>
             {nhlStats.length > 0 && otherLeagueStats.length > 0 && (
               <LeagueToggle handleChangeLeagues={handleChangeLeagues} activeLeague={activeLeague} />
             )}
