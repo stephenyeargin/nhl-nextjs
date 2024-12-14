@@ -6,7 +6,7 @@ import Image from 'next/image';
 import PropTypes from 'prop-types';
 import Headshot from '@/app/components/Headshot';
 import { formatStat, formatSeason, formatOrdinalNumber, formatLocalizedDate, formatTextColorByBackgroundColor, formatHeadTitle } from '@/app/utils/formatters';
-import GameSkeleton from '@/app/components/GameSkeleton';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import TeamLogo from '@/app/components/TeamLogo';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -44,7 +44,7 @@ export default function PlayerPage({ params }) {
   }, [id]);
 
   if (!player) {
-    return (<GameSkeleton hideGameHeader />);
+    return (<GameBodySkeleton />);
   }
 
   const {
@@ -67,7 +67,9 @@ export default function PlayerPage({ params }) {
     featuredStats,
     careerTotals,
     awards,
-    active,
+    isActive,
+    inTop100AllTime,
+    inHHOF,
   } = player;
 
   const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
@@ -129,10 +131,6 @@ export default function PlayerPage({ params }) {
       </div>
     );
   };
-
-  if (!player) {
-    return (<GameSkeleton hideGameHeader />);
-  }
 
   // Current team if present
   const team = getTeamDataByAbbreviation(player.currentTeamAbbrev);
@@ -239,7 +237,6 @@ export default function PlayerPage({ params }) {
           height={960}
           className="w-full h-full lg:object-cover"
         />
-
         <div className="block lg:absolute bottom-0 w-full bg-black bg-opacity-100 lg:bg-opacity-60 text-white p-8">
           <div className="grid grid-cols-12">
             <div className="col-span-12 lg:col-span-5">
@@ -261,7 +258,7 @@ export default function PlayerPage({ params }) {
                     <dt className="col-span-1 font-bold col">Weight:</dt>
                     <dd className="col-span-2">{formattedWeight}</dd>
                     <dt className="col-span-1 font-bold col">Born:</dt>
-                    <dd className="col-span-2">{formattedBirthDate} {active && (<>(Age: {age})</>)}</dd>
+                    <dd className="col-span-2">{formattedBirthDate} {isActive && (<>(Age: {age})</>)}</dd>
                     <dt className="col-span-1 font-bold col">Birthplace:</dt>
                     <dd className="col-span-2">{birthCity.default}, {birthCountry}</dd>
                     <dt className="col-span-1 font-bold col">{position !== 'G' ? 'Shoots' : 'Catches'}:</dt>
@@ -272,7 +269,20 @@ export default function PlayerPage({ params }) {
                 </div>
               </div>
             </div>
-            <div className="col-span-12 lg:col-span-7">
+            <div className="col-span-12 lg:col-span-7 relative">
+              <div className="relative md:absolute md:right-5 md:-top-20 py-5 flex gap-5">
+                {inTop100AllTime === 1 && (
+                  <div>
+                    <Image src="https://assets.nhle.com/badges/100_greatest_players.svg" alt="NHL Top 100 of All Time" width="1024" height="1024" className="w-20 h-20" />
+                  </div>
+                )}
+                {inHHOF === 1 && (
+                  <div>
+                    <Image src="https://assets.nhle.com/badges/hockey_hof.svg" alt="NHL Top 100 of All Time" width="1024" height="1024" className="w-20 h-20" />
+                  </div>
+                )}
+              </div>
+
               {featuredStats?.season && seasonType === 2 && (
                 <div className="my-1 text-xl font-bold">{formatSeason(featuredStats.season)}</div>
               )}

@@ -12,6 +12,7 @@ import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
 import Image from 'next/image';
 import { useGameContext } from '../contexts/GameContext';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
+import GameHeaderSkeleton from './GameHeaderSkeleton';
 
 const GameHeader = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -34,7 +35,7 @@ const GameHeader = () => {
   }, []);
 
   if (!gameData) { 
-    return <></>;
+    return <GameHeaderSkeleton />;
   }
 
   // Destructure data for rendering

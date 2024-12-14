@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPlayCircle, faTrophy, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { useGameContext } from '@/app/contexts/GameContext.js';
-import GameSkeleton from '@/app/components/GameSkeleton.js';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton.js';
 import Headshot from '@/app/components/Headshot';
 import GamePreview from '@/app/components/GamePreview';
 import { PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
@@ -21,7 +21,7 @@ const GamePage = () => {
   const { gameData, pageError } = useGameContext();
 
   if (!gameData) {
-    return <GameSkeleton hideGameHeader />;
+    return <GameBodySkeleton />;
   }
 
   const logos = {};

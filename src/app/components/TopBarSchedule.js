@@ -6,6 +6,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { PropTypes } from 'prop-types';
 import GameTile from './GameTile';
+import TopBarScheduleSkeleton from './TopBarScheduleSkeleton';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -77,65 +78,34 @@ const TopBarSchedule = ({ gameDate }) => {
     setFocusedDate(date);
   };
 
+  if (!games || games.length === 0) {
+    return (<TopBarScheduleSkeleton />);
+  }
+
   return (
     <div className="px-2">
-      {games?.length > 0 ? (
-        <>
-          <div className="flex text-xs gap-2 overflow-x-auto scrollbar-hidden">
-            {dates.map((date) => {
-              let dateClass = 'border rounded-xl';
-              if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
-                dateClass = 'border border-blue-400 rounded-xl';
-              }
-              if (date === focusedDate) {
-                dateClass = 'active rounded-xl bg-slate-500 text-white';
-              }
+      <div className="flex text-xs gap-2 overflow-x-auto scrollbar-hidden">
+        {dates.map((date) => {
+          let dateClass = 'border rounded-xl';
+          if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
+            dateClass = 'border border-blue-400 rounded-xl';
+          }
+          if (date === focusedDate) {
+            dateClass = 'active rounded-xl bg-slate-500 text-white';
+          }
               
-              return (
-                <button key={date} className={dateClass} onClick={() => handleDateClick(date)}>
-                  <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
-                </button>
-              );
-            })}
-          </div>
-          <div className="overflow-x-auto scrollbar-hidden my-3">
-            <div className="flex flex-nowrap gap-4">
-              {games.map((game) => (<GameTile key={game.id} game={game} hideDate={true} style={{minWidth: '360px'}} /> ))}
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="overflow-x-auto scrollbar-hidden animate-pulse">
-          <div className="flex text-sm py-4">
-            {[0,1,2,3,4,5,6].map((i) => (
-              <div key={i} className={i !== 3 ? 'active rounded-xl bg-slate-300 dark:bg-slate-700 mx-3' : 'active rounded-xl bg-slate-700 dark:bg-slate-300 mx-3'}>
-                <div className="px-4">&nbsp;</div>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-nowrap gap-4 p-4">
-            {[0,1,3,4,5,6].map((placeholder) => (
-              <div key={placeholder} className="border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow" style={{minWidth: '380px'}}>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="mx-3 text-sm bg-slate-300 dark:bg-slate-700 w-10">&nbsp;</div>
-                    <div className="mx-3 text-sm bg-slate-300 dark:bg-slate-700 w-80">&nbsp;</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="mx-3 text-sm bg-slate-300 dark:bg-slate-700 w-10">&nbsp;</div>
-                    <div className="mx-3 text-sm bg-slate-300 dark:bg-slate-700 w-80">&nbsp;</div>
-                  </div>
-                </div>
-                <div className="mt-2 pt-3">
-                  <div className="flex justify-between items-center">
-                    <div className="mx-3 text-sm bg-slate-300 dark:bg-slate-700 w-80">&nbsp;</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          return (
+            <button key={date} className={dateClass} onClick={() => handleDateClick(date)}>
+              <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
+            </button>
+          );
+        })}
+      </div>
+      <div className="overflow-x-auto scrollbar-hidden my-3">
+        <div className="flex flex-nowrap gap-4">
+          {games.map((game) => (<GameTile key={game.id} game={game} hideDate={true} style={{minWidth: '360px'}} /> ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };

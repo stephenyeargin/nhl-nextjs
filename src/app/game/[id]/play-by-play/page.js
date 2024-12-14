@@ -13,7 +13,7 @@ import Image from 'next/image';
 import Headshot from '@/app/components/Headshot';
 import { PropTypes } from 'prop-types';
 import { useGameContext } from '@/app/contexts/GameContext';
-import GameSkeleton from '@/app/components/GameSkeleton';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import { notFound } from 'next/navigation';
 import { formatPeriodLabel } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
@@ -64,7 +64,7 @@ const PlayByPlay = ({ params }) => {
 
   // If no boxscore available, redirect back up
   if (!gameData || !playByPlay) {
-    return <GameSkeleton hideGameHeader />;
+    return <GameBodySkeleton />;
   }
 
   // No reason to render future games

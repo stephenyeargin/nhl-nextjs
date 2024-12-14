@@ -1,7 +1,7 @@
 'use client';
 
 import React, { use, useEffect, useState } from 'react';
-import GameSkeleton from '@/app/components/GameSkeleton.js';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton.js';
 import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
@@ -58,7 +58,7 @@ const BoxScore = ({ params }) => {
 
   // If game data is loading, show loading indicator
   if (!gameData || !gameState) {
-    return <GameSkeleton hideGameHeader />;
+    return <GameBodySkeleton />;
   }
 
   if (['PRE', 'FUT'].includes(gameState)) {
