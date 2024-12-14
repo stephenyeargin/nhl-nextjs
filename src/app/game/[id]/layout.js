@@ -4,6 +4,9 @@ import React, { Suspense, use } from 'react';
 import { PropTypes } from 'prop-types';
 import { GameProvider } from '@/app/contexts/GameContext';
 import GameSkeleton from '@/app/components/GameSkeleton';
+import GameHeader from '@/app/components/GameHeader';
+import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
+import GameSidebar from '@/app/components/GameSidebar';
 
 const GameLayout = ({ children, params }) => {
   const { id: gameId } = use(params);
@@ -11,7 +14,21 @@ const GameLayout = ({ children, params }) => {
   return (
     <GameProvider gameId={gameId}>
       <Suspense fallback={<GameSkeleton />}>
-        {children}
+        <div className="container mx-auto">
+          <GameHeader />
+
+          <GameSubPageNavigation />
+          
+          <div className="grid grid-cols-4 gap-10">
+            <div className="col-span-4 md:col-span-3">
+              {children}
+            </div>
+
+            <div className="col-span-4 md:col-span-1">
+              <GameSidebar />
+            </div>
+          </div>
+        </div>
       </Suspense>
     </GameProvider>
   );

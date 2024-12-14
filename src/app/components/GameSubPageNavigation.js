@@ -8,16 +8,26 @@ import { faHockeyPuck, faList, faRadio, faTable, faTelevision } from '@fortaweso
 import { usePathname } from 'next/navigation';
 import { formatBroadcasts } from '../utils/formatters';
 import FloatingAudioPlayer from './FloatingAudioPlayer';
+import { useGameContext } from '../contexts/GameContext';
 
-const GameSubPageNavigation = ({ game }) => {
+const GameSubPageNavigation = () => {
   const [audioPlayerUrl, setAudioPlayerUrl] = useState(null);
   const [audioPlayerLabel, setAudioPlayerLabel] = useState(null);
   const [isAudioPlayerVisible, setAudioPlayerVisible] = useState(false);
   const [isAudioPlayerPlaying, setAudioPlayerPlaying] = useState(true);
 
-  const { id } = game;
+  const { gameData } = useGameContext();
+
   const activeRoute = usePathname();  
   const activeClasses = 'bg-slate-500/10 border-slate-500 border-b-2';
+
+  if (!gameData) { 
+    return <></>;
+  }
+
+  // Destructure data for rendering
+  const { game } = gameData;
+  const { id } = game;
 
   const handleAudioPlayerStop = () => {
     setAudioPlayerPlaying(false);

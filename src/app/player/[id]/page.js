@@ -44,7 +44,7 @@ export default function PlayerPage({ params }) {
   }, [id]);
 
   if (!player) {
-    return (<GameSkeleton />);
+    return (<GameSkeleton hideGameHeader />);
   }
 
   const {
@@ -131,7 +131,7 @@ export default function PlayerPage({ params }) {
   };
 
   if (!player) {
-    return <GameSkeleton />;
+    return (<GameSkeleton hideGameHeader />);
   }
 
   // Current team if present

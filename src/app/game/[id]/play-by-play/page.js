@@ -4,7 +4,6 @@ import React, { use, useEffect, useState } from 'react';
 import Link from 'next/link.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPlayCircle} from '@fortawesome/free-solid-svg-icons';
-import GameHeader from '@/app/components/GameHeader.js';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import { GAME_EVENTS, MISS_TYPES, PENALTY_DESCRIPTIONS, PENALTY_TYPES, ZONE_DESCRIPTIONS } from '@/app/utils/constants';
@@ -13,10 +12,8 @@ import PeriodSelector from '@/app/components/PeriodSelector';
 import Image from 'next/image';
 import Headshot from '@/app/components/Headshot';
 import { PropTypes } from 'prop-types';
-import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
 import { useGameContext } from '@/app/contexts/GameContext';
 import GameSkeleton from '@/app/components/GameSkeleton';
-import GameSidebar from '@/app/components/GameSidebar';
 import { notFound } from 'next/navigation';
 import { formatPeriodLabel } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
@@ -67,7 +64,7 @@ const PlayByPlay = ({ params }) => {
 
   // If no boxscore available, redirect back up
   if (!gameData || !playByPlay) {
-    return <GameSkeleton />;
+    return <GameSkeleton hideGameHeader />;
   }
 
   // No reason to render future games
@@ -338,98 +335,88 @@ const PlayByPlay = ({ params }) => {
   };
 
   return (
-    <div className="container mx-auto">
-      <GameHeader />
+    <div>
+      <div className="flex justify-center items-center my-5">
+        <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} includeAll={true} />
+        <div className="mx-5">
+          <select 
+            className="p-2 text-sm min-w-[200px] border rounded text-black dark:text-white bg-white dark:bg-black" 
+            value={eventFilter || 'all'}
+            onChange={handleFilterChange}
+          >
+            <option value="all">All Events</option>
+            <option value="goal">Goals</option>
+            <option value="shot-on-goal">Shots on Goal</option>
+            <option value="missed-shot">Missed Shots</option>
+            <option value="blocked-shot">Blocked Shots</option>
+            <option value="hit">Hits</option>
+            <option value="giveaway">Giveaways</option>
+            <option value="takeaway">Takeaways</option>
+            <option value="penalty">Penalties</option>
+            <option value="faceoff">Faceoffs</option>
+            <option value="stoppage">Stoppage</option>
+          </select>
+        </div>
 
-      <GameSubPageNavigation game={game} />
-      <div className="grid grid-cols-4 gap-10">
-        <div className="col-span-4 md:col-span-3">
-          <div className="flex justify-center items-center my-5">
-            <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} includeAll={true} />
-            <div className="mx-5">
-              <select 
-                className="p-2 text-sm min-w-[200px] border rounded text-black dark:text-white bg-white dark:bg-black" 
-                value={eventFilter || 'all'}
-                onChange={handleFilterChange}
-              >
-                <option value="all">All Events</option>
-                <option value="goal">Goals</option>
-                <option value="shot-on-goal">Shots on Goal</option>
-                <option value="missed-shot">Missed Shots</option>
-                <option value="blocked-shot">Blocked Shots</option>
-                <option value="hit">Hits</option>
-                <option value="giveaway">Giveaways</option>
-                <option value="takeaway">Takeaways</option>
-                <option value="penalty">Penalties</option>
-                <option value="faceoff">Faceoffs</option>
-                <option value="stoppage">Stoppage</option>
-              </select>
-            </div>
+      </div>
 
-          </div>
+      <IceRink game={game} plays={filteredPlays} homeTeam={homeTeam} awayTeam={awayTeam} renderPlayByPlayEvent={renderPlayByPlayEvent} renderTeamLogo={renderTeamLogo} />
 
-          <IceRink game={game} plays={filteredPlays} homeTeam={homeTeam} awayTeam={awayTeam} renderPlayByPlayEvent={renderPlayByPlayEvent} renderTeamLogo={renderTeamLogo} />
-
-          <div className="overflow-x-auto">
-            <table className="text-xs min-w-full table-auto">
-              <thead>
-                <tr className="hidden">
-                  <th className="p-2 text-center">Time</th>
-                  <th className="p-2 text-center">Event Type</th>
-                  <th className="p-2 text-center">Details</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedPlays.length === 0 && (
-                  <tr>
-                    <td colSpan={3} className="p-2 text-center">No matching plays.</td>
-                  </tr>
-                )}
-                {sortedPlays.map((play, i) => {
-                  return(
-                    <tr key={play.eventId} className={i % 2 === 0 ? 'bg-slate-500/10' : ''}>
-                      <td className="p-2 text-xs text-center">
-                        <div className="mt-1">
-                          <span className="p-1 mx-auto font-bold border rounded">{play.timeRemaining}</span>
-                        </div>
-                        {activePeriod === 0 && (
-                          <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
-                        )}
-                      </td>
-                      <td className="p-2 flex flex-wrap gap-2 items-center">
-                        <div className="w-10 h-10">
-                          {play.details?.eventOwnerTeamId && renderTeamLogo(play.details?.eventOwnerTeamId)}
-                        </div>
+      <div className="overflow-x-auto">
+        <table className="text-xs min-w-full table-auto">
+          <thead>
+            <tr className="hidden">
+              <th className="p-2 text-center">Time</th>
+              <th className="p-2 text-center">Event Type</th>
+              <th className="p-2 text-center">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedPlays.length === 0 && (
+              <tr>
+                <td colSpan={3} className="p-2 text-center">No matching plays.</td>
+              </tr>
+            )}
+            {sortedPlays.map((play, i) => {
+              return(
+                <tr key={play.eventId} className={i % 2 === 0 ? 'bg-slate-500/10' : ''}>
+                  <td className="p-2 text-xs text-center">
+                    <div className="mt-1">
+                      <span className="p-1 mx-auto font-bold border rounded">{play.timeRemaining}</span>
+                    </div>
+                    {activePeriod === 0 && (
+                      <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
+                    )}
+                  </td>
+                  <td className="p-2 flex flex-wrap gap-2 items-center">
+                    <div className="w-10 h-10">
+                      {play.details?.eventOwnerTeamId && renderTeamLogo(play.details?.eventOwnerTeamId)}
+                    </div>
+                    <div>
+                      <span className="hidden lg:block p-1 border rounded font-bold text-xs uppercase">
+                        {GAME_EVENTS[play.typeDescKey]}
+                      </span>
+                      {play.typeDescKey === 'goal' && (
                         <div>
-                          <span className="hidden lg:block p-1 border rounded font-bold text-xs uppercase">
-                            {GAME_EVENTS[play.typeDescKey]}
-                          </span>
-                          {play.typeDescKey === 'goal' && (
-                            <div>
-                              <Image
-                                src={SirenOnSVG}
-                                className="p-2 w-12 h-12 animate-pulse mx-auto"
-                                width={200}
-                                heigh={200}
-                                alt="Goal"
-                              />
-                            </div>
-                          )}
+                          <Image
+                            src={SirenOnSVG}
+                            className="p-2 w-12 h-12 animate-pulse mx-auto"
+                            width={200}
+                            heigh={200}
+                            alt="Goal"
+                          />
                         </div>
-                      </td>
-                      <td className="p-2 text-sm">
-                        {renderPlayByPlayEvent(play, game)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div className="col-span-4 md:col-span-1">
-          <GameSidebar />
-        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="p-2 text-sm">
+                    {renderPlayByPlayEvent(play, game)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
