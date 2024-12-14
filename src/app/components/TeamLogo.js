@@ -28,18 +28,23 @@ const TeamLogo = ({ src, alt, className, team, colorMode, style }) => {
   let teamData = {};
   if (!src && team) {
     teamData = getTeamDataByAbbreviation(team);
-    if (teamData) {
+    if (teamData.teamId) {
       updatedSrc = `https://assets.nhle.com/logos/nhl/svg/${team}_light.svg`;
     } else {
       teamData = getTeamDataByCommonName(team);
-      if (teamData) {
+      if (teamData.teamId) {
         updatedSrc = `https://assets.nhle.com/logos/nhl/svg/${teamData.abbreviation}_light.svg`;
       }
     }
   }
 
+  // If historic logo, force into 'light' mode
+  if (/\d+_light.svg$/i.test(updatedSrc)) {
+    colorMode = 'light';
+  }
+
   // colorMode setting overrides theme
-  if (colorMode) {
+  if (colorMode && updatedSrc) {
     updatedSrc = (colorMode === 'dark') ? updatedSrc.replace('_light', '_dark') : updatedSrc.replace('_dark', '_light');
   } else {
     updatedSrc = (theme === 'dark') ? updatedSrc.replace('_light', '_dark') : updatedSrc.replace('_dark', '_light');

@@ -79,7 +79,7 @@ const GameTile = ({game, hideDate, style}) => {
           {(game.gameState === 'FINAL' || game.gameState === 'OFF') && (
             <div>
               <span className="text-sm mr-2" suppressHydrationWarning>{hideDate ? null : formatLocalizedDate(game.startTimeUTC)}</span>
-              <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
+              <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
                 FINAL{(game.gameOutcome?.lastPeriodType !== 'REG' && game.periodDescriptor?.periodType !== 'REG') ? `/${game.gameOutcome?.lastPeriodType ?? game.periodDescriptor?.periodType}` : ''}
               </span>
             </div>
@@ -95,7 +95,7 @@ const GameTile = ({game, hideDate, style}) => {
             </span>
           )}
           {game.gameState === 'FUT' && (
-            <span className="text-sm">
+            <span className="p-1 text-xs">
               <span suppressHydrationWarning>{formatLocalizedTime(game.startTimeUTC)}</span>
               {' '}
               {hideDate ? null : formatLocalizedDate(game.startTimeUTC)}

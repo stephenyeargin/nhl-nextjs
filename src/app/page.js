@@ -11,14 +11,14 @@ const NewsPage = async ({ searchParams }) => {
   return (
     <div className="container mx-auto px-4 py-8">
       {news.items?.length > 0 && (
-        <>
+        <div>
           <h1 className="text-3xl font-bold mb-6">Latest News</h1>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
             {news.items.map((item) => (
               <StoryCard key={item.entityId} item={item} />
             ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

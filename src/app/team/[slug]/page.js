@@ -17,10 +17,12 @@ export default async function SchedulePage({ params }) {
   const { slug } = await params;
   const team = getTeamDataByAbbreviation(slug?.toUpperCase());
 
-  if (!team) {
-    return <div className="p-5 text-center text-2xl">
-      Team not found!
-    </div>;
+  if (!team || team.abbreviation === 'NHL') {
+    return (
+      <div className="py-10 text-center text-2xl" style={{ minHeight: '60vh'}}>
+        Team not found matching {slug}.
+      </div>
+    );
   }
 
   let headerStyle = {};
@@ -49,7 +51,7 @@ export default async function SchedulePage({ params }) {
       <div style={{ backgroundColor: team.teamColor }} className="mb-5 flex items-center rounded-xl">
         <div className="p-5">
           <h1 className="text-3xl font-bold mb-3" style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}>{team.name}</h1>
-          <div className="flex gap-2">
+          <div className="flex gap-2" style={{ color: formatTextColorByBackgroundColor(team.teamColor)}}>
             <div className="">{formatOrdinalNumber(teamStanding.conferenceSequence)} {teamStanding.conferenceName} Conference</div>
             <div className="hidden sm:block">•</div>
             <div className="">{formatOrdinalNumber(teamStanding.divisionSequence)} {teamStanding.divisionName} Division</div>

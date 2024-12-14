@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -93,9 +92,9 @@ const TopBarSchedule = ({ gameDate }) => {
               }
               
               return (
-                <Link key={date} href={`?date=${date}`} className={dateClass} onClick={() => handleDateClick(date)}>
+                <button key={date} className={dateClass} onClick={() => handleDateClick(date)}>
                   <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
-                </Link>
+                </button>
               );
             })}
           </div>

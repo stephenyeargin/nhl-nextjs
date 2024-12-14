@@ -66,7 +66,8 @@ export default function PlayerPage({ params }) {
     last5Games,
     featuredStats,
     careerTotals,
-    awards
+    awards,
+    active,
   } = player;
 
   const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
@@ -260,7 +261,7 @@ export default function PlayerPage({ params }) {
                     <dt className="col-span-1 font-bold col">Weight:</dt>
                     <dd className="col-span-2">{formattedWeight}</dd>
                     <dt className="col-span-1 font-bold col">Born:</dt>
-                    <dd className="col-span-2">{formattedBirthDate} (Age: {age})</dd>
+                    <dd className="col-span-2">{formattedBirthDate} {active && (<>(Age: {age})</>)}</dd>
                     <dt className="col-span-1 font-bold col">Birthplace:</dt>
                     <dd className="col-span-2">{birthCity.default}, {birthCountry}</dd>
                     <dt className="col-span-1 font-bold col">{position !== 'G' ? 'Shoots' : 'Catches'}:</dt>
@@ -412,7 +413,7 @@ export default function PlayerPage({ params }) {
                   <FontAwesomeIcon icon={faTrophy} fixedWidth /> {a.trophy.default}
                 </div>
                 {a.seasons.map((s, i) => (
-                  <div key={s.seasonId} className={i%2 ? 'p-1' : 'p-1 bg-gray-400/10'}>
+                  <div key={s.seasonId} className={i%2 ? 'p-1 bg-slate-500/10' : 'p-1'}>
                     <div className="my-2 grid grid-cols-4 md:grid-cols-8 gap-2 justify-between items-center">
                       <div className="col-span-1 text-center row-span-3 md:row-span-2 font-bold">
                         {formatSeason(s.seasonId)}

@@ -122,6 +122,10 @@ export const formatOrdinalNumber = (number) => {
 };
 
 export const formatTextColorByBackgroundColor = (backgroundColor) => {
+  if (!backgroundColor) {
+    return '#fff';
+  }
+
   const hexColor = backgroundColor.replace('#', '');
   const r = parseInt(hexColor.substr(0, 2), 16);
   const g = parseInt(hexColor.substr(2, 2), 16);

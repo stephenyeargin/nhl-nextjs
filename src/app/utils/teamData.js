@@ -225,14 +225,22 @@ const teamData = [
   }
 ];
 
+const defaultTeam = {
+  'name': 'NHL',
+  'hashtag': 'NHL',
+  'abbreviation': 'NHL',
+  'teamColor': '#010101',
+  'teamId': 0,
+};
+
 export const getTeamDataByAbbreviation = (abbreviation) => {
   const team = teamData.find((t) => t.abbreviation === abbreviation);
 
-  return team ? team : false;
+  return team ? team : defaultTeam;
 };
 
 export const getTeamDataByCommonName = (name) => {
   const team = teamData.find((t) => t.name === name);
 
-  return team ? team : false;
+  return team ? team : defaultTeam;
 };

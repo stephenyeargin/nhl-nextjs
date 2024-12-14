@@ -148,7 +148,7 @@ const GamePage = () => {
                                   <span className="rounded text-xs ml-2 text-white bg-red-900 p-1 uppercase">{goal.strength}G</span>
                                 )}
                                 {goal.goalModifier !== 'none' && (
-                                  <span className="rounded text-xs ml-2 text-white bg-blue-900 p-1 uppercase" title={GOAL_MODIFIERS[goal.goalModifier]?.title}>{GOAL_MODIFIERS[goal.goalModifier]?.label}</span>
+                                  <span className="rounded text-xs ml-2 text-white bg-red-900  p-1 uppercase" title={GOAL_MODIFIERS[goal.goalModifier]?.title}>{GOAL_MODIFIERS[goal.goalModifier]?.label}</span>
                                 )}
                                 <br />
                                 <div className="flex items-center">
