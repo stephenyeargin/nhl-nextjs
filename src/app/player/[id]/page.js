@@ -17,6 +17,7 @@ import '@/app/components/StatsTable.scss';
 
 export default function PlayerPage({ params }) {
   const { id } = use(params);
+  const filteredId = id.replace(/[a-z-]/ig, '');
 
   const [player, setPlayer] = useState(null);
   const [activeLeague, setActiveLeague] = useState('nhl');
@@ -29,7 +30,7 @@ export default function PlayerPage({ params }) {
 
   useEffect(() => {
     const fetchPlayer = async () => {
-      const playerResponse = await fetch(`/api/nhl/player/${id}/landing`, { cache: 'no-store' });
+      const playerResponse = await fetch(`/api/nhl/player/${filteredId}/landing`, { cache: 'no-store' });
 
       if (!playerResponse.ok) {
         return notFound();
@@ -41,7 +42,7 @@ export default function PlayerPage({ params }) {
     };
 
     fetchPlayer();
-  }, [id]);
+  }, [ filteredId ]);
 
   if (!player) {
     return (<GameBodySkeleton />);

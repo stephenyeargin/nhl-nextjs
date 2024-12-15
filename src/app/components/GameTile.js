@@ -94,8 +94,8 @@ const GameTile = ({game, hideDate, style}) => {
               </span>
             </span>
           )}
-          {game.gameState === 'FUT' && (
-            <span className="p-1 text-xs">
+          {['FUT', 'PRE'].includes(game.gameState) && (
+            <span className={`p-1 text-xs ${game.gameState === 'PRE' ? 'bg-red-900 rounded text-white' : '' }`}>
               <span suppressHydrationWarning>{formatLocalizedTime(game.startTimeUTC)}</span>
               {' '}
               {hideDate ? null : formatLocalizedDate(game.startTimeUTC)}

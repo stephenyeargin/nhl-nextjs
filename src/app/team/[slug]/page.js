@@ -36,7 +36,7 @@ export default async function SchedulePage({ params }) {
   const standingsResponse = await fetch('https://api-web.nhle.com/v1/standings/now', { cache: 'no-store' });
   const scheduleResponse = await fetch(`https://api-web.nhle.com/v1/scoreboard/${team.abbreviation}/now`, { cache: 'no-store' });
   const fullSeasonScheduleResponse = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${team.abbreviation}/now`, { cache: 'no-store' });
-  const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=teamid-${team.teamId}&context.team.abbreviation=nhl`, { cache: 'no-store' });
+  const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=teamid-${team.teamId}&$limit=8`, { cache: 'no-store' });
 
   const schedule = await scheduleResponse.json();
   const standings = await standingsResponse.json();
@@ -141,7 +141,7 @@ export default async function SchedulePage({ params }) {
         <>
           <h1 className="text-3xl font-bold mb-6">Latest News</h1>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
-            {news.items.slice(0, 8).map((item) => (
+            {news.items.map((item) => (
               <StoryCard key={item.entityId} item={item} />
             ))}
           </div>
