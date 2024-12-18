@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { PropTypes } from 'prop-types';
 import StoryCard from './components/StoryCard';
+import { formatMarkdownContent } from './utils/formatters';
 
 const NewsPage = async ({ searchParams }) => {
   const { tag } = await searchParams;
@@ -30,7 +31,7 @@ const NewsPage = async ({ searchParams }) => {
                   <Link href={`/news/${news.items[0].slug}`} className="">
                     <h2 className="text-2xl font-bold">{news.items[0].headline || news.items[0].title}</h2>
                   </Link>
-                  <p className="text-justify line-clamp-3 text-sm">{news.items[0].summary.replace('\\', '')}</p>
+                  <div className="text-justify line-clamp-3 text-sm" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(news.items[0].summary)}} />
                   <Link href={`/news/${news.items[0].slug}`} className="block font-bold py-3 underline">Read Story</Link>
                 </div>
               </div>

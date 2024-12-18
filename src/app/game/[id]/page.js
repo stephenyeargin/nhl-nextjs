@@ -175,9 +175,9 @@ const GamePage = () => {
                           <div className="text-sm font-light">Shot</div>
                         </div>
                         {goal.highlightClipSharingUrl && (
-                          <div className="col-span-12 md:col-span-1 md:py-5 rounded-md mx-4 text-center text-blue-500">
+                          <div className="col-span-12 md:col-span-1 md:py-5 rounded-md mx-4 text-center text-blue-900">
                             <Link href={goal.highlightClipSharingUrl} rel="noopener noreferrer">
-                              <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mr-2 md:mr-0" />
+                              <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mr-2 md:mr-0 bg-white rounded-full" />
                               <span className="md:hidden">Watch Highlight</span>
                             </Link>
                           </div>

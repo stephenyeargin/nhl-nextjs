@@ -4,6 +4,7 @@ import utc from 'dayjs/plugin/utc';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { marked } from 'marked';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -163,6 +164,15 @@ export const formatPeriodLabel = (periodData, long=false) => {
   default:
     return '';
   }
+};
+
+export const formatMarkdownContent = (content) => {
+  return marked.parse(content)
+    .replace(/<forge-entity\s+title="([^"]+)"\s+slug="([^"]+)"\s+code="([^"]+)">([^<]+)<\/forge-entity>/g, '<a href="/$3/$2">$4</a>')
+    .replace(/<p>/g, '<p class="mb-4">')
+    .replace(/<a\s/g, '<a class="underline" ')
+    .replace(/<h2>/g, '<h2 class="text-xl font-bold mb-4">')
+    .replace(/<h3>/g, '<h3 class="text-lg font-bold mb-4">');
 };
 
 export const formatHeadTitle = (value) => {

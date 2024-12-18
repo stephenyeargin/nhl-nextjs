@@ -19,14 +19,14 @@ const StatComparisonRow = ({ awayStat, awayStatRank, awayTeam, stat, homeStat, h
       </div>
 
       {/* Second Row: Horizontal Bar Indicator */}
-      <div className="relative my-1 h-2">
+      <div className="relative my-1 h-2 bg-white">
         <div
           className="absolute top-0 left-0 h-full bg-black-500"
-          style={{ width: `${awayPercentage < 100 ? awayPercentage - 1 : 100}%`, backgroundColor: awayTeam.data.teamColor }}
+          style={{ width: `${awayPercentage < 100 ? awayPercentage - 0.5 : 100}%`, backgroundColor: awayTeam.data.teamColor }}
         />
         <div
           className="absolute top-0 right-0 h-full bg-white-500"
-          style={{ width: `${homePercentage < 100 ? homePercentage - 1 : 100}%`, backgroundColor: homeTeam.data.teamColor }}
+          style={{ width: `${homePercentage < 100 ? homePercentage - 0.5 : 100}%`, backgroundColor: homeTeam.data.teamColor }}
         />
       </div>
       {/* Third Row: Ranks in the Center */}

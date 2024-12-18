@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
-import { formatLocalizedDate, formatLocalizedTime } from '../utils/formatters';
+import { formatLocalizedDate, formatLocalizedTime, formatMarkdownContent } from '../utils/formatters';
 
 const MissingThumbnail = () => (
   <div className="w-full bg-gray-200 flex items-center aspect-square">
@@ -58,7 +58,7 @@ const StoryCard = ({ item, small, imageFormatInstructions }) => {
       <Link href={`/news/${item.slug}`} className="">
         <h2 className="text-xl font-bold">{item.headline || item.title}</h2>
       </Link>
-      <p className="text-justify line-clamp-3 text-sm">{item.summary.replace('\\', '')}</p>
+      <div className="text-justify line-clamp-3 text-sm" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary) }} />
       <Link href={`/news/${item.slug}`} className="block font-bold py-3 underline">Read Story</Link>
     </div>
   );};

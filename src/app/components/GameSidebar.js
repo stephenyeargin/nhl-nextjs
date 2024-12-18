@@ -5,13 +5,12 @@ import { useGameContext } from '../contexts/GameContext';
 import Scoreboard from './Scoreboard';
 import TeamLogo from './TeamLogo';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
-import { GAME_STATES, GAME_REPORT_NAMES } from '../utils/constants';
+import { GAME_STATES, GAME_REPORT_NAMES, NHL_BRIGHTCOVE_ACCOUNT } from '../utils/constants';
 import { formatSeriesStatus, formatLocalizedTime, formatPeriodLabel } from '../utils/formatters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faPlayCircle, faWarning } from '@fortawesome/free-solid-svg-icons';
 import GameSidebarSkeleton from './GameSidebarSkeleton';
 import StatComparisonRow from './StatComparisonRow';
-
 
 const gameIsInProgress = (game) => {
   switch (GAME_STATES[game.gameState]) {
@@ -41,6 +40,7 @@ const GameSidebar = () => {
 
   // Destructure data for rendering
   const { homeTeam, awayTeam, game, rightRail, story } = gameData;
+  const { gameVideo } = rightRail;
 
   homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev) || {};
   awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev) || {};
@@ -57,6 +57,21 @@ const GameSidebar = () => {
 
   return (
     <div>
+      {(gameVideo?.threeMinRecap || gameVideo?.condensedGame) && (
+        <div className="flex justify-items-end gap-2 mb-3">
+          {gameVideo?.threeMinRecap && (
+            <Link href={`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.threeMinRecap}`} className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow" target="_blank">
+              <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> 3:00 Recap
+            </Link>
+          )}
+          {gameVideo?.condensedGame && (
+            <Link href={`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.condensedGame}`} className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow" target="_blank">
+              <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Condensed Game
+            </Link>
+          )}
+        </div>
+      )}
+
       {rightRail.linescore && (
         <div className="mb-5">
           <Scoreboard game={game} linescore={rightRail.linescore} />

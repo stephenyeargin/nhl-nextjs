@@ -365,3 +365,5 @@ export const GAME_REPORT_NAMES = {
   toiAway: 'Time on Ice: Away',
   toiHome: 'Time on Ice: Home',
 };
+
+export const NHL_BRIGHTCOVE_ACCOUNT = '6415718365001';

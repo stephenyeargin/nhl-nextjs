@@ -2,23 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
-import { marked } from 'marked';
 import Image from 'next/image';
 import Link from 'next/link';
-import { formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters';
+import { formatLocalizedDate, formatLocalizedTime, formatMarkdownContent } from '@/app/utils/formatters';
 import { useStoryContext } from '@/app/contexts/StoryContext';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons';
-
-const renderMarkdownContent = (content) => {
-  return marked.parse(content)
-    .replace(/<forge-entity\s+title="([^"]+)"\s+slug="([^"]+)"\s+code="([^"]+)">([^<]+)<\/forge-entity>/g, '<a href="/$3/$2">$4</a>')
-    .replace(/<p>/g, '<p class="mb-4">')
-    .replace(/<a\s/g, '<a class="underline" ')
-    .replace(/<h2>/g, '<h2 class="text-xl font-bold mb-4">')
-    .replace(/<h3>/g, '<h3 class="text-lg font-bold mb-4">');
-};
 
 const NewsArticle = () => {
   const { storyData } = useStoryContext();
@@ -128,7 +118,7 @@ const NewsArticle = () => {
           return (
             <div key={_entityId} className="my-5">
               {byline}
-              <div dangerouslySetInnerHTML={{ __html: renderMarkdownContent(content) }} />
+              <div dangerouslySetInnerHTML={{ __html: formatMarkdownContent(content) }} />
             </div>
           );
         }
