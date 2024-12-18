@@ -350,7 +350,7 @@ const GameSidebar = () => {
           {rightRail.gameInfo.referees.length > 0 && rightRail.gameInfo.linesmen.length > 0 && (
             <div className="flex">
               <div className="w-full p-2">
-                <div className="underline">Officials</div>
+                <div className="font-bold">Officials</div>
                 <div>Referees: {rightRail.gameInfo.referees.map((o, i) => <span key={i}>{i > 0 && ', '}{o.default}</span>)}</div>
                 <div>Linesmen: {rightRail.gameInfo.linesmen.map((o, i) => <span key={i}>{i > 0 && ', '}{o.default}</span>)}</div>
               </div>
@@ -359,22 +359,22 @@ const GameSidebar = () => {
           <div className="flex">
             <div className="w-1/2 p-2">
               <div className="my-2">
-                <div className="underline">{awayTeam.abbrev} Head Coach</div>
+                <div className="font-bold">{awayTeam.abbrev} Head Coach</div>
                 {rightRail.gameInfo.awayTeam.headCoach.default}
               </div>
               <div className="my-2">
-                <div className="underline">{awayTeam.abbrev} Scratches</div>
+                <div className="font-bold">{awayTeam.abbrev} Scratches</div>
                 {rightRail.gameInfo.awayTeam.scratches.length === 0 && (<>No players listed.</>)}
                 {rightRail.gameInfo.awayTeam.scratches.map((p, i) => <span key={p.id}>{i > 0 && ', '}{renderPlayer(p)}</span>)}
               </div>
             </div>
             <div className="w-1/2 p-2">
               <div className="my-2">
-                <div className="underline">{homeTeam.abbrev} Head Coach</div>
+                <div className="font-bold">{homeTeam.abbrev} Head Coach</div>
                 {rightRail.gameInfo.homeTeam.headCoach.default}
               </div>
               <div className="my-2">
-                <div className="underline">{homeTeam.abbrev} Scratches</div>
+                <div className="font-bold">{homeTeam.abbrev} Scratches</div>
                 {rightRail.gameInfo.homeTeam.scratches.length === 0 && (<>No players listed.</>)}
                 {rightRail.gameInfo.homeTeam.scratches.map((p, i) => <span key={p.id}>{i > 0 && ', '}{renderPlayer(p)}</span>)}
               </div>
@@ -386,10 +386,10 @@ const GameSidebar = () => {
       {rightRail.gameReports && (
         <div>
           <div className="p-2 text-2xl font-bold text-center">Game Reports</div>
-          <ul className="text-xs font-bold underline flex flex-wrap mt-2">
+          <ul className="text-xs flex flex-wrap mt-2">
             {Object.keys(rightRail.gameReports).map((reportKey) => (
               <li key={reportKey} className="p-1 w-1/2 text-center">
-                <Link href={rightRail.gameReports[reportKey]}>{GAME_REPORT_NAMES[reportKey]}</Link>
+                <Link href={rightRail.gameReports[reportKey]} className="font-bold underline">{GAME_REPORT_NAMES[reportKey]}</Link>
               </li>
             ))}
           </ul>

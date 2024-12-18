@@ -14,12 +14,14 @@ import { faHockeyPuck, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import LeagueToggle from '@/app/components/LeagueToggle';
 import '@/app/components/StatsTable.scss';
+import StoryCard from '@/app/components/StoryCard';
 
 export default function PlayerPage({ params }) {
   const { id } = use(params);
   const filteredId = id.replace(/[a-z-]/ig, '');
 
   const [player, setPlayer] = useState(null);
+  const [playerNews, setPlayerNews] = useState({});
   const [activeLeague, setActiveLeague] = useState('nhl');
   const [seasonType, setSeasonType] = useState(2); // [2: Regular season, 3: Post-season]
 
@@ -38,6 +40,10 @@ export default function PlayerPage({ params }) {
       const playerData = await playerResponse.json();
       setPlayer(playerData);
 
+      const topStoriesResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=playerid-${playerData.playerId}&context.slug=nhl&$limit=4`, { cache: 'no-store' });
+      const topStories = await topStoriesResponse.json();
+      setPlayerNews(topStories);
+      
       formatHeadTitle(`${playerData.firstName.default} ${playerData.lastName.default} | #${playerData.sweaterNumber} | ${playerData.position}`);
     };
 
@@ -331,9 +337,22 @@ export default function PlayerPage({ params }) {
         </div>
       </div>
 
+      {playerNews.items?.length > 0 && (
+        <div className="">
+          <h1 className="text-3xl font-bold mb-4">Latest News</h1>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
+            {playerNews.items.map((item) => (
+              <div key={item._entityId} className="col-span-4 md:col-span-1">
+                <StoryCard item={item} small />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {last5Games && (
         <div className="my-5">
-          <div className="text-3xl font-bold underline my-3">Last Five Games</div>
+          <div className="text-3xl font-bold my-3">Last Five Games</div>
           <div className="overflow-x-auto">
             <table className="text-sm w-full">
               <thead>
@@ -355,7 +374,7 @@ export default function PlayerPage({ params }) {
                   <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
                     <td className="p-2 border text-center">{formatLocalizedDate(g.gameDate)}</td>
                     <td className="p-2 border text-left">
-                      <div className="font-bold underline">
+                      <div className="font-bold">
                         {g.homeRoadFlag !== 'H' ? (
                           <div className="flex items-center gap-2">
                             <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
@@ -395,7 +414,7 @@ export default function PlayerPage({ params }) {
         <div id="seasonTotals">
 
           <div className="flex justify-between">
-            <div className="text-3xl font-bold underline my-3">{seasonType === 2 ? 'Season Totals' : 'Playoff Totals'}</div>
+            <div className="text-3xl font-bold my-3">{seasonType === 2 ? 'Season Totals' : 'Playoff Totals'}</div>
             {nhlStats.length > 0 && otherLeagueStats.length > 0 && (
               <LeagueToggle handleChangeLeagues={handleChangeLeagues} activeLeague={activeLeague} />
             )}
@@ -416,7 +435,7 @@ export default function PlayerPage({ params }) {
 
       {awards && (
         <div className="my-5">
-          <div className="text-3xl font-bold underline my-3">Awards</div>
+          <div className="text-3xl font-bold my-3">Awards</div>
           <div className="">
             {awards.map((a) => (
               <div key={a.trophy.default} className="py-4 border-t first:border-t-0">

@@ -20,8 +20,8 @@ const NewsPage = async ({ searchParams }) => {
       {news.items?.length > 0 && (
         <div>
           <h1 className="text-3xl font-bold mb-6">Latest News</h1>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
-            <div key={news.items[0].entityId} className="mb-4 col-span-3">
+          <div key={news.items[0]._entityId} className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
+            <div className="mb-4 col-span-3">
               <div className="md:relative">
                 <Link href={`/news/${news.items[0].slug}`} className="">
                   <Image src={news.items[0].thumbnail?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')} width="832" height="468" alt="Story Photo" className="w-full" />
@@ -36,7 +36,7 @@ const NewsPage = async ({ searchParams }) => {
               </div>
             </div>
             {news.items.slice(1, news.items.length).map((item) => (
-              <div key={item.entityId} className="col-span-4 md:col-span-1">
+              <div key={item._entityId} className="col-span-4 md:col-span-1">
                 <StoryCard item={item} />
               </div>
             ))}

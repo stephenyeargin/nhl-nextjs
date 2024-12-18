@@ -108,7 +108,7 @@ const GamePreview = ({ game }) => {
           />
         </div>
         <div className="text-center">
-          <div className="text-3xl font-bold underline">Players to Watch</div>
+          <div className="text-3xl font-bold">Players to Watch</div>
           <div className="text-xl">{STAT_CONTEXT[matchup.teamLeaders?.context] || matchup.teamLeaders?.context}</div>
         </div>
         <div className="">
@@ -167,7 +167,7 @@ const GamePreview = ({ game }) => {
       ))}
 
       <div className="my-5">
-        <div className="text-3xl font-bold underline my-3 text-center">Goalie Comparison</div>
+        <div className="text-3xl font-bold my-3">Goalie Comparison</div>
 
         {/* Away Team */}
         <div>
@@ -191,7 +191,7 @@ const GamePreview = ({ game }) => {
       </div>
 
       <div className="flex justify-between">
-        <div className="text-3xl font-bold underline">Team Stats</div>
+        <div className="text-3xl font-bold">Team Stats</div>
         <TeamToggle
           homeTeam={homeTeam}
           awayTeam={awayTeam}

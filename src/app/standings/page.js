@@ -23,7 +23,7 @@ export default async function Home(request) {
   } catch (error) {
     return (
       <div className="container mx-auto">
-        <div className="text-3xl font-bold underline">Standings</div>
+        <div className="text-3xl font-bold">Standings</div>
         <div className="text-lg py-2">{error.message}</div>
       </div>
     );
@@ -31,7 +31,7 @@ export default async function Home(request) {
 
   return (
     <div className="container mx-auto">
-      <div className="text-3xl font-bold underline">Standings</div>
+      <div className="text-3xl font-bold">Standings</div>
       <h2 className="text-xl py-4">Western Conference</h2>
       <StandingsTable standings={westernConference} />
       <h2 className="text-xl py-4">Eastern Conference</h2>

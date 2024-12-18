@@ -62,9 +62,8 @@ const GamePage = () => {
           {game.summary.iceSurface && (
             <IceRink game={game} plays={[]} homeTeam={homeTeam} awayTeam={awayTeam} />
           )}
-          <div className="text-3xl font-bold underline my-4">Game Summary</div>
           <div className="mb-4">
-            <h3 className="text-xl font-semibold my-3">Scoring Summary</h3>
+            <h3 className="text-2xl font-semibold my-3">Scoring Summary</h3>
             {summary.scoring.map((period, index) => (
               <div key={index} className="mb-2">
                 <h4 className="font-semibold">{formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number }, true)}</h4>
@@ -194,7 +193,7 @@ const GamePage = () => {
           </div>
           {game.summary.penalties && (
             <div className="my-10">
-              <h3 className="text-xl font-semibold my-3">Penalties</h3>
+              <h3 className="text-2xl font-semibold my-3">Penalties</h3>
               {game.summary.penalties.map((period, index) => (
                 <div key={index} className="mb-5">
                   <h4 className="font-semibold">
@@ -259,39 +258,39 @@ const GamePage = () => {
               ))}
             </div>
           )}
-          <div>
-            {summary.threeStars?.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold my-4">Three Stars</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  {summary.threeStars.map((p) => (
-                    <div key={p.playerId} className="text-center">
-                      <div className="relative inline-block">
-                        <span className="absolute bottom-0 left-0 bg-white text-black rounded-full font-bold border border-slate-200 w-8 h-8 flex items-center justify-center">
-                          {p.star}
-                        </span>
-                        <Headshot
-                          playerId={p.playerId}
-                          src={p.headshot}
-                          alt={p.name.default}
-                          size="6"
-                          className="mx-auto mb-2"
-                        />
-                      </div>
-                      <h4 className="font-semibold">
-                        <Link href={`/player/${p.playerId}`}>{p.name.default}</Link></h4>
-                      <p className="text-sm">#{p.sweaterNo} • {p.teamAbbrev} • {p.position}</p>
-                      {Object.prototype.hasOwnProperty.call(p, 'goals') ? (
-                        <p className="text-sm">G: {p.goals} | A: {p.assists} | P: {p.points}</p>
-                      ) : (
-                        <p className="text-sm">GAA: {formatStat(p.goalsAgainstAverage, 2)} | SV%: {formatStat(p.savePctg, 3)}</p>
-                      )}
+          
+          {summary.threeStars?.length > 0 && (
+            <div>
+              <h3 className="text-2xl font-semibold">Three Stars</h3>
+              <div className="grid grid-cols-3 gap-4">
+                {summary.threeStars.map((p) => (
+                  <div key={p.playerId} className="text-center py-4">
+                    <div className="relative inline-block">
+                      <span className="absolute bottom-0 left-0 bg-white text-black rounded-full font-bold border border-slate-200 w-8 h-8 flex items-center justify-center">
+                        {p.star}
+                      </span>
+                      <Headshot
+                        playerId={p.playerId}
+                        src={p.headshot}
+                        alt={p.name.default}
+                        size="6"
+                        className="mx-auto mb-2"
+                      />
                     </div>
-                  ))}
-                </div>
+                    <h4 className="font-semibold">
+                      <Link href={`/player/${p.playerId}`}>{p.name.default}</Link></h4>
+                    <p className="text-sm">#{p.sweaterNo} • {p.teamAbbrev} • {p.position}</p>
+                    {Object.prototype.hasOwnProperty.call(p, 'goals') ? (
+                      <p className="text-sm">G: {p.goals} | A: {p.assists} | P: {p.points}</p>
+                    ) : (
+                      <p className="text-sm">GAA: {formatStat(p.goalsAgainstAverage, 2)} | SV%: {formatStat(p.savePctg, 3)}</p>
+                    )}
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
+
         </div>
       )}
     </div>
