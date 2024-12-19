@@ -9,7 +9,7 @@ const PlayerDropdown = ({ players, activePlayer }) => {
         const newPlayer = e.target.value;
         window.location = `/player/${newPlayer}`;
       }}
-      className="text-xl border bg-inherit p-2 rounded bg-white"
+      className=" p-2 rounded text-xl border bg-inherit text-inherit"
     >
       {players.map((player) => (
         <option key={player.playerId} value={player.playerId}>
