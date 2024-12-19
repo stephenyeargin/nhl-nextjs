@@ -1,2 +1,2 @@
-
-npm run lint:fix
+#!/bin/sh
+npx lint-staged

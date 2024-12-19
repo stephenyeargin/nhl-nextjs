@@ -12,7 +12,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:fix",
+      "pre-commit": "lint-staged",
       "pre-push": "npm test"
     }
   },
@@ -37,8 +37,14 @@
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "postcss": "^8",
     "sass": "^1.81.0",
     "tailwindcss": "^3.4.15"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "next lint --fix"
+    ]
   }
 }
