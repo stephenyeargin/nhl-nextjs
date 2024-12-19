@@ -23,7 +23,7 @@ const PlayerDropdown = ({ players, activePlayer }) => {
 PlayerDropdown.propTypes = {
   players: PropTypes.arrayOf(PropTypes.object).isRequired,
   activePlayer: PropTypes.string.isRequired,
-}
+};
 
 export default PlayerDropdown;
 

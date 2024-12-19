@@ -189,7 +189,7 @@ const GamePage = () => {
                           <div className="col-span-12 md:col-span-1 md:py-5 rounded-md mx-4 text-center text-blue-900">
                             <button
                               onClick={() => {
-                                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${goal.highlightClip}`)
+                                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${goal.highlightClip}`);
                                 setVideoPlayerLabel(`${goal.teamAbbrev.default} | ${goal.timeInPeriod} ${formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number })} | ${goal.name.default}`);
                                 setVideoPlayerVisible(true);
                               }}

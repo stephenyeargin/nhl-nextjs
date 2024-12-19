@@ -75,7 +75,7 @@ const GameSidebar = () => {
           {gameVideo?.threeMinRecap && (
             <button
               onClick={() => {
-                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.threeMinRecap}`)
+                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.threeMinRecap}`);
                 setVideoPlayerLabel('3:00 Recap');
                 setVideoPlayerVisible(true);
               }}
@@ -86,15 +86,15 @@ const GameSidebar = () => {
           )}
           {gameVideo?.condensedGame && (
             <button
-            onClick={() => {
-              setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.condensedGame}`)
-              setVideoPlayerLabel('Condensed Game');
-              setVideoPlayerVisible(true);
-            }}
-            className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow"
-          >
-            <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Condensed Game
-          </button>
+              onClick={() => {
+                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.condensedGame}`);
+                setVideoPlayerLabel('Condensed Game');
+                setVideoPlayerVisible(true);
+              }}
+              className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow"
+            >
+              <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Condensed Game
+            </button>
           )}
         </div>
       )}

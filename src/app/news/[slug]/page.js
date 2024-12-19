@@ -136,6 +136,7 @@ const NewsArticle = () => {
         }
 
         console.warn(`Unknown story part type: ${type}, rendering as title`);
+        
         return null;
       })}
     </div>
