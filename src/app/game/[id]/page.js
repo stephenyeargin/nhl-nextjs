@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { notFound } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,14 +10,19 @@ import { useGameContext } from '@/app/contexts/GameContext.js';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton.js';
 import Headshot from '@/app/components/Headshot';
 import GamePreview from '@/app/components/GamePreview';
-import { PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS } from '@/app/utils/constants';
+import { PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS, NHL_BRIGHTCOVE_ACCOUNT } from '@/app/utils/constants';
 import PageError from '@/app/components/PageError';
 import TeamLogo from '@/app/components/TeamLogo';
 import { formatPeriodLabel, formatStat } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
 import GameStory from '@/app/components/GameStory';
+import FloatingVideoPlayer from '@/app/components/FloatingVideoPlayer';
 
 const GamePage = () => {
+  const [videoPlayerLabel, setVideoPlayerLabel] = useState(null);
+  const [videoPlayerUrl, setVideoPlayerUrl] = useState(null);
+  const [isVideoPlayerVisible, setVideoPlayerVisible] = useState(false);
+
   const { gameData, pageError } = useGameContext();
 
   if (!gameData) {
@@ -48,6 +53,12 @@ const GamePage = () => {
   // Update logo map
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
+
+  const handleVideoPlayerClose = () => {
+    setVideoPlayerVisible(false);
+    setVideoPlayerLabel(null);
+    setVideoPlayerUrl(null);
+  };
 
   return (
     <div>
@@ -174,12 +185,18 @@ const GamePage = () => {
                           <div className="font-black capitalize">{goal.shotType ? goal.shotType : '-'}</div>
                           <div className="text-sm font-light">Shot</div>
                         </div>
-                        {goal.highlightClipSharingUrl && (
+                        {goal.highlightClip && (
                           <div className="col-span-12 md:col-span-1 md:py-5 rounded-md mx-4 text-center text-blue-900">
-                            <Link href={goal.highlightClipSharingUrl} rel="noopener noreferrer">
+                            <button
+                              onClick={() => {
+                                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${goal.highlightClip}`)
+                                setVideoPlayerLabel(`${goal.teamAbbrev.default} | ${goal.timeInPeriod} ${formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number })} | ${goal.name.default}`);
+                                setVideoPlayerVisible(true);
+                              }}
+                            >
                               <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mr-2 md:mr-0 bg-white rounded-full" />
                               <span className="md:hidden">Watch Highlight</span>
-                            </Link>
+                            </button>
                           </div>
                         )}
                       </div>
@@ -293,6 +310,7 @@ const GamePage = () => {
 
         </div>
       )}
+      <FloatingVideoPlayer isVisible={isVideoPlayerVisible} url={videoPlayerUrl} label={videoPlayerLabel} onClose={handleVideoPlayerClose} />
     </div>
   );
 };

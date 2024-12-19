@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useGameContext } from '../contexts/GameContext';
@@ -11,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faPlayCircle, faWarning } from '@fortawesome/free-solid-svg-icons';
 import GameSidebarSkeleton from './GameSidebarSkeleton';
 import StatComparisonRow from './StatComparisonRow';
+import FloatingVideoPlayer from './FloatingVideoPlayer';
 
 const gameIsInProgress = (game) => {
   switch (GAME_STATES[game.gameState]) {
@@ -32,6 +35,10 @@ const renderPlayer = (player) => {
 };
 
 const GameSidebar = () => {
+  const [videoPlayerLabel, setVideoPlayerLabel] = useState(null);
+  const [videoPlayerUrl, setVideoPlayerUrl] = useState(null);
+  const [isVideoPlayerVisible, setVideoPlayerVisible] = useState(false);
+
   const { gameData } = useGameContext();
 
   if (!gameData) { 
@@ -55,19 +62,39 @@ const GameSidebar = () => {
     gameStats[s.category] = { awayValue: s.awayValue, homeValue: s.homeValue };
   });
 
+  const handleVideoPlayerClose = () => {
+    setVideoPlayerVisible(false);
+    setVideoPlayerLabel(null);
+    setVideoPlayerUrl(null);
+  };
+
   return (
     <div>
       {(gameVideo?.threeMinRecap || gameVideo?.condensedGame) && (
         <div className="flex justify-items-end gap-2 mb-3">
           {gameVideo?.threeMinRecap && (
-            <Link href={`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.threeMinRecap}`} className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow" target="_blank">
+            <button
+              onClick={() => {
+                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.threeMinRecap}`)
+                setVideoPlayerLabel('3:00 Recap');
+                setVideoPlayerVisible(true);
+              }}
+              className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow"
+            >
               <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> 3:00 Recap
-            </Link>
+            </button>
           )}
           {gameVideo?.condensedGame && (
-            <Link href={`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.condensedGame}`} className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow" target="_blank">
-              <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Condensed Game
-            </Link>
+            <button
+            onClick={() => {
+              setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.condensedGame}`)
+              setVideoPlayerLabel('Condensed Game');
+              setVideoPlayerVisible(true);
+            }}
+            className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow"
+          >
+            <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Condensed Game
+          </button>
           )}
         </div>
       )}
@@ -410,6 +437,7 @@ const GameSidebar = () => {
           </ul>
         </div>
       )}
+      <FloatingVideoPlayer isVisible={isVideoPlayerVisible} url={videoPlayerUrl} label={videoPlayerLabel} onClose={handleVideoPlayerClose} />
     </div>
   );
 };

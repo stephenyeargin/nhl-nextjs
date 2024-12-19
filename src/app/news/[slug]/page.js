@@ -61,24 +61,36 @@ const NewsArticle = () => {
         // Custom Entity (e.g., Video Section)
         if (type === 'customentity') {
           return (
-            <div key={_entityId} className="my-5">
+            <div className="" key={part._entityId}>
               <figure>
-                <div className="relative">
-                  <Image
-                    src={thumbnail.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')}
-                    alt="Custom Entity Image"
-                    className="w-full"
-                    width={832}
-                    height={468}
-                  />
-                  <Link
-                    href={`https://players.brightcove.net/${fields.brightcoveAccountId}/default_default/index.html?videoId=${fields.brightcoveId}`}
-                    className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-cover hover:bg-white/70 opacity-0 hover:opacity-100 rounded"
-                    target="_blank"
-                  >
-                    <FontAwesomeIcon icon={faExternalLink} fixedWidth className="text-6xl text-blue-900" />
-                  </Link>
-                </div>
+                <iframe
+                  src={`https://players.brightcove.net/${fields.brightcoveAccountId}/default_default/index.html?videoId=${fields.brightcoveId}`}
+                  allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  className="w-full aspect-video"
+                  loading="lazy"
+                  title={fields.title}
+                >
+                  <div key={_entityId} className="my-5">
+
+                    <div className="relative">
+                      <Image
+                        src={thumbnail.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')}
+                        alt="Custom Entity Image"
+                        className="w-full"
+                        width={832}
+                        height={468}
+                      />
+                      <Link
+                        href={`https://players.brightcove.net/${fields.brightcoveAccountId}/default_default/index.html?videoId=${fields.brightcoveId}`}
+                        className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-cover hover:bg-white/70 opacity-0 hover:opacity-100 rounded"
+                        target="_blank"
+                      >
+                        <FontAwesomeIcon icon={faExternalLink} fixedWidth className="text-6xl text-blue-900" />
+                      </Link>
+                    </div>
+                  </div>
+                </iframe>
                 <figcaption className="my-3 text-xs text-gray-500">{fields.description || fields.longDescription}</figcaption>
               </figure>
             </div>
@@ -123,6 +135,7 @@ const NewsArticle = () => {
           );
         }
 
+        console.warn(`Unknown story part type: ${type}, rendering as title`);
         return null;
       })}
     </div>

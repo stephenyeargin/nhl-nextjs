@@ -14,12 +14,26 @@ const StandingsTable = ({ standings }) => {
         if (a.divisionAbbrev === b.divisionAbbrev) {
           return (a.divisionSequence > b.divisionSequence) ? 1 : -1;
         }
-        
+
+        // Sort alphabetically
         return (a.divisionAbbrev > b.divisionAbbrev) ? 1 : -1;
       }
       
       return (a.wildcardSequence > b.wildcardSequence) ? 1 : -1;
     });
+
+  // If row[0].points is less than row[3].points, swap 0,1,2 and 3,4,5
+  if (tableRows[0].points < tableRows[3].points) {
+    const temp = tableRows[0];
+    tableRows[0] = tableRows[3];
+    tableRows[3] = temp;
+    const temp2 = tableRows[1];
+    tableRows[1] = tableRows[4];
+    tableRows[4] = temp2;
+    const temp3 = tableRows[2];
+    tableRows[2] = tableRows[5];
+    tableRows[5] = temp3;
+  }
 
   const wildcardRankings = ['1', '2', '3', '1', '2', '3', 'WC1', 'WC2', '', '', '', '', '', '', '', ''];
 

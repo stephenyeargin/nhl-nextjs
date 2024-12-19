@@ -7,9 +7,12 @@ const GameContext = createContext();
 
 export const useGameContext = () => useContext(GameContext);
 
+const GAME_REFRESH_TTL = 15 * 1000; // 15 seconds
+
 export const GameProvider = ({ gameId, children }) => {
   const [gameData, setGameData] = useState(null);
   const [gameState, setGameState] = useState(null);
+  const [gameScheduleState, setGameScheduleState] = useState(null);
   const [pageError, setPageError] = useState(null);
 
   useEffect(() => {
@@ -43,20 +46,21 @@ export const GameProvider = ({ gameId, children }) => {
       const { homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup } = game || {};
       setGameData({ homeTeam, awayTeam, gameDate, venue, venueLocation, summary, matchup, game, rightRail, story });
       setGameState(game ? game.gameState : null);
+      setGameScheduleState(game ? game.gameScheduleState : null);
     };
 
     // Initial fetch
     fetchGameData();
    
     // Polling interval (only if the game is in progress)
-    if (['PRE', 'LIVE', 'CRIT'].includes(gameState)) {
+    if (!['OFF'].includes(gameState) && gameScheduleState === 'OK') {
       intervalId = setInterval(() => {
         fetchGameData();
-      }, 20000); // 20 seconds
+      }, GAME_REFRESH_TTL);
     }
     
     return () => clearInterval(intervalId);
-  }, [gameId, gameState]); // only re-run if gameState or gameId changes
+  }, [gameId, gameState, gameScheduleState]); // only re-run if state changes
 
   return (
     <GameContext.Provider value={{ gameData, gameState, pageError }}>

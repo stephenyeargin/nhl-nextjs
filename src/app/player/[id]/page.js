@@ -15,6 +15,7 @@ import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import LeagueToggle from '@/app/components/LeagueToggle';
 import '@/app/components/StatsTable.scss';
 import StoryCard from '@/app/components/StoryCard';
+import PlayerDropdown from '@/app/components/PlayerDropdown';
 
 export default function PlayerPage({ params }) {
   const { id } = use(params);
@@ -220,20 +221,27 @@ export default function PlayerPage({ params }) {
 
   return (
     <div className="container mx-auto">
-      <div className="text-4xl my-4 flex items-center">
-        <span className="px-3 border-r">{firstName.default} <span className="font-bold">{lastName.default}</span></span>
-        {teamLogo && (
-          <span className="px-3 border-r">
-            <TeamLogo
-              team={currentTeamAbbrev}
-              src={teamLogo}
-              alt={currentTeamAbbrev}
-              className="h-10 w-10"
-            />
-          </span>
-        )}
-        <span className="px-3 border-r">#{sweaterNumber}</span>
-        <span className="px-3">{position}</span>
+      <div className="flex justify-between items-center">
+        <div className="text-4xl my-4 flex items-center">
+          <span className="px-3 border-r">{firstName.default} <span className="font-bold">{lastName.default}</span></span>
+          {teamLogo && (
+            <span className="px-3 border-r">
+              <TeamLogo
+                team={currentTeamAbbrev}
+                src={teamLogo}
+                alt={currentTeamAbbrev}
+                className="h-10 w-10"
+              />
+            </span>
+          )}
+          <span className="px-3 border-r">#{sweaterNumber}</span>
+          <span className="px-3">{position}</span>
+        </div>
+        <div>
+          {player.currentTeamRoster && (
+            <PlayerDropdown players={player.currentTeamRoster} activePlayer={player.playerId} />
+          )}
+        </div>
       </div>
 
       <div className="relative w-auto">
