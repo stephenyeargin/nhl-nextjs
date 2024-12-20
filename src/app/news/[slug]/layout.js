@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, use } from 'react';
+import React, { Suspense } from 'react';
 import { PropTypes } from 'prop-types';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import Link from 'next/link';
@@ -8,9 +8,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHockeyPuck, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { StoryProvider } from '@/app/contexts/StoryContext';
 import StorySidebar from '@/app/components/StorySidebar';
+import { useParams } from 'next/navigation';
 
-const NewsLayout = ({ children, params }) => {
-  const { slug: storyId } = use(params);
+const NewsLayout = ({ children }) => {
+  const { slug: storyId } = useParams();
 
   return (
     <StoryProvider storyId={storyId}>

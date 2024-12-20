@@ -1,15 +1,16 @@
 'use client';
 
-import React, { Suspense, use } from 'react';
+import React, { Suspense } from 'react';
 import { PropTypes } from 'prop-types';
 import { GameProvider } from '@/app/contexts/GameContext';
 import GameSkeleton from '@/app/components/GameSkeleton';
 import GameHeader from '@/app/components/GameHeader';
 import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
 import GameSidebar from '@/app/components/GameSidebar';
+import { useParams } from 'next/navigation';
 
-const GameLayout = ({ children, params }) => {
-  const { id: gameId } = use(params);
+const GameLayout = ({ children }) => {
+  const { id: gameId } = useParams();
   
   return (
     <GameProvider gameId={gameId}>

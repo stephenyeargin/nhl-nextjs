@@ -1,16 +1,16 @@
 'use client';
 
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton.js';
 import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import { PropTypes } from 'prop-types';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import TeamToggle from '@/app/components/TeamToggle';
 
-const BoxScore = ({ params }) => {
-  const { id } = use(params);
+const BoxScore = () => {
+  const { id } = useParams();
   const logos = {};
 
   // Initial state for the game data

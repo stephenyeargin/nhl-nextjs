@@ -1,7 +1,7 @@
 'use client';
 
-import React, { use, useState, useEffect } from 'react';
-import { notFound } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import Headshot from '@/app/components/Headshot';
@@ -17,8 +17,8 @@ import '@/app/components/StatsTable.scss';
 import StoryCard from '@/app/components/StoryCard';
 import PlayerDropdown from '@/app/components/PlayerDropdown';
 
-export default function PlayerPage({ params }) {
-  const { id } = use(params);
+export default function PlayerPage() {
+  const { id } = useParams();
   const filteredId = id.replace(/[a-z-]/ig, '');
 
   const [player, setPlayer] = useState(null);

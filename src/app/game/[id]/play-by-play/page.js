@@ -1,6 +1,6 @@
 'use client';
 
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPlayCircle} from '@fortawesome/free-solid-svg-icons';
@@ -14,14 +14,14 @@ import Headshot from '@/app/components/Headshot';
 import { PropTypes } from 'prop-types';
 import { useGameContext } from '@/app/contexts/GameContext';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { formatPeriodLabel } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
 
-const PlayByPlay = ({ params }) => {
+const PlayByPlay = () => {
   const { gameData } = useGameContext();
 
-  const { id } = use(params);
+  const { id } = useParams();
   const logos = {};
 
   // Initial state for the game data
