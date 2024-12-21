@@ -57,7 +57,7 @@ const NewsArticle = () => {
               <figure>
                 <Image
                   src={image.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')}
-                  alt={fields.altText}
+                  alt={fields.altText || 'Photo'}
                   className="w-full"
                   width={832}
                   height={468}

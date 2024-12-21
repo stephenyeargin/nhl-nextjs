@@ -167,6 +167,10 @@ export const formatPeriodLabel = (periodData, long=false) => {
 };
 
 export const formatMarkdownContent = (content) => {
+  if (!content) {
+    return '';
+  }
+
   return marked.parse(content)
     .replace(/<forge-entity\s+title="([^"]+)"\s+slug="([^"]+)"\s+code="([^"]+)">([^<]+)<\/forge-entity>/g, '<a href="/$3/$2">$4</a>')
     .replace(/<p>/g, '<p class="mb-4">')

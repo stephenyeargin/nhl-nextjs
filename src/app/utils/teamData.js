@@ -1,6 +1,7 @@
 const teamData = [
   {
     name: 'Anaheim Ducks',
+    slug: 'ducks',
     hashtag: 'FlyTogether',
     abbreviation: 'ANA',
     teamColor: '#cf4520',
@@ -9,6 +10,7 @@ const teamData = [
   },
   {
     name: 'Boston Bruins',
+    slug: 'bruins',
     hashtag: 'NHLBruins',
     abbreviation: 'BOS',
     teamColor: '#FFB81C',
@@ -17,6 +19,7 @@ const teamData = [
   },
   {
     name: 'Buffalo Sabres',
+    slug: 'sabres',
     hashtag: 'SabreHood',
     abbreviation: 'BUF',
     teamColor: '#003087',
@@ -25,6 +28,7 @@ const teamData = [
   },
   {
     name: 'Calgary Flames',
+    slug: 'flames',
     hashtag: 'Flames',
     abbreviation: 'CGY',
     teamColor: '#c8102e',
@@ -33,6 +37,7 @@ const teamData = [
   },
   {
     name: 'Carolina Hurricanes',
+    slug: 'hurricanes',
     hashtag: 'RaiseUp',
     abbreviation: 'CAR',
     teamColor: '#c8102e',
@@ -41,6 +46,7 @@ const teamData = [
   },
   {
     name: 'Chicago Blackhawks',
+    slug: 'blackhawks',
     hashtag: 'Blackhawks',
     abbreviation: 'CHI',
     teamColor: '#ce1126',
@@ -49,6 +55,7 @@ const teamData = [
   },
   {
     name: 'Colorado Avalanche',
+    slug: 'avalanche',
     hashtag: 'GoAvsGo',
     abbreviation: 'COL',
     teamColor: '#8a2432',
@@ -57,6 +64,7 @@ const teamData = [
   },
   {
     name: 'Columbus Blue Jackets',
+    slug: 'bluejackets',
     hashtag: 'CBJ',
     abbreviation: 'CBJ',
     teamColor: '#041e42',
@@ -65,6 +73,7 @@ const teamData = [
   },
   {
     name: 'Dallas Stars',
+    slug: 'stars',
     hashtag: 'TexasHockey',
     abbreviation: 'DAL',
     teamColor: '#00823e',
@@ -73,6 +82,7 @@ const teamData = [
   },
   {
     name: 'Detroit Red Wings',
+    slug: 'redwings',
     hashtag: 'LGRW',
     abbreviation: 'DET',
     teamColor: '#c8102e',
@@ -81,6 +91,7 @@ const teamData = [
   },
   {
     name: 'Edmonton Oilers',
+    slug: 'oilers',
     hashtag: 'LetsGoOilers',
     abbreviation: 'EDM',
     teamColor: '#00205b',
@@ -89,6 +100,7 @@ const teamData = [
   },
   {
     name: 'Florida Panthers',
+    slug: 'panthers',
     hashtag: 'TimeToHunt',
     abbreviation: 'FLA',
     teamColor: '#041E42',
@@ -97,6 +109,7 @@ const teamData = [
   },
   {
     name: 'Los Angeles Kings',
+    slug: 'kings',
     hashtag: 'GoKingsGo',
     abbreviation: 'LAK',
     teamColor: '#8a9599',
@@ -105,6 +118,7 @@ const teamData = [
   },
   {
     name: 'Minnesota Wild',
+    slug: 'wild',
     hashtag: 'MNWild',
     abbreviation: 'MIN',
     teamColor: '#0e4431',
@@ -113,6 +127,7 @@ const teamData = [
   },
   {
     name: 'Montréal Canadiens',
+    slug: 'canadiens',
     hashtag: 'GoHabsGo',
     abbreviation: 'MTL',
     teamColor: '#a6192e',
@@ -121,6 +136,7 @@ const teamData = [
   },
   {
     name: 'Nashville Predators',
+    slug: 'predators',
     hashtag: 'Smashville',
     abbreviation: 'NSH',
     teamColor: '#ffb81c',
@@ -129,6 +145,7 @@ const teamData = [
   },
   {
     name: 'New Jersey Devils',
+    slug: 'devils',
     hashtag: 'NJDevils',
     abbreviation: 'NJD',
     teamColor: '#cc0000',
@@ -137,6 +154,7 @@ const teamData = [
   },
   {
     name: 'New York Islanders',
+    slug: 'islanders',
     hashtag: 'Isles',
     abbreviation: 'NYI',
     teamColor: '#00468b',
@@ -145,6 +163,7 @@ const teamData = [
   },
   {
     name: 'New York Rangers',
+    slug: 'rangers',
     hashtag: 'NYR',
     abbreviation: 'NYR',
     teamColor: '#0033a0',
@@ -161,6 +180,7 @@ const teamData = [
   },
   {
     name: 'Philadelphia Flyers',
+    slug: 'flyers',
     hashtag: 'LetsGoFlyers',
     abbreviation: 'PHI',
     teamColor: '#d24303',
@@ -169,6 +189,7 @@ const teamData = [
   },
   {
     name: 'Pittsburgh Penguins',
+    slug: 'penguins',
     hashtag: 'LetsGoPens',
     abbreviation: 'PIT',
     teamColor: '#000000',
@@ -177,6 +198,7 @@ const teamData = [
   },
   {
     name: 'St. Louis Blues',
+    slug: 'blues',
     hashtag: 'STLBlues',
     abbreviation: 'STL',
     teamColor: '#004986',
@@ -185,6 +207,7 @@ const teamData = [
   },
   {
     name: 'San Jose Sharks',
+    slug: 'sharks',
     hashtag: 'TheFutureIsTeal',
     abbreviation: 'SJS',
     teamColor: '#00778b',
@@ -193,6 +216,7 @@ const teamData = [
   },
   {
     name: 'Seattle Kraken',
+    slug: 'kraken',
     hashtag: 'SeaKraken',
     abbreviation: 'SEA',
     teamColor: '#001425',
@@ -201,6 +225,7 @@ const teamData = [
   },
   {
     name: 'Tampa Bay Lightning',
+    slug: 'lightning',
     hashtag: 'GoBolts',
     abbreviation: 'TBL',
     teamColor: '#00205b',
@@ -209,6 +234,7 @@ const teamData = [
   },
   {
     name: 'Toronto Maple Leafs',
+    slug: 'mapleleafs',
     hashtag: 'LeafsForever',
     abbreviation: 'TOR',
     teamColor: '#00205b',
@@ -217,6 +243,7 @@ const teamData = [
   },
   {
     name: 'Utah Hockey Club',
+    slug: 'utah',
     hashtag: 'UtahHC',
     abbreviation: 'UTA',
     teamColor: '#6cace4',
@@ -225,6 +252,7 @@ const teamData = [
   },
   {
     name: 'Vancouver Canucks',
+    slug: 'canucks',
     hashtag: 'Canucks',
     abbreviation: 'VAN',
     teamColor: '#00205b',
@@ -233,6 +261,7 @@ const teamData = [
   },
   {
     name: 'Vegas Golden Knights',
+    slug: 'goldenknights',
     hashtag: 'VegasBorn',
     abbreviation: 'VGK',
     teamColor: '#b9975b',
@@ -241,6 +270,7 @@ const teamData = [
   },
   {
     name: 'Washington Capitals',
+    slug: 'capitals',
     hashtag: 'ALLCAPS',
     abbreviation: 'WSH',
     teamColor: '#041E42',
@@ -249,6 +279,7 @@ const teamData = [
   },
   {
     name: 'Winnipeg Jets',
+    slug: 'jets',
     hashtag: 'GoJetsGo',
     abbreviation: 'WPG',
     teamColor: '#041E42',
@@ -273,6 +304,12 @@ export const getTeamDataByAbbreviation = (abbreviation) => {
 
 export const getTeamDataByCommonName = (name) => {
   const team = teamData.find((t) => t.name === name);
+
+  return team ? team : defaultTeam;
+};
+
+export const getTeamDataBySlug = (slug) => {
+  const team = teamData.find((t) => t.name.toLowerCase().replace(' ', '-') === slug);
 
   return team ? team : defaultTeam;
 };

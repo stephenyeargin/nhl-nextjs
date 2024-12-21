@@ -3,10 +3,13 @@ import GameTile from '@/app/components/GameTile';
 import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { PropTypes } from 'prop-types';
-import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
+import { getTeamDataByAbbreviation, getTeamDataBySlug } from '@/app/utils/teamData';
 import { formatOrdinalNumber, formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 import StoryCard from '@/app/components/StoryCard';
 import TeamSchedule from '@/app/components/TeamSchedule';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 export const metadata = {
   title: 'Team Schedule & Stats',
@@ -15,7 +18,10 @@ export const metadata = {
 
 export default async function SchedulePage({ params }) {
   const { slug } = await params;
-  const team = getTeamDataByAbbreviation(slug?.toUpperCase());
+  let team = getTeamDataByAbbreviation(slug?.toUpperCase());
+  if (!team || team.abbreviation === 'NHL') {
+    team = getTeamDataBySlug(slug);
+  }
 
   if (!team || team.abbreviation === 'NHL') {
     return (
@@ -36,7 +42,7 @@ export default async function SchedulePage({ params }) {
   const standingsResponse = await fetch('https://api-web.nhle.com/v1/standings/now', { cache: 'no-store' });
   const scheduleResponse = await fetch(`https://api-web.nhle.com/v1/scoreboard/${team.abbreviation}/now`, { cache: 'no-store' });
   const fullSeasonScheduleResponse = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${team.abbreviation}/now`, { cache: 'no-store' });
-  const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=teamid-${team.teamId}&context.slug=nhl&$limit=8`, { cache: 'no-store' });
+  const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=teamid-${team.teamId}&context.slug=teamid-${team.teamId}&$limit=8`, { cache: 'no-store' });
 
   const schedule = await scheduleResponse.json();
   const standings = await standingsResponse.json();
@@ -126,6 +132,10 @@ export default async function SchedulePage({ params }) {
           </div>
         </div>
       )}
+
+      <div className="my-3 text-center text-xs">
+        <Link href={`https://nhl.com/${team.slug}`} className="underline font-bold"><FontAwesomeIcon icon={faGlobe} fixedWidth className="mr-1" />Official Website</Link>
+      </div>
 
       <h1 className="text-3xl font-bold mb-6">Recent &amp; Upcoming Games</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
