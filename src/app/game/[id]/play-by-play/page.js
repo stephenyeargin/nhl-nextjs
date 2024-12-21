@@ -224,13 +224,14 @@ const PlayByPlay = () => {
       );
     case 'goal':
       return (
-        <div className="p-2 gap-4 rounded-lg flex flex-wrap justify-center md:justify-between items-center bg-red-900/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}` }}>
-          <div className="flex gap-4 items-center justify-start">
+        <div className="p-2 gap-5 rounded-lg flex flex-wrap justify-center md:justify-between items-center bg-red-900/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}` }}>
+          <div className="flex gap-5 items-center justify-start">
             <Headshot
               playerId={e.scoringPlayerId}
               src={(lookupPlayerData(e.scoringPlayerId)).headshot}
               alt="Player Headshot"
               className="h-16 w-16 hidden lg:block"
+              team={eventTeamData.abbreviation}
             />
             <div className="">
               <div className="font-medium text-lg mb-3">{renderPlayer(e.scoringPlayerId)} ({e.scoringPlayerTotal}) scored {e.shotType ? `(${GAME_EVENTS[e.shotType]?.toLowerCase()})` : ''}</div>
@@ -267,13 +268,14 @@ const PlayByPlay = () => {
       );
     case 'penalty':
       return (
-        <div className="p-2 gap-4 rounded-lg flex flex-wrap justify-center md:justify-start items-center bg-slate-500/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}`}}>
+        <div className="p-2 gap-5 rounded-lg flex flex-wrap justify-center md:justify-start items-center bg-slate-500/80 text-white" style={{ borderLeft: `solid 25px ${eventTeamData.teamColor}`}}>
           {e.committedByPlayerId ? (
             <Headshot
               playerId={e.committedByPlayerId}
               src={(lookupPlayerData(e.committedByPlayerId)).headshot}
               alt="Player Headshot"
               className="h-16 w-16 hidden lg:block"
+              team={eventTeamData.abbreviation}
             />
           ) : (
             <div className="bg-slate-100 rounded-full h-16 w-16 hidden lg:block">
@@ -338,9 +340,9 @@ const PlayByPlay = () => {
     <div>
       <div className="flex justify-center items-center my-5">
         <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} includeAll={true} />
-        <div className="mx-5">
+        <div className="mx-4">
           <select 
-            className="p-2 text-sm min-w-[200px] border rounded text-black dark:text-white bg-white dark:bg-black" 
+            className="p-2 text-sm min-w-[200px] border rounded text-black dark:text-white bg-inherit" 
             value={eventFilter || 'all'}
             onChange={handleFilterChange}
           >

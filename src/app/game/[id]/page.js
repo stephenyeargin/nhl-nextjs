@@ -140,6 +140,7 @@ const GamePage = () => {
                             alt={`${goal.firstName.default} ${goal.lastName.default}`}
                             size="4"
                             className="mr-2"
+                            team={goal.teamAbbrev.default}
                           />
                           <div>
                             <span className="font-bold">
@@ -195,7 +196,7 @@ const GamePage = () => {
                               }}
                             >
                               <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mr-2 md:mr-0 bg-white rounded-full" />
-                              <span className="md:hidden">Watch Highlight</span>
+                              <span className="md:hidden text-sm text-blue-900 dark:text-white font-bold underline">Watch Highlight</span>
                             </button>
                           </div>
                         )}
@@ -292,6 +293,7 @@ const GamePage = () => {
                         alt={p.name.default}
                         size="6"
                         className="mx-auto mb-2"
+                        team={p.teamAbbrev}
                       />
                     </div>
                     <h4 className="font-semibold">

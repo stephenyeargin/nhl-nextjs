@@ -48,7 +48,7 @@ export default async function SchedulePage({ params }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div style={{ backgroundColor: team.teamColor }} className="mb-5 flex items-center rounded-xl">
+      <div style={{ backgroundColor: team.teamColor, borderWidth: 4, borderColor: team.secondaryTeamColor }} className="mb-5 flex items-center rounded-xl">
         <div className="p-5">
           <h1 className="text-3xl font-bold mb-3" style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}>{team.name}</h1>
           <div className="flex gap-2" style={{ color: formatTextColorByBackgroundColor(team.teamColor)}}>
@@ -152,11 +152,11 @@ export default async function SchedulePage({ params }) {
       <h1 className="text-3xl font-bold mb-6">Team Stats</h1>
       <div className="mb-5">
         <div className="font-bold my-2">Forwards</div>
-        <StatsTable stats={teamStats.skaters.filter((t) => t.positionCode !== 'D')} teamColor={team.teamColor} />
+        <StatsTable stats={teamStats.skaters.filter((t) => t.positionCode !== 'D')} team={team.abbreviation} />
         <div className="font-bold my-2">Defensemen</div>
-        <StatsTable stats={teamStats.skaters.filter((t) => t.positionCode === 'D')} teamColor={team.teamColor} />
+        <StatsTable stats={teamStats.skaters.filter((t) => t.positionCode === 'D')} team={team.abbreviation} />
         <div className="font-bold my-2">Goalies</div>
-        <StatsTable stats={teamStats.goalies} teamColor={team.teamColor} />
+        <StatsTable stats={teamStats.goalies} team={team.abbreviation} />
       </div>
 
       <h1 className="text-3xl font-bold mb-6">Season Schedule</h1>

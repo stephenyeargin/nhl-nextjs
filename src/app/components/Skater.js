@@ -4,8 +4,11 @@ import Headshot from './Headshot';
 import GameClock from './GameClock';
 import { PropTypes } from 'prop-types';
 import { formatTextColorByBackgroundColor } from '../utils/formatters';
+import { getTeamDataByAbbreviation } from '../utils/teamData';
 
-export const Skater = ({ player, game, isHomeTeam, teamColor }) => {
+export const Skater = ({ player, game, isHomeTeam, team }) => {
+
+  const { teamColor } = getTeamDataByAbbreviation(team);
 
   // Add time remaining
   let time = '0:00';
@@ -40,6 +43,7 @@ export const Skater = ({ player, game, isHomeTeam, teamColor }) => {
         alt={`${player.name.default}`}
         size="2"
         className="hidden lg:block m-1"
+        team={team}
       />
       <div className="hidden lg:block font-bold">
         <Link href={`/player/${player.playerId}`}>{player.name.default}</Link>
@@ -60,10 +64,10 @@ Skater.propTypes = {
   player: PropTypes.object.isRequired,
   game: PropTypes.object,
   isHomeTeam: PropTypes.bool,
-  teamColor: PropTypes.string
+  team: PropTypes.string
 };
 
 Skater.defaults = {
   isHomeTeam: true,
-  teamColor: '#000000',
+  team: 'NHL',
 };

@@ -12,8 +12,8 @@ const MissingThumbnail = () => (
   </div>
 );
 
-const StoryCard = ({ item, small, imageFormatInstructions }) => {
-  if (small) {
+const StoryCard = ({ item, size }) => {
+  if (size === 'small') {
     return (
       <div key={item._entityId} className="mb-4">
         <Link href={`/news/${item.slug}`} className="grid grid-cols-3 gap-4 items-center">
@@ -32,27 +32,31 @@ const StoryCard = ({ item, small, imageFormatInstructions }) => {
     );
   }
   
+  if (size === 'large') {
+    return (
+      <div className="md:relative">
+        <Link href={`/news/${item.slug}`} className="">
+          <Image src={item.thumbnail?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')} width="832" height="468" alt="Story Photo" className="w-full" />
+        </Link>
+        <div className="md:absolute md:bottom-0 md:right-0 md:left-0 md:p-5 md:bg-black/70 md:text-white">
+          <Link href={`/news/${item.slug}`} className="">
+            <h2 className="text-2xl font-bold">{item.headline || item.title}</h2>
+          </Link>
+          <div className="text-justify line-clamp-3 text-sm" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary)}} />
+          <Link href={`/news/${item.slug}`} className="block font-bold py-3 underline">Read Story</Link>
+        </div>
+      </div>
+    );
+  }
   
   return(
     <div key={item._entityId} className="mb-4">
       <p className="hidden" suppressHydrationWarning>{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(item.contentDate)}</p>
       <Link href={`/news/${item.slug}`} className="">
-        {imageFormatInstructions ? (
-          <>
-            {item.thumbnail ? (
-              <Image src={item.thumbnail?.templateUrl.replace('{formatInstructions}', imageFormatInstructions)} width="900" height="600" alt="Story Photo" className="w-full" />
-            ) : (
-              <MissingThumbnail />
-            )}
-          </>
+        {item.thumbnail ? (               
+          <Image src={item.thumbnail?.thumbnailUrl} width="416" height="416" alt="Story Photo" className="mb-2 w-full" />
         ) : (
-          <>
-            {item.thumbnail ? (               
-              <Image src={item.thumbnail?.thumbnailUrl} width="416" height="416" alt="Story Photo" className="mb-2 w-full" />
-            ) : (
-              <MissingThumbnail />
-            )}
-          </>
+          <MissingThumbnail />
         )}
       </Link>
       <Link href={`/news/${item.slug}`} className="">
@@ -65,8 +69,7 @@ const StoryCard = ({ item, small, imageFormatInstructions }) => {
 
 StoryCard.propTypes = {
   item: PropTypes.object.isRequired,
-  small: PropTypes.bool,
-  imageFormatInstructions: PropTypes.string,
+  size: PropTypes.string,
 };
 
 export default StoryCard;

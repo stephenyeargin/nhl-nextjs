@@ -2,10 +2,18 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
+import { getTeamDataByAbbreviation } from '../utils/teamData';
 
-const Headshot = ({ src, alt, className, size, playerId }) => {
+const Headshot = ({ src, alt, className, size, playerId, team }) => {
+  let style = { maxHeight: `${size}rem`, maxWidth: `${size}rem` };
+  if (team) {
+    const { teamColor, secondaryTeamColor } = getTeamDataByAbbreviation(team);
+    style.backgroundColor = teamColor;
+    style.backgroundImage = `linear-gradient(to bottom, ${teamColor}, #FFFFFF)`;
+    style.border = `2px solid ${secondaryTeamColor}`;
+  }
 
-  className += ' rounded-full bg-gradient-to-tr from-gray-500 via-gray-300 to-gray-100';
+  className += ' rounded-full bg-gradient-to-tr from-gray-500 via-gray-300 to-gray-100 shadow-md';
 
   if (!src) {
     return (
@@ -20,7 +28,7 @@ const Headshot = ({ src, alt, className, size, playerId }) => {
       className={className}
       width={256}
       height={256}
-      style={{ maxHeight: `${size}rem`, maxWidth: `${size}rem` }}
+      style={style}
     />
   );
 
@@ -43,7 +51,8 @@ Headshot.propTypes = {
   alt: PropTypes.string.required,
   className: PropTypes.string,
   size: PropTypes.string,
-  playerId: PropTypes.number
+  playerId: PropTypes.number,
+  team: PropTypes.string
 };
 
 Headshot.defaultProps = {

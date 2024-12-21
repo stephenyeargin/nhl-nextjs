@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { formatLocalizedDate, formatLocalizedTime, formatMarkdownContent } from '@/app/utils/formatters';
+import { formatHeadTitle, formatLocalizedDate, formatLocalizedTime, formatMarkdownContent } from '@/app/utils/formatters';
 import { useStoryContext } from '@/app/contexts/StoryContext';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,11 +30,21 @@ const NewsArticle = () => {
     return notFound();
   }
 
+  formatHeadTitle(story.title);
+
+  // Set default contributor if none is provided
+  if (!story.references.contributor) {
+    story.references.contributor = [{
+      title: 'NHL.com Staff',
+      fields: {},
+    }];
+  }
+
   return (
     <div className="container mx-auto my-5">
       <div className="my-5">
-        <h1 className="text-4xl font-bold">{story.title}</h1>
-        <h2 className="my-1 text-gray-500 font-light">{story.fields?.description}</h2>
+        <h1 className="text-4xl font-bold">{story.headline || story.title}</h1>
+        <h2 className="my-4 text-gray-500 font-light">{story.fields?.description}</h2>
       </div>
 
       {story.parts.map((part, i) => {
@@ -44,15 +54,17 @@ const NewsArticle = () => {
         if (type === 'photo') {
           return (
             <div key={_entityId} className="my-5">
-              <figure className="relative">
+              <figure>
                 <Image
                   src={image.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')}
-                  alt="Story Photo"
+                  alt={fields.altText}
                   className="w-full"
                   width={832}
                   height={468}
                 />
-                <figcaption className="my-3 text-xs text-gray-500">{image.title} &ndash; {fields.credit}</figcaption>
+                {fields.credit && (
+                  <figcaption className="text-xs text-gray-500 py-2">&copy; {fields.credit}</figcaption>
+                )}
               </figure>
             </div>
           );
@@ -109,14 +121,14 @@ const NewsArticle = () => {
         // Markdown Section
         if (type === 'markdown') {
           let byline = null;
-          if (i === 1 && story.references?.contributor?.length > 0) {
+          if (i === 1) {
             byline = (
               <div className="my-5">
                 <div>
                   By <strong className="text-bold">
                     {story.references.contributor.map((contributor, i2) => (
                       <span key={contributor._entityId}>
-                        {contributor.title}, {contributor.fields.source}
+                        {contributor.title}{contributor.fields.source ? `, ${contributor.fields.source}` : ''}
                         {i2 < story.references.contributor.length - 1 && ', '}
                       </span>
                     ))}
@@ -139,6 +151,19 @@ const NewsArticle = () => {
         
         return null;
       })}
+
+      <hr className="my-5" />
+
+      <div className="my-5">
+        <span className="inline-block rounded p-1 text-xs font-bold m-1">
+          Tags:
+        </span>
+        {story.tags.filter((t) => !t.extraData?.hideOnSite).map((tag) => (
+          <Link href={`/news/tags/${tag.slug}`} key={tag._entityId} className="inline-block rounded p-1 border text-xs m-1">
+            {tag.title}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

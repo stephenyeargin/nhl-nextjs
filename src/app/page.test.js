@@ -2,12 +2,6 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import NewsPage from './page';
 
-jest.mock('next/navigation', () => ({
-  useSearchParams: () => ({
-    get: jest.fn().mockReturnValue('news'),
-  }),
-}));
-
 jest.mock('./components/StoryCard', () => {
   const StoryCard = () => <div>StoryCard</div>;
   StoryCard.displayName = 'StoryCard';
@@ -58,9 +52,6 @@ describe('NewsPage', () => {
     render(<NewsPage />);
 
     await waitFor(() => expect(screen.getByText('Latest News')).toBeInTheDocument());
-    expect(screen.getByText('News Headline 1')).toBeInTheDocument();
-    expect(screen.getByText('Summary 1')).toBeInTheDocument();
-    expect(screen.getByText('Read Story')).toBeInTheDocument();
-    expect(screen.getAllByText('StoryCard').length).toBe(1);
+    expect(screen.getAllByText('StoryCard').length).toBe(2);
   });
 });

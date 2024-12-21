@@ -20,7 +20,6 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
   const mappedPlayMostRecent = mappedPlays[0]?.eventId;
 
   useEffect(() => {
-    setActivePlay(mappedPlayMostRecent);
     setPlayBoxContent(null);
   }, [mappedPlayMostRecent]);
 
@@ -30,6 +29,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
 
   const handleMarkerAction = (e) => {
     const play = mappedPlays[e.target.closest('div').getAttribute('data-index')] || {};
+    setActivePlay(play.eventId);
     if (!play) {
       return;
     }
@@ -70,7 +70,12 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
       if (hoverPlay) {
         setHoverPlay(null);
       }
-    }, 7500);
+    }, 2500);
+  };
+
+  const handleRinkClick = () => {
+    setPlayBoxContent(null);
+    setActivePlay(null);
   };
 
   return (
@@ -82,7 +87,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
           width={2000}
           height={850}
           className="my-4 dark:invert dark:grayscale opacity-25"
-          onClick={() => setPlayBoxContent(null)}
+          onClick={handleRinkClick}
         />
         <TeamLogo
           src={logos[homeTeam.abbrev]}
@@ -180,32 +185,32 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
           <div className="absolute top-2 bottom-2 left-0 right-0 grid grid-cols-6 items-center">
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.awayTeam.goalies.map((p) => (
-                <Skater key={p.playerId} player={p} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
+                <Skater key={p.playerId} player={p} isHomeTeam={false} team={awayTeam.abbrev} />
               ))}
             </div>
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.awayTeam.defensemen.map((p) => (
-                <Skater key={p.playerId} player={p} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
+                <Skater key={p.playerId} player={p} isHomeTeam={false} team={awayTeam.abbrev} />
               ))}
             </div>
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.awayTeam.forwards.map((p) => (
-                <Skater key={p.playerId} player={p} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
+                <Skater key={p.playerId} player={p} isHomeTeam={false} team={awayTeam.abbrev} />
               ))}
             </div>
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.homeTeam.forwards.map((p) => (
-                <Skater key={p.playerId} player={p} isHomeTeam={true} teamColor={homeTeam.data.teamColor} />
+                <Skater key={p.playerId} player={p} isHomeTeam={true} team={homeTeam.abbrev} />
               ))}
             </div>
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.homeTeam.defensemen.map((p) => (
-                <Skater key={p.playerId} player={p} isHomeTeam={true} teamColor={homeTeam.data.teamColor} />
+                <Skater key={p.playerId} player={p} isHomeTeam={true} team={homeTeam.abbrev} />
               ))}
             </div>
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.homeTeam.goalies.map((p) => (
-                <Skater key={p.playerId} player={p} isHomeTeam={true} teamColor={homeTeam.data.teamColor} />
+                <Skater key={p.playerId} player={p} isHomeTeam={true} team={homeTeam.abbrev} />
               ))}
             </div>
           </div>
@@ -217,12 +222,12 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
           <div className="grid grid-cols-2 gap-5">
             <div className="col-span-1 flex gap-2 justify-end">
               {game.summary.iceSurface?.awayTeam.penaltyBox.map((p, i) => (
-                <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={false} teamColor={awayTeam.data.teamColor} />
+                <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={false} team={awayTeam.abbrev} />
               ))}
             </div>
             <div className="col-span-1 flex gap-2 justify-start">
               {game.summary.iceSurface?.homeTeam.penaltyBox.map((p, i) => (
-                <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={true} teamColor={homeTeam.data.teamColor} />
+                <Skater key={`${p.playerId}-${i}`} player={p} game={game} isHomeTeam={true} team={homeTeam.abbrev} />
               ))}
             </div>
           </div>

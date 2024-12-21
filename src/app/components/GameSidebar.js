@@ -319,7 +319,9 @@ const GameSidebar = () => {
 
       {rightRail.seasonSeries && (
         <div className="mb-5">
-          <div className="p-2 text-2xl font-bold text-center">Season Series</div>
+          <div className="p-2 text-2xl font-bold text-center">
+            {game.gameType === 3 ? 'Playoff Series' : 'Season Series'}
+          </div>
           <div className="text-center text-xs">
             {formatSeriesStatus(game, rightRail)}
           </div>

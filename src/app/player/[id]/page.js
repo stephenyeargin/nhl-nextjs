@@ -221,8 +221,8 @@ export default function PlayerPage() {
 
   return (
     <div className="container mx-auto">
-      <div className="flex justify-between items-center">
-        <div className="text-4xl my-4 flex items-center">
+      <div className="flex flex-wrap justify-center md:justify-between items-center mb-2">
+        <div className="text-2xl md:text-4xl my-4 flex flex-wrap items-center">
           <span className="px-3 border-r">{firstName.default} <span className="font-bold">{lastName.default}</span></span>
           {teamLogo && (
             <span className="px-3 border-r">
@@ -256,7 +256,7 @@ export default function PlayerPage() {
           <div className="grid grid-cols-12">
             <div className="col-span-12 lg:col-span-5">
               <div className="flex flex-flow gap-2 items-center text-white">
-                <div>
+                <div className="grow">
                   {/* Player Image (Headshot) */}
                   <Headshot
                     playerId={player.playerId}
@@ -264,10 +264,11 @@ export default function PlayerPage() {
                     alt={`Headshot of ${firstName.default} ${lastName.default}`}
                     size={8}
                     className="w-100 mx-auto"
+                    team={currentTeamAbbrev}
                   />
                 </div>
-                <div className="text-sm px-4 flex-grow">
-                  <dl className="grid grid-cols-3 gap-1">
+                <div className="text-sm px-4">
+                  <dl className="grid grid-cols-1 sm:grid-cols-3 gap-1">
                     <dt className="col-span-1 font-bold">Height:</dt>
                     <dd className="col-span-2">{formattedHeight}</dd>
                     <dt className="col-span-1 font-bold col">Weight:</dt>
@@ -385,15 +386,15 @@ export default function PlayerPage() {
                       <div className="font-bold">
                         {g.homeRoadFlag !== 'H' ? (
                           <div className="flex items-center gap-2">
-                            <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
+                            <TeamLogo team={g.teamAbbrev} className="hidden md:block h-8 w-8" alt={g.teamAbbrev} />
                             <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.teamAbbrev}@{g.opponentAbbrev}</Link>
-                            <TeamLogo team={g.opponentAbbrev} className="h-8 w-8" alt={g.opponentAbbrev} />
+                            <TeamLogo team={g.opponentAbbrev} className="hidden md:block h-8 w-8" alt={g.opponentAbbrev} />
                           </div>
                         ) : (
                           <div className="flex items-center gap-2">
-                            <TeamLogo team={g.opponentAbbrev} className="h-8 w-8" alt={g.opponentAbbrev} />
+                            <TeamLogo team={g.opponentAbbrev} className="hidden md:block h-8 w-8" alt={g.opponentAbbrev} />
                             <Link href={`/game/${g.gameId}`} className="font-bold underline">{g.opponentAbbrev}@{g.teamAbbrev}</Link>
-                            <TeamLogo team={g.teamAbbrev} className="h-8 w-8" alt={g.teamAbbrev} />
+                            <TeamLogo team={g.teamAbbrev} className="hidden md:block h-8 w-8" alt={g.teamAbbrev} />
                           </div>
                         )}
                       </div>

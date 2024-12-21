@@ -34,7 +34,7 @@ const GameHeader = () => {
     };
   }, []);
 
-  if (!gameData) { 
+  if (!gameData || !gameData.game) { 
     return <GameHeaderSkeleton />;
   }
 
@@ -54,8 +54,8 @@ const GameHeader = () => {
   }
 
   const gameHeaderStyle = { background: 'var(--background)' };
-  gameHeaderStyle.borderLeft = `solid 25px ${awayTeam.data.teamColor}`;
-  gameHeaderStyle.borderRight = `solid 25px ${homeTeam.data.teamColor}`;
+  gameHeaderStyle.borderLeft = `solid 10px ${awayTeam.data.teamColor}`;
+  gameHeaderStyle.borderRight = `solid 10px ${homeTeam.data.teamColor}`;
 
   const teamHasRecentGoal = (teamAbbrev, game) => {
     // No goals if game isn't live
@@ -153,7 +153,7 @@ const GameHeader = () => {
         )}
         {(gameState === 'FINAL' || gameState === 'OFF') && (
           <div className="text-center my-2 uppercase">
-            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
+            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black text-nowrap rounded">
               Final
               {periodDescriptor.periodType	!== 'REG' && `/${periodDescriptor.periodType}`}
             </span>

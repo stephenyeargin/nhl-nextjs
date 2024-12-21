@@ -6,15 +6,17 @@ import { formatStat, formatTextColorByBackgroundColor } from '@/app/utils/format
 
 import '@/app/assets/datatables.css';
 import '@/app/components/StatsTable.scss';
+import { getTeamDataByAbbreviation } from '../utils/teamData';
 
-const StatsTable = ({ stats, teamColor }) => {
+const StatsTable = ({ stats, team }) => {
   if (!stats || stats.length === 0) {
     return null;
   }
 
   // Add team color if given
   let headerStyle = {};
-  if (teamColor) {
+  if (team) {
+    const { teamColor } = getTeamDataByAbbreviation(team);
     headerStyle = { backgroundColor: teamColor, color: formatTextColorByBackgroundColor(teamColor) };
   }
 
@@ -81,6 +83,7 @@ const StatsTable = ({ stats, teamColor }) => {
             alt={skater.name?.default || `${skater.firstName.default} ${skater.lastName.default}`}
             size="2"
             className="mx-auto"
+            team={team}
           />
         )}
       </td>
@@ -116,7 +119,7 @@ const StatsTable = ({ stats, teamColor }) => {
 
 StatsTable.propTypes = {
   stats: PropTypes.arrayOf(PropTypes.object).isRequired,
-  teamColor: PropTypes.string,
+  team: PropTypes.string,
 };
 
 StatsTable.defaultProps = {

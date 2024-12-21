@@ -101,7 +101,7 @@ const BoxScore = () => {
             <div className="font-bold my-1">Forwards</div>
           </div>
         </div>
-        <StatsTable stats={boxScore.playerByGameStats?.awayTeam.forwards} teamColor={awayTeam.data.teamColor} />
+        <StatsTable stats={boxScore.playerByGameStats?.awayTeam.forwards} team={awayTeam.data.abbreviation} />
         <div className="my-3">
           <div className="flex">
             <TeamLogo
@@ -112,7 +112,7 @@ const BoxScore = () => {
             <div className="font-bold my-1">Defensemen</div>
           </div>
         </div>
-        <StatsTable stats={boxScore.playerByGameStats?.awayTeam.defense} teamColor={awayTeam.data.teamColor} />
+        <StatsTable stats={boxScore.playerByGameStats?.awayTeam.defense} team={awayTeam.data.abbreviation} />
         <div className="my-3">
           <div className="flex">
             <TeamLogo
@@ -123,7 +123,7 @@ const BoxScore = () => {
             <div className="font-bold my-1">Goalies</div>
           </div>
         </div>
-        <StatsTable stats={boxScore.playerByGameStats?.awayTeam.goalies} teamColor={awayTeam.data.teamColor} />
+        <StatsTable stats={boxScore.playerByGameStats?.awayTeam.goalies} team={awayTeam.data.abbreviation} />
       </div>
 
       <div id="homeTeamStats" className={ activeStatTeam === 'homeTeam' ? 'block' : 'hidden'}>
@@ -137,7 +137,7 @@ const BoxScore = () => {
             <div className="font-bold my-1">Forwards</div>
           </div>
         </div>
-        <StatsTable stats={boxScore.playerByGameStats?.homeTeam.forwards} teamColor={homeTeam.data.teamColor} />
+        <StatsTable stats={boxScore.playerByGameStats?.homeTeam.forwards} team={homeTeam.data.abbreviation} />
         <div className="my-3">
           <div className="flex">
             <TeamLogo
@@ -148,7 +148,7 @@ const BoxScore = () => {
             <div className="font-bold my-1">Defensemen</div>
           </div>
         </div>
-        <StatsTable stats={boxScore.playerByGameStats?.homeTeam.defense} teamColor={homeTeam.data.teamColor} />
+        <StatsTable stats={boxScore.playerByGameStats?.homeTeam.defense} team={homeTeam.data.abbreviation} />
         <div className="my-3">
           <div className="flex">
             <TeamLogo
@@ -159,7 +159,7 @@ const BoxScore = () => {
             <div className="font-bold my-1">Goalies</div>
           </div>
         </div>
-        <StatsTable stats={boxScore.playerByGameStats?.homeTeam.goalies} teamColor={homeTeam.data.teamColor} />
+        <StatsTable stats={boxScore.playerByGameStats?.homeTeam.goalies} team={homeTeam.data.abbreviation} />
       </div>
     </div>
   );

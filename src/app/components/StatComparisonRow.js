@@ -14,19 +14,19 @@ const StatComparisonRow = ({ awayStat, awayStatRank, awayTeam, stat, homeStat, h
       {/* First Row: Stats with Stat Name in the Center */}
       <div className="flex items-center">
         <div className="flex-1 text-left font-lg font-bold">{formatStatValue(stat, awayStat)}</div>
-        <div className="flex-1 text-center text-sm">{TEAM_STATS[stat]}</div>
+        <div className="flex-1 text-center text-xs">{TEAM_STATS[stat]}</div>
         <div className="flex-1 text-right font-lg font-bold">{formatStatValue(stat, homeStat)}</div>
       </div>
 
       {/* Second Row: Horizontal Bar Indicator */}
-      <div className="relative my-1 h-2 bg-white">
+      <div className="relative my-1 bg-inherit h-3">
         <div
-          className="absolute top-0 left-0 h-full bg-black-500"
-          style={{ width: `${awayPercentage < 100 ? awayPercentage - 0.5 : 100}%`, backgroundColor: awayTeam.data.teamColor }}
+          className="absolute top-0 left-0 bg-black-500 h-3"
+          style={{ width: `${awayPercentage < 100 ? awayPercentage - 0.5 : 100}%`, backgroundColor: awayTeam.data.teamColor, borderBottom: `2px solid ${awayTeam.data.secondaryTeamColor}` }}
         />
         <div
-          className="absolute top-0 right-0 h-full bg-white-500"
-          style={{ width: `${homePercentage < 100 ? homePercentage - 0.5 : 100}%`, backgroundColor: homeTeam.data.teamColor }}
+          className="absolute top-0 right-0 bg-white-500 h-3"
+          style={{ width: `${homePercentage < 100 ? homePercentage - 0.5 : 100}%`, backgroundColor: homeTeam.data.teamColor, borderBottom: `2px solid ${homeTeam.data.secondaryTeamColor}` }}
         />
       </div>
       {/* Third Row: Ranks in the Center */}
