@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import StoryCard from './components/StoryCard';
-import GameBodySkeleton from './components/GameBodySkeleton';
+import NewsPageSkeleton from './components/NewsPageSkeleton';
 
 const NewsPage = () => {
   const [news, setNews] = useState([]);
@@ -20,11 +20,11 @@ const NewsPage = () => {
   }, [tag]);
 
   if (!news || news.length === 0) {
-    return <GameBodySkeleton />;
+    return <NewsPageSkeleton />;
   }
 
   return (
-    <Suspense fallback={<GameBodySkeleton />}>
+    <Suspense fallback={<NewsPageSkeleton />}>
       <div className="container mx-auto px-4 py-8">
         {news.length > 0 && (
           <div>

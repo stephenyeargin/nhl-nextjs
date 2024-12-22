@@ -35,7 +35,7 @@ const StandingsTable = ({ standings }) => {
     tableRows[5] = temp3;
   }
 
-  const wildcardRankings = ['1', '2', '3', '1', '2', '3', 'WC1', 'WC2', '', '', '', '', '', '', '', ''];
+  const wildcardRankings = ['1', '2', '3', '1', '2', '3', 'WC1', 'WC2', '9', '10', '11', '12', '13', '14', '15', '16'];
 
   return (
     <div className="overflow-x-auto scrollbar-hidden">
@@ -64,8 +64,8 @@ const StandingsTable = ({ standings }) => {
         </thead>
         <tbody>
           {tableRows.map((team, i) => (
-            <tr key={team.teamAbbrev.default}>
-              <td className="text-center border text-xs">{wildcardRankings[i]}</td>
+            <tr key={team.teamAbbrev.default} className={[2, 5, 7].includes(i) ? 'border-double border-b-4' : ''}>
+              <td className="text-center border ranking">{wildcardRankings[i]}</td>
               <td className="border p-1 text-center text-sm font-semibold">
                 <Link href={`/team/${team.teamAbbrev.default}`}>
                   <div className="flex items-center gap-2">

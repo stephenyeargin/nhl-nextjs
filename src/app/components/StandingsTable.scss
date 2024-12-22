@@ -4,14 +4,17 @@
 
 @layer components {
     .standingsTable {
-        @apply text-xs w-full table-auto border-collapse border;
+        @apply w-full table-auto border-collapse border;
 
         th {
             @apply p-2;
         }
 
         td {
-            @apply p-2 border text-sm;
+            @apply text-sm p-2 border;
+            &.ranking {
+                @apply text-xs
+            }
         }
 
         tr:nth-child(even) {

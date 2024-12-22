@@ -56,6 +56,7 @@ const ContentCustomEntity = ({ part }) => {
                 height={468}
                 placeholder="blur"
                 blurDataURL={blurDataURL}
+                loading="lazy"
               />
             </Link>
           </div>

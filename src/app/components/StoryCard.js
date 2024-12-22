@@ -8,7 +8,13 @@ import { formatLocalizedDate, formatLocalizedTime, formatMarkdownContent } from 
 
 const MissingThumbnail = ({ size }) => (
   <div className={`w-full bg-gray-200 flex items-center justify-center aspect-square mb-2 ${size === 'medium' ? 'aspect-square' : 'aspect-video'}`}>
-    <Image src="https://assets.nhle.com/logos/nhl/svg/NHL_light.svg" width="180" height="180" alt="Story Photo" className="" />
+    <Image
+      src="https://assets.nhle.com/logos/nhl/svg/NHL_light.svg"
+      width="180"
+      height="180"
+      alt="Story Photo"
+      className=""
+    />
   </div>
 );
 
@@ -48,6 +54,7 @@ const StoryCard = ({ item, size, className }) => {
                 height="416"
                 alt="Story Photo"
                 className="mb-2 w-full"
+                loading="lazy"
               />
             ) : (
               <MissingThumbnail />
@@ -73,6 +80,7 @@ const StoryCard = ({ item, size, className }) => {
               height="468"
               alt="Story Photo"
               className="mb-2 w-full"
+              loading="lazy"
             />
           ) : (
             <MissingThumbnail size="medium" />
@@ -99,6 +107,7 @@ const StoryCard = ({ item, size, className }) => {
             className="w-full"
             placeholder="blur"
             blurDataURL={blurDataURL}
+            loading="lazy"
           />
         </Link>
         <div className="md:absolute md:bottom-0 md:right-0 md:left-0 md:p-5 md:bg-black/70 md:text-white">
@@ -125,6 +134,7 @@ const StoryCard = ({ item, size, className }) => {
             className="mb-2 w-full"
             placeholder="blur"
             blurDataURL={blurDataURL}
+            loading="lazy"
           />
         ) : (
           <MissingThumbnail />
