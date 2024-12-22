@@ -32,7 +32,13 @@ const GameStory = ({ game }) => {
         <div key={item._entityId} className="mb-4 p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded leading-2">
           {item.thumbnail?.thumbnailUrl && (
             <Link href={`/news/${item.slug}`}>
-              <Image src={item.thumbnail.thumbnailUrl} width="416" height="416" alt="Story Photo" className="w-full" />
+              <Image
+                src={item.thumbnail.thumbnailUrl}
+                width="416"
+                height="416"
+                alt="Story Photo"
+                className="w-full"
+              />
             </Link>
           )}
           <div>

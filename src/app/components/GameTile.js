@@ -38,7 +38,7 @@ const GameTile = ({game, hideDate, style}) => {
             <TeamLogo 
               src={game.awayTeam.logo} 
               alt={`${game.awayTeam.placeName?.default} logo`}
-              className="w-8 h-8 mr-3"
+              className="hidden lg:block w-8 h-8 mr-3"
             />
             <div>
               <span className="font-light">{game.awayTeam.placeNameWithPreposition?.default}</span>{' '}
@@ -58,7 +58,7 @@ const GameTile = ({game, hideDate, style}) => {
             <TeamLogo 
               src={game.homeTeam.logo} 
               alt={`${game.homeTeam.placeName?.default} logo`}
-              className="w-8 h-8 mr-3"
+              className="hidden lg:block w-8 h-8 mr-3"
             />
             <div>
               <span className="font-light">{game.homeTeam.placeNameWithPreposition?.default}</span>{' '}
@@ -74,12 +74,12 @@ const GameTile = ({game, hideDate, style}) => {
       </div>
 
       <div className="mt-2 pt-3 border-t">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center">
           <span className="text-sm text-slate-600">{game.venue.default}</span>
           {(game.gameState === 'FINAL' || game.gameState === 'OFF') && (
             <div>
               <span className="text-sm mr-2" suppressHydrationWarning>{hideDate ? null : formatLocalizedDate(game.startTimeUTC)}</span>
-              <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:text-black rounded">
+              <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:text-black rounded text-nowrap">
                 FINAL{(game.gameOutcome?.lastPeriodType !== 'REG' && game.periodDescriptor?.periodType !== 'REG') ? `/${game.gameOutcome?.lastPeriodType ?? game.periodDescriptor?.periodType}` : ''}
               </span>
             </div>

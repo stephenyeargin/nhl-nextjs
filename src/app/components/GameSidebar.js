@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useGameContext } from '../contexts/GameContext';
@@ -41,6 +41,18 @@ const GameSidebar = () => {
 
   const { gameData } = useGameContext();
 
+  // Hide the video player if escape key pressed
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setVideoPlayerVisible(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  
   if (!gameData) { 
     return <GameSidebarSkeleton />;
   }
@@ -79,7 +91,7 @@ const GameSidebar = () => {
                 setVideoPlayerLabel('3:00 Recap');
                 setVideoPlayerVisible(true);
               }}
-              className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow"
+              className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
             >
               <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> 3:00 Recap
             </button>
@@ -91,7 +103,7 @@ const GameSidebar = () => {
                 setVideoPlayerLabel('Condensed Game');
                 setVideoPlayerVisible(true);
               }}
-              className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow"
+              className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
             >
               <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Condensed Game
             </button>

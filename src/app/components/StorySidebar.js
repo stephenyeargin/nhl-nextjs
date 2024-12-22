@@ -18,14 +18,14 @@ const StorySidebar = () => {
         <div className="my-5">
           <h3 className="font-bold text-xl my-2 py-2 border-b">Related Stories</h3>
           {storyData.story?.relations.filter((s) => s.type === 'story').map((relation) => (
-            <StoryCard key={relation._entityId} item={relation} size="small" />
+            <StoryCard key={relation._entityId} item={relation} size="small" className="mb-2" />
           ))}
         </div>
       )}
 
       <h3 className="font-bold text-xl my-2 py-2 border-b">Top Stories</h3>
       {sidebarStories.items?.map((item) => (
-        <StoryCard key={item._entityId} item={item} size="small" />
+        <StoryCard key={item._entityId} item={item} size="small" className="mb-2" />
       ))}
     </div>
   );

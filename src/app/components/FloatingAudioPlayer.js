@@ -15,7 +15,7 @@ const FloatingAudioPlayer = ({ url, label, isVisible, isPlaying, onClose, onTogg
         {isPlaying ? (
           <FontAwesomeIcon icon={faRadio} fixedWidth onClick={() => onTogglePlay(false)} className="cursor-pointer hover:text-red-900" />
         ) : (
-          <FontAwesomeIcon icon={faPlay} fixedWidth onClick={() => onTogglePlay(false)} className="cursor-pointer hover:text-blue-500" />
+          <FontAwesomeIcon icon={faPlay} fixedWidth onClick={() => onTogglePlay(false)} className="cursor-pointer hover:text-blue-600" />
         )}
         <span>{label} Radio</span>
         <button onClick={onClose} className="hover:text-slate-400">

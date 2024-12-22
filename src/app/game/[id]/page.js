@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { notFound } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,6 +23,18 @@ const GamePage = () => {
   const [videoPlayerUrl, setVideoPlayerUrl] = useState(null);
   const [isVideoPlayerVisible, setVideoPlayerVisible] = useState(false);
 
+  // Hide the video player if escape key pressed
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setVideoPlayerVisible(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const { gameData, pageError } = useGameContext();
 
   if (!gameData) {
@@ -38,7 +50,7 @@ const GamePage = () => {
     }
     
     return (
-      <PageError pageError={pageError} handleRetry={() => {}} />
+      <PageError pageError={pageError} handleRetry={() => window.location.reload()} />
     );
   };
 
@@ -187,16 +199,16 @@ const GamePage = () => {
                           <div className="text-sm font-light">Shot</div>
                         </div>
                         {goal.highlightClip && (
-                          <div className="col-span-12 md:col-span-1 md:py-5 rounded-md mx-4 text-center text-blue-900">
+                          <div className="col-span-12 md:col-span-1 md:py-5 rounded-md mx-4 text-center text-blue-900 hover:text-blue-600">
                             <button
                               onClick={() => {
                                 setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${goal.highlightClip}`);
-                                setVideoPlayerLabel(`${goal.teamAbbrev.default} | ${goal.timeInPeriod} ${formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number })} | ${goal.name.default}`);
+                                setVideoPlayerLabel(`${goal.teamAbbrev.default} | ${goal.timeInPeriod} ${formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number })} | ${goal.firstName.default} ${goal.lastName.default}`);
                                 setVideoPlayerVisible(true);
                               }}
                             >
                               <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mr-2 md:mr-0 bg-white rounded-full" />
-                              <span className="md:hidden text-sm text-blue-900 dark:text-white font-bold underline">Watch Highlight</span>
+                              <span className="md:hidden text-sm text-blue-900 hover:text-blue-600 dark:text-white font-bold underline">Watch Highlight</span>
                             </button>
                           </div>
                         )}

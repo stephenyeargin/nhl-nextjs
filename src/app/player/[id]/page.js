@@ -2,26 +2,28 @@
 
 import React, { useState, useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import Headshot from '@/app/components/Headshot';
 import { formatStat, formatSeason, formatOrdinalNumber, formatLocalizedDate, formatTextColorByBackgroundColor, formatHeadTitle } from '@/app/utils/formatters';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton';
-import TeamLogo from '@/app/components/TeamLogo';
-import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHockeyPuck, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { faNewspaper, faTrophy, faUser } from '@fortawesome/free-solid-svg-icons';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
+import TeamLogo from '@/app/components/TeamLogo';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import LeagueToggle from '@/app/components/LeagueToggle';
-import '@/app/components/StatsTable.scss';
 import StoryCard from '@/app/components/StoryCard';
 import PlayerDropdown from '@/app/components/PlayerDropdown';
+import '@/app/components/StatsTable.scss';
+import ContentCustomEntity from '@/app/components/ContentCustomEntity';
 
 export default function PlayerPage() {
   const { id } = useParams();
   const filteredId = id.replace(/[a-z-]/ig, '');
 
   const [player, setPlayer] = useState(null);
+  const [playerContent, setPlayerContent] = useState({});
   const [playerNews, setPlayerNews] = useState({});
   const [activeLeague, setActiveLeague] = useState('nhl');
   const [seasonType, setSeasonType] = useState(2); // [2: Regular season, 3: Post-season]
@@ -33,18 +35,22 @@ export default function PlayerPage() {
 
   useEffect(() => {
     const fetchPlayer = async () => {
-      const playerResponse = await fetch(`/api/nhl/player/${filteredId}/landing`, { cache: 'no-store' });
 
+      const playerResponse = await fetch(`/api/nhl/player/${filteredId}/landing`, { cache: 'no-store' });
       if (!playerResponse.ok) {
         return notFound();
       }
       const playerData = await playerResponse.json();
       setPlayer(playerData);
 
+      const playerContentResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/players?tags.slug=playerid-${playerData.playerId}`, { cache: 'no-store' });
+      const playerContent = await playerContentResponse.json();
+      setPlayerContent(playerContent);
+
       const topStoriesResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=playerid-${playerData.playerId}&context.slug=nhl&$limit=4`, { cache: 'no-store' });
       const topStories = await topStoriesResponse.json();
       setPlayerNews(topStories);
-      
+
       formatHeadTitle(`${playerData.firstName.default} ${playerData.lastName.default} | #${playerData.sweaterNumber} | ${playerData.position}`);
     };
 
@@ -327,32 +333,38 @@ export default function PlayerPage() {
                   })}
                 </div>
               ) : (
-                <>No statistics recorded for {seasonType === 3 ? 'playoffs' : 'regular season'}.</>
+                <>No NHL statistics recorded for {seasonType === 3 ? 'playoffs' : 'regular season'}.</>
               )}
             </div>
           </div>
-
         </div>
       </div>
+      {playerContent.items && playerContent.items.length > 0 && playerContent.items[0].fields.biography && (
+        <details className="mb-5 p-5 border border-t-0" id="biography">
+          <summary className="text-2xl font-bold my-1 cursor-pointer">
+            <FontAwesomeIcon icon={faNewspaper} fixedWidth /> Player Bio
+          </summary>
+          <hr className="my-5" />
+          {playerContent.items.map((item) => {
+            return (<ContentCustomEntity key={item._entityId} part={item} />);
+          })}
+        </details>
+      )}
 
-      <div className="my-3 flex justify-center gap-5 items-center">
+      <div className="my-5 flex justify-center gap-5 items-center">
         <div className="text-xs font-bold">
-          <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
+          <FontAwesomeIcon icon={faUser} fixedWidth className="mr-1" />
           <Link href={`https://www.nhl.com/player/${player.playerId}`} className="underline">NHL.com Player Profile</Link>
-        </div>
-        <div className="text-xs">
-          <button className={`font-bold p-1 border rounded-l ${seasonType === 2 ? headerColorClass : ''}`} style={seasonType === 2 ? headerStyle : null} onClick={() => setSeasonType(2)}>Regular Season</button>
-          <button className={`font-bold p-1 border rounded-r ${seasonType === 3 ? headerColorClass : ''}`} style={seasonType === 3 ? headerStyle : null} onClick={() => setSeasonType(3)}>Playoffs</button>
         </div>
       </div>
 
       {playerNews.items?.length > 0 && (
-        <div className="">
+        <div className="my-5">
           <h1 className="text-3xl font-bold mb-4">Latest News</h1>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
             {playerNews.items.map((item) => (
               <div key={item._entityId} className="col-span-4 md:col-span-1">
-                <StoryCard item={item} small />
+                <StoryCard item={item} size="" />
               </div>
             ))}
           </div>
@@ -421,9 +433,13 @@ export default function PlayerPage() {
       
       {seasonTotals && (
         <div id="seasonTotals">
-
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between">
             <div className="text-3xl font-bold my-3">{seasonType === 2 ? 'Season Totals' : 'Playoff Totals'}</div>
+            <div className="text-sm">
+              <button className={`p-2 border rounded-l ${seasonType === 2 ? headerColorClass : ''}`} style={seasonType === 2 ? headerStyle : null} onClick={() => setSeasonType(2)}>Regular Season</button>
+              <button className={`p-2 border rounded-r ${seasonType === 3 ? headerColorClass : ''}`} style={seasonType === 3 ? headerStyle : null} onClick={() => setSeasonType(3)}>Playoffs</button>
+            </div>
+            
             {nhlStats.length > 0 && otherLeagueStats.length > 0 && (
               <LeagueToggle handleChangeLeagues={handleChangeLeagues} activeLeague={activeLeague} />
             )}
@@ -441,7 +457,7 @@ export default function PlayerPage() {
           )}
         </div>
       )}
-
+      
       {awards && (
         <div className="my-5">
           <div className="text-3xl font-bold my-3">Awards</div>

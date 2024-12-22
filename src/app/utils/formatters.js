@@ -1,4 +1,3 @@
-import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -16,9 +15,9 @@ export const formatSeriesStatus = (game, rightRail) => {
   const isTied = homeTeamWins === awayTeamWins;
 
   if (isTied) {
-    if (homeTeamWins === 0) {return <></>;}
+    if (homeTeamWins === 0) {return '';}
     
-    return <>Series tied.</>;
+    return 'Series tied.';
   }
 
   const leadingTeam = homeTeamWins > awayTeamWins ? game.homeTeam : game.awayTeam;
@@ -27,9 +26,7 @@ export const formatSeriesStatus = (game, rightRail) => {
   
   const status = neededToWin === leadingWins ? 'wins' : 'leads';
   
-  return (
-    <>{leadingTeam.placeName.default} {status} {leadingWins}-{trailingWins}</>
-  );
+  return `${leadingTeam.placeName.default} ${status} ${leadingWins}-${trailingWins}`;
 };
 
 export const formatBroadcasts = (broadcasts) => {

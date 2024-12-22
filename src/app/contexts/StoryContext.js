@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { PropTypes } from 'prop-types';
-import { formatHeadTitle } from '../utils/formatters';
+import { formatHeadTitle, formatLocalizedDate } from '../utils/formatters';
 
 const StoryContext = createContext();
 
@@ -40,7 +40,7 @@ export const StoryProvider = ({ storyId, children }) => {
         setGameData({ game });
 
         // Set page title
-        formatHeadTitle(`${story.headline || story.title}`);
+        formatHeadTitle(`${formatLocalizedDate(story.contentDate)}: ${story.headline || story.title}`);
       } catch (error) {
         setPageError({ message: 'Failed to load story. Please try again later.', error });
         console.error('Error fetching story data:', error);

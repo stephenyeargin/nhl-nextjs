@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPlayCircle} from '@fortawesome/free-solid-svg-icons';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import { GAME_EVENTS, MISS_TYPES, PENALTY_DESCRIPTIONS, PENALTY_TYPES, ZONE_DESCRIPTIONS } from '@/app/utils/constants';
+import { GAME_EVENTS, MISS_TYPES, NHL_BRIGHTCOVE_ACCOUNT, PENALTY_DESCRIPTIONS, PENALTY_TYPES, ZONE_DESCRIPTIONS } from '@/app/utils/constants';
 import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
 import PeriodSelector from '@/app/components/PeriodSelector';
 import Image from 'next/image';
@@ -17,6 +17,7 @@ import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import { notFound, useParams } from 'next/navigation';
 import { formatPeriodLabel } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
+import FloatingVideoPlayer from '@/app/components/FloatingVideoPlayer';
 
 const PlayByPlay = () => {
   const { gameData } = useGameContext();
@@ -29,6 +30,9 @@ const PlayByPlay = () => {
   const [gameState, setGameState] = useState(null);
   const [activePeriod, setActivePeriod] = useState(null);
   const [eventFilter, setEventFilter] = useState(null);
+  const [videoPlayerLabel, setVideoPlayerLabel] = useState(null);
+  const [videoPlayerUrl, setVideoPlayerUrl] = useState(null);
+  const [isVideoPlayerVisible, setVideoPlayerVisible] = useState(false);
 
   // Use `useEffect` to run once on initial render and set up polling
   useEffect(() => {
@@ -61,6 +65,18 @@ const PlayByPlay = () => {
       return () => clearInterval(intervalId);
     }
   }, [ id, gameState, activePeriod ]);
+
+  // Hide the video player if escape key pressed
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setVideoPlayerVisible(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // If no boxscore available, redirect back up
   if (!gameData || !playByPlay) {
@@ -257,11 +273,19 @@ const PlayByPlay = () => {
             )}
             
           </div>
-          {play.details?.highlightClipSharingUrl && (
+          {play.details?.highlightClip && (
             <div className="text-center text-white">
-              <Link href={play.details?.highlightClipSharingUrl} rel="noopener noreferrer">
+              <button
+                onClick={() => {
+                  const player = lookupPlayerData(e.scoringPlayerId);
+
+                  setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${play.details.highlightClip}`);
+                  setVideoPlayerLabel(`${eventTeamData.abbreviation} | ${play.timeInPeriod} ${formatPeriodLabel(play.periodDescriptor)} | ${player.firstName.default} ${player.lastName.default}`);
+                  setVideoPlayerVisible(true);
+                }}
+              >
                 <FontAwesomeIcon icon={faPlayCircle} size="2x" className="align-middle mx-auto" />
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -330,6 +354,12 @@ const PlayByPlay = () => {
         </div>
       );
     }
+  };
+
+  const handleVideoPlayerClose = () => {
+    setVideoPlayerVisible(false);
+    setVideoPlayerLabel(null);
+    setVideoPlayerUrl(null);
   };
 
   const handleFilterChange = (e) => {
@@ -420,6 +450,7 @@ const PlayByPlay = () => {
           </tbody>
         </table>
       </div>
+      <FloatingVideoPlayer isVisible={isVideoPlayerVisible} url={videoPlayerUrl} label={videoPlayerLabel} onClose={handleVideoPlayerClose} />
     </div>
   );
 };

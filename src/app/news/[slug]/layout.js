@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHockeyPuck, faNewspaper } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { StoryProvider } from '@/app/contexts/StoryContext';
 import StorySidebar from '@/app/components/StorySidebar';
 import { useParams } from 'next/navigation';
@@ -18,9 +18,9 @@ const NewsLayout = ({ children }) => {
       <Suspense fallback={<GameBodySkeleton />}>
         <div className="container mx-auto">
           <div className="my-5 text-xs text-center">
-            <Link href="/" className="underline font-bold"><FontAwesomeIcon icon={faNewspaper} fixedWidth className="mr-1" />Back to News</Link>
+            <Link href="/" className="underline font-bold"><FontAwesomeIcon icon={faHome} fixedWidth className="mr-1" />Back to News</Link>
             {' '}|{' '}
-            <Link href={`https://nhl.com/news/${storyId}`} className="underline font-bold"><FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />NHL.com Story</Link>
+            <Link href={`https://nhl.com/news/${storyId}`} className="underline font-bold"><FontAwesomeIcon icon={faNewspaper} fixedWidth className="mr-1" />NHL.com Story</Link>
           </div>
 
           <hr />
