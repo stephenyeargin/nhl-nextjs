@@ -96,7 +96,7 @@ export default function PlayerPage() {
     const formattedRound = formatOrdinalNumber(draftDetails?.round);
     const formattedPickInRound = formatOrdinalNumber(draftDetails?.pickInRound);
     const formattedOverallPick = formatOrdinalNumber(draftDetails?.overallPick);
-    draft = `${draftDetails.year}, ${draftDetails.teamAbbrev} (${formattedOverallPick} overall), ${formattedRound} round, ${formattedPickInRound} pick`;
+    draft = <>{draftDetails.year}, {draftDetails.teamAbbrev} ({formattedOverallPick} overall), {formattedRound} round, {formattedPickInRound} pick</>;
   }
 
   const statHeaders = [

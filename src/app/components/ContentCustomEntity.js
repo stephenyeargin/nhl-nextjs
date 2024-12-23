@@ -47,7 +47,7 @@ const ContentCustomEntity = ({ part }) => {
       <div key={_entityId} className="my-5">
         <div className="grid grid-cols-1 lg:grid-cols-4 items-center border">
           <div className={`col-span-4 lg:col-span-2 ${/image right/.test(contextualFields?.layout) ? 'order-1' : 'order-0'}`}>
-            <Link href={fields.url.url} target={fields.url.openInNewTab ? '_blank' : '_self'}>
+            <Link href={fields.url?.url || '#'} target={fields.url?.openInNewTab ? '_blank' : '_self'}>
               <Image
                 src={thumbnail.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png')}
                 alt={thumbnail.title}
@@ -62,9 +62,9 @@ const ContentCustomEntity = ({ part }) => {
           </div>
           <div className="col-span-4 lg:col-span-2 p-10 text-center bg-slate-200 dark:bg-slate-800 flex h-full flex-col justify-center">
             <h3 className="text-2xl font-semibold">
-              <Link href={fields.url.url} target={fields.url.openInNewTab ? '_blank' : '_self'}>{fields.headline}</Link>
+              <Link href={fields.url?.url || '#'} target={fields.url?.openInNewTab ? '_blank' : '_self'}>{fields.headline}</Link>
             </h3>
-            <p className="text-sm my-2">{fields.description}</p>
+            <div className="text-sm my-2" dangerouslySetInnerHTML={{__html: formatMarkdownContent(fields.description)}} />
             <div className="flex justify-center gap-4">
               {fields.callToAction1Link?.url && (
                 <Link

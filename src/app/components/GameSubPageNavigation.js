@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHockeyPuck, faList, faRadio, faTable, faTelevision } from '@fortawesome/free-solid-svg-icons';
+import { faHockeyPuck, faList, faRadio, faTable, faTelevision, faVideo } from '@fortawesome/free-solid-svg-icons';
 import { usePathname } from 'next/navigation';
 import { formatBroadcasts } from '../utils/formatters';
 import FloatingAudioPlayer from './FloatingAudioPlayer';
@@ -67,6 +67,15 @@ const GameSubPageNavigation = () => {
           >
             <FontAwesomeIcon icon={faList} fixedWidth className="mr-1" />
             Play-by-Play
+          </Link>
+        )}
+        {!['FUT', 'PRE'].includes(game.gameState) && (
+          <Link
+            href={`/game/${id}/videos`}
+            className={`text-sm p-3 ${activeRoute === `/game/${id}/videos` ? activeClasses : ''}`}
+          >
+            <FontAwesomeIcon icon={faVideo} fixedWidth className="mr-1" />
+            Highlights
           </Link>
         )}
       </div>
