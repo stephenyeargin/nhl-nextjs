@@ -25,7 +25,7 @@ const VideoItemPage = () => {
       setVideos(videoItems.items);
     };
     fetchVideos();
-  }, [slug]);
+  }, []);
   
   if (!video) {
     return <NewsPageSkeleton />;
