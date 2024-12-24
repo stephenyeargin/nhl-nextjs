@@ -61,8 +61,8 @@ const GameSidebar = () => {
   const { homeTeam, awayTeam, game, rightRail, story } = gameData;
   const { gameVideo } = rightRail;
 
-  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev) || {};
-  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev) || {};
+  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev, true) || {};
+  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev, false) || {};
 
   // Update logo map
   const logos = {};
@@ -329,7 +329,7 @@ const GameSidebar = () => {
         </div>
       )}
 
-      {rightRail.seasonSeries && (
+      {rightRail.seasonSeries && rightRail.seasonSeries.length > 0 && (
         <div className="mb-5">
           <div className="p-2 text-2xl font-bold text-center">
             {game.gameType === 3 ? 'Playoff Series' : 'Season Series'}

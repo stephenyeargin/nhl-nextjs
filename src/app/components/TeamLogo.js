@@ -27,11 +27,11 @@ const TeamLogo = ({ src, alt, className, team, colorMode, style }) => {
   let updatedSrc = src ? src : 'https://assets.nhle.com/logos/nhl/svg/NHL_light.svg';
   let teamData = {};
   if (!src && team) {
-    teamData = getTeamDataByAbbreviation(team);
+    teamData = getTeamDataByAbbreviation(team, true);
     if (teamData.teamId) {
       updatedSrc = `https://assets.nhle.com/logos/nhl/svg/${team}_light.svg`;
     } else {
-      teamData = getTeamDataByCommonName(team);
+      teamData = getTeamDataByCommonName(team, true);
       if (teamData.teamId) {
         updatedSrc = `https://assets.nhle.com/logos/nhl/svg/${teamData.abbreviation}_light.svg`;
       }

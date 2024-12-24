@@ -288,28 +288,38 @@ const teamData = [
   }
 ];
 
-const defaultTeam = {
-  'name': 'NHL',
-  'hashtag': 'NHL',
-  'abbreviation': 'NHL',
-  'teamColor': '#010101',
-  'teamId': 0,
+const defaultTeam = (isHome) => {
+  let teamColor = '#3A5DAE';
+  let secondaryTeamColor = '#FFB81C';
+  if (!isHome) {
+    teamColor = '#FFB81C';
+    secondaryTeamColor = '#3A5DAE';
+  }
+
+  return {
+    name: 'NHL',
+    hashtag: 'NHL',
+    abbreviation: 'NHL',
+    teamColor,
+    secondaryTeamColor,
+    teamId: 0,
+  };
 };
 
-export const getTeamDataByAbbreviation = (abbreviation) => {
+export const getTeamDataByAbbreviation = (abbreviation, isHome) => {
   const team = teamData.find((t) => t.abbreviation === abbreviation);
 
-  return team ? team : defaultTeam;
+  return team ? team : defaultTeam(isHome);
 };
 
-export const getTeamDataByCommonName = (name) => {
+export const getTeamDataByCommonName = (name, isHome) => {
   const team = teamData.find((t) => t.name === name);
 
-  return team ? team : defaultTeam;
+  return team ? team : defaultTeam(isHome);
 };
 
-export const getTeamDataBySlug = (slug) => {
+export const getTeamDataBySlug = (slug, isHome) => {
   const team = teamData.find((t) => t.name.toLowerCase().replace(' ', '-') === slug);
 
-  return team ? team : defaultTeam;
+  return team ? team : defaultTeam(isHome);
 };

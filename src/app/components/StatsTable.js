@@ -16,7 +16,7 @@ const StatsTable = ({ stats, team }) => {
   // Add team color if given
   let headerStyle = {};
   if (team) {
-    const { teamColor } = getTeamDataByAbbreviation(team);
+    const { teamColor } = getTeamDataByAbbreviation(team, true);
     headerStyle = { backgroundColor: teamColor, color: formatTextColorByBackgroundColor(teamColor) };
   }
 

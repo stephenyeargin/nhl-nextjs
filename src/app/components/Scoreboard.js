@@ -4,12 +4,12 @@ import TeamLogo from './TeamLogo';
 import { formatPeriodLabel } from '../utils/formatters';
 
 const Scoreboard = ({ game, linescore }) => {
-  const totalPeriods = game.periodDescriptor?.number < 3 ? 3 : game.periodDescriptor?.number;
+  const totalPeriods = game.periodDescriptor?.number < game.regPeriods ? game.regPeriods : game.periodDescriptor?.number;
 
   // Helper function to determine if a period is an overtime period with no scores
   const isEmptyOvertime = (period) => {
     return (
-      period.periodDescriptor.number > 3 && // Check if it's overtime
+      period.periodDescriptor.number > game.regPeriods && // Check if it's overtime
       period.away === 0 && period.home === 0 // Both teams did not score
     );
   };

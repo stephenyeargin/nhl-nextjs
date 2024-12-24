@@ -147,7 +147,7 @@ export default function PlayerPage() {
   };
 
   // Current team if present
-  const team = getTeamDataByAbbreviation(player.currentTeamAbbrev);
+  const team = getTeamDataByAbbreviation(player.currentTeamAbbrev, true);
   let headerColorClass = 'bg-slate-200 dark:bg-slate-800';
   let headerStyle = {};
   if (team && team.teamColor) {

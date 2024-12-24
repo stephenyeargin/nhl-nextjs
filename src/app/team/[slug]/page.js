@@ -18,7 +18,7 @@ export const metadata = {
 
 export default async function SchedulePage({ params }) {
   const { slug } = await params;
-  let team = getTeamDataByAbbreviation(slug?.toUpperCase());
+  let team = getTeamDataByAbbreviation(slug?.toUpperCase(), true);
   if (!team || team.abbreviation === 'NHL') {
     team = getTeamDataBySlug(slug);
   }

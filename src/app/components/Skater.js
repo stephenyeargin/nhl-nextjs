@@ -8,7 +8,7 @@ import { getTeamDataByAbbreviation } from '../utils/teamData';
 
 export const Skater = ({ player, game, isHomeTeam, team }) => {
 
-  const { teamColor } = getTeamDataByAbbreviation(team);
+  const { teamColor } = getTeamDataByAbbreviation(team, true);
 
   // Add time remaining
   let time = '0:00';

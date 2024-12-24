@@ -22,8 +22,8 @@ const GamePreview = ({ game }) => {
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
 
-  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev) || {};
-  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev) || {};
+  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev, true) || {};
+  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev, false) || {};
 
   const handleStatTeamClick = (team) => {
     setActiveStatTeam(team);

@@ -7,7 +7,7 @@ import { getTeamDataByAbbreviation } from '../utils/teamData';
 const Headshot = ({ src, alt, className, size, playerId, team }) => {
   let style = { maxHeight: `${size}rem`, maxWidth: `${size}rem` };
   if (team) {
-    const { teamColor, secondaryTeamColor } = getTeamDataByAbbreviation(team);
+    const { teamColor, secondaryTeamColor } = getTeamDataByAbbreviation(team, true);
     style.backgroundColor = teamColor;
     style.backgroundImage = `linear-gradient(to bottom, ${teamColor}, #FFFFFF)`;
     style.border = `2px solid ${secondaryTeamColor}`;

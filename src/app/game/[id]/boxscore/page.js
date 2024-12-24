@@ -68,8 +68,8 @@ const BoxScore = () => {
   // Destructure data for rendering
   const { homeTeam, awayTeam, boxScore } = gameData;
 
-  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev) || {};
-  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev) || {};
+  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev, true) || {};
+  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev, false) || {};
 
   // Update logo map
   logos[homeTeam.abbrev] = homeTeam.logo;

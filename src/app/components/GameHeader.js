@@ -42,8 +42,8 @@ const GameHeader = () => {
   const { game } = gameData;
   const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
 
-  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev);
-  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev);
+  awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev, false);
+  homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev, true);
 
   let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';
   if (isSticky) {
@@ -103,136 +103,141 @@ const GameHeader = () => {
   };
   
   return (
-    <div className={gameHeaderClass} ref={stickyRef} style={gameHeaderStyle}>
-      <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
-        <div>
-          <TeamLogo
-            team={awayTeam.abbrev}
-            src={awayTeam.logo}
-            alt={awayTeam.commonName.default}
-            className="w-20 h-20 mx-auto"
-          />
-        </div>
-        <div>
-          <Link href={`/team/${awayTeam.abbrev}`}>
-            <div className="text-xl font-black block md:hidden">{awayTeam.abbrev}</div>
-            <div className="text-lg hidden md:block">
-              <div className="text-sm">{awayTeam.placeName.default}</div>
-              <div className="text-xl font-black">{awayTeam.commonName.default.replace(awayTeam.placeName.default, '')}</div>
-            </div>
-          </Link>
-          {gameState !== 'FUT' ? (
-            <div className="text-sm">SOG: {awayTeam.sog || 0}</div>
-          ) : (
-            <div className="text-sm">{awayTeam.record}</div>
-          )}
-        </div>
-      </div>
-      <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${awayTeam.score < homeTeam.score && ['FINAL', 'OFF'].includes(gameState) ? 'opacity-50' : ''}`}>
-        {situation?.awayTeam.situationDescriptions?.map((code) => (
-          <span key={code} className="mx-1 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
-        ))}
-        <span>{awayTeam.score}</span>
-        {teamHasRecentGoal(awayTeam.abbrev, game) && (
-          <Image src={SirenOnSVG} height="256" width="256" className="h-10 w-10 ml-2 animate-pulse" alt="Goal" />
-        )}
-      </div>
-      <div className="col-span-2 text-center content-middle">
-        <div className="text-xs my-1">{venue.default}, {venueLocation.default}</div>
-        {(gameState === 'LIVE' || gameState === 'CRIT') && (
-          <div className="my-3 flex flex-wrap justify-center">
-            <span className="font-md font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase text-nowrap">
-              {formatPeriodLabel(periodDescriptor)}
-              {clock.inIntermission ? ' INT' : ''}
-            </span>
-            <span className="font-bold text-xl">
-              <GameClock timeRemaining={clock.timeRemaining} running={clock?.inIntermission || clock?.running} />
-              {!clock.inIntermission && !clock.running && (<FontAwesomeIcon icon={faPauseCircle} className="ml-1" />)}
-            </span>
+    <>
+      {game.specialEvent && (
+        <div className="my-4 text-center font-bold text-gray-500">&#9734;&#9734;&#9734; {game.specialEvent.name.default} &#9734;&#9734;&#9734;</div>
+      )}
+      <div className={gameHeaderClass} ref={stickyRef} style={gameHeaderStyle}>
+        <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
+          <div>
+            <TeamLogo
+              team={awayTeam.abbrev}
+              src={awayTeam.logo}
+              alt={awayTeam.commonName.default}
+              className="w-20 h-20 mx-auto"
+            />
           </div>
-        )}
-        {(gameState === 'FINAL' || gameState === 'OFF') && (
-          <div className="text-center my-2 uppercase">
-            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black text-nowrap rounded">
-              Final
-              {periodDescriptor.periodType	!== 'REG' && `/${periodDescriptor.periodType}`}
-            </span>
-          </div>
-        )}
-        {['FUT', 'PRE'].includes(gameState) && (
-          <div className="my-1">
-            <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatLocalizedTime(startTimeUTC)}</span>
-          </div>
-        )}
-        {gameState === 'PRE' && (
-          <div className="my-1 text-nowrap">
-            <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase"><FontAwesomeIcon icon={faClock} fixedWidth /> Pregame</span>
-          </div>
-        )}
-        {gameScheduleState === 'CNCL' && (
-          <div className="my-1 text-nowrap">
-            <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
-          </div>
-        )}
-        {gameScheduleState === 'PPD' && (
-          <div className="my-1 text-nowrap">
-            <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
-          </div>
-        )}
-        {(situation && (situation.awayTeam.strength !== 5 || situation?.homeTeam.strength) !== 5) && (
-          <div className="my-2">
-            {situation?.timeRemaining && (
-              <div>
-                <span className="text-sm font-medium px-2 py-1 border text-slate-900 dark:text-slate-100 rounded">
-                  <GameClock timeRemaining={situation?.timeRemaining} running={clock?.running && !clock?.inIntermission} />
-                </span>
+          <div>
+            <Link href={`/team/${awayTeam.abbrev}`}>
+              <div className="text-xl font-black block md:hidden">{awayTeam.abbrev}</div>
+              <div className="text-lg hidden md:block">
+                <div className="text-sm">{awayTeam.placeName.default}</div>
+                <div className="text-xl font-black">{awayTeam.commonName.default.replace(awayTeam.placeName.default, '')}</div>
               </div>
+            </Link>
+            {gameState !== 'FUT' ? (
+              <div className="text-sm">SOG: {awayTeam.sog || 0}</div>
+            ) : (
+              <div className="text-sm">{awayTeam.record}</div>
             )}
-            <span className="text-sm md:text-sm font-bold px-2 py-1 text-red-900 rounded uppercase text-nowrap">
-              {situation?.awayTeam.strength}-on-{situation?.homeTeam.strength}
-            </span>
           </div>
-        )}
-        {!['LIVE', 'CRIT'].includes(gameState) && (
-          <div className="text-xs my-2">
-            <div>{formatLocalizedDate(startTimeUTC, 'MMMM D, YYYY')}</div>
-          </div>
-        )}
-      </div>
-      <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${awayTeam.score > homeTeam.score && ['FINAL', 'OFF'].includes(gameState) ? 'opacity-50' : ''}`}>
-        {teamHasRecentGoal(homeTeam.abbrev, game) && (
-          <Image src={SirenOnSVG} height="256" width="256" className="h-10 w-10 mr-2 animate-pulse" alt="Goal" />
-        )}
-        <span>{homeTeam.score}</span>
-        {situation?.homeTeam.situationDescriptions?.map((code) => (
-          <span key={code} className="mx-2 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
-        ))}
-      </div>
-      <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
-        <div className="text-right order-2 md:order-1">
-          <Link href={`/team/${homeTeam.abbrev}`}>
-            <div className="text-xl font-black block md:hidden">{homeTeam.abbrev}</div>
-            <div className="text-lg hidden md:block">
-              <div className="text-sm">{homeTeam.placeName.default}</div>
-              <div className="text-xl font-black">{homeTeam.commonName.default.replace(homeTeam.placeName.default, '')}</div>
-            </div>
-          </Link>
-          {gameState !== 'FUT' ? (
-            <div className="text-sm">SOG: {homeTeam.sog || 0}</div>
-          ) : (
-            <div className="text-sm">{homeTeam.record}</div>
+        </div>
+        <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${awayTeam.score < homeTeam.score && ['FINAL', 'OFF'].includes(gameState) ? 'opacity-50' : ''}`}>
+          {situation?.awayTeam.situationDescriptions?.map((code) => (
+            <span key={code} className="mx-1 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
+          ))}
+          <span>{awayTeam.score}</span>
+          {teamHasRecentGoal(awayTeam.abbrev, game) && (
+            <Image src={SirenOnSVG} height="256" width="256" className="h-10 w-10 ml-2 animate-pulse" alt="Goal" />
           )}
         </div>
-        <div className="text-right order-1 md:order-2">
-          <TeamLogo
-            team={homeTeam.abbrev}
-            src={homeTeam.logo}
-            alt={homeTeam.commonName.default}
-            className="w-20 h-20 mx-auto"
-          />
+        <div className="col-span-2 text-center content-middle">
+          <div className="text-xs my-1">{venue.default}, {venueLocation.default}</div>
+          {(gameState === 'LIVE' || gameState === 'CRIT') && (
+            <div className="my-3 flex flex-wrap justify-center">
+              <span className="font-md font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase text-nowrap">
+                {formatPeriodLabel(periodDescriptor)}
+                {clock.inIntermission ? ' INT' : ''}
+              </span>
+              <span className="font-bold text-xl">
+                <GameClock timeRemaining={clock.timeRemaining} running={clock?.inIntermission || clock?.running} />
+                {!clock.inIntermission && !clock.running && (<FontAwesomeIcon icon={faPauseCircle} className="ml-1" />)}
+              </span>
+            </div>
+          )}
+          {(gameState === 'FINAL' || gameState === 'OFF') && (
+            <div className="text-center my-2 uppercase">
+              <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black text-nowrap rounded">
+              Final
+                {periodDescriptor.periodType	!== 'REG' && `/${periodDescriptor.periodType}`}
+              </span>
+            </div>
+          )}
+          {['FUT', 'PRE'].includes(gameState) && (
+            <div className="my-1">
+              <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatLocalizedTime(startTimeUTC)}</span>
+            </div>
+          )}
+          {gameState === 'PRE' && (
+            <div className="my-1 text-nowrap">
+              <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase"><FontAwesomeIcon icon={faClock} fixedWidth /> Pregame</span>
+            </div>
+          )}
+          {gameScheduleState === 'CNCL' && (
+            <div className="my-1 text-nowrap">
+              <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+            </div>
+          )}
+          {gameScheduleState === 'PPD' && (
+            <div className="my-1 text-nowrap">
+              <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+            </div>
+          )}
+          {(situation && (situation.awayTeam.strength !== 5 || situation?.homeTeam.strength) !== 5) && (
+            <div className="my-2">
+              {situation?.timeRemaining && (
+                <div>
+                  <span className="text-sm font-medium px-2 py-1 border text-slate-900 dark:text-slate-100 rounded">
+                    <GameClock timeRemaining={situation?.timeRemaining} running={clock?.running && !clock?.inIntermission} />
+                  </span>
+                </div>
+              )}
+              <span className="text-sm md:text-sm font-bold px-2 py-1 text-red-900 rounded uppercase text-nowrap">
+                {situation?.awayTeam.strength}-on-{situation?.homeTeam.strength}
+              </span>
+            </div>
+          )}
+          {!['LIVE', 'CRIT'].includes(gameState) && (
+            <div className="text-xs my-2">
+              <div>{formatLocalizedDate(startTimeUTC, 'MMMM D, YYYY')}</div>
+            </div>
+          )}
+        </div>
+        <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${awayTeam.score > homeTeam.score && ['FINAL', 'OFF'].includes(gameState) ? 'opacity-50' : ''}`}>
+          {teamHasRecentGoal(homeTeam.abbrev, game) && (
+            <Image src={SirenOnSVG} height="256" width="256" className="h-10 w-10 mr-2 animate-pulse" alt="Goal" />
+          )}
+          <span>{homeTeam.score}</span>
+          {situation?.homeTeam.situationDescriptions?.map((code) => (
+            <span key={code} className="mx-2 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
+          ))}
+        </div>
+        <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
+          <div className="text-right order-2 md:order-1">
+            <Link href={`/team/${homeTeam.abbrev}`}>
+              <div className="text-xl font-black block md:hidden">{homeTeam.abbrev}</div>
+              <div className="text-lg hidden md:block">
+                <div className="text-sm">{homeTeam.placeName.default}</div>
+                <div className="text-xl font-black">{homeTeam.commonName.default.replace(homeTeam.placeName.default, '')}</div>
+              </div>
+            </Link>
+            {gameState !== 'FUT' ? (
+              <div className="text-sm">SOG: {homeTeam.sog || 0}</div>
+            ) : (
+              <div className="text-sm">{homeTeam.record}</div>
+            )}
+          </div>
+          <div className="text-right order-1 md:order-2">
+            <TeamLogo
+              team={homeTeam.abbrev}
+              src={homeTeam.logo}
+              alt={homeTeam.commonName.default}
+              className="w-20 h-20 mx-auto"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

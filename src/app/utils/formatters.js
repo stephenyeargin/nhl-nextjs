@@ -150,13 +150,13 @@ export const formatPeriodLabel = (periodData, long=false) => {
     return long ? `1${ordinalSuffix(number)} Period` : `1${ordinalSuffix(number)}`;
   case number === 2:
     return long ? `2${ordinalSuffix(number)} Period` : `2${ordinalSuffix(number)}`;
-  case number === 3:
+  case number === 3 && number <= periodData.maxRegulationPeriods:
     return long ? `3${ordinalSuffix(number)} Period` : `3${ordinalSuffix(number)}`;
   case number === 4 && !otPeriods:
     return long ? 'Overtime' : 'OT';
-  case number === 5 && periodType === 'SO':
+  case number > periodData.maxRegulationPeriods && periodType === 'SO':
     return long ? 'Shootout' : 'SO';
-  case number > 3 && periodType === 'OT':
+  case number > periodData.maxRegulationPeriods && periodType === 'OT':
     return long ? `${number - 3}${ordinalSuffix(number - 3)} Overtime` : `${number - 3}OT`;
   default:
     return '';

@@ -91,8 +91,8 @@ const PlayByPlay = () => {
   // Destructure data for rendering
   const { homeTeam, awayTeam, game } = gameData;
 
-  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev) || {};
-  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev) || {};
+  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev, true) || {};
+  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev, false) || {};
 
   // Update logo map
   logos[homeTeam.abbrev] = homeTeam.logo;
@@ -122,10 +122,10 @@ const PlayByPlay = () => {
 
   const lookupTeamDataByTeamId = (teamId) => {
     if (teamId === awayTeam.id) {
-      return getTeamDataByAbbreviation(awayTeam.abbrev);
+      return getTeamDataByAbbreviation(awayTeam.abbrev, false);
     }
     if (teamId === homeTeam.id) {
-      return getTeamDataByAbbreviation(homeTeam.abbrev);
+      return getTeamDataByAbbreviation(homeTeam.abbrev, true);
     }
 
     return {};
