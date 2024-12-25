@@ -439,7 +439,6 @@ export default function PlayerPage() {
               <button className={`p-2 border rounded-l ${seasonType === 2 ? headerColorClass : ''}`} style={seasonType === 2 ? headerStyle : null} onClick={() => setSeasonType(2)}>Regular Season</button>
               <button className={`p-2 border rounded-r ${seasonType === 3 ? headerColorClass : ''}`} style={seasonType === 3 ? headerStyle : null} onClick={() => setSeasonType(3)}>Playoffs</button>
             </div>
-            
             {nhlStats.length > 0 && otherLeagueStats.length > 0 && (
               <LeagueToggle handleChangeLeagues={handleChangeLeagues} activeLeague={activeLeague} />
             )}
@@ -454,6 +453,9 @@ export default function PlayerPage() {
             <div className={nhlStats.length === 0 || activeLeague === 'other' ? 'block' : 'hidden'}>
               {renderStatsTable({ stats: otherLeagueStats, showLeague: true })}
             </div>
+          )}
+          {nhlStats.length === 0 && otherLeagueStats.length ===0 && (
+            <div className="my-4 text-gray-500">No statistics available.</div>
           )}
         </div>
       )}

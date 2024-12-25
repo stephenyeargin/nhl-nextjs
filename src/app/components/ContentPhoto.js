@@ -29,20 +29,31 @@ const ContentPhoto = ({ part }) => {
   return (
     <div key={_entityId} className="my-5">
       <figure>
-        <Image
-          src={image.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')}
-          alt={fields.altText || 'Photo'}
-          className="w-full"
-          width={832}
-          height={468}
-          placeholder="blur"
-          blurDataURL={blurDataURL}
-        />
+        <div className="relative group"> {/* Add group for hover state */}
+          <Image
+            src={image.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')}
+            alt={fields.altText || 'Photo'}
+            title={fields.altText || 'Photo'}
+            className="w-full"
+            width={832}
+            height={468}
+            placeholder="blur"
+            blurDataURL={blurDataURL}
+          />
+          {fields.altText && (
+            <figcaption className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-xs p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              {fields.altText}
+            </figcaption>
+          )}
+        </div>
         {fields.credit && (
-          <figcaption className="text-xs text-gray-500 py-2">&copy; {fields.credit}</figcaption>
+          <figcaption className="text-xs text-gray-500 py-2 mt-2">
+        &copy; {fields.credit}
+          </figcaption>
         )}
       </figure>
     </div>
+
   );
 };
 
