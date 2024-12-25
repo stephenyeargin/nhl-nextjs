@@ -7,6 +7,7 @@ import utc from 'dayjs/plugin/utc';
 import { PropTypes } from 'prop-types';
 import GameTile from './GameTile';
 import TopBarScheduleSkeleton from './TopBarScheduleSkeleton';
+import { formatLocalizedDate } from '../utils/formatters';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -23,7 +24,7 @@ const sortGamesByState = (games) => {
 };
 
 const TopBarSchedule = ({ gameDate }) => {
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState(null);
   const [focusedDate, setFocusedDate] = useState(gameDate || null);
   const [dates, setDates] = useState([]);
 
@@ -78,7 +79,7 @@ const TopBarSchedule = ({ gameDate }) => {
     setFocusedDate(date);
   };
 
-  if (!games || games.length === 0) {
+  if (!games) {
     return (<TopBarScheduleSkeleton />);
   }
 
@@ -103,6 +104,11 @@ const TopBarSchedule = ({ gameDate }) => {
       </div>
       <div className="overflow-x-auto scrollbar-hidden my-3">
         <div className="flex flex-nowrap gap-4">
+          {games.length === 0 && (
+            <div className="flex items-center" style={{ minHeight: '9.25rem' }}>
+              <div className="p-4">No games scheduled for {formatLocalizedDate(focusedDate)}</div>
+            </div>
+          )}
           {games.map((game) => (<GameTile key={game.id} game={game} hideDate={true} style={{minWidth: '360px'}} /> ))}
         </div>
       </div>
