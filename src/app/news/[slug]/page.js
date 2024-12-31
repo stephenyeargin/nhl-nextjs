@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { useStoryContext } from '@/app/contexts/StoryContext';
@@ -13,16 +13,7 @@ import ContentByline from '@/app/components/ContentByline';
 import PageError from '@/app/components/PageError';
 
 const NewsArticle = () => {
-  const { storyData, pageError } = useStoryContext();
-  const { story } = storyData;
-  
-  const [isStoryLoaded, setIsStoryLoaded] = useState(false);
-
-  useEffect(() => {
-    if (story) {
-      setIsStoryLoaded(true);
-    }
-  }, [story]);
+  const { story, pageError } = useStoryContext();
 
   if (pageError) {
     return (
@@ -30,12 +21,12 @@ const NewsArticle = () => {
     );
   }
 
-  if (!isStoryLoaded) {
-    return <GameBodySkeleton />;
+  if (story && story.status === 404) {
+    return notFound();
   }
 
-  if (story.status === 404) {
-    return notFound();
+  if (story === undefined || !story._entityId) {
+    return <GameBodySkeleton />;
   }
 
   // Put the byline as the second element in the story parts array
@@ -89,7 +80,7 @@ const NewsArticle = () => {
           Tags:
         </span>
         {story.tags.filter((t) => !t.extraData?.hideOnSite).map((tag) => (
-          <Link href={`/news/tags/${tag.slug}`} key={tag._entityId} className="inline-block rounded p-1 border text-xs m-1">
+          <Link href={`/news/topic/${tag.slug}`} key={tag._entityId} className="inline-block rounded p-1 border text-xs m-1">
             {tag.title}
           </Link>
         ))}
