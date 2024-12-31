@@ -7,6 +7,7 @@ import utc from 'dayjs/plugin/utc';
 import { PropTypes } from 'prop-types';
 import GameTile from './GameTile';
 import TopBarScheduleSkeleton from './TopBarScheduleSkeleton';
+import { formatLocalizedDate } from '../utils/formatters';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -95,7 +96,7 @@ const TopBarSchedule = ({ gameDate }) => {
           }
               
           return (
-            <button key={date} className={dateClass} onClick={() => handleDateClick(date)}>
+            <button key={date} className={dateClass} onClick={() => handleDateClick(date)} title={formatLocalizedDate(date, 'dddd, MMMM D, YYYY')}>
               <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
             </button>
           );

@@ -5,7 +5,7 @@ import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
 import VideoCard from '../components/VideoCard';
 import { formatHeadTitle } from '../utils/formatters';
 
-const VideosPage = () => {
+const VideoPage = () => {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
@@ -35,4 +35,4 @@ const VideosPage = () => {
   );
 };
 
-export default VideosPage;
+export default VideoPage;

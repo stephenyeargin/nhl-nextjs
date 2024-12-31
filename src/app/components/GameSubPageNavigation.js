@@ -71,8 +71,8 @@ const GameSubPageNavigation = () => {
         )}
         {!['FUT', 'PRE'].includes(game.gameState) && (
           <Link
-            href={`/game/${id}/videos`}
-            className={`text-sm p-3 ${activeRoute === `/game/${id}/videos` ? activeClasses : ''}`}
+            href={`/game/${id}/highlights`}
+            className={`text-sm p-3 ${activeRoute === `/game/${id}/highlights` ? activeClasses : ''}`}
           >
             <FontAwesomeIcon icon={faVideo} fixedWidth className="mr-1" />
             Highlights

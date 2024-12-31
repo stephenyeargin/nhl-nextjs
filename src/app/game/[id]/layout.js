@@ -13,25 +13,27 @@ const GameLayout = ({ children }) => {
   const { id: gameId } = useParams();
   
   return (
-    <GameProvider gameId={gameId}>
-      <Suspense fallback={<GameSkeleton />}>
-        <div className="container mx-auto">
-          <GameHeader />
+    <div>
+      <GameProvider gameId={gameId}>
+        <Suspense fallback={<GameSkeleton />}>
+          <div className="container mx-auto">
+            <GameHeader />
 
-          <GameSubPageNavigation />
+            <GameSubPageNavigation />
           
-          <div className="grid grid-cols-4 gap-10">
-            <div className="col-span-4 md:col-span-3">
-              {children}
-            </div>
+            <div className="grid grid-cols-4 gap-10">
+              <div className="col-span-4 md:col-span-3">
+                {children}
+              </div>
 
-            <div className="col-span-4 md:col-span-1">
-              <GameSidebar />
+              <div className="col-span-4 md:col-span-1">
+                <GameSidebar />
+              </div>
             </div>
           </div>
-        </div>
-      </Suspense>
-    </GameProvider>
+        </Suspense>
+      </GameProvider>
+    </div>
   );
 };
 

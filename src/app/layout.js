@@ -2,11 +2,11 @@ import React from 'react';
 import localFont from 'next/font/local';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import MainNav from './components/MainNav';
-import './globals.css';
-import TopBarSchedule from './components/TopBarSchedule';
+import MainNav from '@/app/components/MainNav';
+import TopBarSchedule from '@/app/components/TopBarSchedule';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import './globals.css';
 
 config.autoAddCss = false;
 

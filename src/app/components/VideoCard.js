@@ -45,7 +45,7 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
   if (size === 'small') {
     return (
       <div className={className}>
-        <Link onClick={handleCardClick} href={`/videos/${item.slug}`} className="grid grid-cols-3 gap-4 items-center">
+        <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="grid grid-cols-3 gap-4 items-center">
           <div className="col-span-1">
             {item.thumbnail ? (               
               <Image
@@ -72,7 +72,7 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
     return(
       <div className={className}>
         <p className="hidden" suppressHydrationWarning>{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(item.contentDate)}</p>
-        <Link onClick={handleCardClick} href={`/videos/${item.slug}`} className="">
+        <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="">
           {item.thumbnail ? (               
             <Image
               src={item.thumbnail?.thumbnailUrl}
@@ -86,11 +86,11 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
             <MissingThumbnail size="medium" />
           )}
         </Link>
-        <Link onClick={handleCardClick} href={`/videos/${item.slug}`} className="">
+        <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="">
           <h2 className="text-xl font-bold">{item.headline || item.title}</h2>
         </Link>
         <div className="text-justify line-clamp-3 text-sm" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary) }} />
-        <Link onClick={handleCardClick} href={`/videos/${item.slug}`} className="block font-bold py-3 underline">Watch</Link>
+        <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="block font-bold py-3 underline">Watch</Link>
       </div>
     );
   }
@@ -98,7 +98,7 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
   if (size === 'large') {
     return (
       <div className={`md:relative ${className}`}>
-        <Link onClick={handleCardClick} href={`/videos/${item.slug}`} className="">
+        <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="">
           <Image
             src={item.thumbnail?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png')}
             width="832"
@@ -111,11 +111,11 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
           />
         </Link>
         <div className="md:absolute md:bottom-0 md:right-0 md:left-0 md:p-5 md:bg-black/70 md:text-white">
-          <Link onClick={handleCardClick} href={`/videos/${item.slug}`} className="">
+          <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="">
             <h2 className="text-2xl font-bold">{item.headline || item.title}</h2>
           </Link>
           <div className="text-justify line-clamp-3 text-sm" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary)}} />
-          <Link href={`/videos/${item.slug}`} className="block font-bold py-3 underline">Read Story</Link>
+          <Link href={`/video/${item.slug}`} className="block font-bold py-3 underline">Read Story</Link>
         </div>
       </div>
     );
@@ -124,7 +124,7 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
   return(
     <div className={className}>
       <p className="hidden" suppressHydrationWarning>{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(item.contentDate)}</p>
-      <Link onClick={handleCardClick} href={`/videos/${item.slug}`} className="">
+      <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="">
         {item.thumbnail ? (               
           <Image
             src={item.thumbnail?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size20/f_png')}

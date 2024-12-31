@@ -25,7 +25,7 @@ const VideoItemPage = () => {
       setVideos(videoItems.items);
     };
     fetchVideos();
-  }, []);
+  }, [slug]);
   
   if (!video) {
     return <NewsPageSkeleton />;
@@ -37,7 +37,7 @@ const VideoItemPage = () => {
   return (
     <div className="container mx-auto">
       <div className="my-5 text-xs text-center">
-        <Link href="/videos/" className="underline font-bold"><FontAwesomeIcon icon={faFilm} fixedWidth className="mr-1" />Back to Videos</Link>
+        <Link href="/video/" className="underline font-bold"><FontAwesomeIcon icon={faFilm} fixedWidth className="mr-1" />Back to Videos</Link>
         {' '}|{' '}
         <Link href={`https://nhl.com/video/${video.slug}`} className="underline font-bold"><FontAwesomeIcon icon={faVideoCamera} fixedWidth className="mr-1" />NHL.com Video</Link>
       </div>

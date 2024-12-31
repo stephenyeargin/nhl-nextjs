@@ -8,7 +8,7 @@ import VideoCard from '@/app/components/VideoCard';
 import { useGameContext } from '@/app/contexts/GameContext';
 import { formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters';
 
-const Videos = () => {
+const Highlights = () => {
   const { id } = useParams();
   const { gameState } = useGameContext();
   const videoPlayerRef = useRef(null);
@@ -116,10 +116,10 @@ const Videos = () => {
   );
 };
 
-Videos.propTypes = {
+Highlights.propTypes = {
   params: PropTypes.shape({
     id: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default Videos;
+export default Highlights;

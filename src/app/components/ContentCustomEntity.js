@@ -22,7 +22,7 @@ const ContentCustomEntity = ({ part }) => {
     fetchBlurDataURL();
   }, [part?.thumbnail]);
 
-  const { _entityId, fields, contextualFields, thumbnail, entityCode } = part;
+  const { _entityId, fields, contextualFields, thumbnail, entityCode, title } = part;
 
   if (entityCode === 'video') {
     return (
@@ -34,7 +34,7 @@ const ContentCustomEntity = ({ part }) => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             className="w-full aspect-video"
             loading="lazy"
-            title={fields.title}
+            title={title}
           />
           <figcaption className="my-3 text-xs text-gray-500">{fields.description || fields.longDescription}</figcaption>
         </figure>
@@ -47,7 +47,7 @@ const ContentCustomEntity = ({ part }) => {
       <div key={_entityId} className="my-5">
         <div className="grid grid-cols-1 lg:grid-cols-4 items-center border">
           <div className={`col-span-4 lg:col-span-2 ${/image right/.test(contextualFields?.layout) ? 'order-1' : 'order-0'}`}>
-            <Link href={fields.url?.url || '#'} target={fields.url?.openInNewTab ? '_blank' : '_self'}>
+            <Link href={fields.url?.url || fields.callToAction1Link.url} target={fields.url?.openInNewTab ? '_blank' : '_self'}>
               <Image
                 src={thumbnail.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png')}
                 alt={thumbnail.title}
@@ -62,7 +62,7 @@ const ContentCustomEntity = ({ part }) => {
           </div>
           <div className="col-span-4 lg:col-span-2 p-10 text-center bg-slate-200 dark:bg-slate-800 flex h-full flex-col justify-center">
             <h3 className="text-2xl font-semibold">
-              <Link href={fields.url?.url || '#'} target={fields.url?.openInNewTab ? '_blank' : '_self'}>{fields.headline}</Link>
+              <Link href={fields.url?.url || fields.callToAction1Link.url} target={fields.url?.openInNewTab ? '_blank' : '_self'}>{fields.headline || title}</Link>
             </h3>
             <div className="text-sm my-2" dangerouslySetInnerHTML={{__html: formatMarkdownContent(fields.description)}} />
             <div className="flex justify-center gap-4">
@@ -112,6 +112,7 @@ ContentCustomEntity.propTypes = {
     contextualFields: PropTypes.object,
     thumbnail: PropTypes.object.isRequired,
     entityCode: PropTypes.string.isRequired,
+    title: PropTypes.string,
   }).isRequired,
 };
 

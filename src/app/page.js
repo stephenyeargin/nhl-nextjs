@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import StoryCard from './components/StoryCard';
-import NewsPageSkeleton from './components/NewsPageSkeleton';
+import StoryCard from '@/app/components/StoryCard';
+import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
 
 const NewsPage = () => {
   const [news, setNews] = useState([]);

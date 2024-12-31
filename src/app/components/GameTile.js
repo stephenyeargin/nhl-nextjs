@@ -41,7 +41,7 @@ const GameTile = ({game, hideDate, style}) => {
               className="hidden lg:block w-8 h-8 mr-3"
             />
             <div>
-              <span className="font-light">{game.awayTeam.placeNameWithPreposition?.default}</span>{' '}
+              <span className="font-light">{game.awayTeam.placeNameWithPreposition?.default || game.awayTeam.name.default}</span>{' '}
               <span className="font-bold">{game.awayTeam.commonName?.default.replace(game.awayTeam.placeNameWithPreposition?.default, '')}</span>
             </div>
           </div>
@@ -61,7 +61,7 @@ const GameTile = ({game, hideDate, style}) => {
               className="hidden lg:block w-8 h-8 mr-3"
             />
             <div>
-              <span className="font-light">{game.homeTeam.placeNameWithPreposition?.default}</span>{' '}
+              <span className="font-light">{game.homeTeam.placeNameWithPreposition?.default || game.homeTeam.name.default}</span>{' '}
               <span className="font-bold">{game.homeTeam.commonName?.default.replace(game.homeTeam.placeNameWithPreposition?.default, '')}</span>
             </div>
           </div>

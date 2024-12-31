@@ -98,7 +98,7 @@ const BoxScore = () => {
               alt={awayTeam.abbrev}
               className="mr-2 h-8 w-8"
             />
-            <div className="font-bold my-1">Forwards</div>
+            <div className="font-bold my-1">Forwards ({boxScore.playerByGameStats?.awayTeam.forwards.length})</div>
           </div>
         </div>
         <StatsTable stats={boxScore.playerByGameStats?.awayTeam.forwards} team={awayTeam.data.abbreviation} />
@@ -109,7 +109,7 @@ const BoxScore = () => {
               alt={awayTeam.abbrev}
               className="mr-2 h-8 w-8"
             />
-            <div className="font-bold my-1">Defensemen</div>
+            <div className="font-bold my-1">Defensemen ({boxScore.playerByGameStats?.awayTeam.defense.length})</div>
           </div>
         </div>
         <StatsTable stats={boxScore.playerByGameStats?.awayTeam.defense} team={awayTeam.data.abbreviation} />
@@ -120,7 +120,7 @@ const BoxScore = () => {
               alt={awayTeam.abbrev}
               className="mr-2 h-8 w-8"
             />
-            <div className="font-bold my-1">Goalies</div>
+            <div className="font-bold my-1">Goalies ({boxScore.playerByGameStats?.awayTeam.goalies.length})</div>
           </div>
         </div>
         <StatsTable stats={boxScore.playerByGameStats?.awayTeam.goalies} team={awayTeam.data.abbreviation} />
@@ -134,7 +134,7 @@ const BoxScore = () => {
               alt={homeTeam.abbrev}
               className="mr-2 h-8 w-8"
             />
-            <div className="font-bold my-1">Forwards</div>
+            <div className="font-bold my-1">Forwards ({boxScore.playerByGameStats?.homeTeam.forwards.length})</div>
           </div>
         </div>
         <StatsTable stats={boxScore.playerByGameStats?.homeTeam.forwards} team={homeTeam.data.abbreviation} />
@@ -145,7 +145,7 @@ const BoxScore = () => {
               alt={homeTeam.abbrev}
               className="mr-2 h-8 w-8"
             />
-            <div className="font-bold my-1">Defensemen</div>
+            <div className="font-bold my-1">Defensemen ({boxScore.playerByGameStats?.homeTeam.defense.length})</div>
           </div>
         </div>
         <StatsTable stats={boxScore.playerByGameStats?.homeTeam.defense} team={homeTeam.data.abbreviation} />
@@ -156,7 +156,7 @@ const BoxScore = () => {
               alt={homeTeam.abbrev}
               className="mr-2 h-8 w-8"
             />
-            <div className="font-bold my-1">Goalies</div>
+            <div className="font-bold my-1">Goalies ({boxScore.playerByGameStats?.homeTeam.goalies.length})</div>
           </div>
         </div>
         <StatsTable stats={boxScore.playerByGameStats?.homeTeam.goalies} team={homeTeam.data.abbreviation} />
