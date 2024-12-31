@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import StoryCard from '@/app/components/StoryCard';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
 
 const NewsTagPage = () => {
@@ -24,8 +24,12 @@ const NewsTagPage = () => {
     }
   }, [tag]);
 
-  if (!newsData || newsData.items?.length === 0) {
+  if (!newsData || !newsData.items) {
     return <NewsPageSkeleton />;
+  }
+
+  if (newsData.items.length === 0) {
+    return notFound();
   }
 
   return (

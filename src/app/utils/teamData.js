@@ -282,8 +282,8 @@ const teamData = [
     slug: 'jets',
     hashtag: 'GoJetsGo',
     abbreviation: 'WPG',
-    teamColor: '#041E42',
-    secondaryTeamColor: '#004C97',
+    teamColor: '#041e42',
+    secondaryTeamColor: '#296ec8',
     teamId: 52,
   }
 ];

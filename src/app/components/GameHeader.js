@@ -105,7 +105,22 @@ const GameHeader = () => {
   return (
     <>
       {game.specialEvent && (
-        <div className="my-4 text-center font-bold text-gray-500">&#9734;&#9734;&#9734; {game.specialEvent.name.default} &#9734;&#9734;&#9734;</div>
+        <>
+          {game.specialEvent.lightLogoUrl?.default ? (
+            <div className="flex justify-center py-5">
+              <Image
+                src={game.specialEvent.lightLogoUrl.default}
+                width={300}
+                height={100}
+                alt="Event Logo"
+                title={game.specialEvent.name.default}
+                className="w-full md:w-1/3"
+              />
+            </div>
+          ) : (
+            <div className="my-4 text-center font-bold text-gray-500">&#9734;&#9734;&#9734; {game.specialEvent.name.default} &#9734;&#9734;&#9734;</div>
+          )}
+        </>
       )}
       <div className={gameHeaderClass} ref={stickyRef} style={gameHeaderStyle}>
         <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">

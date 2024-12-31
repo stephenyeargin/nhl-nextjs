@@ -43,6 +43,11 @@ const GameTile = ({game, hideDate, style}) => {
             <div>
               <span className="font-light">{game.awayTeam.placeNameWithPreposition?.default || game.awayTeam.name.default}</span>{' '}
               <span className="font-bold">{game.awayTeam.commonName?.default.replace(game.awayTeam.placeNameWithPreposition?.default, '')}</span>
+              {game.situation?.awayTeam.situationDescriptions?.map((situation, i) => (
+                <span key={i} className="text-xs font-bold bg-red-900 text-white p-1 rounded ms-1">
+                  {situation}
+                </span>
+              ))}
             </div>
           </div>
           {game.gameState !== 'FUT' ? (
@@ -63,6 +68,11 @@ const GameTile = ({game, hideDate, style}) => {
             <div>
               <span className="font-light">{game.homeTeam.placeNameWithPreposition?.default || game.homeTeam.name.default}</span>{' '}
               <span className="font-bold">{game.homeTeam.commonName?.default.replace(game.homeTeam.placeNameWithPreposition?.default, '')}</span>
+              {game.situation?.homeTeam.situationDescriptions?.map((situation, i) => (
+                <span key={i} className="text-xs font-bold bg-red-900 text-white p-1 rounded mx-1">
+                  {situation}
+                </span>
+              ))}
             </div>
           </div>
           {game.gameState !== 'FUT' ? (

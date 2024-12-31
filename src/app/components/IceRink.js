@@ -150,7 +150,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
                 <>
                   <circle cx="5" cy="5" r="4" strokeWidth="2" stroke={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data.secondaryTeamColor : awayTeam.data.secondaryTeamColor} />
                   <circle cx="5" cy="5" r="4" strokeWidth="1" stroke={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data.teamColor : awayTeam.data.teamColor} />
-                  <text x={5} y={7} fontFamily="Arial" fontWeight="bold" fontSize="4pt" textAnchor="middle" alignmentBaseline="middle" className="font-bold uppercase fill-white">{play.typeDescKey.substr(0,1)}</text>
+                  <text x={5} y={6.5} fontFamily="Arial" fontWeight="bold" fontSize="4pt" textAnchor="middle" alignmentBaseline="middle" className="font-bold uppercase fill-white">{play.typeDescKey.substr(0,1)}</text>
                 </>
               )}
             </svg>
