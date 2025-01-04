@@ -445,7 +445,7 @@ const GameSidebar = () => {
           <ul className="text-xs flex flex-wrap mt-2">
             {Object.keys(rightRail.gameReports).map((reportKey) => (
               <li key={reportKey} className="p-1 w-1/2 text-center">
-                <Link href={rightRail.gameReports[reportKey]} className="font-bold underline">{GAME_REPORT_NAMES[reportKey]}</Link>
+                <Link href={rightRail.gameReports[reportKey]} className="font-bold underline">{GAME_REPORT_NAMES[reportKey] || reportKey}</Link>
               </li>
             ))}
           </ul>

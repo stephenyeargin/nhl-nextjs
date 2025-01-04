@@ -356,6 +356,7 @@ export const MISS_TYPES = {
 export const GAME_REPORT_NAMES = {
   gameSummary: 'Game Summary',
   eventSummary: 'Event Summary',
+  shootoutSummary: 'Shootout Summary',
   playByPlay: 'Full Play-By-Play',
   faceoffSummary: 'Face-off Summary',
   faceoffComparison: 'Face-off Comparison',
