@@ -57,15 +57,12 @@ export const StoryProvider = ({ storyId, children }) => {
         // Step 1: Fetch story
         const storyResponse = await fetchStory(storyId);
 
-        // Step 2: Handle redirect for legacy story if needed
         if (typeof storyResponse === 'string') {
           return window.location.replace(`/news/${storyResponse}`);
         }
 
-        // Step 3: Fetch sidebar stories
         const topStories = await fetchSidebarStories();
 
-        // Step 4: Fetch game data if story has a game tag
         const gameTag = storyResponse.tags.find((t) => t.externalSourceName === 'game');
         if (gameTag) {
           const gameId = gameTag.extraData.gameId;
@@ -73,12 +70,10 @@ export const StoryProvider = ({ storyId, children }) => {
           setGame(gameResponse);
         }
 
-        // Step 5: Update state with fetched data
         setSidebarStories(topStories);
         setStory(storyResponse);
 
-        // Step 6: Set the page title
-        formatHeadTitle(`${formatLocalizedDate(story.contentDate)}: ${story.headline || story.title}`);
+        formatHeadTitle(`${formatLocalizedDate(storyResponse.contentDate)}: ${storyResponse.headline || storyResponse.title}`);
 
       } catch (error) {
         setPageError({ message: 'Failed to load story. Please try again later.', error });
@@ -87,7 +82,7 @@ export const StoryProvider = ({ storyId, children }) => {
     };
 
     loadData();
-  }, [storyId, story]); // only re-run if story/storyId changes
+  }, [storyId]); // only re-run if story/storyId changes
 
   return (
     <StoryContext.Provider value={{ story, game, sidebarStories, pageError }}>
