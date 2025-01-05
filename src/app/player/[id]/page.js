@@ -360,7 +360,10 @@ export default function PlayerPage() {
 
       {playerNews.items?.length > 0 && (
         <div className="my-5">
-          <h1 className="text-3xl font-bold mb-4">Latest News</h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold mb-4">Latest News</h1>
+            <Link className="block text-sm" href={`/news/topic/playerid-${player.playerId}`}><FontAwesomeIcon icon={faNewspaper} fixedWidth /> <span className="font-bold underline">Player News</span></Link>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
             {playerNews.items.map((item) => (
               <div key={item._entityId} className="col-span-4 md:col-span-1">
@@ -368,6 +371,7 @@ export default function PlayerPage() {
               </div>
             ))}
           </div>
+
         </div>
       )}
 

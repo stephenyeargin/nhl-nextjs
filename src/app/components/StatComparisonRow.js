@@ -22,11 +22,11 @@ const StatComparisonRow = ({ awayStat, awayStatRank, awayTeam, stat, homeStat, h
       <div className="relative my-1 bg-inherit h-3">
         <div
           className="absolute top-0 left-0 bg-black-500 h-3"
-          style={{ width: `${awayPercentage < 100 ? awayPercentage - 0.5 : 100}%`, backgroundColor: awayTeam.data.teamColor, borderBottom: `2px solid ${awayTeam.data.secondaryTeamColor}` }}
+          style={{ width: `${awayPercentage < 100 ? awayPercentage - 1 : 100}%`, backgroundColor: awayTeam.data.teamColor, borderBottom: `2px solid ${awayTeam.data.secondaryTeamColor}` }}
         />
         <div
           className="absolute top-0 right-0 bg-white-500 h-3"
-          style={{ width: `${homePercentage < 100 ? homePercentage - 0.5 : 100}%`, backgroundColor: homeTeam.data.teamColor, borderBottom: `2px solid ${homeTeam.data.secondaryTeamColor}` }}
+          style={{ width: `${homePercentage < 100 ? homePercentage - 1 : 100}%`, backgroundColor: homeTeam.data.teamColor, borderBottom: `2px solid ${homeTeam.data.secondaryTeamColor}` }}
         />
       </div>
       {/* Third Row: Ranks in the Center */}
