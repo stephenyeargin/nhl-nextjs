@@ -4,48 +4,63 @@ import React, { useState, useEffect, Suspense } from 'react';
 import StoryCard from '@/app/components/StoryCard';
 import { notFound, useParams } from 'next/navigation';
 import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
+import LoadMoreButton from '@/app/components/LoadMoreButton';
 
 const NewsTagPage = () => {
-  const [newsData, setNewsData] = useState({});
+  const [newsItems, setNewsItems] = useState([]);
+  const [tagData, setTagData] = useState(null);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const { tag } = useParams();
 
   useEffect(() => {
     const fetchNews = async () => {
       const tagResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/tags/${tag}`, { cache: 'no-store' });
       const tagData = await tagResponse.json();
+      setTagData(tagData);
 
-      const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${tag}&context.slug=nhl&$limit=24`, { cache: 'no-store' });
-      const newsItems = await newsResponse.json();
+      const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${tag}&context.slug=nhl&$skip=${offset}&$limit=24`, { cache: 'no-store' });
+      const news = await newsResponse.json();
+      setNewsItems((prevNewsItems) => [...prevNewsItems, ...news.items]);
 
-      setNewsData({ items: newsItems.items, tag: tagData });
+      if (!news.pagination.nextUrl) {
+        setHasMore(false);
+      }
     };
     if (tag) {
       fetchNews();
     }
-  }, [tag]);
+  }, [tag, offset]);
 
-  if (!newsData || !newsData.items) {
+  if (!newsItems) {
     return <NewsPageSkeleton />;
   }
 
-  if (newsData.items.length === 0) {
+  if (newsItems.length === 0 && hasMore === false) {
     return notFound();
   }
+
+  const handleLoadMoreButton = () => {
+    setOffset(offset + 24);
+  };
 
   return (
     <Suspense fallback={<NewsPageSkeleton />}>
       <div className="container mx-auto px-4 py-8">
-        {newsData.items?.length > 0 && (
+        {newsItems.length > 0 && (
           <div>
-            <h1 className="text-3xl font-bold mb-6">{newsData.tag.title}</h1>
+            <h1 className="text-3xl font-bold mb-6">{tagData.title}</h1>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
-              {newsData.items.map((item) => (
-                <div key={item._entityId} className="col-span-4 md:col-span-1">
-                  <StoryCard item={item} />
+              {newsItems.map((item, i) => (
+                <div key={i} className="col-span-4 md:col-span-1">
+                  <StoryCard item={item} showDate />
                 </div>
               ))}
             </div>
           </div>
+        )}
+        {hasMore && (
+          <LoadMoreButton handleClick={handleLoadMoreButton} />
         )}
       </div>
     </Suspense>

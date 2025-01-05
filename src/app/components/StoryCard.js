@@ -22,7 +22,7 @@ MissingThumbnail.propTypes = {
   size: PropTypes.string,
 };
 
-const StoryCard = ({ item, size, className }) => {
+const StoryCard = ({ item, size, showDate, className }) => {
   const [blurDataURL, setBlurDataURL] = useState('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
 
   useEffect(() => {
@@ -62,6 +62,9 @@ const StoryCard = ({ item, size, className }) => {
           </div>
           <div className="col-span-2">
             <h2 className="text-md font-bold">{item.headline || item.title}</h2>
+            {showDate && (
+              <div>{formatLocalizedDate(item.contentDate)}</div>
+            )}
           </div>
         </Link>
       </div>
@@ -89,6 +92,9 @@ const StoryCard = ({ item, size, className }) => {
         <Link href={`/news/${item.slug}`} className="">
           <h2 className="text-xl font-bold">{item.headline || item.title}</h2>
         </Link>
+        {showDate && (
+          <div>{formatLocalizedDate(item.contentDate)}</div>
+        )}
         <div className="text-justify line-clamp-3 text-sm" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary) }} />
         <Link href={`/news/${item.slug}`} className="block font-bold py-3 underline">Read Story</Link>
       </div>
@@ -143,6 +149,9 @@ const StoryCard = ({ item, size, className }) => {
       <Link href={`/news/${item.slug}`} className="">
         <h2 className="text-xl font-bold">{item.headline || item.title}</h2>
       </Link>
+      {showDate && (
+        <div className="text-xs text-gray-500 my-2">{formatLocalizedDate(item.contentDate, 'LL')}</div>
+      )}
       <div className="text-justify line-clamp-3 text-sm" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary) }} />
       <Link href={`/news/${item.slug}`} className="block font-bold py-3 underline">Read Story</Link>
     </div>
@@ -152,6 +161,7 @@ const StoryCard = ({ item, size, className }) => {
 StoryCard.propTypes = {
   item: PropTypes.object.isRequired,
   className: PropTypes.string,
+  showDate: PropTypes.bool,
   size: PropTypes.string,
 };
 

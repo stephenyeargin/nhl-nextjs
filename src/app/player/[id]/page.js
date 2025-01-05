@@ -367,7 +367,7 @@ export default function PlayerPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
             {playerNews.items.map((item) => (
               <div key={item._entityId} className="col-span-4 md:col-span-1">
-                <StoryCard item={item} size="" />
+                <StoryCard item={item} showDate />
               </div>
             ))}
           </div>

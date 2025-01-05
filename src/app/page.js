@@ -38,7 +38,7 @@ const NewsPage = () => {
               </div>
               {news.slice(2, news.length).map((item, i) => (
                 <div key={i} className="col-span-4 md:col-span-1">
-                  <StoryCard item={item} />
+                  <StoryCard item={item} showDate />
                 </div>
               ))}
             </div>
