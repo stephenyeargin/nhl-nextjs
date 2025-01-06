@@ -9,7 +9,7 @@ import StoryCard from '@/app/components/StoryCard';
 import TeamSchedule from '@/app/components/TeamSchedule';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 
 export const metadata = {
   title: 'Team Schedule & Stats',
@@ -149,15 +149,17 @@ export default async function SchedulePage({ params }) {
 
       {news.items?.length > 0 && (
         <>
-          <h1 className="text-3xl font-bold mb-6">Latest News</h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold mb-4">Latest News</h1>
+            <Link className="block text-sm" href={`/news/topic/teamid-${team.teamId}`}><FontAwesomeIcon icon={faNewspaper} fixedWidth /> <span className="font-bold underline">Team News</span></Link>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
             {news.items.map((item) => (
-              <StoryCard key={item._entityId} item={item} />
+              <StoryCard key={item._entityId} item={item} showDate />
             ))}
           </div>
         </>
       )}
-
 
       <h1 className="text-3xl font-bold mb-6">Team Stats</h1>
       <div className="mb-5">
