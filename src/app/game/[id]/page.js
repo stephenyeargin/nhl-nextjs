@@ -17,6 +17,7 @@ import { formatPeriodLabel, formatStat } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
 import GameStory from '@/app/components/GameStory';
 import FloatingVideoPlayer from '@/app/components/FloatingVideoPlayer';
+import ShootoutScoreboard from '@/app/components/ShootoutScoreboard';
 
 const GamePage = () => {
   const [videoPlayerLabel, setVideoPlayerLabel] = useState(null);
@@ -92,6 +93,7 @@ const GamePage = () => {
                 <h4 className="font-semibold">{formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number }, true)}</h4>
                 {period.periodDescriptor.periodType === 'SO' ? (
                   <>
+                    <ShootoutScoreboard shootout={game.summary?.shootout} awayTeam={awayTeam} homeTeam={homeTeam} />
                     {game.summary?.shootout.length === 0 && (
                       <p className="text-slate-500">No shots taken.</p>
                     )}
