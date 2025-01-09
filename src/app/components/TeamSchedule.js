@@ -5,6 +5,8 @@ import { PropTypes } from 'prop-types';
 import Link from 'next/link';
 import TeamLogo from '@/app/components/TeamLogo';
 import { formatLocalizedDate, formatLocalizedTime, formatBroadcasts } from '@/app/utils/formatters';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
 
 const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }) => {
   return (
@@ -56,9 +58,12 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }) => {
                     {game.awayTeam.abbrev} {game.awayTeam.score}-{game.homeTeam.score} {game.homeTeam.abbrev}
                   </Link>
                 )}
-                {game.gameScheduleState	 === 'CNCL' && (
-                  <span className="p-1 text-xs border rounded">Canceled</span>
+                {game.gameScheduleState === 'CNCL' && (
+                  <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
                 )}
+                {game.gameScheduleState === 'PPD' && (
+                  <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+                )} 
               </td>
               <td>
                 {formatBroadcasts(game.tvBroadcasts)}

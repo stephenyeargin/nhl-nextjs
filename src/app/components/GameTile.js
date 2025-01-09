@@ -19,18 +19,6 @@ const GameTile = ({game, hideDate, style}) => {
       className={`border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-900' : ''}`}
       style={style}
     >
-      <div className="text-lg">
-        {game.gameType === 1 && (
-          <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1 uppercase">Preseason</span>
-        )}
-        {game.gameScheduleState === 'CNCL' && (
-          <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
-        )}
-        {game.gameScheduleState === 'PPD' && (
-          <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
-        )} 
-      </div>
-
       <div className="space-y-2">
         {/* Away Team */}
         <div className={`flex items-center justify-between ${game.awayTeam.defeated ? 'opacity-50' : ''}`}>
@@ -85,7 +73,23 @@ const GameTile = ({game, hideDate, style}) => {
 
       <div className="mt-2 pt-3 border-t">
         <div className="flex flex-wrap justify-between items-center">
-          <span className="text-sm text-slate-600">{game.venue.default}</span>
+          {(['CNCL', 'PPD'].includes(game.gameScheduleState) || game.gameType === 1) ? (
+            <div className="text-sm">
+              {game.gameScheduleState === 'CNCL' && (
+                <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+              )}
+              {game.gameScheduleState === 'PPD' && (
+                <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+              )} 
+            </div>
+          ) : (
+            <>
+              <span className="text-sm text-slate-600">{game.venue.default}</span>
+              {game.gameType === 1 && (
+                <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1 uppercase">Preseason</span>
+              )}
+            </>
+          )}
           {(game.gameState === 'FINAL' || game.gameState === 'OFF') && (
             <div>
               <span className="text-sm mr-2" suppressHydrationWarning>{hideDate ? null : formatLocalizedDate(game.startTimeUTC)}</span>

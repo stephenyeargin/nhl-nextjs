@@ -190,7 +190,7 @@ const GameHeader = () => {
           )}
           {gameScheduleState === 'CNCL' && (
             <div className="my-1 text-nowrap">
-              <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+              <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
             </div>
           )}
           {gameScheduleState === 'PPD' && (
