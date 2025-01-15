@@ -306,6 +306,10 @@ const defaultTeam = (isHome) => {
   };
 };
 
+export const getTeamSlugs = () => {
+  return teamData.map((team) => team.slug);
+};
+
 export const getTeamDataByAbbreviation = (abbreviation, isHome) => {
   const team = teamData.find((t) => t.abbreviation === abbreviation);
 
