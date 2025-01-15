@@ -172,14 +172,20 @@ export default function PlayerPage() {
               {showLeague && (
                 <th className={'p-2 text-left'} style={headerStyle}>League</th>
               )}
-              {statHeaders.map(
-                ({ key, label, title, altKey }) =>
-                  (Object.keys(seasonTotals[seasonTotals.length-1]).includes(key) || (altKey && Object.keys(seasonTotals[seasonTotals.length-1]).includes(altKey))) && (
+              {statHeaders.map(({ key, label, title, altKey }) => {
+                // Check if the key or altKey exists in any of the seasons
+                const statExists = seasonTotals.some(season => 
+                  Object.keys(season).includes(key) || (altKey && Object.keys(season).includes(altKey))
+                );
+
+                return (
+                  statExists && (
                     <th key={key} className={`p-2 text-center ${headerColorClass}`} style={headerStyle}>
                       <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
                     </th>
                   )
-              )}
+                );
+              })}
             </tr>
           </thead>
           <tbody>
@@ -201,9 +207,14 @@ export default function PlayerPage() {
                     {season.leagueAbbrev}
                   </td>
                 )}
-                {statHeaders.map(
-                  ({ key, altKey, precision }) =>
-                    (Object.keys(seasonTotals[seasonTotals.length-1]).includes(key) || (altKey && Object.keys(seasonTotals[seasonTotals.length-1]).includes(altKey))) && (
+                {statHeaders.map(({ key, altKey, precision }) => {
+                  // Check if the key or altKey exists in any of the seasons
+                  const statExists = seasonTotals.some(season => 
+                    Object.keys(season).includes(key) || (altKey && Object.keys(season).includes(altKey))
+                  );
+
+                  return (
+                    statExists && (
                       <td key={key} className="p-2 border text-center text-xs">
                         {season[key] !== undefined ? (
                           <>{formatStat(season[key], precision)}</>
@@ -212,7 +223,8 @@ export default function PlayerPage() {
                         )}
                       </td>
                     )
-                )}
+                  );
+                })}
               </tr>
             ))}
           </tbody>
