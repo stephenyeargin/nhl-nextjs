@@ -103,9 +103,11 @@ const GameTile = ({game, hideDate, style}) => {
               <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded uppercase mr-2">
                 {formatPeriodLabel(game.periodDescriptor)}{game.clock?.inIntermission ? ' INT' : ''}
               </span>
-              <span className="text-sm font-bold">
-                {game.clock?.timeRemaining}
-              </span>
+              {game.periodDescriptor !== 'SO' && (
+                <span className="text-sm font-bold">
+                  {game.clock?.timeRemaining}
+                </span>
+              )}
             </span>
           )}
           {['FUT', 'PRE'].includes(game.gameState) && (

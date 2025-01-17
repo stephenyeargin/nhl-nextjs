@@ -164,10 +164,12 @@ const GameHeader = () => {
                 {formatPeriodLabel(periodDescriptor)}
                 {clock.inIntermission ? ' INT' : ''}
               </span>
-              <span className="font-bold text-xl">
-                <GameClock timeRemaining={clock.timeRemaining} running={clock?.inIntermission || clock?.running} />
-                {!clock.inIntermission && !clock.running && (<FontAwesomeIcon icon={faPauseCircle} className="ml-1" />)}
-              </span>
+              {periodDescriptor.periodType !== 'SO' && (
+                <span className="font-bold text-xl">
+                  <GameClock timeRemaining={clock.timeRemaining} running={clock?.inIntermission || clock?.running} />
+                  {!clock.inIntermission && !clock.running && (<FontAwesomeIcon icon={faPauseCircle} className="ml-1" />)}
+                </span>
+              )}
             </div>
           )}
           {(gameState === 'FINAL' || gameState === 'OFF') && (
