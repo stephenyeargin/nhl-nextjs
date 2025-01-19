@@ -4,8 +4,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TeamLogo from './TeamLogo';
 
-const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }) => {
+const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }) => { 
   const maxRounds = Math.max(Math.floor(shootout.length / 2), 3);
+
+  let shootingFirst = awayTeam;
+  if (shootout.length > 0 && shootout[0].teamAbbrev === homeTeam.abbrev) {
+    shootingFirst = homeTeam;
+  }
 
   const getRoundData = (roundIndex) => {
     const shot = shootout.find((i) => i.sequence === roundIndex);
@@ -45,19 +50,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }) => {
         <tbody>
           <tr>
             <td className="p-2 border">
-              {shootout[0]?.team !== awayTeam.abbrev ? (
-                <div className="flex gap-1 items-center">
-                  <TeamLogo
-                    team={homeTeam.abbrev}
-                    src={homeTeam.logo}
-                    alt={homeTeam.commonName.default}
-                    className="w-10 h-10 mx-auto"
-                  />
-                  <span className="font-bold">
-                    {homeTeam.abbrev}
-                  </span>
-                </div>
-              ) : (
+              {shootingFirst === awayTeam ? (
                 <div className="flex gap-1 items-center">
                   <TeamLogo
                     team={awayTeam.abbrev}
@@ -67,6 +60,18 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }) => {
                   />
                   <span className="font-bold">
                     {awayTeam.abbrev}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex gap-1 items-center">
+                  <TeamLogo
+                    team={homeTeam.abbrev}
+                    src={homeTeam.logo}
+                    alt={homeTeam.commonName.default}
+                    className="w-10 h-10 mx-auto"
+                  />
+                  <span className="font-bold">
+                    {homeTeam.abbrev}
                   </span>
                 </div>
               )}
@@ -83,19 +88,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }) => {
           </tr>
           <tr>
             <td className="p-2 border">
-              {shootout[0]?.team === awayTeam.abbrev ? (
-                <div className="flex gap-1 items-center">
-                  <TeamLogo
-                    team={homeTeam.abbrev}
-                    src={homeTeam.logo}
-                    alt={homeTeam.commonName.default}
-                    className="w-10 h-10 mx-auto"
-                  />
-                  <span className="font-bold">
-                    {homeTeam.abbrev}
-                  </span>
-                </div>
-              ) : (
+              {shootingFirst === homeTeam ? (
                 <div className="flex gap-1 items-center">
                   <TeamLogo
                     team={awayTeam.abbrev}
@@ -105,6 +98,18 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }) => {
                   />
                   <span className="font-bold">
                     {awayTeam.abbrev}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex gap-1 items-center">
+                  <TeamLogo
+                    team={homeTeam.abbrev}
+                    src={homeTeam.logo}
+                    alt={homeTeam.commonName.default}
+                    className="w-10 h-10 mx-auto"
+                  />
+                  <span className="font-bold">
+                    {homeTeam.abbrev}
                   </span>
                 </div>
               )}
