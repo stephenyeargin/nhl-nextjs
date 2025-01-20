@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { formatHeadTitle, formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters';
 import Link from 'next/link';
 import { faFilm, faVideoCamera } from '@fortawesome/free-solid-svg-icons';
@@ -29,6 +29,10 @@ const VideoItemPage = () => {
   
   if (!video) {
     return <NewsPageSkeleton />;
+  }
+
+  if (video.status === 404) {
+    return notFound();
   }
 
   const { fields } = video;
