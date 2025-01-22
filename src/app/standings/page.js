@@ -2,17 +2,11 @@ import React from 'react';
 
 import StandingsTable from '@/app/components/StandingsTable';
 
-export default async function Home(request) {
+export default async function Home() {
   let westernConference, easternConference;
 
   try {
-    let url;
-    if (request.searchQuery?.date) {
-      url = `https://api-web.nhle.com/v1/standings/${request.searchQuery.date}`;
-    } else {
-      url = 'https://api-web.nhle.com/v1/standings/now';
-    }
-    const apiStandings = await fetch(url);
+    const apiStandings = await fetch('https://api-web.nhle.com/v1/standings/now', { cache: 'no-store' });
     if (!apiStandings.ok) {
       throw new Error('Failed to fetch data');
     }
