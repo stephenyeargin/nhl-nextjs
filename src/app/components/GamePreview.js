@@ -121,7 +121,7 @@ const GamePreview = ({ game }) => {
           />
         </div>
       </div>
-      {matchup.teamLeaders?.leaders.map((leader) => (
+      {matchup.skaterComparison?.leaders.map((leader) => (
         <div key={leader.category} className="border grid grid-cols-12 mb-3 py-2 items-center">
           <div className="col-span-3 p-2 flex">
             <Headshot
@@ -202,24 +202,30 @@ const GamePreview = ({ game }) => {
           activeStatTeam={activeStatTeam}
         />
       </div>
+      
+      {skaterSeasonStats?.skaters.length > 0 && (
+        <>
+          <div id="awayTeamStats" className={`${activeStatTeam === 'awayTeam' ? '' : 'hidden'} my-5`}>
+            <div className="font-bold my-2">Forwards ({skaterSeasonStats.skaters.filter((t) => t.teamId === awayTeam.id && t.position !== 'D').length})</div>
+            <StatsTable stats={skaterSeasonStats.skaters.filter((t) => t.teamId === awayTeam.id && t.position !== 'D')} team={awayTeam.data.abbreviation} />
+            <div className="font-bold my-2">Defensemen ({skaterSeasonStats.skaters.filter((t) => t.teamId === awayTeam.id && t.position === 'D').length})</div>
+            <StatsTable stats={skaterSeasonStats.skaters.filter((t) => t.teamId === awayTeam.id && t.position === 'D')} team={awayTeam.data.abbreviation} />
+            <div className="font-bold my-2">Goalies ({goalieSeasonStats.goalies.filter((t) => t.teamId === awayTeam.id).length})</div>
+            <StatsTable stats={goalieSeasonStats.goalies.filter((t) => t.teamId === awayTeam.id)} team={awayTeam.data.abbreviation} />
+          </div>
 
-      <div id="awayTeamStats" className={`${activeStatTeam === 'awayTeam' ? '' : 'hidden'} my-5`}>
-        <div className="font-bold my-2">Forwards ({skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position !== 'D').length})</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position !== 'D')} team={awayTeam.data.abbreviation} />
-        <div className="font-bold my-2">Defensemen ({skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position === 'D').length})</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === awayTeam.id && t.position === 'D')} team={awayTeam.data.abbreviation} />
-        <div className="font-bold my-2">Goalies ({goalieSeasonStats.filter((t) => t.teamId === awayTeam.id).length})</div>
-        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === awayTeam.id)} team={awayTeam.data.abbreviation} />
-      </div>
+          <div id="homeTeamStats" className={`${activeStatTeam === 'homeTeam' ? '' : 'hidden'} my-5`}>
+            <div className="font-bold my-2">Forwards ({skaterSeasonStats.skaters.filter((t) => t.teamId === homeTeam.id && t.position !== 'D').length})</div>
+            <StatsTable stats={skaterSeasonStats.skaters.filter((t) => t.teamId === homeTeam.id && t.position !== 'D')} team={homeTeam.data.abbreviation} />
+            <div className="font-bold my-2">Defensemen ({skaterSeasonStats.skaters.filter((t) => t.teamId === homeTeam.id && t.position === 'D').length})</div>
+            <StatsTable stats={skaterSeasonStats.skaters.filter((t) => t.teamId === homeTeam.id && t.position === 'D')} team={homeTeam.data.abbreviation} />
+            <div className="font-bold my-2">Goalies ({goalieSeasonStats.goalies.filter((t) => t.teamId === homeTeam.id).length})</div>
+            <StatsTable stats={goalieSeasonStats.goalies.filter((t) => t.teamId === homeTeam.id)} team={homeTeam.data.abbreviation} />
+          </div>
+        </>
 
-      <div id="homeTeamStats" className={`${activeStatTeam === 'homeTeam' ? '' : 'hidden'} my-5`}>
-        <div className="font-bold my-2">Forwards ({skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position !== 'D').length})</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position !== 'D')} team={homeTeam.data.abbreviation} />
-        <div className="font-bold my-2">Defensemen ({skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position === 'D').length})</div>
-        <StatsTable stats={skaterSeasonStats.filter((t) => t.teamId === homeTeam.id && t.position === 'D')} team={homeTeam.data.abbreviation} />
-        <div className="font-bold my-2">Goalies ({goalieSeasonStats.filter((t) => t.teamId === homeTeam.id).length})</div>
-        <StatsTable stats={goalieSeasonStats.filter((t) => t.teamId === homeTeam.id)} team={homeTeam.data.abbreviation} />
-      </div>
+      )}
+
     </div>
   );
 };
