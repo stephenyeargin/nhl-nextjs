@@ -48,6 +48,7 @@ const fetchGameData = async (gameId) => {
 export const StoryProvider = ({ storyId, children }) => {
   const [story, setStory] = useState({});
   const [game, setGame] = useState({});
+  const [players, setPlayers] = useState([]);
   const [sidebarStories, setSidebarStories] = useState([]);
   const [pageError, setPageError] = useState(null);
 
@@ -70,6 +71,11 @@ export const StoryProvider = ({ storyId, children }) => {
           setGame(gameResponse);
         }
 
+        const playerTags = storyResponse.tags.filter((t) => t.externalSourceName === 'player');
+        if (playerTags.length) {
+          setPlayers(playerTags);
+        }
+
         setSidebarStories(topStories);
         setStory(storyResponse);
 
@@ -85,7 +91,7 @@ export const StoryProvider = ({ storyId, children }) => {
   }, [storyId]); // only re-run if story/storyId changes
 
   return (
-    <StoryContext.Provider value={{ story, game, sidebarStories, pageError }}>
+    <StoryContext.Provider value={{ story, game, players, sidebarStories, pageError }}>
       {children}
     </StoryContext.Provider>
   );

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { useStoryContext } from '@/app/contexts/StoryContext';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import ContentPhoto from '@/app/components/ContentPhoto';
@@ -11,6 +10,7 @@ import ContentExternal from '@/app/components/ContentExternal';
 import ContentMarkdown from '@/app/components/ContentMarkdown';
 import ContentByline from '@/app/components/ContentByline';
 import PageError from '@/app/components/PageError';
+import ContentTag from '@/app/components/ContentTag';
 
 const NewsArticle = () => {
   const { story, pageError } = useStoryContext();
@@ -80,9 +80,7 @@ const NewsArticle = () => {
           Tags:
         </span>
         {story.tags.filter((t) => !t.extraData?.hideOnSite).map((tag) => (
-          <Link href={`/news/topic/${tag.slug}`} key={tag._entityId} className="inline-block rounded p-1 border text-xs m-1">
-            {tag.title}
-          </Link>
+          <ContentTag tag={tag} key={tag._entityId} />
         ))}
       </div>
     </div>

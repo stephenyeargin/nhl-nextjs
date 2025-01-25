@@ -17,6 +17,7 @@ import StoryCard from '@/app/components/StoryCard';
 import PlayerDropdown from '@/app/components/PlayerDropdown';
 import '@/app/components/StatsTable.scss';
 import ContentCustomEntity from '@/app/components/ContentCustomEntity';
+import { STAT_CONTEXT } from '@/app/utils/constants';
 
 export default function PlayerPage() {
   const { id } = useParams();
@@ -101,7 +102,7 @@ export default function PlayerPage() {
 
   const statHeaders = [
     { key: 'gamesPlayed', label: 'GP', title: 'Games Played' },
-    { key: 'gamesStarted', label: 'GS', title: 'Games Started' },
+    { key: 'gamesStarted', label: 'GS', title: 'Games Started', unit: 'start' },
     { key: 'decision', label: 'D', title: 'Decision' },
     { key: 'wins', label: 'W', title: 'Wins' },
     { key: 'losses', label: 'L', title: 'Losses' },
@@ -389,7 +390,7 @@ export default function PlayerPage() {
 
       {last5Games && (
         <div className="my-5">
-          <div className="text-3xl font-bold my-3">Last Five Games</div>
+          <div className="text-3xl font-bold my-3">{STAT_CONTEXT['last_5_games']}</div>
           <div className="overflow-x-auto">
             <table className="text-sm w-full">
               <thead>
@@ -428,13 +429,13 @@ export default function PlayerPage() {
                       </div>
                     </td>
                     {statHeaders.map(
-                      ({ key, altKey, precision }) =>
+                      ({ key, altKey, precision, unit }) =>
                         (Object.keys(last5Games[0]).includes(key) || (altKey && Object.keys(last5Games[0]).includes(altKey))) && (
                           <td key={key} className="p-2 border text-center text-xs">
                             {g[key] !== undefined ? (
-                              <>{formatStat(g[key], precision)}</>
+                              <>{formatStat(g[key], precision, unit)}</>
                             ) : (
-                              <>{formatStat(g[altKey], precision)}</>
+                              <>{formatStat(g[altKey], precision, unit)}</>
                             )}
                           </td>
                         )

@@ -46,6 +46,10 @@ export const formatLocalizedTime = (timeString) => {
 };
 
 export const formatStat = (value, precision, unit) => {
+  if (unit === 'start') {
+    return value ? 'Yes' : 'No';
+  }
+
   if (unit === 'time') {
     return formatSecondsToGameTime(value);
   }
