@@ -97,8 +97,18 @@ const GamePreview = ({ game }) => {
     );
   };
 
+  // Handle canceled game
+  if (game.gameScheduleState === 'CNCL') {
+    return (
+      <div className="py-10 text-center">
+        <h2 className="text-2xl">Game canceled.</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="my-5">
+
       <div className="flex justify-between">
         <div className="">
           <TeamLogo
@@ -110,7 +120,7 @@ const GamePreview = ({ game }) => {
         </div>
         <div className="text-center">
           <div className="text-3xl font-bold">Players to Watch</div>
-          <div className="text-xl">{STAT_CONTEXT[matchup.teamLeaders?.context] || matchup.teamLeaders?.context}</div>
+          <div className="text-xl">{STAT_CONTEXT[matchup.skaterComparison?.contextLabel]}</div>
         </div>
         <div className="">
           <TeamLogo
@@ -168,10 +178,8 @@ const GamePreview = ({ game }) => {
           </div>
         </div>
       ))}
-
       <div className="my-5">
         <div className="text-3xl font-bold my-3">Goalie Comparison</div>
-
         {/* Away Team */}
         <div>
           {renderTeamTotals({team: matchup.goalieComparison.awayTeam, teamAbbrev: awayTeam.abbrev})}
