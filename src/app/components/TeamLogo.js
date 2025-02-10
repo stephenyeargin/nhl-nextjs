@@ -38,11 +38,6 @@ const TeamLogo = ({ src, alt, className, team, colorMode, style }) => {
     }
   }
 
-  // If historic logo, force into 'light' mode
-  if (/\d+_light.svg$/i.test(updatedSrc)) {
-    colorMode = 'light';
-  }
-
   // colorMode setting overrides theme
   if (colorMode && updatedSrc) {
     updatedSrc = (colorMode === 'dark') ? updatedSrc.replace('_light', '_dark') : updatedSrc.replace('_dark', '_light');

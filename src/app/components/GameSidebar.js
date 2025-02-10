@@ -80,6 +80,10 @@ const GameSidebar = () => {
     setVideoPlayerUrl(null);
   };
 
+  if (homeTeam.abbrev === 'TBD' || awayTeam.abbrev === 'TBD') {
+    return (<></>);
+  }
+
   return (
     <div>
       {(gameVideo?.threeMinRecap || gameVideo?.condensedGame) && (

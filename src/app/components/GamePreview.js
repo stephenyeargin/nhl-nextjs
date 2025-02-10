@@ -36,24 +36,29 @@ const GamePreview = ({ game }) => {
           src={logos[teamAbbrev]}
           alt={teamAbbrev}
           className="w-20 h-20"
+          colorMode='dark'
         />
       </div>
-      <div className="col-span-2 flex flex-col items-center">
-        <div className="text-lg font-bold">{team.teamTotals.record}</div>
-        <div className="text-sm font-light">Record</div>
-      </div>
-      <div className="col-span-2 flex flex-col items-center">
-        <div className="text-lg font-bold">{formatStat(team.teamTotals.gaa, 3)}</div>
-        <div className="text-sm font-light">GAA</div>
-      </div>
-      <div className="col-span-2 flex flex-col items-center">
-        <div className="text-lg font-bold">{formatStat(team.teamTotals.savePctg, 3)}</div>
-        <div className="text-sm font-light">Save %</div>
-      </div>
-      <div className="col-span-2 flex flex-col items-center">
-        <div className="text-lg font-bold">{team.teamTotals.shutouts}</div>
-        <div className="text-sm font-light">Shutouts</div>
-      </div>
+      {team.teamTotals && (
+        <>
+          <div className="col-span-2 flex flex-col items-center">
+            <div className="text-lg font-bold">{team.teamTotals.record}</div>
+            <div className="text-sm font-light">Record</div>
+          </div>
+          <div className="col-span-2 flex flex-col items-center">
+            <div className="text-lg font-bold">{formatStat(team.teamTotals.gaa, 3)}</div>
+            <div className="text-sm font-light">GAA</div>
+          </div>
+          <div className="col-span-2 flex flex-col items-center">
+            <div className="text-lg font-bold">{formatStat(team.teamTotals.savePctg, 3)}</div>
+            <div className="text-sm font-light">Save %</div>
+          </div>
+          <div className="col-span-2 flex flex-col items-center">
+            <div className="text-lg font-bold">{team.teamTotals.shutouts}</div>
+            <div className="text-sm font-light">Shutouts</div>
+          </div>
+        </>
+      )}
     </div>
   );
 
@@ -106,6 +111,14 @@ const GamePreview = ({ game }) => {
     );
   }
 
+  if (homeTeam.abbrev === 'TBD' || awayTeam.abbrev === 'TBD') {
+    return (
+      <div className="py-10 text-center">
+        <h2 className="text-2xl">Matchup pending outcome of prior games.</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="my-5">
 
@@ -133,49 +146,53 @@ const GamePreview = ({ game }) => {
       </div>
       {matchup.skaterComparison?.leaders.map((leader) => (
         <div key={leader.category} className="border grid grid-cols-12 mb-3 py-2 items-center">
-          <div className="col-span-3 p-2 flex">
-            <Headshot
-              playerId={leader.awayLeader.playerId}
-              src={leader.awayLeader.headshot}
-              alt={`${leader.awayLeader.firstName.default} ${leader.awayLeader.lastName.default}`}
-              size="4"
-              className="mr-2 hidden md:block"
-              team={awayTeam.abbrev}
-            />
-            <div className="mx-1">
-              <Link href={`/player/${leader.awayLeader.playerId}`}>
-                <div>{leader.awayLeader.firstName.default}</div>
-                <div className="font-bold">{leader.awayLeader.lastName.default}</div>
-                <div className="text-sm">#{leader.awayLeader.sweaterNumber} • {leader.awayLeader.positionCode}</div>
-              </Link>
+          {leader.awayLeader && (
+            <div className="col-span-3 p-2 flex">
+              <Headshot
+                playerId={leader.awayLeader.playerId}
+                src={leader.awayLeader.headshot}
+                alt={`${leader.awayLeader.firstName.default} ${leader.awayLeader.lastName.default}`}
+                size="4"
+                className="mr-2 hidden md:block"
+                team={awayTeam.abbrev}
+              />
+              <div className="mx-1">
+                <Link href={`/player/${leader.awayLeader.playerId}`}>
+                  <div>{leader.awayLeader.firstName.default}</div>
+                  <div className="font-bold">{leader.awayLeader.lastName.default}</div>
+                  <div className="text-sm">#{leader.awayLeader.sweaterNumber} • {leader.awayLeader.positionCode}</div>
+                </Link>
+              </div>
             </div>
-          </div>
+          )}
           <div className="col-span-2 text-center text-xl md:text-5xl font-black">
-            {leader.awayLeader.value}
+            {leader.awayLeader?.value}
           </div>
           <div className="col-span-2 text-center">
             {PLAYER_STATS[leader.category]}
           </div>
           <div className="col-span-2 text-center text-xl md:text-5xl font-black">
-            {leader.homeLeader.value}
+            {leader.homeLeader?.value}
           </div>
-          <div className="col-span-3 p-2 flex justify-end">
-            <div className="mx-1 text-right">
-              <Link href={`/player/${leader.homeLeader.playerId}`}>
-                <div>{leader.homeLeader.firstName.default}</div>
-                <div className="font-bold">{leader.homeLeader.lastName.default}</div>
-                <div className="text-sm">#{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}</div>
-              </Link>
+          {leader.homeLeader && (
+            <div className="col-span-3 p-2 flex justify-end">
+              <div className="mx-1 text-right">
+                <Link href={`/player/${leader.homeLeader.playerId}`}>
+                  <div>{leader.homeLeader.firstName.default}</div>
+                  <div className="font-bold">{leader.homeLeader.lastName.default}</div>
+                  <div className="text-sm">#{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}</div>
+                </Link>
+              </div>
+              <Headshot
+                playerId={leader.homeLeader.playerId}
+                src={leader.homeLeader.headshot}
+                alt={`${leader.homeLeader.firstName.default} ${leader.homeLeader.lastName.default}`}
+                size="4"
+                className="ml-2 hidden md:block"
+                team={homeTeam.abbrev}
+              />
             </div>
-            <Headshot
-              playerId={leader.homeLeader.playerId}
-              src={leader.homeLeader.headshot}
-              alt={`${leader.homeLeader.firstName.default} ${leader.homeLeader.lastName.default}`}
-              size="4"
-              className="ml-2 hidden md:block"
-              team={homeTeam.abbrev}
-            />
-          </div>
+          )}
         </div>
       ))}
       <div className="my-5">
