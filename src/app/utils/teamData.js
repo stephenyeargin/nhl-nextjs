@@ -285,7 +285,33 @@ const teamData = [
     teamColor: '#041e42',
     secondaryTeamColor: '#296ec8',
     teamId: 52,
-  }
+  },
+  // International
+  {
+    name: 'Canada',
+    abbreviation: 'CAN',
+    teamColor: '#c8102e',
+    secondaryTeamColor: '#ddcba4',
+  },
+  {
+    name: 'Finland',
+    abbreviation: 'FIN',
+    teamColor: '#041e42',
+    secondaryTeamColor: '#ffb81c',
+  },
+  {
+    name: 'Sweden',
+    abbreviation: 'SWE',
+    teamColor: '#006EB3',
+    secondaryTeamColor: '#041e42',
+  },
+  {
+    name: 'USA',
+    abbreviation: 'USA',
+    teamColor: '#003087',
+    secondaryTeamColor: '#c8102e',
+  },
+
 ];
 
 const defaultTeam = (isHome) => {

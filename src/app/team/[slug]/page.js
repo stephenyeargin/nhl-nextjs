@@ -19,11 +19,11 @@ export const metadata = {
 export default async function SchedulePage({ params }) {
   const { slug } = await params;
   let team = getTeamDataByAbbreviation(slug?.toUpperCase(), true);
-  if (!team || team.abbreviation === 'NHL') {
+  if (!team.teamId || team.abbreviation === 'NHL') {
     team = getTeamDataBySlug(slug);
   }
 
-  if (!team || team.abbreviation === 'NHL') {
+  if (!team.teamId || team.abbreviation === 'NHL') {
     return (
       <div className="py-10 text-center text-2xl" style={{ minHeight: '60vh'}}>
         Team not found matching {slug}.
