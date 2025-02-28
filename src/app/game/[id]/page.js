@@ -255,16 +255,16 @@ const GamePage = () => {
                                 />
                                 <div>
                                   <div className="font-bold">
-                                    {penalty.committedByPlayer || penalty.teamAbbrev.default}
+                                    {penalty.committedByPlayer.default || penalty.teamAbbrev.default}
                                   </div>
                                   {penalty.drawnBy && (
                                     <div className="text-xs text-slate-600">
-                                          Drawn by: {penalty.drawnBy}
+                                          Drawn by: {penalty.drawnBy.default}
                                     </div>
                                   )}
                                   {penalty.servedBy && (
                                     <div className="text-xs text-slate-600">
-                                          Served by: {penalty.servedBy}
+                                          Served by: {penalty.servedBy.default}
                                     </div>
                                   )}
                                 </div>
@@ -313,7 +313,7 @@ const GamePage = () => {
                     <h4 className="font-semibold">
                       <Link href={`/player/${p.playerId}`}>{p.name.default}</Link></h4>
                     <p className="text-sm">#{p.sweaterNo} • {p.teamAbbrev} • {p.position}</p>
-                    {Object.prototype.hasOwnProperty.call(p, 'goals') ? (
+                    {p.position !== 'G' ? (
                       <p className="text-sm">G: {p.goals} | A: {p.assists} | P: {p.points}</p>
                     ) : (
                       <p className="text-sm">GAA: {formatStat(p.goalsAgainstAverage, 2)} | SV%: {formatStat(p.savePctg, 3)}</p>
