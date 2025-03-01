@@ -255,7 +255,7 @@ const GamePage = () => {
                                 />
                                 <div>
                                   <div className="font-bold">
-                                    {penalty.committedByPlayer.default || penalty.teamAbbrev.default}
+                                    {penalty.committedByPlayer?.default || penalty.teamAbbrev.default}
                                   </div>
                                   {penalty.drawnBy && (
                                     <div className="text-xs text-slate-600">
