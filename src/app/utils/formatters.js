@@ -174,7 +174,7 @@ export const formatMarkdownContent = (content) => {
 
   return marked.parse(content)
     .replace(/<forge-entity\s+title="([^"]+)"\s+slug="([^"]+)"\s+code="([^"]+)">([^<]+)<\/forge-entity>/g, '<a href="/$3/$2">$4</a>')
-    .replace(/https:\/\/www.nhl.com\//g, '/')
+    .replace(/https:\/\/www\.nhl\.com\//g, '/')
     .replace(/<p>/g, '<p class="mb-4">')
     .replace(/<a\s/g, '<a class="underline" ')
     .replace(/<h2>/g, '<h2 class="text-xl font-bold mb-4">')
