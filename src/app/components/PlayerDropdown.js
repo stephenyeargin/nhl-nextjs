@@ -6,7 +6,7 @@ const PlayerDropdown = ({ players, activePlayer }) => {
     <select
       value={activePlayer}
       onChange={(e) => {
-        const newPlayer = e.target.value;
+        const newPlayer = encodeURIComponent(e.target.value);
         window.location = `/player/${newPlayer}`;
       }}
       className=" p-2 rounded text-xl border bg-inherit text-inherit"
