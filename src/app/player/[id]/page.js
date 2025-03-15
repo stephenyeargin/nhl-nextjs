@@ -26,6 +26,7 @@ export default function PlayerPage() {
   const [player, setPlayer] = useState(null);
   const [playerContent, setPlayerContent] = useState({});
   const [playerNews, setPlayerNews] = useState({});
+  const [playerPhotos, setPlayerPhotos] = useState({});
   const [activeLeague, setActiveLeague] = useState('nhl');
   const [seasonType, setSeasonType] = useState(2); // [2: Regular season, 3: Post-season]
 
@@ -51,6 +52,10 @@ export default function PlayerPage() {
       const topStoriesResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=playerid-${playerData.playerId}&context.slug=nhl&$limit=4`, { cache: 'no-store' });
       const topStories = await topStoriesResponse.json();
       setPlayerNews(topStories);
+
+      const photosResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/photos/?tags.slug=playerid-${playerData.playerId}&$limit=8`, { cache: 'no-store' });
+      const photos = await photosResponse.json();
+      setPlayerPhotos(photos);
 
       formatHeadTitle(`${playerData.firstName.default} ${playerData.lastName.default} | #${playerData.sweaterNumber} | ${playerData.position}`);
     };
@@ -502,6 +507,22 @@ export default function PlayerPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {playerPhotos.items?.length > 0 && (
+        <div className="my-5">
+          <div className="text-3xl font-bold my-3">Photos</div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+            {playerPhotos.items.map((item) => (
+              <div key={item._entityId} className="col-span-4 md:col-span-1">
+                <figure>
+                  <Image src={item.image.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size20/f_png')} alt={item.fields.altText || 'Photo' } width="1600" height="900" />
+                  <figcaption className="text-sm text-center">{item.fields.caption || item.fields.altText }</figcaption>
+                </figure>
               </div>
             ))}
           </div>

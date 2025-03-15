@@ -103,14 +103,14 @@ const GamePage = () => {
                           <Headshot
                             playerId={shot.playerId}
                             src={shot.headshot}
-                            alt={`${shot.firstName} ${shot.lastName}`}
+                            alt={`${shot.firstName.default} ${shot.lastName.default}`}
                             size="4"
                             className="mr-2"
                           />
                           <div className="grow">
                             <span className="font-bold">
                               {shot.playerId ? (
-                                <Link href={`/player/${shot.playerId}`}>{shot.firstName} {shot.lastName}</Link>
+                                <Link href={`/player/${shot.playerId}`}>{shot.firstName.default} {shot.lastName.default}</Link>
                               ) : (
                                 <>Unnamed</>
                               )}
