@@ -117,7 +117,8 @@ const GamePage = () => {
                             </span>
                             <div className="col-span-10 flex">
                               <TeamLogo
-                                src={logos[shot.teamAbbrev]}
+                                src={logos[shot.teamAbbrev.default]}
+                                team={shot.teamAbbrev.default}
                                 alt="Logo"
                                 className="w-8 h-8 mr-2"
                               />
@@ -170,6 +171,7 @@ const GamePage = () => {
                             <div className="flex items-center">
                               <TeamLogo
                                 src={logos[goal.teamAbbrev.default]}
+                                team={goal.teamAbbrev.default}
                                 alt="Logo"
                                 className="w-8 h-8 mr-2"
                               />
@@ -250,6 +252,7 @@ const GamePage = () => {
                               <div className="flex">
                                 <TeamLogo
                                   src={logos[penalty.teamAbbrev.default]}
+                                  team={penalty.teamAbbrev.default}
                                   alt="Logo"
                                   className="w-10 h-10 mr-2"
                                 />

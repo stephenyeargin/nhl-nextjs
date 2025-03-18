@@ -126,6 +126,7 @@ const GameSidebar = () => {
             <div className="w-1/4 p-2 text-bold flex justify-center">
               <TeamLogo
                 src={logos[awayTeam.abbrev]}
+                team={awayTeam.abbrev}
                 alt={awayTeam.abbrev}
                 className="h-12 w-12"
               />
@@ -134,6 +135,7 @@ const GameSidebar = () => {
             <div className="w-1/4 p-2 text-bold flex justify-center">
               <TeamLogo
                 src={logos[homeTeam.abbrev]}
+                team={homeTeam.abbrev}
                 alt={homeTeam.abbrev}
                 className="h-12 w-12"
               />
@@ -155,6 +157,7 @@ const GameSidebar = () => {
               <div className="w-1/4 p-2 text-bold flex justify-center">
                 <TeamLogo
                   src={logos[awayTeam.abbrev]}
+                  team={awayTeam.abbrev}
                   alt={awayTeam.abbrev}
                   className="h-12 w-12"
                 />
@@ -163,6 +166,7 @@ const GameSidebar = () => {
               <div className="w-1/4 p-2 text-bold flex justify-center">
                 <TeamLogo
                   src={logos[homeTeam.abbrev]}
+                  team={homeTeam.abbrev}
                   alt={homeTeam.abbrev}
                   className="h-12 w-12"
                 />

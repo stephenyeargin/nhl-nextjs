@@ -46,6 +46,7 @@ const Scoreboard = ({ game, linescore }) => {
             <div className="flex flex-wrap items-center gap-1">
               <TeamLogo
                 src={game.awayTeam.logo}
+                team={game.awayTeam.abbrev}
                 className="w-10"
                 alt="Logo"
               />
@@ -76,6 +77,7 @@ const Scoreboard = ({ game, linescore }) => {
             <div className="flex flex-wrap items-center gap-1">
               <TeamLogo
                 src={game.homeTeam.logo}
+                team={game.homeTeam.abbrev}
                 className="w-10"
                 alt="Logo"
               />
