@@ -67,15 +67,27 @@ const StandingsTable = ({ standings }) => {
             <tr key={team.teamAbbrev.default} className={[2, 5, 7].includes(i) ? 'border-double border-b-4' : ''}>
               <td className="text-center border ranking">{wildcardRankings[i]}</td>
               <td className="border p-1 text-center text-sm font-semibold">
-                <Link href={`/team/${team.teamAbbrev.default}`}>
+                <Link href={`/team/${team.teamAbbrev.default}`} className={team.clinchIndicator === 'e' ? 'opacity-40' : ''}>
                   <div className="flex items-center gap-2">
                     <TeamLogo
                       src={team.teamLogo}
                       className="h-6 w-6 hidden sm:block"
                       alt="Logo"
                     />
-                    <div className="block md:hidden">{team.teamAbbrev.default}</div>
-                    <div className="hidden md:block">{team.teamName.default}</div>
+                    <div className="block md:hidden">
+                      {team.teamAbbrev.default}
+                      {' '}
+                      {team.clinchIndicator && (
+                        <span>({team.clinchIndicator})</span>
+                      )}
+                    </div>
+                    <div className="hidden md:block">
+                      {team.teamName.default}
+                      {' '}
+                      {team.clinchIndicator && (
+                        <span>({team.clinchIndicator})</span>
+                      )}
+                    </div>
                   </div>
                 </Link>
               </td>
