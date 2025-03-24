@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import Image from 'next/image';
 import Link from 'next/link';
+import { formatMarkdownContent } from '../utils/formatters';
 
 const GameStory = ({ game }) => {
   const [content, setStoryContent] = useState(null);
@@ -46,7 +47,7 @@ const GameStory = ({ game }) => {
               <Link href={`/news/${item.slug}`}>{item.headline}</Link>
             </h1>
             <h2 className="text-lg text-slate-500 mb-2">{item.fields?.description}</h2>
-            <p className="text-sm mb-2">{item.summary}</p>
+            <p className="text-sm mb-2" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary) }} />
             <Link href={`/news/${item.slug}`} className="font-bold underline">Read Story</Link>
           </div>
         </div>
