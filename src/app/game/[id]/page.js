@@ -104,6 +104,7 @@ const GamePage = () => {
                             playerId={shot.playerId}
                             src={shot.headshot}
                             alt={`${shot.firstName.default} ${shot.lastName.default}`}
+                            team={shot.teamAbbrev.default}
                             size="4"
                             className="mr-2"
                           />
