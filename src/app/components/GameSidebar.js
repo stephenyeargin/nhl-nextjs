@@ -29,7 +29,7 @@ const gameIsInProgress = (game) => {
 const renderPlayer = (player) => {
   return (
     <>
-      <Link href={`/player/${player.id}`}>{player.firstName.default} {player.lastName.default}</Link>
+      <Link href={`/player/${player.id}`}>{player.firstName?.default} {player.lastName?.default}</Link>
     </>
   );
 };

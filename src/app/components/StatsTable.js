@@ -80,7 +80,7 @@ const StatsTable = ({ stats, team }) => {
           <Headshot
             playerId={skater.playerId}
             src={skater.headshot}
-            alt={skater.name?.default || `${skater.firstName.default} ${skater.lastName.default}`}
+            alt={skater.name?.default || `${skater.firstName?.default} ${skater.lastName?.default}`}
             size="2"
             className="mx-auto"
             team={team}
@@ -89,7 +89,7 @@ const StatsTable = ({ stats, team }) => {
       </td>
       <td className="text-left text-nowrap" data-order={skater.lastName?.default || skater.name?.default}>
         <Link href={`/player/${skater.playerId}`} className="font-bold">
-          {skater.name?.default ? skater.name.default : `${skater.firstName.default} ${skater.lastName.default}`}
+          {skater.name?.default ? skater.name.default : `${skater.firstName?.default} ${skater.lastName?.default}`}
         </Link>
       </td>
       {statHeaders.map(

@@ -103,7 +103,7 @@ const GamePage = () => {
                           <Headshot
                             playerId={shot.playerId}
                             src={shot.headshot}
-                            alt={`${shot.firstName.default} ${shot.lastName.default}`}
+                            alt={`${shot.firstName?.default} ${shot.lastName?.default}`}
                             team={shot.teamAbbrev.default}
                             size="4"
                             className="mr-2"
@@ -111,7 +111,7 @@ const GamePage = () => {
                           <div className="grow">
                             <span className="font-bold">
                               {shot.playerId ? (
-                                <Link href={`/player/${shot.playerId}`}>{shot.firstName.default} {shot.lastName.default}</Link>
+                                <Link href={`/player/${shot.playerId}`}>{shot.firstName?.default} {shot.lastName?.default}</Link>
                               ) : (
                                 <>Unnamed</>
                               )}
@@ -153,14 +153,14 @@ const GamePage = () => {
                           <Headshot
                             playerId={goal.playerId}
                             src={goal.headshot}
-                            alt={`${goal.firstName.default} ${goal.lastName.default}`}
+                            alt={`${goal.firstName?.default} ${goal.lastName?.default}`}
                             size="4"
                             className="mr-2"
                             team={goal.teamAbbrev.default}
                           />
                           <div>
                             <span className="font-bold">
-                              <Link href={`/player/${goal.playerId}`}>{goal.firstName.default} {goal.lastName.default}</Link> ({goal.goalsToDate})
+                              <Link href={`/player/${goal.playerId}`}>{goal.firstName?.default} {goal.lastName?.default}</Link> ({goal.goalsToDate})
                             </span>
                             {goal.strength !== 'ev' && (
                               <span className="rounded text-xs ml-2 text-white bg-red-900 p-1 uppercase">{goal.strength}G</span>
@@ -181,7 +181,7 @@ const GamePage = () => {
                                   <strong>Assists:</strong>
                                   {' '}
                                   {goal.assists.map((assist, i) => (
-                                    <span key={i}>{assist.firstName.default} {assist.lastName.default} ({assist.assistsToDate}){i !== goal.assists.length - 1 && ', '}</span>
+                                    <span key={i}>{assist.firstName?.default} {assist.lastName?.default} ({assist.assistsToDate}){i !== goal.assists.length - 1 && ', '}</span>
                                   ))}
                                 </>
                               ) : (
@@ -208,7 +208,7 @@ const GamePage = () => {
                             <button
                               onClick={() => {
                                 setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${goal.highlightClip}`);
-                                setVideoPlayerLabel(`${goal.teamAbbrev.default} | ${goal.timeInPeriod} ${formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number })} | ${goal.firstName.default} ${goal.lastName.default}`);
+                                setVideoPlayerLabel(`${goal.teamAbbrev.default} | ${goal.timeInPeriod} ${formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number })} | ${goal.firstName?.default} ${goal.lastName?.default}`);
                                 setVideoPlayerVisible(true);
                               }}
                             >

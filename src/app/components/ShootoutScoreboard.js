@@ -26,13 +26,13 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }) => {
     return shot.result === 'goal' ? (
       <>
         {shot.gameWinner ? (
-          <FontAwesomeIcon icon={faTrophy} className="text-3xl text-green-500" title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: Game Winner!`} />
+          <FontAwesomeIcon icon={faTrophy} className="text-3xl text-green-500" title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: Game Winner!`} />
         ) : (
-          <FontAwesomeIcon icon={faCheckCircle} className="text-3xl text-green-500" title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: ${shot.result.toUpperCase()}`} />
+          <FontAwesomeIcon icon={faCheckCircle} className="text-3xl text-green-500" title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: ${shot.result.toUpperCase()}`} />
         )}
       </>
     ) : (
-      <FontAwesomeIcon icon={faXmarkCircle} className="text-3xl text-slate-500" title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: ${shot.result.toUpperCase()}`} />
+      <FontAwesomeIcon icon={faXmarkCircle} className="text-3xl text-slate-500" title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: ${shot.result.toUpperCase()}`} />
     );
   };
 

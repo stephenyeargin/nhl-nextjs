@@ -13,7 +13,7 @@ const PlayerDropdown = ({ players, activePlayer }) => {
     >
       {players.map((player) => (
         <option key={player.playerId} value={player.playerId}>
-          {player.lastName.default}, {player.firstName.default}
+          {player.lastName?.default}, {player.firstName?.default}
         </option>
       ))}
     </select>

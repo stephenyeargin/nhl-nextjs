@@ -69,15 +69,15 @@ const GamePreview = ({ game }) => {
           <Headshot
             playerId={goaltender.playerId}
             src={goaltender.headshot}
-            alt={`${goaltender.firstName.default} ${goaltender.lastName.default}`}
+            alt={`${goaltender.firstName?.default} ${goaltender.lastName?.default}`}
             className="mr-2 hidden md:block"
             size="4"
             team={team}
           />
           <div className="mx-1">
             <Link href={`/player/${goaltender.playerId}`}>
-              <div>{goaltender.firstName.default}</div>
-              <div className="font-bold">{goaltender.lastName.default}</div>
+              <div>{goaltender.firstName?.default}</div>
+              <div className="font-bold">{goaltender.lastName?.default}</div>
               <div className="text-sm">#{goaltender.sweaterNumber} • {goaltender.positionCode}</div>
             </Link>
           </div>
@@ -151,15 +151,15 @@ const GamePreview = ({ game }) => {
               <Headshot
                 playerId={leader.awayLeader.playerId}
                 src={leader.awayLeader.headshot}
-                alt={`${leader.awayLeader.firstName.default} ${leader.awayLeader.lastName.default}`}
+                alt={`${leader.awayLeader.firstName?.default} ${leader.awayLeader.lastName?.default}`}
                 size="4"
                 className="mr-2 hidden md:block"
                 team={awayTeam.abbrev}
               />
               <div className="mx-1">
                 <Link href={`/player/${leader.awayLeader.playerId}`}>
-                  <div>{leader.awayLeader.firstName.default}</div>
-                  <div className="font-bold">{leader.awayLeader.lastName.default}</div>
+                  <div>{leader.awayLeader.firstName?.default}</div>
+                  <div className="font-bold">{leader.awayLeader.lastName?.default}</div>
                   <div className="text-sm">#{leader.awayLeader.sweaterNumber} • {leader.awayLeader.positionCode}</div>
                 </Link>
               </div>
@@ -178,15 +178,15 @@ const GamePreview = ({ game }) => {
             <div className="col-span-3 p-2 flex justify-end">
               <div className="mx-1 text-right">
                 <Link href={`/player/${leader.homeLeader.playerId}`}>
-                  <div>{leader.homeLeader.firstName.default}</div>
-                  <div className="font-bold">{leader.homeLeader.lastName.default}</div>
+                  <div>{leader.homeLeader.firstName?.default}</div>
+                  <div className="font-bold">{leader.homeLeader.lastName?.default}</div>
                   <div className="text-sm">#{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}</div>
                 </Link>
               </div>
               <Headshot
                 playerId={leader.homeLeader.playerId}
                 src={leader.homeLeader.headshot}
-                alt={`${leader.homeLeader.firstName.default} ${leader.homeLeader.lastName.default}`}
+                alt={`${leader.homeLeader.firstName?.default} ${leader.homeLeader.lastName?.default}`}
                 size="4"
                 className="ml-2 hidden md:block"
                 team={homeTeam.abbrev}

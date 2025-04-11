@@ -65,7 +65,7 @@ export default function PlayerPage() {
         setHasMorePhotos(false);
       }
 
-      formatHeadTitle(`${playerData.firstName.default} ${playerData.lastName.default} | #${playerData.sweaterNumber} | ${playerData.position}`);
+      formatHeadTitle(`${playerData.firstName?.default} ${playerData.lastName?.default} | #${playerData.sweaterNumber} | ${playerData.position}`);
     };
 
     fetchPlayer();

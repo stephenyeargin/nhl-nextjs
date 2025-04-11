@@ -165,7 +165,7 @@ const PlayByPlay = () => {
     if (!player.playerId) {
       return (
         <>
-          <span href={`/player/${player.playerId}`} className="font-bold">{player.firstName.default} {player.lastName.default}</span>
+          <span href={`/player/${player.playerId}`} className="font-bold">{player.firstName?.default} {player.lastName?.default}</span>
         </>
       );
     }
@@ -173,7 +173,7 @@ const PlayByPlay = () => {
     return (
       <>
         <span className="p-1 border rounded text-xs mx-1">#{player.sweaterNumber}</span>{' '}
-        <Link href={`/player/${player.playerId}`} className="font-bold">{player.firstName.default} {player.lastName.default}</Link>
+        <Link href={`/player/${player.playerId}`} className="font-bold">{player.firstName?.default} {player.lastName?.default}</Link>
       </>
     );
   };
@@ -280,7 +280,7 @@ const PlayByPlay = () => {
                   const player = lookupPlayerData(e.scoringPlayerId);
 
                   setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${play.details.highlightClip}`);
-                  setVideoPlayerLabel(`${eventTeamData.abbreviation} | ${play.timeInPeriod} ${formatPeriodLabel(play.periodDescriptor)} | ${player.firstName.default} ${player.lastName.default}`);
+                  setVideoPlayerLabel(`${eventTeamData.abbreviation} | ${play.timeInPeriod} ${formatPeriodLabel(play.periodDescriptor)} | ${player.firstName?.default} ${player.lastName?.default}`);
                   setVideoPlayerVisible(true);
                 }}
               >
