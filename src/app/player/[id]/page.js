@@ -82,7 +82,9 @@ export default function PlayerPage() {
     weightInPounds,
     birthDate,
     birthCity,
+    birthStateProvince,
     birthCountry,
+    badges,
     shootsCatches,
     draftDetails,
     sweaterNumber,
@@ -96,8 +98,6 @@ export default function PlayerPage() {
     careerTotals,
     awards,
     isActive,
-    inTop100AllTime,
-    inHHOF,
   } = player;
 
   const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
@@ -312,7 +312,13 @@ export default function PlayerPage() {
                     <dt className="col-span-1 font-bold col">Born:</dt>
                     <dd className="col-span-2">{formattedBirthDate} {isActive && (<>(Age: {age})</>)}</dd>
                     <dt className="col-span-1 font-bold col">Birthplace:</dt>
-                    <dd className="col-span-2">{birthCity.default}, {birthCountry}</dd>
+                    <dd className="col-span-2">
+                      {birthStateProvince ? (
+                        <>{birthCity.default}, {birthStateProvince?.default}, {birthCountry}</>
+                      ) : (
+                        <>{birthCity.default}, {birthCountry}</>
+                      )}
+                    </dd>
                     <dt className="col-span-1 font-bold col">{position !== 'G' ? 'Shoots' : 'Catches'}:</dt>
                     <dd className="col-span-2">{shootsCatches}</dd>
                     <dt className="col-span-1 font-bold col">Draft:</dt>
@@ -323,15 +329,14 @@ export default function PlayerPage() {
             </div>
             <div className="col-span-12 lg:col-span-7 relative">
               <div className="relative md:absolute md:right-5 md:-top-20 py-5 flex gap-5">
-                {inTop100AllTime === 1 && (
-                  <div>
-                    <Image src="https://assets.nhle.com/badges/100_greatest_players.svg" alt="NHL Top 100 of All Time" width="1024" height="1024" className="w-20 h-20" />
-                  </div>
-                )}
-                {inHHOF === 1 && (
-                  <div>
-                    <Image src="https://assets.nhle.com/badges/hockey_hof.svg" alt="NHL Top 100 of All Time" width="1024" height="1024" className="w-20 h-20" />
-                  </div>
+                {badges.length && (
+                  <>
+                    {badges.map((badge, i) => (
+                      <div key={i}>
+                        <Image src={badge.logoUrl.default} alt={badge.title.default} title={badge.title.default} width="1024" height="1024" className="w-20 h-20" />
+                      </div>
+                    ))}
+                  </>
                 )}
               </div>
 
