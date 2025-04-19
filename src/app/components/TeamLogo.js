@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { PropTypes } from 'prop-types';
 import { getTeamDataByAbbreviation, getTeamDataByCommonName } from '../utils/teamData';
 
-const TeamLogo = ({ src, alt, className, team, colorMode, style }) => {
+const TeamLogo = ({ src, alt, className, team, colorMode, noLink, style }) => {
   const [theme, setTheme] = useState(colorMode);
 
   // Detecting the theme on initial load and whenever it changes
@@ -56,7 +56,7 @@ const TeamLogo = ({ src, alt, className, team, colorMode, style }) => {
     />
   );
 
-  if (team && team.length < 5) {
+  if (team && team.length < 5 && !noLink) {
     return (
       <Link href={`/team/${team}`}>
         {image}
@@ -74,11 +74,13 @@ TeamLogo.propTypes = {
   team: PropTypes.string,
   colorMode: PropTypes.string,
   style: PropTypes.object,
+  noLink: PropTypes.bool,
 };
 
 TeamLogo.defaultProps = {
   colorMode: 'auto',
   style: {},
+  noLink: false,
 };
 
 export default TeamLogo;
