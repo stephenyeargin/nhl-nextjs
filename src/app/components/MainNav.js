@@ -23,6 +23,9 @@ const MainNav = () => {
         <li className={`mr-6 ${isActive(/^\/standings$/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`} >
           <Link href="/standings" className="text-black dark:text-white">Standings</Link>
         </li>
+        <li className={`mr-6 ${isActive(/^\/playoffs/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`} >
+          <Link href="/playoffs" className="text-black dark:text-white">Playoffs</Link>
+        </li>
       </ul>
     </nav>
   );
