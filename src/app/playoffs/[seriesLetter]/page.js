@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 import TeamLogo from '@/app/components/TeamLogo';
 import Link from 'next/link';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
+import StoryCard from '@/app/components/StoryCard';
 
-const fetchSeriesData = async (seriesLetter) => {
-  const year = new Date().getFullYear();
+const fetchSeriesData = async (seriesLetter, year) => {
   const res = await fetch(
     `https://api-web.nhle.com/v1/schedule/playoff-series/${year-1}${year}/${seriesLetter.toLowerCase()}/`,
     { cache: 'no-store' }
@@ -20,9 +20,21 @@ const fetchSeriesData = async (seriesLetter) => {
   return res.json();
 };
 
+const fetchRelatedStories = async (seriesLetter, year) => {
+  const res = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${year-1}-${String(year).slice(-2)}&tags.slug=series-${seriesLetter.toLowerCase()}&context.slug=nhl`, { cache: 'no-store' });
+  if (!res.ok) {
+    return false;
+  }
+
+  return res.json();
+};
+
 export default async function SeriesPage({ params }) {
   const { seriesLetter } = await params;
-  const series = await fetchSeriesData(seriesLetter);
+  const year = new Date().getFullYear();
+
+  const series = await fetchSeriesData(seriesLetter, year);
+  const relatedStories = await fetchRelatedStories(seriesLetter, year);
 
   if (!series) {
     return notFound();
@@ -107,6 +119,21 @@ export default async function SeriesPage({ params }) {
           );
         })}
       </div>
+
+      {relatedStories.items?.length > 0 && (
+        <div className="my-5">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold mb-4">Series Coverage</h1>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+            {relatedStories.items.map((item) => (
+              <div key={item._entityId} className="col-span-4 md:col-span-1">
+                <StoryCard item={item} showDate />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
