@@ -49,7 +49,7 @@ const GamePage = () => {
     if (pageError && pageError.error?.status === 404) {
       notFound();
     }
-    
+
     return (
       <PageError pageError={pageError} handleRetry={() => window.location.reload()} />
     );
@@ -240,8 +240,8 @@ const GamePage = () => {
                     <div className="min-w-full">
                       <div className="flex flex-col">
                         {period.penalties.map((penalty, penaltyIndex) => (
-                          <div 
-                            key={penaltyIndex} 
+                          <div
+                            key={penaltyIndex}
                             className={`my-1 flex ${penaltyIndex % 2 ? '' : 'bg-slate-500/10'}`}
                           >
                             <div className="w-20 p-4 text-right">
@@ -250,7 +250,7 @@ const GamePage = () => {
                               </span>
                             </div>
                             <div className="w-1/3 p-2">
-                              <div className="flex">
+                              <div className="flex flex-wrap">
                                 <TeamLogo
                                   src={logos[penalty.teamAbbrev.default]}
                                   team={penalty.teamAbbrev.default}
@@ -274,14 +274,14 @@ const GamePage = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className="w-40 p-4">
+                            <div className="w-30 p-4">
                               {penalty.duration ? `${penalty.duration} mins` : '-'}
                             </div>
                             <div className="w-1/4 p-2">
                               <div className="text-xs font-light text-slate-600">
                                 {PENALTY_TYPES[penalty.type] || penalty.type}
                               </div>
-                              <div>
+                              <div className="text-sm sm:text-md">
                                 {PENALTY_DESCRIPTIONS[penalty.descKey] || penalty.descKey.replace(/-/g, ' ')}
                               </div>
                             </div>
@@ -294,7 +294,7 @@ const GamePage = () => {
               ))}
             </div>
           )}
-          
+
           {summary.threeStars?.length > 0 && (
             <div>
               <h3 className="text-2xl font-semibold">Three Stars</h3>
