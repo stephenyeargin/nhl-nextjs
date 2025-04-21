@@ -19,7 +19,7 @@ const GameHeader = () => {
   const stickyRef = useRef(null);
 
   const { gameData } = useGameContext();
-  
+
   useEffect(() => {
     const handleScroll = () => {
       if (stickyRef.current) {
@@ -28,19 +28,19 @@ const GameHeader = () => {
       }
     };
     window.addEventListener('scroll', handleScroll);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  if (!gameData || !gameData.game) { 
+  if (!gameData || !gameData.game) {
     return <GameHeaderSkeleton />;
   }
 
   // Destructure data for rendering
   const { game } = gameData;
-  const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, periodDescriptor, situation, clock, startTimeUTC } = game;
+  const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, ifNecessary, periodDescriptor, situation, clock, startTimeUTC } = game;
 
   awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev, false);
   homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev, true);
@@ -101,7 +101,7 @@ const GameHeader = () => {
 
     return timeDifference <= 5;
   };
-  
+
   return (
     <>
       {game.specialEvent && (
@@ -182,7 +182,17 @@ const GameHeader = () => {
           )}
           {['FUT', 'PRE'].includes(gameState) && (
             <div className="my-1">
-              <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatLocalizedTime(startTimeUTC)}</span>
+              {gameScheduleState !== 'TBD' ? (
+                <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatLocalizedTime(startTimeUTC)}</span>
+              ) : (
+                <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">
+                  {ifNecessary ? (
+                    <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">(If Necessary)</span>
+                  ) : (
+                    <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">TBD</span>
+                  )}
+                </span>
+              )}
             </div>
           )}
           {gameState === 'PRE' && (

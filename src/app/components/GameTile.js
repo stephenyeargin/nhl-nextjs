@@ -15,7 +15,7 @@ const GameTile = ({game, hideDate, style}) => {
   return (
     <Link
       href={`/game/${game.id}`}
-      key={game.id} 
+      key={game.id}
       className={`border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-900' : ''}`}
       style={style}
     >
@@ -23,8 +23,10 @@ const GameTile = ({game, hideDate, style}) => {
         {/* Away Team */}
         <div className={`flex items-center justify-between ${game.awayTeam.defeated ? 'opacity-50' : ''}`}>
           <div className="flex items-center">
-            <TeamLogo 
-              src={game.awayTeam.logo} 
+            <TeamLogo
+              team={game.awayTeam.abbrev}
+              noLink={true}
+              src={game.awayTeam.logo}
               alt={`${game.awayTeam.placeName?.default} logo`}
               className="hidden lg:block w-8 h-8 mr-3"
             />
@@ -48,8 +50,10 @@ const GameTile = ({game, hideDate, style}) => {
         {/* Home Team */}
         <div className={`flex items-center justify-between ${game.homeTeam.defeated ? 'opacity-50' : ''}`}>
           <div className="flex items-center">
-            <TeamLogo 
-              src={game.homeTeam.logo} 
+            <TeamLogo
+              team={game.homeTeam.abbrev}
+              noLink={true}
+              src={game.homeTeam.logo}
               alt={`${game.homeTeam.placeName?.default} logo`}
               className="hidden lg:block w-8 h-8 mr-3"
             />
@@ -80,7 +84,7 @@ const GameTile = ({game, hideDate, style}) => {
               )}
               {game.gameScheduleState === 'PPD' && (
                 <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
-              )} 
+              )}
             </div>
           ) : (
             <>
@@ -112,9 +116,17 @@ const GameTile = ({game, hideDate, style}) => {
           )}
           {['FUT', 'PRE'].includes(game.gameState) && (
             <span className={`p-1 text-xs ${game.gameState === 'PRE' ? 'bg-red-900 rounded text-white' : '' }`}>
-              <span suppressHydrationWarning>{formatLocalizedTime(game.startTimeUTC)}</span>
+              {game.gameScheduleState !== 'TBD' && (
+                <span suppressHydrationWarning>{formatLocalizedTime(game.startTimeUTC)}</span>
+              )}
               {' '}
               {hideDate ? null : formatLocalizedDate(game.startTimeUTC)}
+              {game.gameType === 3 && game.ifNecessary && (
+                <span>
+                  {' '}
+                  <span className="font-bold">(If Necessary)</span>
+                </span>
+              )}
             </span>
           )}
         </div>

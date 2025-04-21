@@ -66,6 +66,7 @@ export default async function SchedulePage({ params }) {
         <TeamLogo
           src={`https://assets.nhle.com/logos/nhl/svg/${team.abbreviation}_dark.svg`}
           className="w-64 h-64 mx-auto hidden md:block"
+          colorMode="dark"
         />
         <h1 className="text-5xl font-bold opacity-25 p-5 italic hidden lg:block"style={{ color: formatTextColorByBackgroundColor(team.teamColor)}}>#{team.hashtag}</h1>
       </div>
@@ -172,7 +173,7 @@ export default async function SchedulePage({ params }) {
       </div>
 
       <h1 className="text-3xl font-bold mb-6">Season Schedule</h1>
-      
+
       <TeamSchedule team={team} fullSeasonSchedule={fullSeasonSchedule} headerStyle={headerStyle} />
     </div>
   );
