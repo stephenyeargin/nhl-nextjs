@@ -8,17 +8,29 @@ import Link from 'next/link';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import StoryCard from '@/app/components/StoryCard';
 
-const fetchSeriesData = async (seriesLetter, year) => {
+const fetchSeriesData = async (seriesString, year) => {
+  const extractSeriesLetter = /(?:series-)?([a-z])(?:-coverage)?/i;
+
+  const match = seriesString.match(extractSeriesLetter);
+  if (!match || !match[1]) {
+
+    return false;
+  }
+
+  const seriesLetter = match[1].toLowerCase();
+
   const res = await fetch(
-    `https://api-web.nhle.com/v1/schedule/playoff-series/${year-1}${year}/${seriesLetter.toLowerCase()}/`,
+    `https://api-web.nhle.com/v1/schedule/playoff-series/${year - 1}${year}/${seriesLetter}/`,
     { cache: 'no-store' }
   );
+
   if (!res.ok) {
     return false;
   }
 
   return res.json();
 };
+
 
 const fetchRelatedStories = async (seriesLetter, year) => {
   const res = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${year-1}-${String(year).slice(-2)}&tags.slug=series-${seriesLetter.toLowerCase()}&context.slug=nhl`, { cache: 'no-store' });
@@ -30,8 +42,7 @@ const fetchRelatedStories = async (seriesLetter, year) => {
 };
 
 export default async function SeriesPage({ params }) {
-  const { seriesLetter } = await params;
-  const year = new Date().getFullYear();
+  const { seriesLetter, year } = await params;
 
   const series = await fetchSeriesData(seriesLetter, year);
   const relatedStories = await fetchRelatedStories(seriesLetter, year);
@@ -45,6 +56,17 @@ export default async function SeriesPage({ params }) {
   topSeedTeam.data = getTeamDataByAbbreviation(topSeedTeam.abbrev, false);
   bottomSeedTeam.data = getTeamDataByAbbreviation(bottomSeedTeam.abbrev, true);
 
+  const logos = {
+    [topSeedTeam.id]: topSeedTeam.logo,
+    [bottomSeedTeam.id]: bottomSeedTeam.logo,
+  };
+
+  const seriesTitles = {
+    'nhl-semifinal': 'NHL Semifinal',
+
+  };
+
+
   const seriesHeaderStyle = { background: 'var(--background)' };
   seriesHeaderStyle.borderLeft = `solid 10px ${topSeedTeam.data.teamColor}`;
   seriesHeaderStyle.borderRight = `solid 10px ${bottomSeedTeam.data.teamColor}`;
@@ -53,14 +75,14 @@ export default async function SeriesPage({ params }) {
     <main className="max-w-4xl mx-auto px-4 py-10">
       {seriesLogo && (
         <div className="p-5 bg-gray-900 rounded-xl">
-          <Link href="/playoffs">
+          <Link href={`/playoffs/${year}`}>
             <Image src={seriesLogo} alt="Series Logo" width={1024} height={1024} className="h-auto w-auto" />
           </Link>
         </div>
       )}
 
       <div className="grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center" style={seriesHeaderStyle}>
-        <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
+        <div className="col-span-3 flex mx-auto gap-2 items-center justify-center">
           <div>
             <TeamLogo
               team={topSeedTeam.abbrev}
@@ -74,30 +96,32 @@ export default async function SeriesPage({ params }) {
               <div className="text-xl font-black block md:hidden">{topSeedTeam.abbrev}</div>
               <div className="text-lg hidden md:block">
                 <div className="text-sm">{topSeedTeam.placeName?.default}</div>
-                <div className="text-xl font-black">{topSeedTeam.name?.default.replace(topSeedTeam.placeName?.default, '')}</div>
+                <div className="text-lg font-black">{topSeedTeam.name?.default.replace(topSeedTeam.placeName?.default, '')}</div>
               </div>
             </Link>
           </div>
         </div>
-        <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${bottomSeedTeam.seriesWins === 4 ? 'opacity-50' : ''}`}>
+
+        <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${bottomSeedTeam.seriesWins === series.neededToWin && series.neededToWin ? 'opacity-50' : ''}`}>
           {/* Series Status Top Seed */}
           {topSeedTeam.seriesWins}
         </div>
         <div className="col-span-2 text-center content-middle">
           <span className="block md:hidden font-bold capitalize">{roundAbbrev}</span>
-          <span className="hidden md:block font-bold capitalize">{roundLabel.replace(/-/g, ' ')}</span>
+          <span className="hidden md:block font-bold capitalize">{seriesTitles[roundLabel] || roundLabel.replace(/-/g, ' ')}</span>
+          <span className="block text-sm">Best of {series.length || (series.neededToWin * 2) - 1}</span>
         </div>
-        <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${topSeedTeam.seriesWins === 4 ? 'opacity-50' : ''}`}>
+        <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${topSeedTeam.seriesWins === series.neededToWin && series.neededToWin ? 'opacity-50' : ''}`}>
           {/* Series Status Bottom Seed */}
           {bottomSeedTeam.seriesWins}
         </div>
-        <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
+        <div className="col-span-3 flex mx-auto gap-2 items-center justify-center">
           <div className="text-right order-2 md:order-1">
             <Link href={`/team/${bottomSeedTeam.abbrev}`}>
               <div className="text-xl font-black block md:hidden">{bottomSeedTeam.abbrev}</div>
               <div className="text-lg hidden md:block">
                 <div className="text-sm">{bottomSeedTeam.placeName?.default}</div>
-                <div className="text-xl font-black">{bottomSeedTeam.name?.default?.replace(bottomSeedTeam.placeName?.default, '')}</div>
+                <div className="text-lg font-black">{bottomSeedTeam.name?.default?.replace(bottomSeedTeam.placeName?.default, '')}</div>
               </div>
             </Link>
           </div>
@@ -112,10 +136,16 @@ export default async function SeriesPage({ params }) {
         </div>
       </div>
 
+      <div className="text-center my-5">
+        <Link href={`/playoffs/${year}`} className="font-bold underline">
+          &laquo; Back to Playoffs
+        </Link>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {games.map((game, i) => {
           return (
-            <GameTile key={i} game={game} className="col-span-1" />
+            <GameTile key={i} game={game} logos={logos} className="col-span-1" />
           );
         })}
       </div>

@@ -40,7 +40,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
           <div className="">
             <span className="p-1 font-bold border rounded">{play.timeRemaining}</span>
           </div>
-          <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>  
+          <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
         </div>
         <TeamLogo
           team={play.details.eventOwnerTeamId === homeTeam.id
@@ -183,7 +183,7 @@ const IceRink = ({ game, plays, homeTeam, awayTeam, renderPlayByPlayEvent, rende
           </div>
         )}
         {!plays.length > 0 && game?.summary?.iceSurface && (
-          <div className="absolute top-2 bottom-2 left-0 right-0 grid grid-cols-6 items-center">
+          <div className="absolute top-1 bottom-2 left-0 right-0 grid grid-cols-6 items-center">
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.awayTeam.goalies.map((p) => (
                 <Skater key={p.playerId} player={p} isHomeTeam={false} team={awayTeam.abbrev} />

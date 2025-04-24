@@ -8,7 +8,7 @@ import { PropTypes } from 'prop-types';
 import { formatLocalizedTime, formatLocalizedDate, formatPeriodLabel } from '@/app/utils/formatters';
 import TeamLogo from '@/app/components/TeamLogo';
 
-const GameTile = ({game, hideDate, style}) => {
+const GameTile = ({game, logos, hideDate, style}) => {
   game.awayTeam.defeated = game.awayTeam.score < game.homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
   game.homeTeam.defeated = game.homeTeam.score < game.awayTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
 
@@ -26,12 +26,12 @@ const GameTile = ({game, hideDate, style}) => {
             <TeamLogo
               team={game.awayTeam.abbrev}
               noLink={true}
-              src={game.awayTeam.logo}
+              src={game.awayTeam.logo || logos[game.awayTeam.id]}
               alt={`${game.awayTeam.placeName?.default} logo`}
               className="hidden lg:block w-8 h-8 mr-3"
             />
             <div>
-              <span className="font-light">{game.awayTeam.placeNameWithPreposition?.default || game.awayTeam.name.default}</span>{' '}
+              <span className="font-light">{game.awayTeam.placeNameWithPreposition?.default || game.awayTeam.placeName?.default}</span>{' '}
               <span className="font-bold">{game.awayTeam.commonName?.default.replace(game.awayTeam.placeNameWithPreposition?.default, '')}</span>
               {game.situation?.awayTeam.situationDescriptions?.map((situation, i) => (
                 <span key={i} className="text-xs font-bold bg-red-900 text-white p-1 rounded ms-1">
@@ -53,12 +53,12 @@ const GameTile = ({game, hideDate, style}) => {
             <TeamLogo
               team={game.homeTeam.abbrev}
               noLink={true}
-              src={game.homeTeam.logo}
+              src={game.homeTeam.logo || logos[game.homeTeam.id]}
               alt={`${game.homeTeam.placeName?.default} logo`}
               className="hidden lg:block w-8 h-8 mr-3"
             />
             <div>
-              <span className="font-light">{game.homeTeam.placeNameWithPreposition?.default || game.homeTeam.name.default}</span>{' '}
+              <span className="font-light">{game.homeTeam.placeNameWithPreposition?.default || game.homeTeam.placeName?.default}</span>{' '}
               <span className="font-bold">{game.homeTeam.commonName?.default.replace(game.homeTeam.placeNameWithPreposition?.default, '')}</span>
               {game.situation?.homeTeam.situationDescriptions?.map((situation, i) => (
                 <span key={i} className="text-xs font-bold bg-red-900 text-white p-1 rounded mx-1">
@@ -139,6 +139,7 @@ GameTile.propTypes = {
   game: PropTypes.object.isRequired,
   hideDate: PropTypes.bool,
   style: PropTypes.object,
+  logos: PropTypes.object,
 };
 
 GameTile.defaultProps = {
