@@ -62,6 +62,9 @@ export default async function PlayoffsPage({ params }) {
     columnCount = 9;
   }
   if (bracket.series.length < 15) {
+    columnCount = 7;
+  }
+  if (bracket.series.length < 11) {
     columnCount = 1;
   }
 
