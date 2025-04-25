@@ -16,10 +16,10 @@ const GameTile = ({game, logos, hideDate, style}) => {
     <Link
       href={`/game/${game.id}`}
       key={game.id}
-      className={`border rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-900' : ''}`}
+      className={`border rounded-lg shadow-sm p-2 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-900' : ''}`}
       style={style}
     >
-      <div className="space-y-2">
+      <div className="">
         {/* Away Team */}
         <div className={`flex items-center justify-between ${game.awayTeam.defeated ? 'opacity-50' : ''}`}>
           <div className="flex items-center">
@@ -75,7 +75,7 @@ const GameTile = ({game, logos, hideDate, style}) => {
         </div>
       </div>
 
-      <div className="mt-2 pt-3 border-t">
+      <div className="mt-1 pt-1 border-t">
         <div className="flex flex-wrap justify-between items-center">
           {(['CNCL', 'PPD'].includes(game.gameScheduleState) || game.gameType === 1) ? (
             <div className="text-sm">
@@ -88,7 +88,12 @@ const GameTile = ({game, logos, hideDate, style}) => {
             </div>
           ) : (
             <>
-              <span className="text-sm text-slate-600">{game.venue.default}</span>
+              <span className="text-xs text-slate-600">
+                {game.seriesStatus?.seriesAbbrev && (
+                  <span>{game.seriesStatus.seriesAbbrev}, GM {game.seriesStatus.game} &bull; </span>
+                )}
+                {game.venue.default}
+              </span>
               {game.gameType === 1 && (
                 <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1 uppercase">Preseason</span>
               )}

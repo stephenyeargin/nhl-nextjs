@@ -68,7 +68,7 @@ export default async function PlayoffsPage({ params }) {
   const shownSeriesTitles = new Set();
 
   return (
-    <main className="px-4 py-10 bg-gray-900">
+    <main className="px-4 py-10 bg-gray-900 text-white">
       <div className="max-w-4xl my-5 mx-auto p-5 rounded-xl">
         <Image
           src={bracket.bracketLogo}
@@ -80,14 +80,14 @@ export default async function PlayoffsPage({ params }) {
       </div>
 
       <div className="flex justify-center">
-        <label className="block p-2 text-xl">
+        <label className="block p-2 text-xl font-bold">
           Season:
         </label>
         <PlayoffYearSelector seasons={seasons} year={year} />
       </div>
 
       <div className={`hidden sm:grid grid-cols-${columnCount} align-center gap-5`}>
-        {/* Stanley Cup Qualifiers */}
+        {/* Stanley Cup Qualifiers (2020) */}
         {bracket.series.find((s) => s.seriesAbbrev === 'SCQ') && (
           <div>
             <PlayoffSeriesTile year={year} series={getSeriesByLetter(bracket, 'W')} />
@@ -135,7 +135,7 @@ export default async function PlayoffsPage({ params }) {
           <PlayoffSeriesTile year={year} series={getSeriesByLetter(bracket, 'C')} />
           <PlayoffSeriesTile year={year} series={getSeriesByLetter(bracket, 'D')} />
         </div>
-        {/* Stanley Cup Qualifiers */}
+        {/* Stanley Cup Qualifiers (2020) */}
         {bracket.series.find((s) => s.seriesAbbrev === 'SCQ') && (
           <div>
             <PlayoffSeriesTile year={year} series={getSeriesByLetter(bracket, 'S')} />

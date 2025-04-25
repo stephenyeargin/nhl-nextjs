@@ -10,7 +10,7 @@ const handlePlayoffYearChange = (e) => {
 
 const PlayoffYearSelector = ({ seasons, year }) => {
   return (
-    <select className="p-2 rounded text-xl border bg-inherit text-inherit" value={year} onChange={handlePlayoffYearChange}>
+    <select className="p-2 rounded text-xl border bg-inherit text-white" value={year} onChange={handlePlayoffYearChange}>
       {seasons.map((y, i) => (<option key={i} value={String(y)?.replace(/^\d{4}/, '')}>{String(y)?.replace(/^\d{4}/, '')}</option> ))}
     </select>
   );
