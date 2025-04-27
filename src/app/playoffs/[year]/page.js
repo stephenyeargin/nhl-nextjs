@@ -61,9 +61,6 @@ export default async function PlayoffsPage({ params }) {
   if (bracket.series.find((s) => s.seriesAbbrev === 'SCQ')) {
     columnCount = 9;
   }
-  if (bracket.series.length < 15) {
-    columnCount = 7;
-  }
   if (bracket.series.length < 11) {
     columnCount = 1;
   }

@@ -12,6 +12,25 @@ const GameTile = ({game, logos, hideDate, style}) => {
   game.awayTeam.defeated = game.awayTeam.score < game.homeTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
   game.homeTeam.defeated = game.homeTeam.score < game.awayTeam.score && ['FINAL', 'OFF'].includes(game.gameState);
 
+  let playoffSeriesStatus = '';
+  if (game.seriesStatus && game.gameType === 3) {
+    if (game.seriesStatus.topSeedWins === game.seriesStatus.bottomSeedWins) {
+      playoffSeriesStatus = 'TIED';
+    }
+    if (game.seriesStatus.topSeedWins > game.seriesStatus.bottomSeedWins && game.seriesStatus.topSeedWins < 4) {
+      playoffSeriesStatus = `${game.seriesStatus.topSeedTeamAbbrev} ${game.seriesStatus.topSeedWins}-${game.seriesStatus.bottomSeedWins}`;
+    }
+    if (game.seriesStatus.topSeedWins < game.seriesStatus.bottomSeedWins && game.seriesStatus.bottomSeedWins < 4) {
+      playoffSeriesStatus = `${game.seriesStatus.bottomSeedTeamAbbrev} ${game.seriesStatus.bottomSeedWins}-${game.seriesStatus.topSeedWins}`;
+    }
+    if (game.seriesStatus.topSeedWins === 4) {
+      playoffSeriesStatus = `${game.seriesStatus.topSeedTeamAbbrev} WINS ${game.seriesStatus.topSeedWins}-${game.seriesStatus.bottomSeedWins}`;
+    }
+    if (game.seriesStatus.topSeedWins === 4) {
+      playoffSeriesStatus = `${game.seriesStatus.bottomSeedTeamAbbrev} WINS ${game.seriesStatus.bottomSeedWins}-${game.seriesStatus.topSeedWins}`;
+    }
+  }
+
   return (
     <Link
       href={`/game/${game.id}`}
@@ -32,7 +51,7 @@ const GameTile = ({game, logos, hideDate, style}) => {
             />
             <div>
               <span className="font-light">{game.awayTeam.placeNameWithPreposition?.default || game.awayTeam.placeName?.default}</span>{' '}
-              <span className="font-bold">{game.awayTeam.commonName?.default.replace(game.awayTeam.placeNameWithPreposition?.default, '')}</span>
+              <span className="font-bold">{game.awayTeam.commonName?.default.replace(game.awayTeam.placeNameWithPreposition?.default, '') || game.awayTeam.name?.default}</span>
               {game.situation?.awayTeam.situationDescriptions?.map((situation, i) => (
                 <span key={i} className="text-xs font-bold bg-red-900 text-white p-1 rounded ms-1">
                   {situation}
@@ -59,7 +78,7 @@ const GameTile = ({game, logos, hideDate, style}) => {
             />
             <div>
               <span className="font-light">{game.homeTeam.placeNameWithPreposition?.default || game.homeTeam.placeName?.default}</span>{' '}
-              <span className="font-bold">{game.homeTeam.commonName?.default.replace(game.homeTeam.placeNameWithPreposition?.default, '')}</span>
+              <span className="font-bold">{game.homeTeam.commonName?.default.replace(game.homeTeam.placeNameWithPreposition?.default, '') || game.homeTeam.name?.default}</span>
               {game.situation?.homeTeam.situationDescriptions?.map((situation, i) => (
                 <span key={i} className="text-xs font-bold bg-red-900 text-white p-1 rounded mx-1">
                   {situation}
@@ -90,7 +109,7 @@ const GameTile = ({game, logos, hideDate, style}) => {
             <>
               <span className="text-xs text-slate-600">
                 {game.seriesStatus?.seriesAbbrev && (
-                  <span>{game.seriesStatus.seriesAbbrev}, GM {game.seriesStatus.game} &bull; </span>
+                  <span>{game.seriesStatus.seriesAbbrev}/GM {game.seriesStatus.game || game.seriesStatus.gameNumberOfSeries} | {playoffSeriesStatus} | </span>
                 )}
                 {game.venue.default}
               </span>
