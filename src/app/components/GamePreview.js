@@ -29,14 +29,13 @@ const GamePreview = ({ game }) => {
     setActiveStatTeam(team);
   };
 
-  const renderTeamTotals = ({ team, teamAbbrev }) => (
+  const renderGoaltenderTeamTotals = ({ team, teamAbbrev }) => (
     <div className="grid grid-cols-12 mb-0 py-2 items-center">
       <div className="col-span-4">
         <TeamLogo
           src={logos[teamAbbrev]}
           alt={teamAbbrev}
           className="w-20 h-20"
-          colorMode='dark'
         />
       </div>
       {team.teamTotals && (
@@ -199,7 +198,7 @@ const GamePreview = ({ game }) => {
         <div className="text-3xl font-bold my-3">Goalie Comparison</div>
         {/* Away Team */}
         <div>
-          {renderTeamTotals({team: matchup.goalieComparison.awayTeam, teamAbbrev: awayTeam.abbrev})}
+          {renderGoaltenderTeamTotals({team: matchup.goalieComparison.awayTeam, teamAbbrev: awayTeam.abbrev})}
           {matchup.goalieComparison.awayTeam.leaders.map((goaltender) => (
             <div key={goaltender.playerId}>
               {renderGoaltender({goaltender, team: awayTeam.abbrev})}
@@ -209,7 +208,7 @@ const GamePreview = ({ game }) => {
 
         {/* Home Team */}
         <div>
-          {renderTeamTotals({team: matchup.goalieComparison.homeTeam, teamAbbrev: homeTeam.abbrev})}
+          {renderGoaltenderTeamTotals({team: matchup.goalieComparison.homeTeam, teamAbbrev: homeTeam.abbrev})}
           {matchup.goalieComparison.homeTeam.leaders.map((goaltender) => (
             <div key={goaltender.playerId}>
               {renderGoaltender({goaltender, team: homeTeam.abbrev})}
@@ -227,7 +226,7 @@ const GamePreview = ({ game }) => {
           activeStatTeam={activeStatTeam}
         />
       </div>
-      
+
       {skaterSeasonStats?.skaters.length > 0 && (
         <>
           <div id="awayTeamStats" className={`${activeStatTeam === 'awayTeam' ? '' : 'hidden'} my-5`}>

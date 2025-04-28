@@ -52,8 +52,8 @@ const GameSidebar = () => {
 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-  
-  if (!gameData) { 
+
+  if (!gameData) {
     return <GameSidebarSkeleton />;
   }
 
@@ -395,6 +395,9 @@ const GameSidebar = () => {
                       )}
                       {g.gameScheduleState === 'PPD' && (
                         <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+                      )}
+                      {g.gameScheduleState === 'TBD' && (
+                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">TBD</span>
                       )}
                     </div>
                     <div>
