@@ -15,7 +15,7 @@ const GameTile = ({game, logos, hideDate, style}) => {
   let playoffSeriesStatus = '';
   if (game.seriesStatus && game.gameType === 3) {
     if (game.seriesStatus.topSeedWins === game.seriesStatus.bottomSeedWins) {
-      playoffSeriesStatus = 'TIED';
+      playoffSeriesStatus = `TIED ${game.seriesStatus.bottomSeedWins}-${game.seriesStatus.topSeedWins}`;
     }
     if (game.seriesStatus.topSeedWins > game.seriesStatus.bottomSeedWins && game.seriesStatus.topSeedWins < 4) {
       playoffSeriesStatus = `${game.seriesStatus.topSeedTeamAbbrev} ${game.seriesStatus.topSeedWins}-${game.seriesStatus.bottomSeedWins}`;

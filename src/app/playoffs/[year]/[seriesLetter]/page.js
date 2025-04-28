@@ -8,21 +8,15 @@ import Link from 'next/link';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import StoryCard from '@/app/components/StoryCard';
 
-const fetchSeriesData = async (seriesString, year) => {
+const fetchData = async (url, seriesString) => {
   const extractSeriesLetter = /(?:series-)?([a-z])(?:-coverage)?/i;
 
   const match = seriesString.match(extractSeriesLetter);
   if (!match || !match[1]) {
-
     return false;
   }
 
-  const seriesLetter = match[1].toLowerCase();
-
-  const res = await fetch(
-    `https://api-web.nhle.com/v1/schedule/playoff-series/${year - 1}${year}/${seriesLetter}/`,
-    { cache: 'no-store' }
-  );
+  const res = await fetch(url, { cache: 'no-store' });
 
   if (!res.ok) {
     return false;
@@ -31,14 +25,18 @@ const fetchSeriesData = async (seriesString, year) => {
   return res.json();
 };
 
+const fetchSeriesData = async (seriesString, year) => {
+  const seriesLetter = seriesString.match(/(?:series-)?([a-z])(?:-coverage)?/i)?.[1]?.toLowerCase();
+  const url = `https://api-web.nhle.com/v1/schedule/playoff-series/${year - 1}${year}/${seriesLetter}/`;
 
-const fetchRelatedStories = async (seriesLetter, year) => {
-  const res = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${year-1}-${String(year).slice(-2)}&tags.slug=series-${seriesLetter.toLowerCase()}&context.slug=nhl`, { cache: 'no-store' });
-  if (!res.ok) {
-    return false;
-  }
+  return fetchData(url, seriesString);
+};
 
-  return res.json();
+const fetchRelatedStories = async (seriesString, year) => {
+  const seriesLetter = seriesString.match(/(?:series-)?([a-z])(?:-coverage)?/i)?.[1]?.toLowerCase();
+  const url = `https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${year - 1}-${String(year).slice(-2)}&tags.slug=series-${seriesLetter}&context.slug=nhl`;
+
+  return fetchData(url, seriesString);
 };
 
 export default async function SeriesPage({ params }) {
