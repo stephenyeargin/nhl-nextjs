@@ -26,7 +26,7 @@ const GameTile = ({game, logos, hideDate, style}) => {
     if (game.seriesStatus.topSeedWins === 4) {
       playoffSeriesStatus = `${game.seriesStatus.topSeedTeamAbbrev} WINS ${game.seriesStatus.topSeedWins}-${game.seriesStatus.bottomSeedWins}`;
     }
-    if (game.seriesStatus.topSeedWins === 4) {
+    if (game.seriesStatus.bottomSeedWins === 4) {
       playoffSeriesStatus = `${game.seriesStatus.bottomSeedTeamAbbrev} WINS ${game.seriesStatus.bottomSeedWins}-${game.seriesStatus.topSeedWins}`;
     }
   }
