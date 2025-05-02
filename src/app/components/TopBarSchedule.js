@@ -16,10 +16,10 @@ const sortGamesByState = (games) => {
   const sortedGames = [...games].sort((a, b) => {
     if (a.gameState === 'LIVE' || a.gameState === 'CRIT') {return -1;}
     if (b.gameState === 'LIVE' || b.gameState === 'CRIT') {return 1;}
-    
+
     return 0;
   });
-  
+
   return sortedGames;
 };
 
@@ -84,7 +84,7 @@ const TopBarSchedule = ({ gameDate }) => {
   }
 
   return (
-    <div className="px-2">
+    <div className="px-2 my-3">
       <div className="flex text-xs gap-2 overflow-x-auto scrollbar-hidden">
         {dates.map((date) => {
           let dateClass = 'border rounded-xl';
@@ -94,7 +94,7 @@ const TopBarSchedule = ({ gameDate }) => {
           if (date === focusedDate) {
             dateClass = 'active rounded-xl bg-slate-500 text-white';
           }
-              
+
           return (
             <button key={date} className={dateClass} onClick={() => handleDateClick(date)} title={formatLocalizedDate(date, 'dddd, MMMM D, YYYY')}>
               <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>

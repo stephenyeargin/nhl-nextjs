@@ -18,10 +18,10 @@ const GameSubPageNavigation = () => {
 
   const { gameData } = useGameContext();
 
-  const activeRoute = usePathname();  
+  const activeRoute = usePathname();
   const activeClasses = 'bg-slate-500/10 border-slate-500 border-b-2';
 
-  if (!gameData) { 
+  if (!gameData) {
     return <></>;
   }
 
@@ -43,43 +43,43 @@ const GameSubPageNavigation = () => {
 
   return (
     <div className="my-5 text-xs font-bold flex flex-wrap md:justify-between items-center border-b-2">
-      <div className="text-sm flex items-center justify-left">
+      <div className="md:text-sm flex items-center justify-left order-last lg:order-first">
         <Link
           href={`/game/${id}`}
-          className={`text-sm p-3 ${activeRoute === `/game/${id}` ? activeClasses : ''}`}
+          className={`p-3 ${activeRoute === `/game/${id}` ? activeClasses : ''}`}
         >
-          <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
+          <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1 hidden md:inline" />
           {!['FUT', 'PRE'].includes(game.gameState) ? 'Summary' : 'Preview'}
         </Link>
         {!['FUT', 'PRE'].includes(game.gameState) && (
           <Link
             href={`/game/${id}/boxscore`}
-            className={`text-sm p-3 ${activeRoute === `/game/${id}/boxscore` ? activeClasses : ''}`}
+            className={`p-3 ${activeRoute === `/game/${id}/boxscore` ? activeClasses : ''}`}
           >
-            <FontAwesomeIcon icon={faTable} fixedWidth className="mr-1" />
+            <FontAwesomeIcon icon={faTable} fixedWidth className="mr-1 hidden md:inline" />
             Box Score
           </Link>
         )}
         {!['FUT', 'PRE'].includes(game.gameState) && (
           <Link
             href={`/game/${id}/play-by-play`}
-            className={`text-sm p-3 ${activeRoute === `/game/${id}/play-by-play` ? activeClasses : ''}`}
+            className={`p-3 ${activeRoute === `/game/${id}/play-by-play` ? activeClasses : ''}`}
           >
-            <FontAwesomeIcon icon={faList} fixedWidth className="mr-1" />
+            <FontAwesomeIcon icon={faList} fixedWidth className="mr-1 hidden md:inline" />
             Play-by-Play
           </Link>
         )}
         {!['FUT', 'PRE'].includes(game.gameState) && (
           <Link
             href={`/game/${id}/highlights`}
-            className={`text-sm p-3 ${activeRoute === `/game/${id}/highlights` ? activeClasses : ''}`}
+            className={`p-3 ${activeRoute === `/game/${id}/highlights` ? activeClasses : ''}`}
           >
-            <FontAwesomeIcon icon={faVideo} fixedWidth className="mr-1" />
+            <FontAwesomeIcon icon={faVideo} fixedWidth className="mr-1 hidden md:inline" />
             Highlights
           </Link>
         )}
       </div>
-      <div className="order-first md:order-last p-3 flex-fill text-center flex gap-4 mb-3 md:mb-0 justify-center items-center lg:justify-end">
+      <div className="order-first lg:order-last p-3 flex-fill text-center flex gap-4 mb-3 md:mb-0 justify-center items-center lg:justify-end">
         <span className="">
           <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
           <Link href={`https://www.nhl.com/gamecenter/${game.id}`} className="underline">NHL.com GameCenter</Link>

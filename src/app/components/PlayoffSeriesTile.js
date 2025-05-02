@@ -31,7 +31,7 @@ const PlayoffSeriesTile = ({ series, year }) => {
       <>
         <Link
           href={`/playoffs/${year}/${series.seriesLetter?.toLowerCase()}`}
-          className="text-xs p-2 border rounded-lg shadow my-4 bg-white dark:bg-gray-900 text-black dark:text-white block"
+          className="text-xs p-2 border rounded-lg shadow my-4 bg-white dark:bg-slate-800 text-black dark:text-white block"
         >
           <div className="flex flex-wrap gap-5 justify-center">
             <div className={`text-center ${(top && series.losingTeamId === top.id) ? 'opacity-50' : ''}`}>
@@ -83,7 +83,7 @@ const PlayoffSeriesTile = ({ series, year }) => {
     <>
       <Link
         href={`/playoffs/${year}/${series.seriesLetter?.toLowerCase()}`}
-        className="text-xs p-2 border rounded-lg shadow my-4 flex items-center bg-white dark:bg-gray-900 text-black dark:text-white"
+        className="text-xs p-2 border rounded-lg shadow my-4 flex items-center bg-white dark:bg-slate-800 text-black dark:text-white"
       >
         <div className="flex-1">
           <div className={`flex items-center justify-center xl:justify-start ${(top && series.losingTeamId === top?.id) ? 'opacity-50' : ''}`}>

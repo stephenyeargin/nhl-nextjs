@@ -34,11 +34,11 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <MainNav />
-        <section id="root" className="px-3 md:px-0 py-3">
+        <section id="root">
           <TopBarSchedule />
           {children}
         </section>
-        <div className="mt-20 bg-slate-200 dark:bg-slate-800 p-5">
+        <div className="bg-slate-200 dark:bg-slate-800 p-5">
           <div className="text-xs text-center">All trademarks are property of their respective owners. | <Link href="https://github.com/stephenyeargin/nhl-nextjs" className="font-bold underline">Source Code</Link></div>
         </div>
         <MatomoAnalytics url={process.env.MATOMO_URL} siteId={process.env.MATOMO_SITE_ID} />

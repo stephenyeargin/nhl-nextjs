@@ -11,16 +11,16 @@ import { useParams } from 'next/navigation';
 
 const GameLayout = ({ children }) => {
   const { id: gameId } = useParams();
-  
+
   return (
-    <div>
+    <div className="p-2">
       <GameProvider gameId={gameId}>
         <Suspense fallback={<GameSkeleton />}>
           <div className="container mx-auto">
             <GameHeader />
 
             <GameSubPageNavigation />
-          
+
             <div className="grid grid-cols-4 gap-10">
               <div className="col-span-4 md:col-span-3">
                 {children}

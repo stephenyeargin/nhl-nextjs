@@ -114,7 +114,7 @@ export default async function SeriesPage({ params }) {
           {bottomSeedTeam.seriesWins}
         </div>
         <div className="col-span-3 flex mx-auto gap-2 items-center justify-center">
-          <div className="text-right order-2 md:order-1">
+          <div className="text-right order-2 sm:order-1">
             <Link href={`/team/${bottomSeedTeam.abbrev}`}>
               <div className="text-xl font-black block md:hidden">{bottomSeedTeam.abbrev}</div>
               <div className="text-lg hidden md:block">
@@ -123,7 +123,7 @@ export default async function SeriesPage({ params }) {
               </div>
             </Link>
           </div>
-          <div className="text-right order-1 md:order-2">
+          <div className="text-right order-1 sm:order-2">
             <TeamLogo
               team={bottomSeedTeam.abbrev}
               src={bottomSeedTeam.logo}
