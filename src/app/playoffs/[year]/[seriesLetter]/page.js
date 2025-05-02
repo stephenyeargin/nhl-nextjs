@@ -141,11 +141,17 @@ export default async function SeriesPage({ params }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {games.map((game, i) => {
+        {games.length > 0 ? games.map((game, i) => {
           return (
             <GameTile key={i} game={game} logos={logos} className="col-span-1" />
           );
-        })}
+        }) : (
+          <div className="col-span-1 md:col-span-2">
+            <div className="text-center font-bold py-20">
+              There are no games scheduled for this series yet.
+            </div>
+          </div>
+        )}
       </div>
 
       {relatedStories.items?.length > 0 && (

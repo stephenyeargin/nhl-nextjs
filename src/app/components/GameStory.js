@@ -14,9 +14,9 @@ const GameStory = ({ game }) => {
 
   useEffect(() => {
     const fetchGameStory = async () => {
-      const contentResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=gameid-${game.id}&tags.slug=${type}&context.slug=nhl`);
+      const contentResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=gameid-${game.id}&tags.slug=${type}&context.slug=nhl&$limit=1`);
       const content = await contentResponse.json();
-  
+
       setStoryContent(content);
     };
 
