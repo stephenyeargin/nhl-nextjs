@@ -34,7 +34,7 @@ const VideoPage = () => {
   formatHeadTitle('Videos');
 
   return (
-    <div className="container mx-auto">
+    <div className="container px-2 mx-auto">
       <div className="text-3xl font-bold mb-6">Videos</div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {videos.map((item, i) => (

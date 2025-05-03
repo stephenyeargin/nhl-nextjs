@@ -53,7 +53,7 @@ export default async function SchedulePage({ params }) {
   const teamStanding = standings.standings.find((standing) => standing.teamAbbrev.default === team.abbreviation.toUpperCase());
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-2 py-8">
       <div style={{ backgroundColor: team.teamColor, borderWidth: 4, borderColor: team.secondaryTeamColor }} className="mb-5 flex items-center rounded-xl">
         <div className="p-5">
           <h1 className="text-3xl font-bold mb-3" style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}>{team.name}</h1>

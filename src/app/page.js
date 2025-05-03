@@ -25,7 +25,7 @@ const NewsPage = () => {
 
   return (
     <Suspense fallback={<NewsPageSkeleton />}>
-      <div className="container mx-auto">
+      <div className="container px-2 mx-auto">
         {news.length > 0 && (
           <div>
             <h1 className="text-3xl font-bold mb-6">Latest News</h1>

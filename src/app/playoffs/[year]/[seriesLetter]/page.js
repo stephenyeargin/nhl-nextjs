@@ -70,9 +70,9 @@ export default async function SeriesPage({ params }) {
   seriesHeaderStyle.borderRight = `solid 10px ${bottomSeedTeam.data.teamColor}`;
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-10">
+    <main className="max-w-4xl mx-auto px-2 pb-10">
       {seriesLogo && (
-        <div className="p-5 bg-gray-900 rounded-xl">
+        <div className="p-5 rounded-xl" style={{ backgroundColor: '#121212' }}>
           <Link href={`/playoffs/${year}`}>
             <Image src={seriesLogo} alt="Series Logo" width={1024} height={1024} className="h-auto w-auto" />
           </Link>

@@ -16,7 +16,7 @@ const NewsLayout = ({ children }) => {
   return (
     <StoryProvider storyId={storyId}>
       <Suspense fallback={<GameBodySkeleton />}>
-        <div className="container mx-auto">
+        <div className="container px-2 mx-auto">
           <div className="my-5 text-xs text-center">
             <Link href="/" className="underline font-bold"><FontAwesomeIcon icon={faHome} fixedWidth className="mr-1" />Back to News</Link>
             {' '}|{' '}

@@ -68,7 +68,7 @@ export default async function PlayoffsPage({ params }) {
   const shownSeriesTitles = new Set();
 
   return (
-    <main className="px-4 py-10 text-white" style={{ backgroundColor: '#121212' }}>
+    <main className="px-2 py-10 text-white" style={{ backgroundColor: '#121212' }}>
       <div className="max-w-4xl my-5 mx-auto p-5 rounded-xl">
         <Image
           src={bracket.bracketLogo}

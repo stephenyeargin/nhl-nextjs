@@ -13,7 +13,7 @@ export default async function Home() {
     const jsonStandings = await apiStandings.json();
     westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
     easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
-    
+
   } catch (error) {
     return (
       <div className="container mx-auto">
@@ -24,13 +24,13 @@ export default async function Home() {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container px-2 mx-auto">
       <div className="text-3xl font-bold">Standings</div>
       <h2 className="text-xl py-4">Western Conference</h2>
       <StandingsTable standings={westernConference} />
       <h2 className="text-xl py-4">Eastern Conference</h2>
       <StandingsTable standings={easternConference} />
-      
+
       <hr className="my-5" />
       <div className="flex gap-1">
         <div className="font-bold">Legend:</div>

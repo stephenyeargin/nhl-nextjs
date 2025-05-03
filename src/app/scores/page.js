@@ -54,7 +54,7 @@ const ScoresPage = () => {
   }
 
   return (
-    <div className="container mx-auto pb-10">
+    <div className="container px-4 mx-auto pb-10">
       <div className="text-3xl font-bold my-5">Scores</div>
       <div className="my-5">
         <div className="flex justify-between gap-2">

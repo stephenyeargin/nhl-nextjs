@@ -104,7 +104,7 @@ export default function PlayerPage() {
   const formattedHeight = `${Math.floor(heightInInches / 12)}′${heightInInches % 12}″`;
   const formattedWeight = `${weightInPounds} lb`;
   const formattedBirthDate = new Date(birthDate).toLocaleDateString();
-    
+
   let draft = 'Undrafted';
   if (draftDetails) {
     const formattedRound = formatOrdinalNumber(draftDetails?.round);
@@ -151,7 +151,7 @@ export default function PlayerPage() {
   const renderStatBox = (stat, value) => {
     const statMeta = statHeaders.find((s) => s.key === stat || s.altKey === stat);
     const { title, precision } = statMeta || { title: stat, precision: 0 };
-    
+
     return (
       <div key={stat} className="p-2 bg-transparent text-center border rounded content-center" style={{minWidth: '7rem'}}>
         <div className="text-2xl capitalize">{formatStat(value, precision)}</div>
@@ -188,7 +188,7 @@ export default function PlayerPage() {
               )}
               {statHeaders.map(({ key, label, title, altKey }) => {
                 // Check if the key or altKey exists in any of the seasons
-                const statExists = seasonTotals.some(season => 
+                const statExists = seasonTotals.some(season =>
                   Object.keys(season).includes(key) || (altKey && Object.keys(season).includes(altKey))
                 );
 
@@ -223,7 +223,7 @@ export default function PlayerPage() {
                 )}
                 {statHeaders.map(({ key, altKey, precision }) => {
                   // Check if the key or altKey exists in any of the seasons
-                  const statExists = seasonTotals.some(season => 
+                  const statExists = seasonTotals.some(season =>
                     Object.keys(season).includes(key) || (altKey && Object.keys(season).includes(altKey))
                   );
 
@@ -256,7 +256,7 @@ export default function PlayerPage() {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="container px-2 mx-auto">
       <div className="flex flex-wrap justify-center md:justify-between items-center mb-2">
         <div className="text-2xl md:text-4xl my-4 flex flex-wrap items-center">
           <span className="px-3 border-r">{firstName.default} <span className="font-bold">{lastName.default}</span></span>
@@ -363,7 +363,7 @@ export default function PlayerPage() {
                     if (careerTotals?.[SEASON_TYPES[seasonType]][stat.key] === undefined) {
                       return;
                     }
-                    
+
                     return renderStatBox(stat.key, careerTotals?.[SEASON_TYPES[seasonType]][stat.key]);
                   })}
                 </div>
@@ -469,7 +469,7 @@ export default function PlayerPage() {
           </div>
         </div>
       )}
-      
+
       {seasonTotals && (
         <div id="seasonTotals">
           <div className="flex items-center justify-between">
@@ -498,7 +498,7 @@ export default function PlayerPage() {
           )}
         </div>
       )}
-      
+
       {awards && (
         <div className="my-5">
           <div className="text-3xl font-bold my-3">Awards</div>
@@ -518,7 +518,7 @@ export default function PlayerPage() {
                         if (s[stat.key] === undefined) {
                           return;
                         }
-                        
+
                         return (<div key={stat.key} className="col-span-1">{renderStatBox(stat.key, s[stat.key])}</div>);
                       })}
                     </div>

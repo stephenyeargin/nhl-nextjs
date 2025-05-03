@@ -13,7 +13,7 @@ const VideoItemPage = () => {
   const { slug } = useParams();
   const [video, setVideo] = useState(null);
   const [videos, setVideos] = useState([]);
-  
+
   useEffect(() => {
     const fetchVideos = async () => {
       const videoResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/videos/${slug}`, { cache: 'no-store' });
@@ -26,7 +26,7 @@ const VideoItemPage = () => {
     };
     fetchVideos();
   }, [slug]);
-  
+
   if (!video) {
     return <NewsPageSkeleton />;
   }
@@ -39,7 +39,7 @@ const VideoItemPage = () => {
   formatHeadTitle(video.title);
 
   return (
-    <div className="container mx-auto">
+    <div className="container px-2 mx-auto">
       <div className="my-5 text-xs text-center">
         <Link href="/video/" className="underline font-bold"><FontAwesomeIcon icon={faFilm} fixedWidth className="mr-1" />Back to Videos</Link>
         {' '}|{' '}
