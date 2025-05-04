@@ -5,7 +5,11 @@ import { PropTypes } from 'prop-types';
 
 const handlePlayoffYearChange = (e) => {
   const year = e.target.value;
-  window.location = `/playoffs/${year}`;
+  if (/^\d+$/.test(year)) { // Ensure the value is numeric
+    window.location = `/playoffs/${year}`;
+  } else {
+    console.error('Invalid year selected:', year);
+  }
 };
 
 const PlayoffYearSelector = ({ seasons, year }) => {
