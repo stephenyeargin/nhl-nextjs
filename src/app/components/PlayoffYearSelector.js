@@ -8,7 +8,7 @@ const handlePlayoffYearChange = (e) => {
   if (/^\d+$/.test(year)) { // Ensure the value is numeric
     window.location = `/playoffs/${year}`;
   } else {
-    console.error("Invalid year selected:", year);
+    console.error('Invalid year selected:', year);
   }
 };
 
