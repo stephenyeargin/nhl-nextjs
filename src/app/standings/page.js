@@ -24,7 +24,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="container px-2 mx-auto">
+    <div className="container px-2 mb-10 mx-auto">
       <div className="text-3xl font-bold">Standings</div>
       <h2 className="text-xl py-4">Western Conference</h2>
       <StandingsTable standings={westernConference} />
