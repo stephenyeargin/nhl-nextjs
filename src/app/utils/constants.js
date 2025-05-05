@@ -228,6 +228,7 @@ export const GAME_EVENTS = {
   'high-stick': 'High Stick',
   'home-timeout': 'Home Timeout',
   'ice-problem': 'Ice problem',
+  'ice-scrape': 'Ice Scrape',
   'ice-time': 'Ice Time',
   'interference-on-goalie': 'Interference on goalie',
   'left-wing': 'Left Wing',

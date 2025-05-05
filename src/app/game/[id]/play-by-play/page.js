@@ -30,6 +30,7 @@ const PlayByPlay = () => {
   const [gameState, setGameState] = useState(null);
   const [activePeriod, setActivePeriod] = useState(null);
   const [eventFilter, setEventFilter] = useState(null);
+  const [teamFilter, setTeamFilter] = useState(null);
   const [videoPlayerLabel, setVideoPlayerLabel] = useState(null);
   const [videoPlayerUrl, setVideoPlayerUrl] = useState(null);
   const [isVideoPlayerVisible, setVideoPlayerVisible] = useState(false);
@@ -99,15 +100,21 @@ const PlayByPlay = () => {
   logos[awayTeam.abbrev] = awayTeam.logo;
 
   const filteredPlays = playByPlay.plays?.filter((p) => {
-    if (activePeriod && p.periodDescriptor.number !== activePeriod) {
-      return false;
+    let includePlay = true;
+
+    if (activePeriod) {
+      includePlay = includePlay && p.periodDescriptor.number === activePeriod;
     }
 
     if (eventFilter && eventFilter !== 'all') {
-      return p.typeDescKey === eventFilter;
+      includePlay = includePlay && p.typeDescKey === eventFilter;
     }
-    
-    return true;
+
+    if (teamFilter && teamFilter !== 'all') {
+      includePlay = includePlay && String(p.details?.eventOwnerTeamId) === teamFilter;
+    }
+
+    return includePlay;
   });
   let sortedPlays = filteredPlays;
   if (['LIVE', 'CRIT'].includes(playByPlay.gameState)) {
@@ -271,7 +278,7 @@ const PlayByPlay = () => {
             ) : (
               <div className="text-2xl font-bold">{e.awayScore}-{e.homeScore}</div>
             )}
-            
+
           </div>
           {play.details?.highlightClip && (
             <div className="text-center text-white">
@@ -362,19 +369,23 @@ const PlayByPlay = () => {
     setVideoPlayerUrl(null);
   };
 
-  const handleFilterChange = (e) => {
+  const handleEventFilterChange = (e) => {
     setEventFilter(e.target.value);
+  };
+
+  const handleTeamFilterChange = (e) => {
+    setTeamFilter(e.target.value);
   };
 
   return (
     <div>
-      <div className="flex justify-center items-center my-5">
+      <div className="flex justify-center items-center my-5 text-xs md:text-sm">
         <PeriodSelector periodData={game.periodDescriptor} activePeriod={activePeriod} handlePeriodChange={setActivePeriod} includeAll={true} />
-        <div className="mx-4">
-          <select 
-            className="p-2 text-sm min-w-[200px] border rounded text-black dark:text-white bg-inherit" 
+        <div className="mx-2">
+          <select
+            className="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
             value={eventFilter || 'all'}
-            onChange={handleFilterChange}
+            onChange={handleEventFilterChange}
           >
             <option value="all">All Events</option>
             <option value="goal">Goals</option>
@@ -387,6 +398,17 @@ const PlayByPlay = () => {
             <option value="penalty">Penalties</option>
             <option value="faceoff">Faceoffs</option>
             <option value="stoppage">Stoppage</option>
+          </select>
+        </div>
+        <div className="">
+          <select
+            className="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
+            value={teamFilter || 'all'}
+            onChange={handleTeamFilterChange}
+          >
+            <option value="all">Both Teams</option>
+            <option value={awayTeam.id}>{awayTeam.placeName.default}</option>
+            <option value={homeTeam.id}>{homeTeam.placeName.default}</option>
           </select>
         </div>
 
