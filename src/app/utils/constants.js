@@ -171,13 +171,14 @@ export const PLAYER_STATS = {
 
 export const STAT_CONTEXT = {
   last_5_games: 'Last 5 Games',
-  regular_season: 'Regular Season'
+  regular_season: 'Regular Season',
+  playoffs: 'Playoffs',
 };
 
 export const SHOOTOUT_RESULT = {
   save: 'Save',
   goal: 'Goal',
-  miss: 'Miss'
+  miss: 'Miss',
 };
 
 export const GAME_EVENTS = {
