@@ -31,8 +31,7 @@ export default async function Home() {
       <h2 className="text-xl py-4">Eastern Conference</h2>
       <StandingsTable standings={easternConference} />
 
-      <hr className="my-5" />
-      <div className="flex gap-1">
+      <div className="flex gap-1 my-5">
         <div className="font-bold">Legend:</div>
         <dl className="flex gap-1 align-middle text-xs">
           <dt className="p-1 font-bold">(x)</dt>

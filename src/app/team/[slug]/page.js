@@ -57,7 +57,7 @@ export default async function SchedulePage({ params }) {
       <div style={{ backgroundColor: team.teamColor, borderWidth: 4, borderColor: team.secondaryTeamColor }} className="mb-5 flex items-center rounded-xl">
         <div className="p-5">
           <h1 className="text-3xl font-bold mb-3" style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}>{team.name}</h1>
-          <div className="flex gap-2" style={{ color: formatTextColorByBackgroundColor(team.teamColor)}}>
+          <div className="flex gap-2" style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}>
             <div className="">{formatOrdinalNumber(teamStanding.conferenceSequence)} {teamStanding.conferenceName} Conference</div>
             <div className="hidden sm:block">•</div>
             <div className="">{formatOrdinalNumber(teamStanding.divisionSequence)} {teamStanding.divisionName} Division</div>

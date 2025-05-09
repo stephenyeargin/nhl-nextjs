@@ -475,11 +475,11 @@ export default function PlayerPage() {
           <div className="flex items-center justify-between">
             <div className="text-3xl font-bold my-3">{seasonType === 2 ? 'Season Totals' : 'Playoff Totals'}</div>
             <div className="text-sm">
-              <button className={`p-2 border rounded-l ${seasonType === 2 ? headerColorClass : ''}`} style={seasonType === 2 ? headerStyle : null} onClick={() => setSeasonType(2)}>Regular Season</button>
-              <button className={`p-2 border rounded-r ${seasonType === 3 ? headerColorClass : ''}`} style={seasonType === 3 ? headerStyle : null} onClick={() => setSeasonType(3)}>Playoffs</button>
+              <button className={`p-2 border border-e-0 rounded-l-md ${seasonType === 2 ? headerColorClass : ''}`} style={seasonType === 2 ? headerStyle : null} onClick={() => setSeasonType(2)}>Regular Season</button>
+              <button className={`p-2 border border-s-0 rounded-r-md ${seasonType === 3 ? headerColorClass : ''}`} style={seasonType === 3 ? headerStyle : null} onClick={() => setSeasonType(3)}>Playoffs</button>
             </div>
             {nhlStats.length > 0 && otherLeagueStats.length > 0 && (
-              <LeagueToggle handleChangeLeagues={handleChangeLeagues} activeLeague={activeLeague} />
+              <LeagueToggle handleChangeLeagues={handleChangeLeagues} activeLeague={activeLeague} activeColor={team.teamColor} />
             )}
           </div>
 

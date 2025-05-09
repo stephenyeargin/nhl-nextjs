@@ -14,8 +14,8 @@ const TeamToggle = ({ homeTeam, awayTeam, activeStatTeam, handleStatTeamClick })
     <div>
       <div className="flex space-x-0">
         <button
-          className="flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md bg-slate-200 dark:bg-slate-800 text-black dark:text-white"
-          style={{ backgroundColor: activeStatTeam === 'awayTeam' ? awayTeam.data.teamColor : '', color: activeStatTeam === 'awayTeam' ? formatTextColorByBackgroundColor(awayTeam.data.teamColor) : '' }}
+          className="flex gap-1 items-center text-sm p-2 border border-e-0 rounded-l-md bg-inherit text-black dark:text-white"
+          style={{ backgroundColor: activeStatTeam === 'awayTeam' ? awayTeam.data.teamColor : '', color: activeStatTeam === 'awayTeam' ? formatTextColorByBackgroundColor(awayTeam.data.teamColor) : 'inherit' }}
           onClick={() => handleStatTeamClick('awayTeam')}
         >
           <TeamLogo
@@ -29,8 +29,8 @@ const TeamToggle = ({ homeTeam, awayTeam, activeStatTeam, handleStatTeamClick })
           </div>
         </button>
         <button
-          className="flex gap-1 items-center text-sm p-2 border border-s-0 rounded-r-md bg-slate-200 dark:bg-slate-800 text-black dark:text-white"
-          style={{ backgroundColor: activeStatTeam === 'homeTeam' ? homeTeam.data.teamColor : '', color: activeStatTeam === 'homeTeam' ? formatTextColorByBackgroundColor(homeTeam.data.teamColor) : '' }}
+          className="flex gap-1 items-center text-sm p-2 border border-s-0 rounded-r-md bg-inherit text-black dark:text-white"
+          style={{ backgroundColor: activeStatTeam === 'homeTeam' ? homeTeam.data.teamColor : '', color: activeStatTeam === 'homeTeam' ? formatTextColorByBackgroundColor(homeTeam.data.teamColor) : 'inherit' }}
           onClick={() => handleStatTeamClick('homeTeam')}
         >
           <TeamLogo
