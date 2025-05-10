@@ -329,7 +329,7 @@ export default function PlayerPage() {
             </div>
             <div className="col-span-12 lg:col-span-7 relative">
               <div className="relative md:absolute md:right-5 md:-top-20 py-5 flex gap-5">
-                {badges.length && (
+                {badges.length > 0 && (
                   <>
                     {badges.map((badge, i) => (
                       <div key={i}>
