@@ -395,6 +395,7 @@ const PlayByPlay = () => {
             <option value="hit">Hits</option>
             <option value="giveaway">Giveaways</option>
             <option value="takeaway">Takeaways</option>
+            <option value="delayed-penalty">Delayed Penalties</option>
             <option value="penalty">Penalties</option>
             <option value="faceoff">Faceoffs</option>
             <option value="stoppage">Stoppage</option>

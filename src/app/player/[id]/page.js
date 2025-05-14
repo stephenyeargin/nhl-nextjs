@@ -256,7 +256,7 @@ export default function PlayerPage() {
   };
 
   return (
-    <div className="container px-2 mx-auto">
+    <div className="container pb-10 px-2 mx-auto">
       <div className="flex flex-wrap justify-center md:justify-between items-center mb-2">
         <div className="text-2xl md:text-4xl my-4 flex flex-wrap items-center">
           <span className="px-3 border-r">{firstName.default} <span className="font-bold">{lastName.default}</span></span>
