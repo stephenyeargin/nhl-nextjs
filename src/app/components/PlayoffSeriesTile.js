@@ -14,7 +14,7 @@ const PlayoffSeriesTile = ({ series, year }) => {
   if (series.seriesLogo && !series.topSeedTeam) {
     return (
       <Link
-        href={`/playoffs/${year}/${series.seriesLetter?.toLowerCase()}`}
+        href={`/playoffs/${year}/series-${series.seriesLetter?.toLowerCase()}-coverage`}
         className="block"
       >
         <Image src={series.seriesLogo} alt="Series Logo" width="1024" height="1024" className="w-auto px-5" />
@@ -83,21 +83,21 @@ const PlayoffSeriesTile = ({ series, year }) => {
     <>
       <Link
         href={`/playoffs/${year}/${series.seriesLetter?.toLowerCase()}`}
-        className="text-xs p-2 border rounded-lg shadow my-4 flex items-center bg-white dark:bg-slate-800 text-black dark:text-white"
+        className="text-xs tracking-tight p-2 border rounded-lg shadow my-4 flex items-center bg-white dark:bg-slate-800 text-black dark:text-white"
       >
         <div className="flex-1">
           <div className={`flex items-center justify-center xl:justify-start ${(top && series.losingTeamId === top?.id) ? 'opacity-50' : ''}`}>
             {top && top.id !== -1 ? (
               <>
                 <TeamLogo src={top.logo} alt={top.abbrev} className="w-8 h-8 mr-3" noLink />
-                <div className="hidden xl:block mx-1 font-thin">({series.topSeedRankAbbrev})</div>
-                <div className="hidden xl:block grow font-bold">{top.commonName?.default.replace(top.placeNameWithPreposition?.default, 'TBD')}</div>
+                <div className="hidden xl:block mx-1">({series.topSeedRankAbbrev})</div>
+                <div className="hidden xl:block grow">{top.commonName?.default.replace(top.placeNameWithPreposition?.default, 'TBD')}</div>
                 <div className="font-semibold">{series.topSeedWins}</div>
               </>
             ) : (
               <>
                 <TBDLogo />
-                <div className="hidden xl:block grow font-bold">TBD</div>
+                <div className="hidden xl:block grow">TBD</div>
                 <div className="font-semibold">0</div>
               </>
             )}
@@ -107,14 +107,14 @@ const PlayoffSeriesTile = ({ series, year }) => {
             {bottom && bottom.id !== -1 ? (
               <>
                 <TeamLogo src={bottom.logo} alt={bottom.abbrev} className="w-8 h-8 mr-3" noLink />
-                <div className="hidden xl:block mx-1 font-thin">({series.bottomSeedRankAbbrev})</div>
-                <div className="hidden xl:block grow font-bold">{bottom.commonName?.default.replace(bottom.placeNameWithPreposition?.default, 'TBD')}</div>
+                <div className="hidden xl:block mx-1">({series.bottomSeedRankAbbrev})</div>
+                <div className="hidden xl:block grow">{bottom.commonName?.default.replace(bottom.placeNameWithPreposition?.default, 'TBD')}</div>
                 <div className="font-semibold">{series.bottomSeedWins}</div>
               </>
             ) : (
               <>
                 <TBDLogo />
-                <div className="hidden xl:block grow font-bold">TBD</div>
+                <div className="hidden xl:block grow">TBD</div>
                 <div className="font-semibold">0</div>
               </>
             )}

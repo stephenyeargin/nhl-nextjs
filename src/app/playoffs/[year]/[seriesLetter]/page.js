@@ -13,16 +13,26 @@ const fetchData = async (url, seriesString) => {
 
   const match = seriesString.match(extractSeriesLetter);
   if (!match || !match[1]) {
-    return false;
+    return { error: 404 };
   }
 
-  const res = await fetch(url, { cache: 'no-store' });
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
 
-  if (!res.ok) {
-    return false;
+    if (res.status === 404) {
+      return { error: 404 };
+    }
+
+    if (!res.ok) {
+      return { error: 500 };
+    }
+
+    const data = await res.json();
+
+    return { data };
+  } catch (err) {
+    return { error: 500 };
   }
-
-  return res.json();
 };
 
 const fetchSeriesData = async (seriesString, year) => {
@@ -42,12 +52,19 @@ const fetchRelatedStories = async (seriesString, year) => {
 export default async function SeriesPage({ params }) {
   const { seriesLetter, year } = await params;
 
-  const series = await fetchSeriesData(seriesLetter, year);
-  const relatedStories = await fetchRelatedStories(seriesLetter, year);
+  const seriesResponse = await fetchSeriesData(seriesLetter, year);
+  const relatedStoriesResponse = await fetchRelatedStories(seriesLetter, year);
 
-  if (!series) {
+  if (seriesResponse.error === 404) {
     return notFound();
   }
+
+  if (seriesResponse.error === 500) {
+    throw new Error('Failed to load series data');
+  }
+
+  const series = seriesResponse.data;
+  const relatedStories = relatedStoriesResponse?.data || { items: [] };
 
   const { topSeedTeam, bottomSeedTeam, games, seriesLogo, roundLabel, roundAbbrev } = series;
 
