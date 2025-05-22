@@ -61,7 +61,7 @@ const Highlights = () => {
   if (videos.length === 0) {
     return (
       <div className="text-center">
-        <div className="p-10 text-2xl mx-40">  
+        <div className="p-10 text-2xl mx-40">
           <div className="text-center bg-gray-500 aspect-video p-10 items-center opacity-50 animate-pulse" />
           <div className="my-5">
             No game highlight videos yet.
@@ -72,7 +72,7 @@ const Highlights = () => {
   }
 
   return (
-    <div id="viewTop">
+    <div id="viewTop" className="mb-10">
       {activeVideo && (
         <div className="mb-5">
           <iframe
@@ -87,7 +87,7 @@ const Highlights = () => {
           <div className="text-3xl font-bold my-5">{activeVideo.title}</div>
           <div className="my-5">{activeVideo.fields.longDescription}</div>
           <div className="my-5">{formatLocalizedDate(activeVideo.contentDate)} {formatLocalizedTime(activeVideo.contentDate)}</div>
-    
+
           <hr className="my-3" />
         </div>
       )}
@@ -112,7 +112,7 @@ const Highlights = () => {
         ))}
       </div>
     </div>
-    
+
   );
 };
 

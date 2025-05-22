@@ -47,7 +47,7 @@ const StoryCard = ({ item, size, showDate, className }) => {
       <div className={className}>
         <Link href={`/news/${item.slug}`} className="grid grid-cols-3 gap-4 items-center">
           <div className="col-span-1">
-            {item.thumbnail ? (               
+            {item.thumbnail ? (
               <Image
                 src={item.thumbnail?.thumbnailUrl}
                 width="416"
@@ -61,7 +61,7 @@ const StoryCard = ({ item, size, showDate, className }) => {
             )}
           </div>
           <div className="col-span-2">
-            <h2 className="text-md font-bold">{item.headline || item.title}</h2>
+            <h2 className="text-base font-bold">{item.headline || item.title}</h2>
             {showDate && (
               <div>{formatLocalizedDate(item.contentDate)}</div>
             )}
@@ -76,7 +76,7 @@ const StoryCard = ({ item, size, showDate, className }) => {
       <div className={className}>
         <p className="hidden" suppressHydrationWarning>{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(item.contentDate)}</p>
         <Link href={`/news/${item.slug}`} className="">
-          {item.thumbnail ? (               
+          {item.thumbnail ? (
             <Image
               src={item.thumbnail?.thumbnailUrl}
               width="832"
@@ -126,12 +126,12 @@ const StoryCard = ({ item, size, showDate, className }) => {
       </div>
     );
   }
-  
+
   return(
     <div className={className}>
       <p className="hidden" suppressHydrationWarning>{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(item.contentDate)}</p>
       <Link href={`/news/${item.slug}`} className="">
-        {item.thumbnail ? (               
+        {item.thumbnail ? (
           <Image
             src={item.thumbnail?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size20/f_png')}
             width="832"

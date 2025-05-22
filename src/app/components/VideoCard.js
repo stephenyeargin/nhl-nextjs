@@ -47,7 +47,7 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
       <div className={className}>
         <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="grid grid-cols-3 gap-4 items-center">
           <div className="col-span-1">
-            {item.thumbnail ? (               
+            {item.thumbnail ? (
               <Image
                 src={item.thumbnail?.thumbnailUrl}
                 width="416"
@@ -61,7 +61,7 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
             )}
           </div>
           <div className="col-span-2">
-            <h2 className="text-md font-bold">{item.headline || item.title}</h2>
+            <h2 className="text-base font-bold">{item.headline || item.title}</h2>
           </div>
         </Link>
       </div>
@@ -73,7 +73,7 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
       <div className={className}>
         <p className="hidden" suppressHydrationWarning>{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(item.contentDate)}</p>
         <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="">
-          {item.thumbnail ? (               
+          {item.thumbnail ? (
             <Image
               src={item.thumbnail?.thumbnailUrl}
               width="832"
@@ -120,12 +120,12 @@ const VideoCard = ({ item, size, className, handleCardClick }) => {
       </div>
     );
   }
-  
+
   return(
     <div className={className}>
       <p className="hidden" suppressHydrationWarning>{formatLocalizedDate(item.contentDate)} {formatLocalizedTime(item.contentDate)}</p>
       <Link onClick={handleCardClick} href={`/video/${item.slug}`} className="">
-        {item.thumbnail ? (               
+        {item.thumbnail ? (
           <Image
             src={item.thumbnail?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size20/f_png')}
             width="832"

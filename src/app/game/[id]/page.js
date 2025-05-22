@@ -281,7 +281,7 @@ const GamePage = () => {
                               <div className="text-xs font-light text-slate-600">
                                 {PENALTY_TYPES[penalty.type] || penalty.type}
                               </div>
-                              <div className="text-sm sm:text-md">
+                              <div className="text-sm sm:text-base">
                                 {PENALTY_DESCRIPTIONS[penalty.descKey] || penalty.descKey.replace(/-/g, ' ')}
                               </div>
                             </div>

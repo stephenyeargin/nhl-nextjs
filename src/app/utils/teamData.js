@@ -7,6 +7,7 @@ const teamData = [
     teamColor: '#cf4520',
     secondaryTeamColor: '#89734c',
     teamId: 24,
+    division: 'Pacific',
   },
   {
     name: 'Boston Bruins',
@@ -16,6 +17,7 @@ const teamData = [
     teamColor: '#FFB81C',
     secondaryTeamColor: '#000000',
     teamId: 6,
+    division: 'Atlantic',
   },
   {
     name: 'Buffalo Sabres',
@@ -25,6 +27,7 @@ const teamData = [
     teamColor: '#003087',
     secondaryTeamColor: '#FFB81C',
     teamId: 7,
+    division: 'Atlantic'
   },
   {
     name: 'Calgary Flames',
@@ -34,6 +37,7 @@ const teamData = [
     teamColor: '#c8102e',
     secondaryTeamColor: '#FAAF19',
     teamId: 20,
+    division: 'Pacific',
   },
   {
     name: 'Carolina Hurricanes',
@@ -43,6 +47,7 @@ const teamData = [
     teamColor: '#c8102e',
     secondaryTeamColor: '#FFFFFF',
     teamId: 12,
+    division: 'Metropolitan',
   },
   {
     name: 'Chicago Blackhawks',
@@ -52,6 +57,7 @@ const teamData = [
     teamColor: '#ce1126',
     secondaryTeamColor: '#FF671B',
     teamId: 16,
+    division: 'Central',
   },
   {
     name: 'Colorado Avalanche',
@@ -61,6 +67,7 @@ const teamData = [
     teamColor: '#8a2432',
     secondaryTeamColor: '#236192',
     teamId: 21,
+    division: 'Central',
   },
   {
     name: 'Columbus Blue Jackets',
@@ -70,6 +77,7 @@ const teamData = [
     teamColor: '#041e42',
     secondaryTeamColor: '#ce1126',
     teamId: 29,
+    division: 'Metropolitan',
   },
   {
     name: 'Dallas Stars',
@@ -79,6 +87,7 @@ const teamData = [
     teamColor: '#00823e',
     secondaryTeamColor: '#8F8F8C',
     teamId: 25,
+    division: 'Central',
   },
   {
     name: 'Detroit Red Wings',
@@ -88,6 +97,7 @@ const teamData = [
     teamColor: '#c8102e',
     secondaryTeamColor: '#FFFFFF',
     teamId: 17,
+    division: 'Atlantic',
   },
   {
     name: 'Edmonton Oilers',
@@ -97,6 +107,7 @@ const teamData = [
     teamColor: '#00205b',
     secondaryTeamColor: '#FF4C00',
     teamId: 22,
+    division: 'Pacific',
   },
   {
     name: 'Florida Panthers',
@@ -106,6 +117,7 @@ const teamData = [
     teamColor: '#041E42',
     secondaryTeamColor: '#c8102E',
     teamId: 13,
+    division: 'Atlantic',
   },
   {
     name: 'Los Angeles Kings',
@@ -115,6 +127,7 @@ const teamData = [
     teamColor: '#8a9599',
     secondaryTeamColor: '#111111',
     teamId: 26,
+    division: 'Pacific',
   },
   {
     name: 'Minnesota Wild',
@@ -124,6 +137,7 @@ const teamData = [
     teamColor: '#0e4431',
     secondaryTeamColor: '#ddc9a3',
     teamId: 30,
+    division: 'Central',
   },
   {
     name: 'Montréal Canadiens',
@@ -133,6 +147,7 @@ const teamData = [
     teamColor: '#a6192e',
     secondaryTeamColor: '#192168',
     teamId: 8,
+    division: 'Atlantic',
   },
   {
     name: 'Nashville Predators',
@@ -142,6 +157,7 @@ const teamData = [
     teamColor: '#ffb81c',
     secondaryTeamColor: '#041E42',
     teamId: 18,
+    division: 'Central',
   },
   {
     name: 'New Jersey Devils',
@@ -151,6 +167,7 @@ const teamData = [
     teamColor: '#cc0000',
     secondaryTeamColor: '#000000',
     teamId: 1,
+    division: 'Metropolitan',
   },
   {
     name: 'New York Islanders',
@@ -160,6 +177,7 @@ const teamData = [
     teamColor: '#00468b',
     secondaryTeamColor: '#f47d30',
     teamId: 2,
+    division: 'Metropolitan',
   },
   {
     name: 'New York Rangers',
@@ -169,6 +187,7 @@ const teamData = [
     teamColor: '#0033a0',
     secondaryTeamColor: '#CE1126',
     teamId: 3,
+    division: 'Metropolitan',
   },
   {
     name: 'Ottawa Senators',
@@ -177,6 +196,7 @@ const teamData = [
     teamColor: '#c8102e',
     secondaryTeamColor: '#000000',
     teamId: 9,
+    division: 'Atlantic',
   },
   {
     name: 'Philadelphia Flyers',
@@ -186,6 +206,7 @@ const teamData = [
     teamColor: '#d24303',
     secondaryTeamColor: '#000000',
     teamId: 4,
+    division: 'Metropolitan',
   },
   {
     name: 'Pittsburgh Penguins',
@@ -195,6 +216,7 @@ const teamData = [
     teamColor: '#000000',
     secondaryTeamColor: '#CFC493',
     teamId: 5,
+    division: 'Metropolitan',
   },
   {
     name: 'St. Louis Blues',
@@ -204,6 +226,7 @@ const teamData = [
     teamColor: '#004986',
     secondaryTeamColor: '#FCB514',
     teamId: 19,
+    division: 'Central',
   },
   {
     name: 'San Jose Sharks',
@@ -213,6 +236,7 @@ const teamData = [
     teamColor: '#00778b',
     secondaryTeamColor: '#e57200',
     teamId: 28,
+    division: 'Pacific',
   },
   {
     name: 'Seattle Kraken',
@@ -222,6 +246,7 @@ const teamData = [
     teamColor: '#001425',
     secondaryTeamColor: '#99d9d9',
     teamId: 55,
+    division: 'Pacific',
   },
   {
     name: 'Tampa Bay Lightning',
@@ -231,6 +256,7 @@ const teamData = [
     teamColor: '#00205b',
     secondaryTeamColor: '#000',
     teamId: 14,
+    division: 'Atlantic',
   },
   {
     name: 'Toronto Maple Leafs',
@@ -240,15 +266,17 @@ const teamData = [
     teamColor: '#00205b',
     secondaryTeamColor: '#FFFFFF',
     teamId: 10,
+    division: 'Atlantic',
   },
   {
-    name: 'Utah Hockey Club',
+    name: 'Utah Mammoth',
     slug: 'utah',
-    hashtag: 'UtahHC',
+    hashtag: 'TusksUp',
     abbreviation: 'UTA',
     teamColor: '#6cace4',
     secondaryTeamColor: '#010101',
     teamId: 59,
+    division: 'Central',
   },
   {
     name: 'Vancouver Canucks',
@@ -258,6 +286,7 @@ const teamData = [
     teamColor: '#00205b',
     secondaryTeamColor: '#00843d',
     teamId: 23,
+    division: 'Pacific',
   },
   {
     name: 'Vegas Golden Knights',
@@ -267,6 +296,7 @@ const teamData = [
     teamColor: '#b9975b',
     secondaryTeamColor: '#333f48',
     teamId: 54,
+    division: 'Pacific',
   },
   {
     name: 'Washington Capitals',
@@ -276,6 +306,7 @@ const teamData = [
     teamColor: '#041E42',
     secondaryTeamColor: '#C8102E',
     teamId: 15,
+    division: 'Metropolitan',
   },
   {
     name: 'Winnipeg Jets',
@@ -285,6 +316,7 @@ const teamData = [
     teamColor: '#041e42',
     secondaryTeamColor: '#296ec8',
     teamId: 52,
+    division: 'Central',
   },
   // International
   {
@@ -292,27 +324,47 @@ const teamData = [
     abbreviation: 'CAN',
     teamColor: '#c8102e',
     secondaryTeamColor: '#ddcba4',
+    teamId: 0,
+    division: 'International',
   },
   {
     name: 'Finland',
     abbreviation: 'FIN',
     teamColor: '#041e42',
     secondaryTeamColor: '#ffb81c',
+    teamId: 0,
+    division: 'International',
   },
   {
     name: 'Sweden',
     abbreviation: 'SWE',
     teamColor: '#006EB3',
     secondaryTeamColor: '#041e42',
+    teamId: 0,
+    division: 'International',
   },
   {
     name: 'USA',
     abbreviation: 'USA',
     teamColor: '#003087',
     secondaryTeamColor: '#c8102e',
+    teamId: 0,
+    division: 'International',
   },
 
 ];
+
+// Sort teamData by .name
+teamData.sort((a, b) => {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+
+  return 0;
+});
 
 const defaultTeam = (isHome) => {
   let teamColor = '#3A5DAE';
@@ -352,4 +404,22 @@ export const getTeamDataBySlug = (slug, isHome) => {
   const team = teamData.find((t) => t.name.toLowerCase().replace(' ', '-') === slug);
 
   return team ? team : defaultTeam(isHome);
+};
+
+export const getAllTeamsByDivision = () => {
+  const teams = {
+    Atlantic: [],
+    Central: [],
+    Metropolitan: [],
+    Pacific: [],
+  };
+
+  teamData.forEach((team) => {
+    if (!team.division || team.division === 'International') {
+      return;
+    }
+    teams[team.division].push(team);
+  });
+
+  return teams;
 };
