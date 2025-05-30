@@ -107,7 +107,7 @@ const GameTile = ({game, logos, hideDate, style}) => {
             </div>
           ) : (
             <>
-              <span className="text-xs text-slate-600">
+              <span className="text-xs text-slate-600 line-clamp-1 text-ellipsis" style={{ maxWidth: '230px'}}>
                 {game.seriesStatus?.seriesAbbrev && (
                   <span>{game.seriesStatus.seriesAbbrev}/GM {game.seriesStatus.game || game.seriesStatus.gameNumberOfSeries} | {playoffSeriesStatus} | </span>
                 )}
