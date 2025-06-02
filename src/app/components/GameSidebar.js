@@ -53,7 +53,7 @@ const GameSidebar = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  if (!gameData) {
+  if (!gameData || !gameData.homeTeam || !gameData.awayTeam || !gameData.game || !gameData.rightRail || !gameData.story) {
     return <GameSidebarSkeleton />;
   }
 

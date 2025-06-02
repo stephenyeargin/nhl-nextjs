@@ -26,7 +26,12 @@ export const GameProvider = ({ gameId, children }) => {
         const storyResponse = await fetch(`/api/nhl/wsc/game-story/${gameId}`, { cache: 'no-store' });
 
         if (!gameResponse.ok || !rightRailResponse.ok || !storyResponse.ok) {
-          throw new Error('Failed to fetch game data');
+          setPageError({ message: 'Failed to load the game data. Please try again later.', error: { status: 500 } });
+          if (gameResponse.status === 404) {
+            setPageError({ message: 'Game not found.', error: { status: 404 } });
+          }
+
+          throw new Error('Error loading game data.');
         }
 
         game = await gameResponse.json();
@@ -39,7 +44,6 @@ export const GameProvider = ({ gameId, children }) => {
           formatHeadTitle(`${game.awayTeam.abbrev} (${game.awayTeam.score}) vs. ${game.homeTeam.abbrev} (${game.homeTeam.score}) - ${GAME_STATES[game.gameState]}`);
         }
       } catch (error) {
-        setPageError({ message: 'Failed to load the game data. Please try again later.', error });
         console.error('Error fetching game data:', error);
       }
 
@@ -51,14 +55,14 @@ export const GameProvider = ({ gameId, children }) => {
 
     // Initial fetch
     fetchGameData();
-   
+
     // Polling interval (only if the game is in progress)
     if (!['OFF'].includes(gameState) && gameScheduleState === 'OK') {
       intervalId = setInterval(() => {
         fetchGameData();
       }, GAME_REFRESH_TTL);
     }
-    
+
     return () => clearInterval(intervalId);
   }, [gameId, gameState, gameScheduleState]); // only re-run if state changes
 

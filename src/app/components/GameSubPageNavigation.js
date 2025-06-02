@@ -21,7 +21,7 @@ const GameSubPageNavigation = () => {
   const activeRoute = usePathname();
   const activeClasses = 'bg-slate-500/10 border-slate-500 border-b-2';
 
-  if (!gameData) {
+  if (!gameData || !gameData.game) {
     return <></>;
   }
 
