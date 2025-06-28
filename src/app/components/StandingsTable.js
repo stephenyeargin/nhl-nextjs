@@ -18,7 +18,7 @@ const StandingsTable = ({ standings }) => {
         // Sort alphabetically
         return (a.divisionAbbrev > b.divisionAbbrev) ? 1 : -1;
       }
-      
+
       return (a.wildcardSequence > b.wildcardSequence) ? 1 : -1;
     });
 
@@ -39,7 +39,7 @@ const StandingsTable = ({ standings }) => {
 
   return (
     <div className="overflow-x-auto scrollbar-hidden">
-      <table className="standingsTable">
+      <table className="statsTable">
         <thead>
           <tr className="text-sm text-nowrap border bg-slate-200 dark:bg-slate-800">
             <th className="w-10 text-center"></th>

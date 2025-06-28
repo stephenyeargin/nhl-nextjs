@@ -27,6 +27,15 @@ export function middleware(request) {
     return NextResponse.rewrite(url);
   }
 
+  // Redirect to current year draft
+  if (pathParts.length === 1 && pathParts[0] === 'draft') {
+    const currentYear = new Date().getFullYear();
+    const url = request.nextUrl.clone();
+    url.pathname = `/draft/${currentYear}`;
+
+    return NextResponse.rewrite(url);
+  }
+
   // If not a valid key, continue to the next handler
   return NextResponse.next();
 }

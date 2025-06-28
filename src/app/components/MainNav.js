@@ -51,8 +51,11 @@ const MainNav = () => {
             Teams
           </Link>
         </li>
-        <li className={`mr-6 ${isActive(/^\/playoffs/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`} >
+        <li className={`${isActive(/^\/playoffs/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`} >
           <Link href="/playoffs" className="text-black dark:text-white">Playoffs</Link>
+        </li>
+        <li className={`mr-6 ${isActive(/^\/draft/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`} >
+          <Link href="/draft" className="text-black dark:text-white">Draft</Link>
         </li>
       </ul>
       <div
