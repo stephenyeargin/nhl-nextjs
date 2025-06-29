@@ -14,7 +14,7 @@ const handleDraftYearChange = (e) => {
 const DraftYearSelect = ({ draftYears, draftYear }) => {
   return (
     <select
-      className="p-2 rounded text-xl border bg-inherit text-white"
+      className="p-2 rounded text-xl border bg-inherit text-black dark:text-white"
       value={draftYear}
       onChange={handleDraftYearChange}
     >
