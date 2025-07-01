@@ -53,7 +53,6 @@ const DraftPage = async ({ params }) => {
                   <th>Country</th>
                   <th>Ht/Wt</th>
                   <th>Amateur Club</th>
-                  <th>Pick History</th>
                 </tr>
               </thead>
               <tbody>
@@ -65,11 +64,14 @@ const DraftPage = async ({ params }) => {
                         <TeamLogo
                           src={pick.teamLogoLight}
                           alt={pick.teamAbbrev}
-                          className="h-8 w-8"
+                          className="h-8 w-8 hidden md:block"
                           team={pick.teamAbbrev}
                         />
                         <a className="font-semibold" href={`/team/${pick.teamAbbrev}`}>{pick.teamName?.default}</a>
                       </div>
+                      {pick.teamAbbrev !== pick.teamPickHistory && (
+                        <div className="text-slate-500 ps-4 text-xs">↳ {pick.teamPickHistory.replace(/-/g, ' » ')}</div>
+                      )}
                     </td>
                     <td>
                       {pick.firstName?.default || ''} {pick.lastName?.default || ''}
@@ -78,7 +80,6 @@ const DraftPage = async ({ params }) => {
                     <td>{pick.countryCode || ''}</td>
                     <td>{pick.height && pick.weight ? `${Math.floor(pick.height / 12)}'${pick.height % 12}" / ${pick.weight}` : ''}</td>
                     <td>{pick.amateurClubName || ''}{pick.amateurLeague ? ` (${pick.amateurLeague})` : ''}</td>
-                    <td>{pick.teamPickHistory}</td>
                   </tr>
                 ))}
               </tbody>

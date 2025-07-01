@@ -4,6 +4,7 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import MainNav from '@/app/components/MainNav';
 import TopBarSchedule from '@/app/components/TopBarSchedule';
+import DraftTicker from './components/DraftTicker';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import './globals.css';
@@ -27,6 +28,15 @@ export const metadata = {
   description: 'NHL Next.js',
 };
 
+function isDraftSeason() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const june15 = new Date(year, 5, 15);
+  const sept1 = new Date(year, 8, 1);
+  
+  return now >= june15 && now < sept1;
+}
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -35,7 +45,7 @@ export default function RootLayout({ children }) {
       >
         <MainNav />
         <section id="root">
-          <TopBarSchedule />
+          {isDraftSeason() ? <DraftTicker /> : <TopBarSchedule />}
           {children}
         </section>
         <div className="bg-slate-200 dark:bg-slate-800 p-5">
