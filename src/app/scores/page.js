@@ -69,10 +69,14 @@ const ScoresPage = () => {
         </div>
       </div>
       <div className="my-5">
-        <div className="flex justify-between">
-          <div><button onClick={() => handleDateChange(scores.prevDate)} className="font-bold underline">&laquo; {formatLocalizedDate(scores.prevDate, 'LL')}</button></div>
-          <div>{formatLocalizedDate(scores.currentDate, 'dddd, MMMM D, YYYY')}</div>
-          <div><button onClick={() => handleDateChange(scores.nextDate)} href="#" className="font-bold underline">{formatLocalizedDate(scores.nextDate, 'LL')} &raquo;</button></div>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="col-span-1 text-start"><button onClick={() => handleDateChange(scores.prevDate)} className="font-bold underline">&laquo; {formatLocalizedDate(scores.prevDate, 'LL')}</button></div>
+          <div className="col-span-1 text-center">{formatLocalizedDate(scores.currentDate, 'dddd, MMMM D, YYYY')}</div>
+          {scores.nextDate ? (
+            <div className="col-span-1 text-end"><button onClick={() => handleDateChange(scores.nextDate)} href="#" className="font-bold underline">{formatLocalizedDate(scores.nextDate, 'LL')} &raquo;</button></div>
+          ) : (
+            <div className="col-span-1 text-end"></div>
+          )}
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
