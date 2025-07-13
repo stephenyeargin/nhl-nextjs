@@ -32,9 +32,9 @@ function isDraftSeason() {
   const now = new Date();
   const year = now.getFullYear();
   const june15 = new Date(year, 5, 15);
-  const sept1 = new Date(year, 8, 1);
-  
-  return now >= june15 && now < sept1;
+  const july15 = new Date(year, 6, 15);
+
+  return now >= june15 && now < july15;
 }
 
 export default function RootLayout({ children }) {

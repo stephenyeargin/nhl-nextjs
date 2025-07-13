@@ -118,9 +118,18 @@ const GamePreview = ({ game }) => {
     );
   }
 
+  if (matchup.skaterComparison?.leaders[0]?.skaters === undefined) {
+    return (
+      <div className="col-span-1 md:col-span-2">
+        <div className="text-center font-bold py-20">
+          Game preview unavailable.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="my-5">
-
       <div className="flex justify-between">
         <div className="">
           <TeamLogo

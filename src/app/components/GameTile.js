@@ -96,7 +96,7 @@ const GameTile = ({game, logos, hideDate, style}) => {
 
       <div className="mt-1 pt-1 border-t">
         <div className="flex flex-wrap justify-between items-center">
-          {(['CNCL', 'PPD'].includes(game.gameScheduleState) || game.gameType === 1) ? (
+          {(['CNCL', 'PPD'].includes(game.gameScheduleState)) ? (
             <div className="text-sm">
               {game.gameScheduleState === 'CNCL' && (
                 <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
@@ -107,15 +107,16 @@ const GameTile = ({game, logos, hideDate, style}) => {
             </div>
           ) : (
             <>
+              {game.gameType === 1 && (
+                <span className="text-xs font-medium p-1 uppercase">Preseason</span>
+              )}
               <span className="text-xs text-slate-600 line-clamp-1 text-ellipsis" style={{ maxWidth: '230px'}}>
                 {game.seriesStatus?.seriesAbbrev && (
                   <span>{game.seriesStatus.seriesAbbrev}/GM {game.seriesStatus.game || game.seriesStatus.gameNumberOfSeries} | {playoffSeriesStatus} | </span>
                 )}
                 {game.venue.default}
               </span>
-              {game.gameType === 1 && (
-                <span className="text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black rounded mr-1 uppercase">Preseason</span>
-              )}
+
             </>
           )}
           {(game.gameState === 'FINAL' || game.gameState === 'OFF') && (
@@ -140,9 +141,9 @@ const GameTile = ({game, logos, hideDate, style}) => {
           )}
           {['FUT', 'PRE'].includes(game.gameState) && (
             <span className={`p-1 text-xs ${game.gameState === 'PRE' ? 'bg-red-900 rounded text-white' : '' }`}>
-              {game.gameScheduleState !== 'TBD' && (
+              {game.gameScheduleState !== 'TBD' ? (
                 <span suppressHydrationWarning>{formatLocalizedTime(game.startTimeUTC)}</span>
-              )}
+              ) : 'TBD'}
               {' '}
               {hideDate ? null : formatLocalizedDate(game.startTimeUTC)}
               {game.gameType === 3 && game.ifNecessary && (
