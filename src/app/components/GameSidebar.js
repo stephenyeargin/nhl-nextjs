@@ -7,8 +7,8 @@ import { useGameContext } from '../contexts/GameContext';
 import Scoreboard from './Scoreboard';
 import TeamLogo from './TeamLogo';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
-import { GAME_STATES, GAME_REPORT_NAMES, NHL_BRIGHTCOVE_ACCOUNT } from '../utils/constants';
-import { formatSeriesStatus, formatLocalizedTime, formatPeriodLabel } from '../utils/formatters';
+import { GAME_STATES, GAME_REPORT_NAMES, NHL_BRIGHTCOVE_ACCOUNT, STAT_CONTEXT } from '../utils/constants';
+import { formatSeriesStatus, formatLocalizedTime, formatPeriodLabel, formatSeason } from '../utils/formatters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faPlayCircle, faWarning } from '@fortawesome/free-solid-svg-icons';
 import GameSidebarSkeleton from './GameSidebarSkeleton';
@@ -243,7 +243,12 @@ const GameSidebar = () => {
                 className="h-12 w-12"
               />
             </div>
-            <div className="w-1/2 p-2 text-2xl font-bold">Season Stats</div>
+            <div className="w-1/2 p-3">
+              <div className="text-2xl font-bold">Season Stats</div>
+              {rightRail.teamSeasonStats.contextLabel && (
+                <div className="text-xs text-center text-gray-500">{formatSeason(rightRail.teamSeasonStats.contextSeason)} {STAT_CONTEXT[rightRail.teamSeasonStats.contextLabel]}</div>
+              )}
+            </div>
             <div className="w-1/4 p-2 text-bold flex justify-center">
               <TeamLogo
                 src={logos[homeTeam.abbrev]}
