@@ -118,7 +118,7 @@ const GamePreview = ({ game }) => {
     );
   }
 
-  if (matchup.skaterComparison?.leaders[0]?.skaters === undefined) {
+  if (matchup.skaterComparison?.leaders[0]?.awayLeader === undefined) {
     return (
       <div className="col-span-1 md:col-span-2">
         <div className="text-center font-bold py-20">

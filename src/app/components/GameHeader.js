@@ -157,6 +157,12 @@ const GameHeader = () => {
           )}
         </div>
         <div className="col-span-2 text-center content-middle">
+          {game.gameType === 1 && (
+            <div className="text-xs my-1 p-1 border rounded font-bold uppercase">Preseason</div>
+          )}
+          {game.gameType === 3 && (
+            <div className="text-xs my-1 p-1 border rounded font-bold uppercase">Stanley Cup Playoffs</div>
+          )}
           <div className="text-xs my-1">{venue.default}, {venueLocation.default}</div>
           {(gameState === 'LIVE' || gameState === 'CRIT') && (
             <div className="my-3 flex flex-wrap justify-center">
