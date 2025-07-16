@@ -275,7 +275,7 @@ const teamData = [
     abbreviation: 'UTA',
     teamColor: '#6cace4',
     secondaryTeamColor: '#010101',
-    teamId: 59,
+    teamId: 68,
     division: 'Central',
   },
   {
