@@ -1,4 +1,6 @@
 import React, { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import { env } from '@/config/env';
 import localFont from 'next/font/local';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -22,9 +24,9 @@ const geistMono = localFont({
   weight: '100 900'
 });
 
-export const metadata = {
-  title: 'NHL Next.js',
-  description: 'NHL Next.js'
+export const metadata: Metadata = {
+  title: env.NEXT_PUBLIC_SITE_NAME,
+  description: env.NEXT_PUBLIC_SITE_NAME
 };
 
 function isDraftSeason(): boolean {
@@ -48,10 +50,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           {children}
         </section>
         <div className="bg-slate-200 dark:bg-slate-800 p-5">
-          <div className="text-xs text-center">All trademarks are property of their respective owners. | <Link href="https://github.com/stephenyeargin/nhl-nextjs" className="font-bold underline">Source Code</Link></div>
+          <div className="text-xs text-center">{env.NEXT_PUBLIC_SITE_NAME} — All trademarks are property of their respective owners. | <Link href="https://github.com/stephenyeargin/nhl-nextjs" className="font-bold underline">Source Code</Link></div>
         </div>
-        {process.env.MATOMO_URL && process.env.MATOMO_SITE_ID && (
-          <MatomoAnalytics url={process.env.MATOMO_URL} siteId={process.env.MATOMO_SITE_ID} />
+        {env.MATOMO_URL && env.MATOMO_SITE_ID && (
+          <MatomoAnalytics url={env.MATOMO_URL} siteId={env.MATOMO_SITE_ID} />
         )}
       </body>
     </html>
