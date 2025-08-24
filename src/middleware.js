@@ -1,4 +1,4 @@
-import { getTeamSlugs } from './app/utils/teamData.js';
+import { getTeamSlugs } from '@/app/utils/teamData';
 import { NextResponse } from 'next/server';
 
 const validTeamKeys = getTeamSlugs();

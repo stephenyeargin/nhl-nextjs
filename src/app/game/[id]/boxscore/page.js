@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton.js';
-import StatsTable from '@/app/components/StatsTable';
-import TeamLogo from '@/app/components/TeamLogo';
-import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import { PropTypes } from 'prop-types';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton.tsx';
+import StatsTable from '@/app/components/StatsTable.tsx';
+import TeamLogo from '@/app/components/TeamLogo.tsx';
+import { getTeamDataByAbbreviation } from '@/app/utils/teamData.ts';
+import PropTypes from 'prop-types';
 import { notFound, useParams } from 'next/navigation';
-import TeamToggle from '@/app/components/TeamToggle';
+import TeamToggle from '@/app/components/TeamToggle.tsx';
 
 const BoxScore = () => {
   const { id } = useParams();

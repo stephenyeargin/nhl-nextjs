@@ -1,7 +1,7 @@
 import React from 'react';
 import '@/app/assets/datatables.css';
-import '@/app/components/StandingsTable.scss';
-import TeamLogo from '@/app/components/TeamLogo';
+import standingsStyles from '@/app/components/StandingsTable.module.scss';
+import TeamLogo from '@/app/components/TeamLogo.tsx';
 import DraftYearSelect from '../DraftYearSelect';
 import PropTypes from 'prop-types';
 
@@ -43,7 +43,7 @@ const DraftPage = async ({ params }) => {
         <div key={round} className="mb-10">
           <h2 className="text-2xl font-semibold mb-4">{roundNames[round] || `Round ${round}`}</h2>
           <div className="overflow-x-auto">
-            <table className="standingsTable border-collapse">
+            <table className={`${standingsStyles.standingsTable} border-collapse`}>
               <thead>
                 <tr>
                   <th>#</th>

@@ -30,7 +30,8 @@
     "quotes": ["error", "single"],
 
     // Enforce consistent indentation (2 spaces)
-    "indent": ["error", 2],
+  // Disabled due to recursion/stack overflow issues with some TSX files; rely on prettier/editor formatting instead
+  "indent": "off",
 
     // Enforce consistent line breaks between functions and variables
     "newline-before-return": "error",

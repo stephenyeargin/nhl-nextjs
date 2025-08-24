@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { formatHeadTitle, formatLocalizedDate } from '../utils/formatters';
+import { formatHeadTitle, formatLocalizedDate } from '@/app/utils/formatters';
 
 // Context & Custom Hook
 const StoryContext = createContext();
@@ -12,7 +12,7 @@ const fetchJsonData = async (url) => {
   if (!response.ok) {
     throw new Error(`Failed to fetch data from ${url}`);
   }
-  
+
   return response.json();
 };
 
@@ -24,7 +24,7 @@ const fetchStory = async (storyId) => {
     const homebaseContent = await fetchJsonData(
       `https://forge-dapi.d3.nhle.com/v2/content/en-us/stories/?fields.homebaseId=${storyId.replace('c-', '')}`
     );
-    
+
     return homebaseContent.items[0].slug;
   }
 

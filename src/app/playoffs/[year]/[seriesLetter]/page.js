@@ -1,12 +1,12 @@
 import React from 'react';
 import Image from 'next/image';
-import GameTile from '@/app/components/GameTile';
+import GameTile from '@/app/components/GameTile.tsx';
 import { notFound } from 'next/navigation';
 import PropTypes from 'prop-types';
-import TeamLogo from '@/app/components/TeamLogo';
+import TeamLogo from '@/app/components/TeamLogo.tsx';
 import Link from 'next/link';
-import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import StoryCard from '@/app/components/StoryCard';
+import { getTeamDataByAbbreviation } from '@/app/utils/teamData.ts';
+import StoryCard from '@/app/components/StoryCard.tsx';
 
 const fetchData = async (url, seriesString) => {
   const extractSeriesLetter = /(?:series-)?([a-z])(?:-coverage)?/i;

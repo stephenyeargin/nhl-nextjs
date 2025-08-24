@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
-import VideoCard from '../components/VideoCard';
-import { formatHeadTitle } from '../utils/formatters';
-import LoadMoreButton from '../components/LoadMoreButton';
+import NewsPageSkeleton from '@/app/components/NewsPageSkeleton.tsx';
+import VideoCard from '@/app/components/VideoCard';
+import { formatHeadTitle } from '@/app/utils/formatters';
+import LoadMoreButton from '@/app/components/LoadMoreButton';
 
 const VideoPage = () => {
   const [videos, setVideos] = useState([]);

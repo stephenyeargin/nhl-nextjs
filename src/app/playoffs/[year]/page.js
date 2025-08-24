@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import PlayoffSeriesTile from '../../components/PlayoffSeriesTile';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import { notFound } from 'next/navigation';
-import PlayoffYearSelector from '@/app/components/PlayoffYearSelector';
+import PlayoffYearSelector from '@/app/components/PlayoffYearSelector.tsx';
 
 async function getPlayoffData({ year }) {
   // const year = new Date().getFullYear(); // or set a fixed year

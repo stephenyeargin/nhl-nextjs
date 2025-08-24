@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton.js';
-import { PropTypes } from 'prop-types';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton.tsx';
+import PropTypes from 'prop-types';
 import { redirect, useParams } from 'next/navigation';
-import VideoCard from '@/app/components/VideoCard';
+import VideoCard from '@/app/components/VideoCard.tsx';
 import { useGameContext } from '@/app/contexts/GameContext';
-import { formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters';
+import { formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters.ts';
 
 const Highlights = () => {
   const { id } = useParams();

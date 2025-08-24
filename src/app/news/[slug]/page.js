@@ -3,14 +3,14 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { useStoryContext } from '@/app/contexts/StoryContext';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton';
-import ContentPhoto from '@/app/components/ContentPhoto';
-import ContentCustomEntity from '@/app/components/ContentCustomEntity';
-import ContentExternal from '@/app/components/ContentExternal';
-import ContentMarkdown from '@/app/components/ContentMarkdown';
-import ContentByline from '@/app/components/ContentByline';
-import PageError from '@/app/components/PageError';
-import ContentTag from '@/app/components/ContentTag';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton.tsx';
+import ContentPhoto from '@/app/components/ContentPhoto.tsx';
+import ContentCustomEntity from '@/app/components/ContentCustomEntity.tsx';
+import ContentExternal from '@/app/components/ContentExternal.tsx';
+import ContentMarkdown from '@/app/components/ContentMarkdown.tsx';
+import ContentByline from '@/app/components/ContentByline.tsx';
+import PageError from '@/app/components/PageError.tsx';
+import ContentTag from '@/app/components/ContentTag.tsx';
 
 const NewsArticle = () => {
   const { story, pageError } = useStoryContext();

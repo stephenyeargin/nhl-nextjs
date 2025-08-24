@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
+import NewsPageSkeleton from '@/app/components/NewsPageSkeleton.tsx';
 import { notFound, useParams } from 'next/navigation';
-import { formatHeadTitle, formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters';
+import { formatHeadTitle, formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters.ts';
 import Link from 'next/link';
 import { faFilm, faVideoCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import VideoCard from '@/app/components/VideoCard';
+import VideoCard from '@/app/components/VideoCard.tsx';
 
 const VideoItemPage = () => {
   const { slug } = useParams();

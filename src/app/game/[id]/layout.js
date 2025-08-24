@@ -1,12 +1,12 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import { GameProvider } from '@/app/contexts/GameContext';
-import GameSkeleton from '@/app/components/GameSkeleton';
-import GameHeader from '@/app/components/GameHeader';
-import GameSubPageNavigation from '@/app/components/GameSubPageNavigation';
-import GameSidebar from '@/app/components/GameSidebar';
+import GameSkeleton from '@/app/components/GameSkeleton.tsx';
+import GameHeader from '@/app/components/GameHeader.tsx';
+import GameSubPageNavigation from '@/app/components/GameSubPageNavigation.tsx';
+import GameSidebar from '@/app/components/GameSidebar.tsx';
 import { useParams } from 'next/navigation';
 
 const GameLayout = ({ children }) => {

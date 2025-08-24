@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import StoryCard from '@/app/components/StoryCard';
+import StoryCard from '@/app/components/StoryCard.tsx';
 import { notFound, useParams } from 'next/navigation';
-import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
-import LoadMoreButton from '@/app/components/LoadMoreButton';
+import NewsPageSkeleton from '@/app/components/NewsPageSkeleton.tsx';
+import LoadMoreButton from '@/app/components/LoadMoreButton.tsx';
 
 const NewsTagPage = () => {
   const [newsItems, setNewsItems] = useState([]);

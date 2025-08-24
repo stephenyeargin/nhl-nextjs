@@ -1,13 +1,13 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { PropTypes } from 'prop-types';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton';
+import PropTypes from 'prop-types';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton.tsx';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { StoryProvider } from '@/app/contexts/StoryContext';
-import StorySidebar from '@/app/components/StorySidebar';
+import StorySidebar from '@/app/components/StorySidebar.tsx';
 import { useParams } from 'next/navigation';
 
 const NewsLayout = ({ children }) => {

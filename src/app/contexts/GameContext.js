@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { PropTypes } from 'prop-types';
-import { GAME_STATES } from '../utils/constants';
-import { formatHeadTitle } from '../utils/formatters';
+import PropTypes from 'prop-types';
+import { GAME_STATES } from '@/app/utils/constants';
+import { formatHeadTitle } from '@/app/utils/formatters';
 
 const GameContext = createContext();
 

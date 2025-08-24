@@ -1,5 +1,5 @@
 import React from 'react';
-import TeamsMenu from '../components/TeamsMenu';
+import TeamsMenu from '@/app/components/TeamsMenu';
 
 export const metadata = {
   title: 'Team Schedule & Stats',

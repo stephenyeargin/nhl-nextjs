@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import NewsPageSkeleton from '../components/NewsPageSkeleton';
-import GameTile from '../components/GameTile';
-import { formatLocalizedDate } from '../utils/formatters';
+import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
+import GameTile from '@/app/components/GameTile';
+import { formatLocalizedDate } from '@/app/utils/formatters';
 
 const ScoresPage = () => {
   const [scores, setScores] = useState(null);

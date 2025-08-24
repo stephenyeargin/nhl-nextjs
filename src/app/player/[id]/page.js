@@ -5,21 +5,21 @@ import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
-import Headshot from '@/app/components/Headshot';
-import { formatStat, formatSeason, formatOrdinalNumber, formatLocalizedDate, formatTextColorByBackgroundColor, formatHeadTitle } from '@/app/utils/formatters';
+import Headshot from '@/app/components/Headshot.tsx';
+import { formatStat, formatSeason, formatOrdinalNumber, formatLocalizedDate, formatTextColorByBackgroundColor, formatHeadTitle } from '@/app/utils/formatters.ts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faNewspaper, faTrophy, faUser } from '@fortawesome/free-solid-svg-icons';
-import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import TeamLogo from '@/app/components/TeamLogo';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton';
-import LeagueToggle from '@/app/components/LeagueToggle';
-import StoryCard from '@/app/components/StoryCard';
-import PlayerDropdown from '@/app/components/PlayerDropdown';
-import '@/app/components/StatsTable.scss';
-import ContentCustomEntity from '@/app/components/ContentCustomEntity';
-import { STAT_CONTEXT } from '@/app/utils/constants';
-import LoadMoreButton from '@/app/components/LoadMoreButton';
-import ContentPhoto from '@/app/components/ContentPhoto';
+import { getTeamDataByAbbreviation } from '@/app/utils/teamData.ts';
+import TeamLogo from '@/app/components/TeamLogo.tsx';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton.tsx';
+import LeagueToggle from '@/app/components/LeagueToggle.tsx';
+import StoryCard from '@/app/components/StoryCard.tsx';
+import PlayerDropdown from '@/app/components/PlayerDropdown.tsx';
+import statsStyles from '@/app/components/StatsTable.module.scss';
+import ContentCustomEntity from '@/app/components/ContentCustomEntity.tsx';
+import { STAT_CONTEXT } from '@/app/utils/constants.ts';
+import LoadMoreButton from '@/app/components/LoadMoreButton.tsx';
+import ContentPhoto from '@/app/components/ContentPhoto.tsx';
 
 export default function PlayerPage() {
   const { id } = useParams();
@@ -178,7 +178,7 @@ export default function PlayerPage() {
   const renderStatsTable = ({ stats, showLeague }) => {
     return (
       <div className="overflow-x-auto">
-        <table className="statsTable">
+  <table className={statsStyles.statsTable}>
           <thead>
             <tr className={`text-xs border ${headerColorClass}`} >
               <th className={'p-2 text-center'} style={headerStyle}>Season</th>

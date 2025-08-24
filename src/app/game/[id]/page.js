@@ -7,17 +7,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPlayCircle, faTrophy, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { useGameContext } from '@/app/contexts/GameContext.js';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton.js';
-import Headshot from '@/app/components/Headshot';
-import GamePreview from '@/app/components/GamePreview';
-import { PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS, NHL_BRIGHTCOVE_ACCOUNT } from '@/app/utils/constants';
-import PageError from '@/app/components/PageError';
-import TeamLogo from '@/app/components/TeamLogo';
-import { formatPeriodLabel, formatStat } from '@/app/utils/formatters';
-import IceRink from '@/app/components/IceRink';
-import GameStory from '@/app/components/GameStory';
-import FloatingVideoPlayer from '@/app/components/FloatingVideoPlayer';
-import ShootoutScoreboard from '@/app/components/ShootoutScoreboard';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton.tsx';
+import Headshot from '@/app/components/Headshot.tsx';
+import GamePreview from '@/app/components/GamePreview.tsx';
+import { PENALTY_TYPES, PENALTY_DESCRIPTIONS, SHOOTOUT_RESULT, GOAL_MODIFIERS, NHL_BRIGHTCOVE_ACCOUNT } from '@/app/utils/constants.ts';
+import PageError from '@/app/components/PageError.tsx';
+import TeamLogo from '@/app/components/TeamLogo.tsx';
+import { formatPeriodLabel, formatStat } from '@/app/utils/formatters.ts';
+import IceRink from '@/app/components/IceRink.tsx';
+import GameStory from '@/app/components/GameStory.tsx';
+import FloatingVideoPlayer from '@/app/components/FloatingVideoPlayer.tsx';
+import ShootoutScoreboard from '@/app/components/ShootoutScoreboard.tsx';
 
 const GamePage = () => {
   const [videoPlayerLabel, setVideoPlayerLabel] = useState(null);

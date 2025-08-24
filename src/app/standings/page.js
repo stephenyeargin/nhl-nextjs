@@ -1,6 +1,6 @@
 import React from 'react';
 
-import StandingsTable from '@/app/components/StandingsTable';
+import StandingsTable from '@/app/components/StandingsTable.tsx';
 
 export default async function Home() {
   let westernConference, easternConference;
