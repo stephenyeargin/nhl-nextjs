@@ -1,28 +1,38 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import NewsPageSkeleton from '@/app/components/NewsPageSkeleton.tsx';
+import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
 import { notFound, useParams } from 'next/navigation';
-import { formatHeadTitle, formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters.ts';
+import { formatHeadTitle, formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters';
 import Link from 'next/link';
 import { faFilm, faVideoCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import VideoCard from '@/app/components/VideoCard.tsx';
+import VideoCard from '@/app/components/VideoCard';
 
-const VideoItemPage = () => {
-  const { slug } = useParams();
-  const [video, setVideo] = useState(null);
-  const [videos, setVideos] = useState([]);
+interface VideoFields { brightcoveAccountId?: string; brightcoveId?: string; longDescription?: string; title?: string; description?: string }
+// Match VideoCard's expected minimal shape (fields, slug, optional metadata)
+interface VideoItem { slug: string; title?: string; headline?: string; summary?: string; contentDate?: string; status?: number; fields: VideoFields; thumbnail?: { templateUrl: string; thumbnailUrl: string }; [k:string]: any }
+interface VideoApiResponse { items: VideoItem[] }
+
+const VideoItemPage: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const [video, setVideo] = useState<VideoItem | null>(null);
+  const [videos, setVideos] = useState<VideoItem[]>([]);
 
   useEffect(() => {
     const fetchVideos = async () => {
       const videoResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/videos/${slug}`, { cache: 'no-store' });
-      const videoItem = await videoResponse.json();
+      const videoItem: VideoItem = await videoResponse.json();
       setVideo(videoItem);
 
       const videosResponse = await fetch('https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?context.slug=nhl&$skip=0&$limit=6', { cache: 'no-store' });
-      const videoItems = await videosResponse.json();
-      setVideos(videoItems.items);
+      const videoItems: VideoApiResponse = await videosResponse.json();
+      setVideos(videoItems.items.map((it: any) => ({ 
+        slug: it.slug || String(it._entityId || ''), 
+        fields: it.fields || { description: it.summary }, 
+        thumbnail: it.thumbnail ? { templateUrl: it.thumbnail.templateUrl || '', thumbnailUrl: it.thumbnail.thumbnailUrl || it.thumbnail.templateUrl || '' } : undefined,
+        ...it 
+      })));
     };
     fetchVideos();
   }, [slug]);
@@ -63,16 +73,13 @@ const VideoItemPage = () => {
       <div className="text-2xl font-bold my-5">Latest Videos</div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {videos.map((item, i) => {
-          return (
-            <VideoCard
-              key={i}
-              item={item}
-              size=""
-              className="col-span-1"
-            />
-          );
-        })}
+  {videos.map((item, i) => (
+          <VideoCard
+            key={i}
+            item={item}
+            className="col-span-1"
+          />
+        ))}
       </div>
     </div>
   );

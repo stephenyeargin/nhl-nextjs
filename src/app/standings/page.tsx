@@ -1,20 +1,32 @@
 import React from 'react';
+import StandingsTable from '@/app/components/StandingsTable';
 
-import StandingsTable from '@/app/components/StandingsTable.tsx';
+// Mirror the stricter interface expected by StandingsTable
+interface StandingsEntry {
+  wildcardSequence: number; divisionAbbrev: string; divisionSequence: number; points: number;
+  teamAbbrev: { default: string }; teamLogo?: string; teamName: { default: string };
+  clinchIndicator?: string; gamesPlayed: number; wins: number; losses: number; otLosses: number; pointPctg: number;
+  regulationWins: number; regulationPlusOtWins: number; goalFor: number; goalAgainst: number; goalDifferential: number;
+  homeWins: number; homeLosses: number; homeOtLosses: number; roadWins: number; roadLosses: number; roadOtLosses: number;
+  shootoutWins: number; shootoutLosses: number; l10Wins: number; l10Losses: number; l10OtLosses: number; streakCode?: string; streakCount?: number;
+  conferenceAbbrev?: string; [k: string]: any;
+}
 
-export default async function Home() {
-  let westernConference, easternConference;
+interface StandingsApiResponse { standings: StandingsEntry[]; [k: string]: any }
+
+export default async function StandingsPage() {
+  let westernConference: StandingsEntry[] = [];
+  let easternConference: StandingsEntry[] = [];
 
   try {
     const apiStandings = await fetch('https://api-web.nhle.com/v1/standings/now', { cache: 'no-store' });
     if (!apiStandings.ok) {
       throw new Error('Failed to fetch data');
     }
-    const jsonStandings = await apiStandings.json();
-    westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
-    easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
-
-  } catch (error) {
+    const jsonStandings: StandingsApiResponse = await apiStandings.json();
+  westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
+  easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
+  } catch (error: any) {
     return (
       <div className="container mx-auto">
         <div className="text-3xl font-bold">Standings</div>
@@ -46,7 +58,6 @@ export default async function Home() {
           <dd className="p-1">Eliminated</dd>
         </dl>
       </div>
-
     </div>
   );
 }

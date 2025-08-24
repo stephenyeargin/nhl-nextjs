@@ -1,22 +1,30 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import NewsPageSkeleton from '@/app/components/NewsPageSkeleton.tsx';
+import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
 import VideoCard from '@/app/components/VideoCard';
 import { formatHeadTitle } from '@/app/utils/formatters';
 import LoadMoreButton from '@/app/components/LoadMoreButton';
 
-const VideoPage = () => {
-  const [videos, setVideos] = useState([]);
+interface VideoItem { _entityId?: string | number; slug: string; fields: { description?: string }; [k:string]: any }
+interface VideoApiResponse { items: VideoItem[]; pagination?: { nextUrl?: string | null } }
+
+const VideoPage: React.FC = () => {
+  const [videos, setVideos] = useState<VideoItem[]>([]);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     const fetchVideos = async () => {
       const videosResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?context.slug=nhl&$skip=${offset}&$limit=24`, { cache: 'no-store' });
-      const videoItems = await videosResponse.json();
-      setVideos((prevVideos) => [...prevVideos, ...videoItems.items]);
-      if (!videoItems.pagination.nextUrl) {
+      const videoItems: VideoApiResponse = await videosResponse.json();
+      const normalized = videoItems.items.map((it: any) => ({
+        slug: it.slug || String(it._entityId || ''),
+        fields: it.fields || { description: it.summary },
+        ...it,
+      } as VideoItem));
+      setVideos((prev) => [...prev, ...normalized]);
+      if (!videoItems.pagination?.nextUrl) {
         setHasMore(false);
       }
     };
@@ -28,7 +36,7 @@ const VideoPage = () => {
   }
 
   const handleLoadMoreButton = () => {
-    setOffset(offset + 24);
+    setOffset((o) => o + 24);
   };
 
   formatHeadTitle('Videos');

@@ -1,37 +1,45 @@
 import React from 'react';
 import '@/app/assets/datatables.css';
 import standingsStyles from '@/app/components/StandingsTable.module.scss';
-import TeamLogo from '@/app/components/TeamLogo.tsx';
-import DraftYearSelect from '../DraftYearSelect';
-import PropTypes from 'prop-types';
+import TeamLogo from '@/app/components/TeamLogo';
+import DraftYearSelect from '@/app/components/DraftYearSelect';
 
-const getDraftYearData = async ({ year }) => {
+interface DraftPick {
+  overallPick: number;
+  teamLogoLight?: string; teamAbbrev: string; teamName?: { default?: string };
+  teamPickHistory?: string;
+  firstName?: { default?: string }; lastName?: { default?: string };
+  positionCode?: string; countryCode?: string;
+  height?: number; weight?: number;
+  amateurClubName?: string; amateurLeague?: string;
+  round: number;
+  [k:string]: any;
+}
+interface DraftData {
+  draftYear: number;
+  draftYears: number[];
+  selectableRounds: number[];
+  picks: DraftPick[];
+}
+
+async function getDraftYearData(year: string | number): Promise<DraftData> {
   const res = await fetch(`https://api-web.nhle.com/v1/draft/picks/${year}/all`, { cache: 'no-store' });
-
+  
   return res.json();
-};
+}
 
-const roundNames = [
-  '',
-  'Round 1',
-  'Round 2',
-  'Round 3',
-  'Round 4',
-  'Round 5',
-  'Round 6',
-  'Round 7',
-];
+const roundNames = ['', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6', 'Round 7'];
 
-const DraftPage = async ({ params }) => {
-  const { year } = await params;
-  const draftData = await getDraftYearData({ year });
+export default async function DraftPage(props: any) {
+  const resolved = await props?.params;
+  const { year } = resolved || {};
+  const draftData = await getDraftYearData(year);
 
-  // Group picks by round
-  const picksByRound = draftData.selectableRounds.reduce((acc, round) => {
+  const picksByRound: Record<number, DraftPick[]> = draftData.selectableRounds.reduce((acc: Record<number, DraftPick[]>, round: number) => {
     acc[round] = draftData.picks.filter((pick) => pick.round === round);
-
+    
     return acc;
-  }, {});
+  }, {} as Record<number, DraftPick[]>);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -69,7 +77,7 @@ const DraftPage = async ({ params }) => {
                         />
                         <a className="font-semibold" href={`/team/${pick.teamAbbrev}`}>{pick.teamName?.default}</a>
                       </div>
-                      {pick.teamAbbrev !== pick.teamPickHistory && (
+                      {pick.teamAbbrev !== pick.teamPickHistory && pick.teamPickHistory && (
                         <div className="text-slate-500 ps-4 text-xs">↳ {pick.teamPickHistory.replace(/-/g, ' » ')}</div>
                       )}
                     </td>
@@ -89,12 +97,4 @@ const DraftPage = async ({ params }) => {
       ))}
     </div>
   );
-};
-
-DraftPage.propTypes = {
-  params: PropTypes.shape({
-    year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  }).isRequired,
-};
-
-export default DraftPage;
+}

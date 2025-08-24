@@ -5,47 +5,46 @@ import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
 import GameTile from '@/app/components/GameTile';
 import { formatLocalizedDate } from '@/app/utils/formatters';
 
-const ScoresPage = () => {
-  const [scores, setScores] = useState(null);
-  const [today, setToday] = useState(null);
+interface GameWeekDay { date: string; dayAbbrev: string; numberOfGames: number }
+interface ScoreGame { id: string | number; [k:string]: any }
+interface ScoresResponse {
+  gameWeek: GameWeekDay[];
+  games: ScoreGame[];
+  prevDate: string; currentDate: string; nextDate?: string;
+  [k:string]: any;
+}
+
+const ScoresPage: React.FC = () => {
+  const [scores, setScores] = useState<ScoresResponse | null>(null);
+  const [today, setToday] = useState<string | Date | null>(null);
 
   useEffect(() => {
-    // Function to get the current date at noon Eastern time
     const setTodayNoonET = () => {
       const now = new Date();
-
-      // Adjust current time to Eastern Time, no DST consideration here for simplicity
       const easternTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-
-      // Set the time to 12:00 PM today
       easternTime.setHours(12, 0, 0, 0);
-
-      return easternTime.toISOString().split('T')[0]; // returns YYYY-MM-DD format
+      
+  return easternTime.toISOString().split('T')[0];
     };
 
     if (!today) {
       const todayNoonET = setTodayNoonET();
-      setToday(todayNoonET); // Set `today` state
+      setToday(todayNoonET);
     } else {
-      // Now fetch the scores based on `today`
       const getScores = async () => {
-        let todayString = today;
-        if (typeof today !== 'string') {
-          todayString = today.toISOString().slice(0, 10);
-        }
+        const todayString = typeof today === 'string' ? today : today.toISOString().slice(0, 10);
         const scoresResponse = await fetch(`/api/nhl/score/${todayString}`, { cache: 'no-store' });
         setScores(await scoresResponse.json());
       };
 
       getScores();
-
       const interval = setInterval(getScores, 30000);
-
-      return () => clearInterval(interval);
+      
+  return () => clearInterval(interval);
     }
-  }, [today]); // Runs when `today` changes
+  }, [today]);
 
-  const handleDateChange = (date) => {
+  const handleDateChange = (date: string) => {
     setToday(new Date(date));
   };
 
@@ -58,14 +57,12 @@ const ScoresPage = () => {
       <div className="text-3xl font-bold my-5">Scores</div>
       <div className="my-5">
         <div className="flex justify-between gap-2">
-          {scores.gameWeek.map((day, i) => {
-            return (
-              <button key={i} className={`p-1 border rounded w-full ${day.date === today ? 'bg-slate-200 dark:bg-slate-800' : ''}`} onClick={() => setToday(day.date)}>
-                <div className="text-xs my-1">{day.dayAbbrev} {formatLocalizedDate(day.date, 'M/D')}</div>
-                <div className="text-xs my-1 font-bold">{day.numberOfGames} game{day.numberOfGames === 1 ? '' : 's'}</div>
-              </button>
-            );
-          })}
+          {scores.gameWeek.map((day, i) => (
+            <button key={i} className={`p-1 border rounded w-full ${day.date === today ? 'bg-slate-200 dark:bg-slate-800' : ''}`} onClick={() => setToday(day.date)}>
+              <div className="text-xs my-1">{day.dayAbbrev} {formatLocalizedDate(day.date, 'M/D')}</div>
+              <div className="text-xs my-1 font-bold">{day.numberOfGames} game{day.numberOfGames === 1 ? '' : 's'}</div>
+            </button>
+          ))}
         </div>
       </div>
       <div className="my-5">
@@ -73,9 +70,9 @@ const ScoresPage = () => {
           <div className="col-span-1 text-start"><button onClick={() => handleDateChange(scores.prevDate)} className="font-bold underline">&laquo; {formatLocalizedDate(scores.prevDate, 'LL')}</button></div>
           <div className="col-span-1 text-center">{formatLocalizedDate(scores.currentDate, 'dddd, MMMM D, YYYY')}</div>
           {scores.nextDate ? (
-            <div className="col-span-1 text-end"><button onClick={() => handleDateChange(scores.nextDate)} href="#" className="font-bold underline">{formatLocalizedDate(scores.nextDate, 'LL')} &raquo;</button></div>
+            <div className="col-span-1 text-end"><button onClick={() => handleDateChange(scores.nextDate!)} className="font-bold underline">{formatLocalizedDate(scores.nextDate, 'LL')} &raquo;</button></div>
           ) : (
-            <div className="col-span-1 text-end"></div>
+            <div className="col-span-1 text-end" />
           )}
         </div>
       </div>
@@ -85,11 +82,9 @@ const ScoresPage = () => {
             No games scheduled.
           </div>
         )}
-        {scores.games.map((game, i) => {
-          return (
-            <GameTile key={i} game={game} hideDate className="col-span-1" />
-          );
-        })}
+        {scores.games.map((game: any, i) => (
+          <GameTile key={i} game={game as any} hideDate />
+        ))}
       </div>
     </div>
   );

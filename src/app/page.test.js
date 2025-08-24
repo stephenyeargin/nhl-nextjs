@@ -16,6 +16,7 @@ describe('NewsPage', () => {
   beforeEach(() => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
+  ok: true,
         json: () => Promise.resolve({ items: [] }),
       })
     );
@@ -45,6 +46,7 @@ describe('NewsPage', () => {
 
     global.fetch = jest.fn(() =>
       Promise.resolve({
+  ok: true,
         json: () => Promise.resolve({ items: mockNews }),
       })
     );

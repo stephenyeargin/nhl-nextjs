@@ -1,30 +1,31 @@
 'use client';
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { DraftYearSelectProps } from '@/app/types/draft';
 
-const handleDraftYearChange = (e) => {
+const handleDraftYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const year = e.target.value;
   if (/^\d+$/.test(year)) {
-    window.location = `/draft/${year}`;
+    window.location.href = `/draft/${year}`;
   } else {
+    // eslint-disable-next-line no-console
     console.error('Invalid year selected:', year);
   }
 };
 
-const DraftYearSelect = ({ draftYears, draftYear }) => {
+const DraftYearSelect: React.FC<DraftYearSelectProps> = ({ draftYears, draftYear }) => {
   const currentIndex = draftYears.indexOf(draftYear);
   const prevYear = currentIndex > 0 ? draftYears[currentIndex - 1] : null;
   const nextYear = currentIndex < draftYears.length - 1 ? draftYears[currentIndex + 1] : null;
 
   const handlePrevYear = () => {
     if (prevYear) {
-      window.location = `/draft/${prevYear}`;
+      window.location.href = `/draft/${prevYear}`;
     }
   };
 
   const handleNextYear = () => {
     if (nextYear) {
-      window.location = `/draft/${nextYear}`;
+      window.location.href = `/draft/${nextYear}`;
     }
   };
 
@@ -32,7 +33,7 @@ const DraftYearSelect = ({ draftYears, draftYear }) => {
     <div className="flex items-center gap-2">
       <div className="w-20 text-right">
         {prevYear && (
-          <button onClick={handlePrevYear} className="font-bold underline">
+          <button onClick={handlePrevYear} className="font-bold underline" type="button">
             « {prevYear}
           </button>
         )}
@@ -42,26 +43,21 @@ const DraftYearSelect = ({ draftYears, draftYear }) => {
         value={draftYear}
         onChange={handleDraftYearChange}
       >
-        {draftYears.map((y, i) => (
-          <option key={i} value={y}>
+        {draftYears.map((y) => (
+          <option key={y} value={y}>
             {y}
           </option>
         ))}
       </select>
       <div className="w-20 text-left">
         {nextYear && (
-          <button onClick={handleNextYear} className="font-bold underline">
+          <button onClick={handleNextYear} className="font-bold underline" type="button">
             {nextYear} »
           </button>
         )}
       </div>
     </div>
   );
-};
-
-DraftYearSelect.propTypes = {
-  draftYears: PropTypes.arrayOf(PropTypes.number).isRequired,
-  draftYear: PropTypes.number.isRequired,
 };
 
 export default DraftYearSelect;
