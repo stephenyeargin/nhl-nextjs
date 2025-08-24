@@ -44,9 +44,9 @@ const GameSubPageNavigation: React.FC = () => {
           className={`p-3 ${activeRoute === `/game/${id}` ? activeClasses : ''}`}
         >
           <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1 hidden md:inline" />
-          {!['FUT', 'PRE'].includes(game.gameState) ? 'Summary' : 'Preview'}
+          {!['FUT', 'PRE'].includes(game.gameState || '') ? 'Summary' : 'Preview'}
         </Link>
-        {!['FUT', 'PRE'].includes(game.gameState) && (
+  {!['FUT', 'PRE'].includes(game.gameState || '') && (
           <Link
             href={`/game/${id}/boxscore`}
             className={`p-3 ${activeRoute === `/game/${id}/boxscore` ? activeClasses : ''}`}
@@ -55,7 +55,7 @@ const GameSubPageNavigation: React.FC = () => {
             Box Score
           </Link>
         )}
-        {!['FUT', 'PRE'].includes(game.gameState) && (
+  {!['FUT', 'PRE'].includes(game.gameState || '') && (
           <Link
             href={`/game/${id}/play-by-play`}
             className={`p-3 ${activeRoute === `/game/${id}/play-by-play` ? activeClasses : ''}`}
@@ -64,7 +64,7 @@ const GameSubPageNavigation: React.FC = () => {
             Play-by-Play
           </Link>
         )}
-        {!['FUT', 'PRE'].includes(game.gameState) && (
+  {!['FUT', 'PRE'].includes(game.gameState || '') && (
           <Link
             href={`/game/${id}/highlights`}
             className={`p-3 ${activeRoute === `/game/${id}/highlights` ? activeClasses : ''}`}

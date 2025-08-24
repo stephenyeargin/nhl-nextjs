@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import localFont from 'next/font/local';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import MainNav from '@/app/components/MainNav.tsx';
-import TopBarSchedule from '@/app/components/TopBarSchedule.tsx';
+import MainNav from '@/app/components/MainNav';
+import TopBarSchedule from '@/app/components/TopBarSchedule';
 import DraftTicker from './components/DraftTicker';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 import './globals.css';
 import MatomoAnalytics from './components/MatomoAnalytics';
@@ -25,24 +24,24 @@ const geistMono = localFont({
 
 export const metadata = {
   title: 'NHL Next.js',
-  description: 'NHL Next.js',
+  description: 'NHL Next.js'
 };
 
-function isDraftSeason() {
+function isDraftSeason(): boolean {
   const now = new Date();
   const year = now.getFullYear();
   const june15 = new Date(year, 5, 15);
   const july15 = new Date(year, 6, 15);
-
+  
   return now >= june15 && now < july15;
 }
 
-export default function RootLayout({ children }) {
+interface RootLayoutProps { children: ReactNode }
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <MainNav />
         <section id="root">
           {isDraftSeason() ? <DraftTicker /> : <TopBarSchedule />}
@@ -51,12 +50,10 @@ export default function RootLayout({ children }) {
         <div className="bg-slate-200 dark:bg-slate-800 p-5">
           <div className="text-xs text-center">All trademarks are property of their respective owners. | <Link href="https://github.com/stephenyeargin/nhl-nextjs" className="font-bold underline">Source Code</Link></div>
         </div>
-        <MatomoAnalytics url={process.env.MATOMO_URL} siteId={process.env.MATOMO_SITE_ID} />
+        {process.env.MATOMO_URL && process.env.MATOMO_SITE_ID && (
+          <MatomoAnalytics url={process.env.MATOMO_URL} siteId={process.env.MATOMO_SITE_ID} />
+        )}
       </body>
     </html>
   );
 }
-
-RootLayout.propTypes = {
-  children: PropTypes.node.isRequired
-};

@@ -64,8 +64,8 @@ const GameSidebar = () => {
   const { homeTeam, awayTeam, game, rightRail, story } = gameData;
   const { gameVideo } = rightRail;
 
-  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev, true) || {};
-  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev, false) || {};
+  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev, true) || { teamColor: '#000', secondaryTeamColor: '#000' };
+  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev, false) || { teamColor: '#000', secondaryTeamColor: '#000' };
 
   // Update logo map
   const logos: Record<string, string> = {};
@@ -120,7 +120,7 @@ const GameSidebar = () => {
 
       {rightRail.linescore && (
         <div className="mb-5">
-          <Scoreboard game={game} linescore={rightRail.linescore} />
+          <Scoreboard game={game as any} linescore={rightRail.linescore} />
         </div>
       )}
       {rightRail.shotsByPeriod && (
@@ -177,60 +177,60 @@ const GameSidebar = () => {
             </div>
             <StatComparisonRow
               awayStat={gameStats.sog.awayValue}
-              awayTeam={awayTeam}
+              awayTeam={awayTeam as any}
               homeStat={gameStats.sog.homeValue}
-              homeTeam={homeTeam}
+              homeTeam={homeTeam as any}
               stat="sog"
             />
             <StatComparisonRow
               awayStat={gameStats.faceoffWinningPctg.awayValue}
-              awayTeam={awayTeam}
+              awayTeam={awayTeam as any}
               homeStat={gameStats.faceoffWinningPctg.homeValue}
-              homeTeam={homeTeam}
+              homeTeam={homeTeam as any}
               stat="faceoffWinningPctg"
             />
             <StatComparisonRow
               awayStat={gameStats.powerPlayPctg.awayValue}
               awayStatRank={gameStats.powerPlay.awayValue}
-              awayTeam={awayTeam}
+              awayTeam={awayTeam as any}
               homeStat={gameStats.powerPlayPctg.homeValue}
               homeStatRank={gameStats.powerPlay.homeValue}
-              homeTeam={homeTeam}
+              homeTeam={homeTeam as any}
               stat="powerPlayPctg"
             />
             <StatComparisonRow
               awayStat={gameStats.pim.awayValue}
-              awayTeam={awayTeam}
+              awayTeam={awayTeam as any}
               homeStat={gameStats.pim.homeValue}
-              homeTeam={homeTeam}
+              homeTeam={homeTeam as any}
               stat="pim"
             />
             <StatComparisonRow
               awayStat={gameStats.hits.awayValue}
-              awayTeam={awayTeam}
+              awayTeam={awayTeam as any}
               homeStat={gameStats.hits.homeValue}
-              homeTeam={homeTeam}
+              homeTeam={homeTeam as any}
               stat="hits"
             />
             <StatComparisonRow
               awayStat={gameStats.blockedShots.awayValue}
-              awayTeam={awayTeam}
+              awayTeam={awayTeam as any}
               homeStat={gameStats.blockedShots.homeValue}
-              homeTeam={homeTeam}
+              homeTeam={homeTeam as any}
               stat="blockedShots"
             />
             <StatComparisonRow
               awayStat={gameStats.giveaways.awayValue}
-              awayTeam={awayTeam}
+              awayTeam={awayTeam as any}
               homeStat={gameStats.giveaways.homeValue}
-              homeTeam={homeTeam}
+              homeTeam={homeTeam as any}
               stat="giveaways"
             />
             <StatComparisonRow
               awayStat={gameStats.takeaways.awayValue}
-              awayTeam={awayTeam}
+              awayTeam={awayTeam as any}
               homeStat={gameStats.takeaways.homeValue}
-              homeTeam={homeTeam}
+              homeTeam={homeTeam as any}
               stat="takeaways"
             />
           </div>
@@ -264,46 +264,46 @@ const GameSidebar = () => {
           <StatComparisonRow
             awayStat={rightRail.teamSeasonStats.awayTeam.ppPctg}
             awayStatRank={rightRail.teamSeasonStats.awayTeam.ppPctgRank}
-            awayTeam={awayTeam}
+            awayTeam={awayTeam as any}
             homeStat={rightRail.teamSeasonStats.homeTeam.ppPctg}
             homeStatRank={rightRail.teamSeasonStats.homeTeam.ppPctgRank}
-            homeTeam={homeTeam}
+            homeTeam={homeTeam as any}
             stat="ppPctg"
           />
           <StatComparisonRow
             awayStat={rightRail.teamSeasonStats.awayTeam.pkPctg}
             awayStatRank={rightRail.teamSeasonStats.awayTeam.pkPctgRank}
-            awayTeam={awayTeam}
+            awayTeam={awayTeam as any}
             homeStat={rightRail.teamSeasonStats.homeTeam.pkPctg}
             homeStatRank={rightRail.teamSeasonStats.homeTeam.pkPctgRank}
-            homeTeam={homeTeam}
+            homeTeam={homeTeam as any}
             stat="pkPctg"
           />
           <StatComparisonRow
             awayStat={rightRail.teamSeasonStats.awayTeam.faceoffWinningPctg}
             awayStatRank={rightRail.teamSeasonStats.awayTeam.faceoffWinningPctgRank}
-            awayTeam={awayTeam}
+            awayTeam={awayTeam as any}
             homeStat={rightRail.teamSeasonStats.homeTeam.faceoffWinningPctg}
             homeStatRank={rightRail.teamSeasonStats.homeTeam.faceoffWinningPctgRank}
-            homeTeam={homeTeam}
+            homeTeam={homeTeam as any}
             stat="faceoffWinningPctg"
           />
           <StatComparisonRow
             awayStat={rightRail.teamSeasonStats.awayTeam.goalsForPerGamePlayed}
             awayStatRank={rightRail.teamSeasonStats.awayTeam.goalsForPerGamePlayedRank}
-            awayTeam={awayTeam}
+            awayTeam={awayTeam as any}
             homeStat={rightRail.teamSeasonStats.homeTeam.goalsForPerGamePlayed}
             homeStatRank={rightRail.teamSeasonStats.homeTeam.goalsForPerGamePlayedRank}
-            homeTeam={homeTeam}
+            homeTeam={homeTeam as any}
             stat="goalsForPerGamePlayed"
           />
           <StatComparisonRow
             awayStat={rightRail.teamSeasonStats.awayTeam.goalsAgainstPerGamePlayed}
             awayStatRank={rightRail.teamSeasonStats.awayTeam.goalsAgainstPerGamePlayedRank}
-            awayTeam={awayTeam}
+            awayTeam={awayTeam as any}
             homeStat={rightRail.teamSeasonStats.homeTeam.goalsAgainstPerGamePlayed}
             homeStatRank={rightRail.teamSeasonStats.homeTeam.goalsAgainstPerGamePlayedRank}
-            homeTeam={homeTeam}
+            homeTeam={homeTeam as any}
             stat="goalsAgainstPerGamePlayed"
           />
         </div>

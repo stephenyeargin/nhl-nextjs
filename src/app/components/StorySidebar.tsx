@@ -12,11 +12,14 @@ interface StoryContextShape {
 }
 
 const StorySidebar = () => {
-  const { story, game, sidebarStories } = useStoryContext() as StoryContextShape;
+  const ctx = (useStoryContext() as StoryContextShape) || ({} as StoryContextShape);
+  const story = ctx?.story || {};
+  const game: any = ctx?.game || {};
+  const sidebarStories: SidebarStories = ctx?.sidebarStories || {};
 
   return (
     <div className="my-5">
-      {game.id && (
+  {game?.id && (
         <div className="my-5">
           <GameTile game={game} style={{ display: 'block'}} />
         </div>

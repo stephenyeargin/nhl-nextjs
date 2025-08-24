@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHockeyPuck } from '@fortawesome/free-solid-svg-icons';
- 
+
 export default function NotFound() {
   return (
     <div className="text-center m-auto flex items-center justify-center" style={{ minHeight: '60vh'}}>

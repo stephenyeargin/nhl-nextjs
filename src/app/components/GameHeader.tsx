@@ -13,38 +13,6 @@ import { useGameContext } from '../contexts/GameContext';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
 import GameHeaderSkeleton from './GameHeaderSkeleton';
 
-interface TeamInfo {
-  abbrev: string;
-  logo: string;
-  commonName: { default: string };
-  placeName: { default: string };
-  score: number;
-  sog?: number;
-  record?: string;
-  data?: any; // TODO refine
-}
-
-interface PeriodDescriptor { periodType: string; number: number }
-interface SituationTeam { strength: number; situationDescriptions?: string[] }
-interface Situation { awayTeam: SituationTeam; homeTeam: SituationTeam; timeRemaining?: string }
-interface Clock { timeRemaining: string; running: boolean; inIntermission: boolean }
-interface SpecialEvent { name: { default: string }; lightLogoUrl?: { default: string } }
-interface GameDataGame {
-  venue: { default: string };
-  venueLocation: { default: string };
-  awayTeam: TeamInfo;
-  homeTeam: TeamInfo;
-  gameState: string;
-  gameScheduleState: string;
-  ifNecessary?: boolean;
-  periodDescriptor: PeriodDescriptor;
-  situation?: Situation;
-  clock: Clock;
-  startTimeUTC: string;
-  gameType: number;
-  specialEvent?: SpecialEvent;
-  summary: any; // TODO refine
-}
 
 const GameHeader: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -88,7 +56,7 @@ const GameHeader: React.FC = () => {
 
   const gameHeaderStyle: React.CSSProperties = { background: 'var(--background)', borderLeft: `solid 10px ${awayTeam.data.teamColor}`, borderRight: `solid 10px ${homeTeam.data.teamColor}` };
 
-  const teamHasRecentGoal = (teamAbbrev: string, game: GameDataGame) => {
+  const teamHasRecentGoal = (teamAbbrev: string, game: any) => {
     // No goals if game isn't live
     if (!['LIVE', 'CRIT'].includes(game.gameState)) {
       return false;
@@ -178,11 +146,11 @@ const GameHeader: React.FC = () => {
             )}
           </div>
         </div>
-        <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${awayTeam.score < homeTeam.score && ['FINAL', 'OFF'].includes(gameState) ? 'opacity-50' : ''}`}>
+  <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) < (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}>
           {situation?.awayTeam.situationDescriptions?.map((code: string) => (
             <span key={code} className="mx-1 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
           ))}
-          <span>{awayTeam.score}</span>
+          <span>{awayTeam.score ?? 0}</span>
           {teamHasRecentGoal(awayTeam.abbrev, game) && (
             <Image src={SirenOnSVG} height="256" width="256" className="h-10 w-10 ml-2 animate-pulse" alt="Goal" />
           )}
@@ -217,7 +185,7 @@ const GameHeader: React.FC = () => {
               </span>
             </div>
           )}
-          {['FUT', 'PRE'].includes(gameState) && (
+          {['FUT', 'PRE'].includes(gameState || '') && (
             <div className="my-1">
               {gameScheduleState !== 'TBD' ? (
                 <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatLocalizedTime(startTimeUTC)}</span>
@@ -261,17 +229,17 @@ const GameHeader: React.FC = () => {
               </span>
             </div>
           )}
-          {!['LIVE', 'CRIT'].includes(gameState) && (
+          {!['LIVE', 'CRIT'].includes(gameState || '') && (
             <div className="text-xs my-2">
               <div>{formatLocalizedDate(startTimeUTC, 'MMMM D, YYYY')}</div>
             </div>
           )}
         </div>
-        <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${awayTeam.score > homeTeam.score && ['FINAL', 'OFF'].includes(gameState) ? 'opacity-50' : ''}`}>
+  <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) > (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}>
           {teamHasRecentGoal(homeTeam.abbrev, game) && (
             <Image src={SirenOnSVG} height="256" width="256" className="h-10 w-10 mr-2 animate-pulse" alt="Goal" />
           )}
-          <span>{homeTeam.score}</span>
+          <span>{homeTeam.score ?? 0}</span>
           {situation?.homeTeam.situationDescriptions?.map((code: string) => (
             <span key={code} className="mx-2 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
           ))}
