@@ -3,21 +3,33 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { useStoryContext } from '@/app/contexts/StoryContext';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton.tsx';
-import ContentPhoto from '@/app/components/ContentPhoto.tsx';
-import ContentCustomEntity from '@/app/components/ContentCustomEntity.tsx';
-import ContentExternal from '@/app/components/ContentExternal.tsx';
-import ContentMarkdown from '@/app/components/ContentMarkdown.tsx';
-import ContentByline from '@/app/components/ContentByline.tsx';
-import PageError from '@/app/components/PageError.tsx';
-import ContentTag from '@/app/components/ContentTag.tsx';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton';
+import ContentPhoto from '@/app/components/ContentPhoto';
+import ContentCustomEntity from '@/app/components/ContentCustomEntity';
+import ContentExternal from '@/app/components/ContentExternal';
+import ContentMarkdown from '@/app/components/ContentMarkdown';
+import ContentByline from '@/app/components/ContentByline';
+import PageError from '@/app/components/PageError';
+import ContentTag from '@/app/components/ContentTag';
 
-const NewsArticle = () => {
-  const { story, pageError } = useStoryContext();
+interface StoryPartBase { type: string; [key: string]: any }
+interface Story {
+  _entityId?: string | number;
+  status?: number;
+  headline?: string;
+  title?: string;
+  parts: StoryPartBase[];
+  tags: any[];
+  fields?: { description?: string };
+  [key: string]: any;
+}
+
+const NewsArticle: React.FC = () => {
+  const { story, pageError }: { story?: Story; pageError?: Error | number } = useStoryContext() as any;
 
   if (pageError) {
     return (
-      <PageError pageError={pageError} handleRetry={() => window.location.reload()} />
+      <PageError pageError={pageError as any} handleRetry={() => window.location.reload()} />
     );
   }
 
@@ -29,8 +41,7 @@ const NewsArticle = () => {
     return <GameBodySkeleton />;
   }
 
-  // Put the byline as the second element in the story parts array
-  let storyParts = [{ type: 'byline' }, ...story.parts];
+  let storyParts: StoryPartBase[] = [{ type: 'byline' }, ...story.parts];
   if (['photo', 'customentity'].includes(story.parts[0].type)) {
     storyParts = [ story.parts[0], { type: 'byline' }, ...story.parts.slice(1) ];
   }
@@ -47,23 +58,23 @@ const NewsArticle = () => {
         switch (type) {
         case 'byline':
           return (
-            <ContentByline key={i} story={story} />
+            <ContentByline key={i} story={story as any} />
           );
         case 'photo':
           return(
-            <ContentPhoto key={i} part={part} />
+            <ContentPhoto key={i} part={part as any} />
           );
         case 'customentity':
           return (
-            <ContentCustomEntity key={i} part={part} />
+            <ContentCustomEntity key={i} part={part as any} />
           );
         case 'external':
           return (
-            <ContentExternal key={i} part={part} />
+            <ContentExternal key={i} part={part as any} />
           );
         case 'markdown':
           return (
-            <ContentMarkdown key={i} part={part} />
+            <ContentMarkdown key={i} part={part as any} />
           );
         default:
           console.warn(`Unknown story part type: ${type}, rendering as title`);
@@ -79,7 +90,7 @@ const NewsArticle = () => {
         <span className="inline-block rounded p-1 text-xs font-bold m-1">
           Tags:
         </span>
-        {story.tags.filter((t) => !t.extraData?.hideOnSite).map((tag) => (
+        {story.tags.filter((t: any) => !t.extraData?.hideOnSite).map((tag: any) => (
           <ContentTag tag={tag} key={tag._entityId} />
         ))}
       </div>

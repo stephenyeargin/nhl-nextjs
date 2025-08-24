@@ -1,17 +1,20 @@
 'use client';
 
-import React, { Suspense } from 'react';
-import PropTypes from 'prop-types';
-import GameBodySkeleton from '@/app/components/GameBodySkeleton.tsx';
+import React, { Suspense, ReactNode } from 'react';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { StoryProvider } from '@/app/contexts/StoryContext';
-import StorySidebar from '@/app/components/StorySidebar.tsx';
+import StorySidebar from '@/app/components/StorySidebar';
 import { useParams } from 'next/navigation';
 
-const NewsLayout = ({ children }) => {
-  const { slug: storyId } = useParams();
+interface NewsLayoutProps {
+  children: ReactNode;
+}
+
+const NewsLayout: React.FC<NewsLayoutProps> = ({ children }) => {
+  const { slug: storyId } = useParams<{ slug: string }>();
 
   return (
     <StoryProvider storyId={storyId}>
@@ -38,13 +41,6 @@ const NewsLayout = ({ children }) => {
       </Suspense>
     </StoryProvider>
   );
-};
-
-NewsLayout.propTypes = {
-  children: PropTypes.node.isRequired,
-  params: PropTypes.shape({
-    slug: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default NewsLayout;
