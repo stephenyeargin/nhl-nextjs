@@ -1,4 +1,5 @@
 import React from 'react';
+import type { DraftYearParam } from '@/app/types/routeParams';
 import '@/app/assets/datatables.css';
 import standingsStyles from '@/app/components/StandingsTable.module.scss';
 import TeamLogo from '@/app/components/TeamLogo';
@@ -31,8 +32,8 @@ async function getDraftYearData(year: string | number): Promise<DraftData> {
 const roundNames = ['', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6', 'Round 7'];
 
 export default async function DraftPage(props: any) {
-  const resolved = await props?.params;
-  const { year } = resolved || {};
+  const resolved = await props?.params as DraftYearParam | Promise<DraftYearParam>;
+  const { year } = await resolved;
   const draftData = await getDraftYearData(year);
 
   const picksByRound: Record<number, DraftPick[]> = draftData.selectableRounds.reduce((acc: Record<number, DraftPick[]>, round: number) => {

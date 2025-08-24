@@ -4,6 +4,7 @@ import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation, getTeamDataBySlug } from '@/app/utils/teamData';
 import { formatOrdinalNumber, formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
+import type { TeamSlugParam } from '@/app/types/routeParams';
 import StoryCard from '@/app/components/StoryCard';
 import TeamSchedule from '@/app/components/TeamSchedule';
 import Link from 'next/link';
@@ -38,9 +39,9 @@ interface TeamStanding {
 interface NewsItem { _entityId: string | number; slug: string; [k:string]: any }
 
 export default async function SchedulePage(props: any) {
-  const rawParams = await props?.params; // supports promise or direct object
-  const { slug } = rawParams || {};
-  let team = getTeamDataByAbbreviation(slug?.toUpperCase(), true);
+  const rawParams = await props?.params as TeamSlugParam | Promise<TeamSlugParam>;
+  const { slug } = await rawParams;
+  let team = getTeamDataByAbbreviation(slug?.toUpperCase(), true); 
   if (!team.teamId || team.abbreviation === 'NHL') {
     team = getTeamDataBySlug(slug, true);
   }

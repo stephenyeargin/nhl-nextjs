@@ -1,4 +1,5 @@
 import React from 'react';
+import type { SeriesParam } from '@/app/types/routeParams';
 import Image from 'next/image';
 import GameTile from '@/app/components/GameTile';
 import { notFound } from 'next/navigation';
@@ -40,8 +41,8 @@ async function fetchRelatedStories(seriesString: string, year: number) {
 }
 
 export default async function SeriesPage(props: any) {
-  const resolved = await props?.params;
-  const { seriesLetter, year } = resolved || {};
+  const resolved = await props?.params as SeriesParam | Promise<SeriesParam>;
+  const { seriesLetter, year } = await resolved;
   const seriesResponse = await fetchSeriesData(seriesLetter, Number(year));
   const relatedStoriesResponse = await fetchRelatedStories(seriesLetter, Number(year));
 
