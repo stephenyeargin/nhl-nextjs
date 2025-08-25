@@ -40,7 +40,7 @@ interface GameContextValue {
   pageError: PageError | null;
 }
 
-const GameContext = createContext<GameContextValue | undefined>(undefined);
+export const GameContext = createContext<GameContextValue | undefined>(undefined);
 export const useGameContext = (): GameContextValue => {
   const ctx = useContext(GameContext);
   if (!ctx) {
