@@ -1,52 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
 import GameTile from '@/app/components/GameTile';
 import { formatLocalizedDate } from '@/app/utils/formatters';
-
-interface GameWeekDay { date: string; dayAbbrev: string; numberOfGames: number }
-interface ScoreGame { id: string | number; [k:string]: any }
-interface ScoresResponse {
-  gameWeek: GameWeekDay[];
-  games: ScoreGame[];
-  prevDate: string; currentDate: string; nextDate?: string;
-  [k:string]: any;
-}
+import { useScoresData } from '@/app/hooks/useScoresData';
 
 const ScoresPage: React.FC = () => {
-  const [scores, setScores] = useState<ScoresResponse | null>(null);
-  const [today, setToday] = useState<string | Date | null>(null);
-
-  useEffect(() => {
-    const setTodayNoonET = () => {
-      const now = new Date();
-      const easternTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-      easternTime.setHours(12, 0, 0, 0);
-      
-  return easternTime.toISOString().split('T')[0];
-    };
-
-    if (!today) {
-      const todayNoonET = setTodayNoonET();
-      setToday(todayNoonET);
-    } else {
-      const getScores = async () => {
-        const todayString = typeof today === 'string' ? today : today.toISOString().slice(0, 10);
-        const scoresResponse = await fetch(`/api/nhl/score/${todayString}`, { cache: 'no-store' });
-        setScores(await scoresResponse.json());
-      };
-
-      getScores();
-      const interval = setInterval(getScores, 30000);
-      
-  return () => clearInterval(interval);
-    }
-  }, [today]);
-
-  const handleDateChange = (date: string) => {
-    setToday(new Date(date));
-  };
+  const { scores, today, handleDateChange } = useScoresData();
 
   if (!scores) {
     return (<NewsPageSkeleton />);
@@ -58,7 +19,7 @@ const ScoresPage: React.FC = () => {
       <div className="my-5">
         <div className="flex justify-between gap-2">
           {scores.gameWeek.map((day, i) => (
-            <button key={i} className={`p-1 border rounded w-full ${day.date === today ? 'bg-slate-200 dark:bg-slate-800' : ''}`} onClick={() => setToday(day.date)}>
+            <button key={i} className={`p-1 border rounded w-full ${day.date === today ? 'bg-slate-200 dark:bg-slate-800' : ''}`} onClick={() => handleDateChange(day.date)}>
               <div className="text-xs my-1">{day.dayAbbrev} {formatLocalizedDate(day.date, 'M/D')}</div>
               <div className="text-xs my-1 font-bold">{day.numberOfGames} game{day.numberOfGames === 1 ? '' : 's'}</div>
             </button>

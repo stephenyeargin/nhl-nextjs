@@ -23,6 +23,14 @@ const makeFetchResponse = (ok: boolean, jsonData: any, status = 200) => ({ ok, s
 describe('GameContext', () => {
   beforeEach(() => {
     jest.resetAllMocks();
+  // use real timers for async data resolution
+    // Silence expected error logs so test output is clean; unexpected errors will still fail tests
+  jest.spyOn(console, 'error').mockImplementation(() => { /* silent expected error */ });
+  });
+
+  afterEach(() => {
+  // nothing to cleanup for real timers
+  (console.error as unknown as jest.Mock).mockRestore?.();
   });
 
   test('loads game data and sets state', async () => {
@@ -39,7 +47,7 @@ describe('GameContext', () => {
 
     render(<GameProvider gameId="1234"><TestConsumer /></GameProvider>);
 
-    await waitFor(() => expect(screen.getByTestId('game-state').textContent).toBe('LIVE'));
+  await waitFor(() => expect(screen.getByTestId('game-state').textContent).toBe('LIVE'));
     expect(screen.getByTestId('home-team').textContent).toBe('HOM');
     // formatHeadTitle should have been called twice (initial and live update)
     const { formatHeadTitle } = require('@/app/utils/formatters');

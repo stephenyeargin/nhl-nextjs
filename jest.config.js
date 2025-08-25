@@ -14,15 +14,7 @@ const config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   collectCoverage: true,
   collectCoverageFrom: [
-  'src/**/*.{ts,tsx,js,jsx}',
-    '!src/**/*.d.ts',
-    '!src/**/index.{ts,tsx,js,jsx}',
-    '!src/app/page.test.js',
-    // Gradually reintroducing previously excluded UI surfaces: components now included
-    '!src/app/**/page.{ts,tsx,js,jsx}',
-    '!src/app/**/layout.{ts,tsx,js,jsx}',
-    '!src/app/**/loading.{ts,tsx,js,jsx}',
-    '!src/app/**/error.{ts,tsx,js,jsx}',
+    'src/**/*.{ts,tsx,js,jsx}',
   ],
   coveragePathIgnorePatterns: [
     '/node_modules/',
@@ -31,10 +23,10 @@ const config = {
   ],
   coverageThreshold: {
     global: {
-  lines: 30,
-  statements: 30,
-  branches: 18,
-  functions: 30,
+      lines: 40,
+      statements: 40,
+      branches: 60,
+      functions: 60,
     },
   },
   moduleNameMapper: {

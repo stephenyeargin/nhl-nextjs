@@ -3,9 +3,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import LeagueToggle from './LeagueToggle';
 
 jest.mock('./TeamLogo', () => {
-  const Mock = (props: any) => <div data-testid="team-logo" {...props}>Logo</div>;
+  const Mock = ({ colorMode: _colorMode, ...rest }: any) => <div data-testid="team-logo" {...rest}>Logo</div>;
   (Mock as any).displayName = 'TeamLogoMock';
-  
+
   return Mock;
 });
 

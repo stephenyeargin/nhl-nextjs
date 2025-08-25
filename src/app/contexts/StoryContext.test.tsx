@@ -27,6 +27,14 @@ describe('StoryContext', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     (global as any).fetch = jest.fn();
+    jest.useFakeTimers();
+  jest.spyOn(console, 'error').mockImplementation(() => { /* silent expected error */ });
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  (console.error as unknown as jest.Mock).mockRestore?.();
   });
 
   test('loads story, players, game, and sidebar', async () => {
