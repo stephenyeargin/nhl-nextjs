@@ -13,6 +13,15 @@ jest.mock('next/image', () => {
   return Img;
 });
 
+// Mock react-player lazy import (suspends internally) to avoid act() Suspense warning
+jest.mock('react-player/lazy', () => {
+  // eslint-disable-next-line react/display-name
+  const Player = () => <div data-testid="react-player" />;
+  (Player as any).displayName = 'ReactPlayerMock';
+
+  return Player;
+});
+
 describe('Floating media players (extra coverage)', () => {
   test('FloatingAudioPlayer visible & close handler', () => {
     const onClose = jest.fn();

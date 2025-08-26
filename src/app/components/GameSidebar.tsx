@@ -496,31 +496,34 @@ const GameSidebar = () => {
       {rightRail.gameInfo && (
         <div className="mb-5 text-xs">
           <div className="p-2 text-2xl font-bold text-center">Game Info</div>
-          {rightRail.gameInfo.referees?.length && rightRail.gameInfo.linesmen?.length && (
-            <div className="flex">
-              <div className="w-full p-2">
-                <div className="font-bold">Officials</div>
-                <div>
-                  Referees:{' '}
-                  {rightRail.gameInfo.referees?.map((o: any, i: number) => (
-                    <span key={i}>
-                      {i > 0 && ', '}
-                      {o.default}
-                    </span>
-                  ))}
-                </div>
-                <div>
-                  Linesmen:{' '}
-                  {rightRail.gameInfo.linesmen?.map((o: any, i: number) => (
-                    <span key={i}>
-                      {i > 0 && ', '}
-                      {o.default}
-                    </span>
-                  ))}
+          {Array.isArray(rightRail.gameInfo.referees) &&
+            rightRail.gameInfo.referees.length > 0 &&
+            Array.isArray(rightRail.gameInfo.linesmen) &&
+            rightRail.gameInfo.linesmen.length > 0 && (
+              <div className="flex">
+                <div className="w-full p-2">
+                  <div className="font-bold">Officials</div>
+                  <div>
+                    Referees:{' '}
+                    {rightRail.gameInfo.referees.map((o: any, i: number) => (
+                      <span key={i}>
+                        {i > 0 && ', '}
+                        {o.default}
+                      </span>
+                    ))}
+                  </div>
+                  <div>
+                    Linesmen:{' '}
+                    {rightRail.gameInfo.linesmen.map((o: any, i: number) => (
+                      <span key={i}>
+                        {i > 0 && ', '}
+                        {o.default}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
           <div className="flex">
             <div className="w-1/2 p-2">
               <div className="my-2">
