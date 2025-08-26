@@ -6,18 +6,20 @@ import { formatStat, formatTextColorByBackgroundColor } from '@/app/utils/format
 import '@/app/assets/datatables.css';
 import styles from '@/app/components/StatsTable.module.scss';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
-
-interface PlayerName { default?: string }
+import type { LocalizedString } from '@/app/types/content';
 interface PlayerStats {
   playerId: number | string;
   sweaterNumber?: number;
   headshot?: string;
-  name?: PlayerName;
-  firstName?: PlayerName;
-  lastName?: PlayerName;
+  name?: LocalizedString;
+  firstName?: LocalizedString;
+  lastName?: LocalizedString;
   [key: string]: any; // dynamic stat fields
 }
-interface StatsTableProps { stats: PlayerStats[]; team?: string }
+interface StatsTableProps {
+  stats: PlayerStats[];
+  team?: string;
+}
 
 const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
   if (!stats || stats.length === 0) {
@@ -28,7 +30,10 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
   let headerStyle: React.CSSProperties = {};
   if (team) {
     const { teamColor } = getTeamDataByAbbreviation(team, true);
-    headerStyle = { backgroundColor: teamColor, color: formatTextColorByBackgroundColor(teamColor) };
+    headerStyle = {
+      backgroundColor: teamColor,
+      color: formatTextColorByBackgroundColor(teamColor),
+    };
   }
 
   // Get all possible stats in the set
@@ -47,8 +52,20 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
     { key: 'shotsAgainst', label: 'SA', title: 'Shots Against' },
     { key: 'saves', label: 'SV', title: 'Saves' },
     { key: 'goalsAgainst', label: 'GA', title: 'Goals Against' },
-    { key: 'savePctg', label: 'SV%', title: 'Save Percentage', altKey: 'savePercentage', precision: 3 },
-    { key: 'goalsAgainstAvg', label: 'GAA', title: 'Goals Against Average', altKey: 'goalsAgainstAverage', precision: 3 },
+    {
+      key: 'savePctg',
+      label: 'SV%',
+      title: 'Save Percentage',
+      altKey: 'savePercentage',
+      precision: 3,
+    },
+    {
+      key: 'goalsAgainstAvg',
+      label: 'GAA',
+      title: 'Goals Against Average',
+      altKey: 'goalsAgainstAverage',
+      precision: 3,
+    },
     { key: 'shutouts', label: 'SO', title: 'Shutouts' },
     { key: 'goals', label: 'G', title: 'Goals Scored' },
     { key: 'assists', label: 'A', title: 'Assists' },
@@ -63,19 +80,31 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
     { key: 'takeaways', label: 'TA', title: 'Takeaways' },
     { key: 'giveaways', label: 'GA', title: 'Giveaways' },
     { key: 'avgTimeOnIce', label: 'TOI/G', title: 'Time On Ice per Game' },
-    { key: 'faceoffWinPctg', label: 'FO%', title: 'Faceoff Win Percentage', altKey: 'faceoffWinningPctg', precision: 3 },
-    { key: 'timeOnIce', label: 'TOI', title: 'Time On Ice', altKey: 'toi', unit: 'time' }
+    {
+      key: 'faceoffWinPctg',
+      label: 'FO%',
+      title: 'Faceoff Win Percentage',
+      altKey: 'faceoffWinningPctg',
+      precision: 3,
+    },
+    { key: 'timeOnIce', label: 'TOI', title: 'Time On Ice', altKey: 'toi', unit: 'time' },
   ];
 
   const renderHeader = () => (
     <tr>
-      <th className="text-center" style={headerStyle}>#</th>
-      <th className="text-left" style={headerStyle}>Name</th>
+      <th className="text-center" style={headerStyle}>
+        #
+      </th>
+      <th className="text-left" style={headerStyle}>
+        Name
+      </th>
       {statHeaders.map(
         ({ key, label, title, altKey }) =>
           (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
             <th key={key} className="text-center" style={headerStyle}>
-              <abbr className="underline decoration-dashed" title={title}>{label}</abbr>
+              <abbr className="underline decoration-dashed" title={title}>
+                {label}
+              </abbr>
             </th>
           )
       )}
@@ -86,7 +115,9 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
     <tr key={skater.playerId}>
       <td className="text-center w-10" data-order={skater?.sweaterNumber}>
         {skater.sweaterNumber ? (
-          <Link href={`/player/${skater.playerId}`} className="font-bold">{skater.sweaterNumber}</Link>
+          <Link href={`/player/${skater.playerId}`} className="font-bold">
+            {skater.sweaterNumber}
+          </Link>
         ) : (
           <Headshot
             playerId={skater.playerId}
@@ -98,18 +129,25 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
           />
         )}
       </td>
-      <td className="text-left text-nowrap" data-order={skater.lastName?.default || skater.name?.default}>
+      <td
+        className="text-left text-nowrap"
+        data-order={skater.lastName?.default || skater.name?.default}
+      >
         <Link href={`/player/${skater.playerId}`} className="font-bold">
-          {skater.name?.default ? skater.name.default : `${skater.firstName?.default} ${skater.lastName?.default}`}
+          {skater.name?.default
+            ? skater.name.default
+            : `${skater.firstName?.default} ${skater.lastName?.default}`}
         </Link>
       </td>
       {statHeaders.map(
         ({ key, altKey, precision, unit }) =>
           (statsAvailable.includes(key) || (altKey && statsAvailable.includes(altKey))) && (
             <td key={key} className="text-center">
-              {skater[key] !== undefined
-                ? <>{formatStat(skater[key], precision, unit)}</>
-                : <>{formatStat(skater[altKey as string], precision, unit)}</>}
+              {skater[key] !== undefined ? (
+                <>{formatStat(skater[key], precision, unit)}</>
+              ) : (
+                <>{formatStat(skater[altKey as string], precision, unit)}</>
+              )}
             </td>
           )
       )}
@@ -118,7 +156,7 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
 
   return (
     <div className="overflow-x-auto">
-  <table className={styles.statsTable}>
+      <table className={styles.statsTable}>
         <thead>{renderHeader()}</thead>
         <tbody>{stats.map(renderRow)}</tbody>
       </table>

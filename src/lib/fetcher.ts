@@ -19,7 +19,7 @@ export async function nhlFetch<T = unknown>(path: string, options: FetchOptions 
   const res = await fetch(url, {
     ...init,
     headers: {
-      'accept': 'application/json',
+      accept: 'application/json',
       ...(init.headers || {}),
     },
     next: { revalidate, tags },
@@ -27,10 +27,16 @@ export async function nhlFetch<T = unknown>(path: string, options: FetchOptions 
   if (!res.ok) {
     // Attempt to include upstream error body for debugging (without throwing large blobs)
     let body: string | undefined;
-    try { body = await res.text(); } catch { /* noop */ }
-    throw new Error(`nhlFetch failed ${res.status} ${res.statusText} for ${url}${body ? ' :: ' + body.slice(0,200) : ''}`);
+    try {
+      body = await res.text();
+    } catch {
+      /* noop */
+    }
+    throw new Error(
+      `nhlFetch failed ${res.status} ${res.statusText} for ${url}${body ? ' :: ' + body.slice(0, 200) : ''}`
+    );
   }
-  
+
   // Rely on caller to know the shape.
   return res.json() as Promise<T>;
 }

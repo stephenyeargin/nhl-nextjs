@@ -8,9 +8,13 @@ describe('GameClock', () => {
   test('counts down when running', () => {
     render(<GameClock timeRemaining="00:03" running />);
     expect(screen.getByText('00:03')).toBeTruthy();
-    act(() => { jest.advanceTimersByTime(1000); });
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
     expect(screen.getByText('00:02')).toBeTruthy();
-    act(() => { jest.advanceTimersByTime(3000); });
+    act(() => {
+      jest.advanceTimersByTime(3000);
+    });
     expect(screen.getByText('00:00')).toBeTruthy();
   });
 

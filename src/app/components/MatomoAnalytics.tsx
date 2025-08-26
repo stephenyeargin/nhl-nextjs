@@ -20,14 +20,13 @@ const MatomoAnalytics = ({ url, siteId }: MatomoAnalyticsProps) => {
     }
 
     init({ url, siteId });
-    
+
     return () => push(['HeatmapSessionRecording::disable']);
-  }, [ url, siteId ]);
+  }, [url, siteId]);
 
   useEffect(() => {
     if (isInitialLoad.current) {
       isInitialLoad.current = false;
-
     } else {
       if (pathname) {
         push(['setCustomUrl', pathname]);

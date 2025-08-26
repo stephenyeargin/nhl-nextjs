@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import ContentMarkdown from './ContentMarkdown';
 
 jest.mock('../utils/formatters', () => ({
-  formatMarkdownContent: (c: string) => `<p class='mb-4'>${c}</p>`
+  formatMarkdownContent: (c: string) => `<p class='mb-4'>${c}</p>`,
 }));
 
 describe('ContentMarkdown', () => {

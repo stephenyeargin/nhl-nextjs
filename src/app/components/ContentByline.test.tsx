@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import ContentByline from './ContentByline';
 
 jest.mock('../utils/formatters', () => ({
-  ...(jest.requireActual('../utils/formatters')),
-  formatLocalizedDate: (d: string) => `DATE(${d})`
+  ...jest.requireActual('../utils/formatters'),
+  formatLocalizedDate: (d: string) => `DATE(${d})`,
 }));
 
 describe('ContentByline', () => {
@@ -15,7 +15,9 @@ describe('ContentByline', () => {
   } as any;
 
   it('renders contributor override when present', () => {
-    render(<ContentByline story={{ ...baseStory, fields: { contributorOverride: 'Jane Writer' } }} />);
+    render(
+      <ContentByline story={{ ...baseStory, fields: { contributorOverride: 'Jane Writer' } }} />
+    );
     expect(screen.getByText(/Jane Writer/)).toBeInTheDocument();
     expect(screen.getByText('DATE(2024-01-01T00:00:00Z)')).toBeInTheDocument();
   });
@@ -27,8 +29,8 @@ describe('ContentByline', () => {
         contributor: [
           { _entityId: '1', title: 'Reporter One', fields: { source: 'NHL.com' } },
           { _entityId: '2', title: 'Reporter Two' },
-        ]
-      }
+        ],
+      },
     };
     render(<ContentByline story={story} />);
     const text = screen.getByText(/Reporter One/).textContent;

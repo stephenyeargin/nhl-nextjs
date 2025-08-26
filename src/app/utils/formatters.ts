@@ -16,29 +16,36 @@ export const formatSeriesStatus = (game: any, rightRail: any): string => {
   const isTied = homeTeamWins === awayTeamWins;
 
   if (isTied) {
-    if (homeTeamWins === 0) {return '';}
-    
+    if (homeTeamWins === 0) {
+      return '';
+    }
+
     return 'Series tied.';
   }
 
   const leadingTeam = homeTeamWins > awayTeamWins ? game.homeTeam : game.awayTeam;
   const leadingWins = homeTeamWins > awayTeamWins ? homeTeamWins : awayTeamWins;
   const trailingWins = homeTeamWins > awayTeamWins ? awayTeamWins : homeTeamWins;
-  
+
   const status = neededToWin === leadingWins ? 'wins' : 'leads';
-  
+
   return `${leadingTeam.placeName.default} ${status} ${leadingWins}-${trailingWins}`;
 };
 
-export const formatBroadcasts = (broadcasts: Array<{ network: string; market: string }> | undefined | null): string => {
+export const formatBroadcasts = (
+  broadcasts: Array<{ network: string; market: string }> | undefined | null
+): string => {
   if (!broadcasts || broadcasts.length === 0) {
     return 'No Broadcasts';
   }
-  
+
   return broadcasts.map((b) => `${b.network} (${b.market})`).join(', ');
 };
 
-export const formatLocalizedDate = (dateString: string | number | Date | undefined, format: string = 'l'): string => {
+export const formatLocalizedDate = (
+  dateString: string | number | Date | undefined,
+  format: string = 'l'
+): string => {
   return dayjs(dateString).utc(true).format(format);
 };
 
@@ -70,26 +77,26 @@ export const formatStat = (
     if (numeric === 1) {
       return '1.000';
     }
-    
-  return numeric.toFixed(precision).replace(/^0\./, '.');
+
+    return numeric.toFixed(precision).replace(/^0\./, '.');
   }
 
   if (value === undefined) {
     return '--';
   }
-  
+
   return value;
 };
 
 export const formatStatValue = (stat: string, value: number): string | number => {
   switch (stat) {
-  case 'powerPlayPctg':
-  case 'faceoffWinningPctg':
-  case 'ppPctg':
-  case 'pkPctg':
-    return `${(value * 100).toFixed(1)}%`;
-  default:
-    return value;
+    case 'powerPlayPctg':
+    case 'faceoffWinningPctg':
+    case 'ppPctg':
+    case 'pkPctg':
+      return `${(value * 100).toFixed(1)}%`;
+    default:
+      return value;
   }
 };
 
@@ -101,12 +108,14 @@ export const formatSecondsToGameTime = (stat: number | string | undefined): stri
   if (typeof stat === 'string' && stat.includes(':')) {
     return stat;
   }
-  
+
   const numeric = typeof stat === 'number' ? stat : Number(stat);
-  if (Number.isNaN(numeric)) {return '--';}
+  if (Number.isNaN(numeric)) {
+    return '--';
+  }
   const minutes = Math.floor(numeric / 60);
   const seconds = Math.round(numeric % 60);
-  
+
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
@@ -114,12 +123,12 @@ export const formatSeason = (season: string | number | undefined): string => {
   if (!season) {
     return '';
   }
-  
+
   const seasonString = season.toString();
 
   const startYear = seasonString.slice(0, 4);
   const endYear = seasonString.slice(6, 8);
-  
+
   return `${startYear}-${endYear}`;
 };
 
@@ -130,7 +139,7 @@ export const formatOrdinalNumber = (number: number | undefined): string => {
 
   const suffixes = ['th', 'st', 'nd', 'rd'];
   const v = number % 100;
-  
+
   return number + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
 };
 
@@ -153,28 +162,34 @@ export const formatPeriodLabel = (periodData: any, long: boolean = false): strin
   const { number, periodType, otPeriods } = periodData;
 
   const ordinalSuffix = (n: number): string => {
-    if (n === 1) {return 'st';}
-    if (n === 2) {return 'nd';}
-    if (n === 3) {return 'rd';}
-    
+    if (n === 1) {
+      return 'st';
+    }
+    if (n === 2) {
+      return 'nd';
+    }
+    if (n === 3) {
+      return 'rd';
+    }
+
     return 'th';
   };
 
   switch (true) {
-  case number === 1:
-    return long ? `1${ordinalSuffix(number)} Period` : `1${ordinalSuffix(number)}`;
-  case number === 2:
-    return long ? `2${ordinalSuffix(number)} Period` : `2${ordinalSuffix(number)}`;
-  case number === 3 && number <= periodData.maxRegulationPeriods:
-    return long ? `3${ordinalSuffix(number)} Period` : `3${ordinalSuffix(number)}`;
-  case number === 4 && !otPeriods:
-    return long ? 'Overtime' : 'OT';
-  case number > periodData.maxRegulationPeriods && periodType === 'SO':
-    return long ? 'Shootout' : 'SO';
-  case number > periodData.maxRegulationPeriods && periodType === 'OT':
-    return long ? `${number - 3}${ordinalSuffix(number - 3)} Overtime` : `${number - 3}OT`;
-  default:
-    return '';
+    case number === 1:
+      return long ? `1${ordinalSuffix(number)} Period` : `1${ordinalSuffix(number)}`;
+    case number === 2:
+      return long ? `2${ordinalSuffix(number)} Period` : `2${ordinalSuffix(number)}`;
+    case number === 3 && number <= periodData.maxRegulationPeriods:
+      return long ? `3${ordinalSuffix(number)} Period` : `3${ordinalSuffix(number)}`;
+    case number === 4 && !otPeriods:
+      return long ? 'Overtime' : 'OT';
+    case number > periodData.maxRegulationPeriods && periodType === 'SO':
+      return long ? 'Shootout' : 'SO';
+    case number > periodData.maxRegulationPeriods && periodType === 'OT':
+      return long ? `${number - 3}${ordinalSuffix(number - 3)} Overtime` : `${number - 3}OT`;
+    default:
+      return '';
   }
 };
 
@@ -185,9 +200,12 @@ export const formatMarkdownContent = (content: string | undefined | null): strin
 
   const parsed = marked.parse(content);
   const html = typeof parsed === 'string' ? parsed : String(parsed);
-  
+
   return html
-    .replace(/<forge-entity\s+title="([^"]+)"\s+slug="([^"]+)"\s+code="([^"]+)">([^<]+)<\/forge-entity>/g, '<a href="/$3/$2">$4</a>')
+    .replace(
+      /<forge-entity\s+title="([^"]+)"\s+slug="([^"]+)"\s+code="([^"]+)">([^<]+)<\/forge-entity>/g,
+      '<a href="/$3/$2">$4</a>'
+    )
     .replace(/https:\/\/www\.nhl\.com\//g, '/')
     .replace(/<p>/g, '<p class="mb-4">')
     .replace(/<a\s/g, '<a class="underline" ')

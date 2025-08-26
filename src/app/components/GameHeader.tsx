@@ -13,7 +13,6 @@ import { useGameContext } from '../contexts/GameContext';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
 import GameHeaderSkeleton from './GameHeaderSkeleton';
 
-
 const GameHeader: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
   const stickyRef = useRef<HTMLDivElement | null>(null);
@@ -41,20 +40,37 @@ const GameHeader: React.FC = () => {
 
   // Destructure data for rendering
   const { game } = gameData;
-  const { venue, venueLocation, awayTeam, homeTeam, gameState, gameScheduleState, ifNecessary, periodDescriptor, situation, clock, startTimeUTC } = game;
+  const {
+    venue,
+    venueLocation,
+    awayTeam,
+    homeTeam,
+    gameState,
+    gameScheduleState,
+    ifNecessary,
+    periodDescriptor,
+    situation,
+    clock,
+    startTimeUTC,
+  } = game as any;
 
   awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev, false);
   homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev, true);
 
   let gameHeaderClass = 'grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center';
   if (isSticky) {
-    gameHeaderClass = 'grid grid-cols-12 items-center md:sticky top-0 pt-5 z-10 border rounded-b-lg shadow-md pb-5';
+    gameHeaderClass =
+      'grid grid-cols-12 items-center md:sticky top-0 pt-5 z-10 border rounded-b-lg shadow-md pb-5';
   }
   if (gameState === 'CRIT') {
     gameHeaderClass += ' border-red-900';
   }
 
-  const gameHeaderStyle: React.CSSProperties = { background: 'var(--background)', borderLeft: `solid 10px ${awayTeam.data.teamColor}`, borderRight: `solid 10px ${homeTeam.data.teamColor}` };
+  const gameHeaderStyle: React.CSSProperties = {
+    background: 'var(--background)',
+    borderLeft: `solid 10px ${awayTeam.data?.teamColor || '#000'}`,
+    borderRight: `solid 10px ${homeTeam.data?.teamColor || '#000'}`,
+  };
 
   const teamHasRecentGoal = (teamAbbrev: string, game: any) => {
     // No goals if game isn't live
@@ -112,12 +128,15 @@ const GameHeader: React.FC = () => {
                 width={300}
                 height={100}
                 alt="Event Logo"
-                title={game.specialEvent.name.default}
+                title={game.specialEvent.name?.default || 'Special Event'}
                 className="w-full md:w-1/3"
               />
             </div>
           ) : (
-            <div className="my-4 text-center font-bold text-gray-500">&#9734;&#9734;&#9734; {game.specialEvent.name.default} &#9734;&#9734;&#9734;</div>
+            <div className="my-4 text-center font-bold text-gray-500">
+              &#9734;&#9734;&#9734; {game.specialEvent.name?.default || 'Special Event'}{' '}
+              &#9734;&#9734;&#9734;
+            </div>
           )}
         </>
       )}
@@ -127,7 +146,7 @@ const GameHeader: React.FC = () => {
             <TeamLogo
               team={awayTeam.abbrev}
               src={awayTeam.logo}
-              alt={awayTeam.commonName.default}
+              alt={awayTeam.commonName?.default || awayTeam.abbrev}
               className="w-20 h-20 mx-auto"
             />
           </div>
@@ -135,24 +154,36 @@ const GameHeader: React.FC = () => {
             <Link href={`/team/${awayTeam.abbrev}`}>
               <div className="text-xl font-black block md:hidden">{awayTeam.abbrev}</div>
               <div className="text-lg hidden md:block">
-                <div className="text-sm">{awayTeam.placeName.default}</div>
-                <div className="text-xl font-black">{awayTeam.commonName.default.replace(awayTeam.placeName.default, '')}</div>
+                <div className="text-sm">{awayTeam.placeName?.default}</div>
+                <div className="text-xl font-black">
+                  {awayTeam.commonName?.default?.replace(awayTeam.placeName?.default || '', '')}
+                </div>
               </div>
             </Link>
             {gameState !== 'FUT' ? (
-              <div className="text-sm">SOG: {awayTeam.sog || 0}</div>
+              <div className="text-sm">SOG: {awayTeam.sog ?? 0}</div>
             ) : (
               <div className="text-sm">{awayTeam.record}</div>
             )}
           </div>
         </div>
-  <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) < (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}>
-          {situation?.awayTeam.situationDescriptions?.map((code: string) => (
-            <span key={code} className="mx-1 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
+        <div
+          className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) < (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}
+        >
+          {situation?.awayTeam?.situationDescriptions?.map((code: string) => (
+            <span key={code} className="mx-1 text-lg rounded text-white bg-red-900 p-1 uppercase">
+              {code}
+            </span>
           ))}
           <span>{awayTeam.score ?? 0}</span>
           {teamHasRecentGoal(awayTeam.abbrev, game) && (
-            <Image src={SirenOnSVG} height="256" width="256" className="h-10 w-10 ml-2 animate-pulse" alt="Goal" />
+            <Image
+              src={SirenOnSVG}
+              height="256"
+              width="256"
+              className="h-10 w-10 ml-2 animate-pulse"
+              alt="Goal"
+            />
           )}
         </div>
         <div className="col-span-2 text-center content-middle">
@@ -160,9 +191,13 @@ const GameHeader: React.FC = () => {
             <div className="text-xs my-1 p-1 border rounded font-bold uppercase">Preseason</div>
           )}
           {game.gameType === 3 && (
-            <div className="text-xs my-1 p-1 border rounded font-bold uppercase">Stanley Cup Playoffs</div>
+            <div className="text-xs my-1 p-1 border rounded font-bold uppercase">
+              Stanley Cup Playoffs
+            </div>
           )}
-          <div className="text-xs my-1">{venue.default}, {venueLocation.default}</div>
+          <div className="text-xs my-1">
+            {venue.default}, {venueLocation.default}
+          </div>
           {(gameState === 'LIVE' || gameState === 'CRIT') && (
             <div className="my-3 flex flex-wrap justify-center">
               <span className="font-md font-medium px-2 py-1 bg-red-900 text-white rounded mr-2 uppercase text-nowrap">
@@ -171,8 +206,13 @@ const GameHeader: React.FC = () => {
               </span>
               {periodDescriptor.periodType !== 'SO' && (
                 <span className="font-bold text-xl">
-                  <GameClock timeRemaining={clock.timeRemaining} running={clock?.inIntermission || clock?.running} />
-                  {!clock.inIntermission && !clock.running && (<FontAwesomeIcon icon={faPauseCircle} className="ml-1" />)}
+                  <GameClock
+                    timeRemaining={clock.timeRemaining}
+                    running={clock?.inIntermission || clock?.running}
+                  />
+                  {!clock.inIntermission && !clock.running && (
+                    <FontAwesomeIcon icon={faPauseCircle} className="ml-1" />
+                  )}
                 </span>
               )}
             </div>
@@ -180,21 +220,27 @@ const GameHeader: React.FC = () => {
           {(gameState === 'FINAL' || gameState === 'OFF') && (
             <div className="text-center my-2 uppercase">
               <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black text-nowrap rounded">
-              Final
-                {periodDescriptor.periodType	!== 'REG' && `/${periodDescriptor.periodType}`}
+                Final
+                {periodDescriptor.periodType !== 'REG' && `/${periodDescriptor.periodType}`}
               </span>
             </div>
           )}
           {['FUT', 'PRE'].includes(gameState || '') && (
             <div className="my-1">
               {gameScheduleState !== 'TBD' ? (
-                <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">{formatLocalizedTime(startTimeUTC)}</span>
+                <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">
+                  {formatLocalizedTime(startTimeUTC)}
+                </span>
               ) : (
                 <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">
                   {ifNecessary ? (
-                    <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">(If Necessary)</span>
+                    <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">
+                      (If Necessary)
+                    </span>
                   ) : (
-                    <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">TBD</span>
+                    <span className="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 text-black rounded uppercase text-nowrap">
+                      TBD
+                    </span>
                   )}
                 </span>
               )}
@@ -202,46 +248,66 @@ const GameHeader: React.FC = () => {
           )}
           {gameState === 'PRE' && (
             <div className="my-1 text-nowrap">
-              <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase"><FontAwesomeIcon icon={faClock} fixedWidth /> Pregame</span>
+              <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded uppercase">
+                <FontAwesomeIcon icon={faClock} fixedWidth /> Pregame
+              </span>
             </div>
           )}
           {gameScheduleState === 'CNCL' && (
             <div className="my-1 text-nowrap">
-              <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+              <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded uppercase">
+                <FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled
+              </span>
             </div>
           )}
           {gameScheduleState === 'PPD' && (
             <div className="my-1 text-nowrap">
-              <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
-            </div>
-          )}
-          {(situation && (situation.awayTeam.strength !== 5 || situation?.homeTeam.strength) !== 5) && (
-            <div className="my-2">
-              {situation?.timeRemaining && (
-                <div>
-                  <span className="text-sm font-medium px-2 py-1 border text-slate-900 dark:text-slate-100 rounded">
-                    <GameClock timeRemaining={situation?.timeRemaining} running={clock?.running && !clock?.inIntermission} />
-                  </span>
-                </div>
-              )}
-              <span className="text-sm md:text-sm font-bold px-2 py-1 text-red-900 rounded uppercase text-nowrap">
-                {situation?.awayTeam.strength}-on-{situation?.homeTeam.strength}
+              <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded uppercase">
+                <FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed
               </span>
             </div>
           )}
+          {situation &&
+            (situation.awayTeam?.strength !== 5 || situation?.homeTeam?.strength !== 5) && (
+              <div className="my-2">
+                {situation?.timeRemaining && (
+                  <div>
+                    <span className="text-sm font-medium px-2 py-1 border text-slate-900 dark:text-slate-100 rounded">
+                      <GameClock
+                        timeRemaining={situation?.timeRemaining}
+                        running={clock?.running && !clock?.inIntermission}
+                      />
+                    </span>
+                  </div>
+                )}
+                <span className="text-sm md:text-sm font-bold px-2 py-1 text-red-900 rounded uppercase text-nowrap">
+                  {situation?.awayTeam?.strength}-on-{situation?.homeTeam?.strength}
+                </span>
+              </div>
+            )}
           {!['LIVE', 'CRIT'].includes(gameState || '') && (
             <div className="text-xs my-2">
               <div>{formatLocalizedDate(startTimeUTC, 'MMMM D, YYYY')}</div>
             </div>
           )}
         </div>
-  <div className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) > (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}>
+        <div
+          className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) > (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}
+        >
           {teamHasRecentGoal(homeTeam.abbrev, game) && (
-            <Image src={SirenOnSVG} height="256" width="256" className="h-10 w-10 mr-2 animate-pulse" alt="Goal" />
+            <Image
+              src={SirenOnSVG}
+              height="256"
+              width="256"
+              className="h-10 w-10 mr-2 animate-pulse"
+              alt="Goal"
+            />
           )}
           <span>{homeTeam.score ?? 0}</span>
-          {situation?.homeTeam.situationDescriptions?.map((code: string) => (
-            <span key={code} className="mx-2 text-lg rounded text-white bg-red-900 p-1 uppercase">{code}</span>
+          {situation?.homeTeam?.situationDescriptions?.map((code: string) => (
+            <span key={code} className="mx-2 text-lg rounded text-white bg-red-900 p-1 uppercase">
+              {code}
+            </span>
           ))}
         </div>
         <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
@@ -249,12 +315,14 @@ const GameHeader: React.FC = () => {
             <Link href={`/team/${homeTeam.abbrev}`}>
               <div className="text-xl font-black block md:hidden">{homeTeam.abbrev}</div>
               <div className="text-lg hidden md:block">
-                <div className="text-sm">{homeTeam.placeName.default}</div>
-                <div className="text-xl font-black">{homeTeam.commonName.default.replace(homeTeam.placeName.default, '')}</div>
+                <div className="text-sm">{homeTeam.placeName?.default}</div>
+                <div className="text-xl font-black">
+                  {homeTeam.commonName?.default?.replace(homeTeam.placeName?.default || '', '')}
+                </div>
               </div>
             </Link>
             {gameState !== 'FUT' ? (
-              <div className="text-sm">SOG: {homeTeam.sog || 0}</div>
+              <div className="text-sm">SOG: {homeTeam.sog ?? 0}</div>
             ) : (
               <div className="text-sm">{homeTeam.record}</div>
             )}
@@ -263,7 +331,7 @@ const GameHeader: React.FC = () => {
             <TeamLogo
               team={homeTeam.abbrev}
               src={homeTeam.logo}
-              alt={homeTeam.commonName.default}
+              alt={homeTeam.commonName?.default || homeTeam.abbrev}
               className="w-20 h-20 mx-auto"
             />
           </div>

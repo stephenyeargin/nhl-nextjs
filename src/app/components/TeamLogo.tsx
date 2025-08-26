@@ -15,7 +15,15 @@ interface TeamLogoProps {
   style?: React.CSSProperties;
 }
 
-const TeamLogo: React.FC<TeamLogoProps> = ({ src, alt, className, team, colorMode = 'auto', noLink = false, style = {} }) => {
+const TeamLogo: React.FC<TeamLogoProps> = ({
+  src,
+  alt,
+  className,
+  team,
+  colorMode = 'auto',
+  noLink = false,
+  style = {},
+}) => {
   const [theme, setTheme] = useState(colorMode);
 
   // Detecting the theme on initial load and whenever it changes
@@ -30,7 +38,7 @@ const TeamLogo: React.FC<TeamLogoProps> = ({ src, alt, className, team, colorMod
     handleThemeChange();
 
     return () => mediaQuery.removeEventListener('change', handleThemeChange);
-  }, [ colorMode ]);
+  }, [colorMode]);
 
   // If src is empty, extract from team name
   let updatedSrc = src ? src : 'https://assets.nhle.com/logos/nhl/svg/NHL_light.svg';
@@ -47,13 +55,21 @@ const TeamLogo: React.FC<TeamLogoProps> = ({ src, alt, className, team, colorMod
     }
   }
 
-  // colorMode setting overrides theme
-  if (colorMode && updatedSrc) {
-    updatedSrc = (colorMode === 'dark') ? updatedSrc.replace('_light', '_dark') : updatedSrc.replace('_dark', '_light');
-  } else {
-    updatedSrc = (theme === 'dark') ? updatedSrc.replace('_light', '_dark') : updatedSrc.replace('_dark', '_light');
+  // Determine final logo variant: explicit light/dark override; 'auto' follows detected theme
+  if (updatedSrc) {
+    if (colorMode === 'dark') {
+      updatedSrc = updatedSrc.replace('_light', '_dark');
+    } else if (colorMode === 'light') {
+      updatedSrc = updatedSrc.replace('_dark', '_light');
+    } else {
+      // auto mode: rely on detected theme state (dark or light)
+      updatedSrc =
+        theme === 'dark'
+          ? updatedSrc.replace('_light', '_dark')
+          : updatedSrc.replace('_dark', '_light');
+    }
   }
-  
+
   const image = (
     <Image
       src={updatedSrc}
@@ -66,11 +82,7 @@ const TeamLogo: React.FC<TeamLogoProps> = ({ src, alt, className, team, colorMod
   );
 
   if (team && team.length < 5 && !noLink) {
-    return (
-      <Link href={`/team/${team}`}>
-        {image}
-      </Link>
-    );
+    return <Link href={`/team/${team}`}>{image}</Link>;
   }
 
   return image;

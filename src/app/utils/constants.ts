@@ -5,19 +5,19 @@ export const GAME_STATES = {
   OT: 'Overtime',
   PRE: 'Pregame',
   FUT: 'Future',
-  CRIT: 'Critical'
+  CRIT: 'Critical',
 };
 
 export const PENALTY_TYPES = {
-  'BEN': 'Bench Minor',
-  'GAM': 'Game Misconduct',
-  'GRO': 'Gross Misconduct',
-  'MAJ': 'Major',
-  'MAT': 'Match',
-  'MIN': 'Minor',
-  'MIS': 'Misconduct',
-  'PS': 'Penalty Shot',
-  'SO': 'Shootout'
+  BEN: 'Bench Minor',
+  GAM: 'Game Misconduct',
+  GRO: 'Gross Misconduct',
+  MAJ: 'Major',
+  MAT: 'Match',
+  MIN: 'Minor',
+  MIS: 'Misconduct',
+  PS: 'Penalty Shot',
+  SO: 'Shootout',
 };
 
 export const PENALTY_DESCRIPTIONS = {
@@ -25,16 +25,16 @@ export const PENALTY_DESCRIPTIONS = {
   '3-minute-minor': '3 Minute Minor',
   'abuse-of-officials': 'Abuse of officials',
   'abusive-language': 'Abusive language',
-  'aggressor': 'Aggressor',
+  aggressor: 'Aggressor',
   'attempt-to-injure': 'Attempt to injure',
-  'bench': 'Bench',
-  'boarding': 'Boarding',
+  bench: 'Bench',
+  boarding: 'Boarding',
   'broken-stick': 'Broken stick',
   'butt-ending': 'Butt-ending',
   'butt-ending-double-minor': 'Butt-ending - double minor',
-  'charging': 'Charging',
+  charging: 'Charging',
   'checking-from-behind': 'Checking from behind',
-  'clipping': 'Clipping',
+  clipping: 'Clipping',
   'closing-hand-on-puck': 'Closing hand on puck',
   'coach-or-manager-on-the-ice': 'Coach or Manager on the ice',
   'concealing-puck': 'Concealing puck',
@@ -49,12 +49,13 @@ export const PENALTY_DESCRIPTIONS = {
   'delaying-game-puck-over-glass': 'Delaying Game - Puck over glass',
   'delaying-game-smothering-puck': 'Delaying Game - Smothering puck',
   'delaying-game-unsuccessful-challenge': 'Delaying Game - Unsuccessful challenge',
-  'delaying-game-unsuccessful-challenge-double-minor': 'Delaying Game - Unsuccessful challenge, double minor',
+  'delaying-game-unsuccessful-challenge-double-minor':
+    'Delaying Game - Unsuccessful challenge, double minor',
   'deliberate-injury': 'Deliberate injury',
-  'diving': 'Diving',
-  'elbowing': 'Elbowing',
-  'embellishment': 'Embellishment',
-  'fighting': 'Fighting',
+  diving: 'Diving',
+  elbowing: 'Elbowing',
+  embellishment: 'Embellishment',
+  fighting: 'Fighting',
   'game-misconduct': 'Game Misconduct',
   'game-misconduct-head-coach': 'Game Misconduct - Head coach',
   'game-misconduct-team-staff': 'Game Misconduct - Team staff',
@@ -66,11 +67,11 @@ export const PENALTY_DESCRIPTIONS = {
   'head-butting-double-minor': 'Head butting - double minor',
   'high-sticking': 'High-sticking',
   'high-sticking-double-minor': 'High-sticking - double minor',
-  'holding': 'Holding',
+  holding: 'Holding',
   'holding-obstruction': 'Holding - Obstruction',
   'holding-stick-obstruction': 'Holding stick - Obstruction',
   'holding-the-stick': 'Holding the stick',
-  'hooking': 'Hooking',
+  hooking: 'Hooking',
   'hooking-obstruction': 'Hooking - Obstruction',
   'illegal-check-to-head': 'Illegal check to head',
   'illegal-equipment': 'Illegal equipment',
@@ -78,24 +79,24 @@ export const PENALTY_DESCRIPTIONS = {
   'illegal-stick-bench': 'Illegal stick - bench',
   'illegal-substitution': 'Illegal substitution',
   'ineligible-player': 'Ineligible Player',
-  'instigator': 'Instigator',
+  instigator: 'Instigator',
   'instigator-face-shield': 'Instigator - face shield',
   'instigator-misconduct': 'Instigator - Misconduct',
-  'interference': 'Interference',
+  interference: 'Interference',
   'interference-bench': 'Interference - Bench',
   'interference-goalkeeper': 'Interference - Goalkeeper',
   'interference-obstruction': 'Interference - Obstruction',
   'interference-with-official': 'Interference with official',
-  'kicking': 'Kicking',
-  'kneeing': 'Kneeing',
+  kicking: 'Kicking',
+  kneeing: 'Kneeing',
   'late-on-ice': 'Late on ice',
   'leaving-penalty-box': 'Leaving penalty box',
-  'leaving-players-penalty-bench': 'Leaving player\'s penalty bench',
-  'major': 'Major',
+  'leaving-players-penalty-bench': "Leaving player's penalty bench",
+  major: 'Major',
   'match-penalty': 'Match Penalty',
   'match-penalty-10-minutes': 'Match Penalty - 10 minutes',
-  'minor': 'Minor',
-  'misconduct': 'Misconduct',
+  minor: 'Minor',
+  misconduct: 'Misconduct',
   'not-proceding-to-dressing-room': 'Not proceeding to dressing room',
   'not-proceeding-directly-to-penalty-box': 'Not proceeding directly to penalty box',
   'objects-on-ice': 'Objects on ice',
@@ -123,23 +124,23 @@ export const PENALTY_DESCRIPTIONS = {
   'puck-thrown-forward-goalkeeper': 'Puck thrown forward - Goalkeeper',
   'refusal-to-play': 'Refusal to play',
   'removing-sweater': 'Removing sweater',
-  'roughing': 'Roughing',
+  roughing: 'Roughing',
   'roughing-double-minor': 'Roughing - double minor',
-  'roughing-removing-opponents-helmet': 'Roughing - Removing opponent\'s helmet',
+  'roughing-removing-opponents-helmet': "Roughing - Removing opponent's helmet",
   'shootout-illegal-stick': 'Shootout - Illegal stick',
   'shootout-unsuccessful-challenge': 'Shootout - Unsuccessful challenge',
-  'slashing': 'Slashing',
-  'spearing': 'Spearing',
+  slashing: 'Slashing',
+  spearing: 'Spearing',
   'spearing-double-minor': 'Spearing - double minor',
   'throwing-equipment': 'Throwing equipment',
   'throwing-stick': 'Throwing stick',
   'too-many-men-on-the-ice': 'Too many men on the ice',
-  'tripping': 'Tripping',
+  tripping: 'Tripping',
   'tripping-obstruction': 'Tripping - Obstruction',
   'unnecessary-roughness': 'Unnecessary roughness',
   'unsportsmanlike-conduct': 'Unsportsmanlike conduct',
   'unsportsmanlike-conduct-coach': 'Unsportsmanlike conduct - Coach',
-  'unsportsmanlike-conduct-bench': 'Unsportsmanlike conduct-bench'
+  'unsportsmanlike-conduct-bench': 'Unsportsmanlike conduct-bench',
 };
 
 export const TEAM_STATS = {
@@ -166,7 +167,7 @@ export const TEAM_STATS = {
 export const PLAYER_STATS = {
   goals: 'Goals',
   assists: 'Assists',
-  points: 'Points'
+  points: 'Points',
 };
 
 export const STAT_CONTEXT = {
@@ -322,28 +323,28 @@ export const GAME_EVENTS = {
   takeaway: 'Takeaway',
   turnover: 'Turnover',
   unknown: 'Unknown',
-  wrist: 'Wrist'
+  wrist: 'Wrist',
 };
 
 export const GOAL_MODIFIERS = {
-  'awarded': { label: 'AWD', title: 'Awarded Goal' },
+  awarded: { label: 'AWD', title: 'Awarded Goal' },
   'awarded-empty-net': { label: 'AWD, EN', title: 'Awarded Goal (Empty Net)' },
   'empty-net': { label: 'EN', title: 'Empty Net' },
   'game-winning-goal': { label: 'GWG', title: 'Game Winning Goal' },
-  'none': { label: '', title: 'None' },
+  none: { label: '', title: 'None' },
   'own-goal': { label: 'OWN', title: 'Own Goal' },
   'own-goal-empty-net': { label: 'OWN, EN', title: 'Own Goal (Empty Net)' },
-  'penalty-shot': { label: 'PS', title: 'Penalty Shot' }
+  'penalty-shot': { label: 'PS', title: 'Penalty Shot' },
 };
 
 export const ZONE_DESCRIPTIONS = {
   D: 'defensive zone',
   O: 'offensive zone',
-  N: 'neutral zone'
+  N: 'neutral zone',
 };
 
 export const MISS_TYPES = {
-  'short': 'short side',
+  short: 'short side',
   'wide-right': 'wide right',
   'wide-left': 'wide left',
   'hit-crossbar': 'hit crossbar',

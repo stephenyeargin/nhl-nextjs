@@ -17,7 +17,6 @@ const GameSkeleton = () => {
         </div>
       </div>
     </div>
-
   );
 };
 

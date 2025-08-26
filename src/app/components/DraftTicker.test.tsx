@@ -14,7 +14,23 @@ const mockFetch = jest.fn();
 
 describe('DraftTicker', () => {
   it('renders picks after fetch', async () => {
-    mockFetch.mockResolvedValueOnce({ json: () => Promise.resolve({ selectableRounds: [1], picks: [{ overallPick: 1, round: 1, teamLogoLight: 'x', teamAbbrev: 'NSH', firstName: { default: 'First' }, lastName: { default: 'Last' }, positionCode: 'C' }] }) });
+    mockFetch.mockResolvedValueOnce({
+      json: () =>
+        Promise.resolve({
+          selectableRounds: [1],
+          picks: [
+            {
+              overallPick: 1,
+              round: 1,
+              teamLogoLight: 'x',
+              teamAbbrev: 'NSH',
+              firstName: { default: 'First' },
+              lastName: { default: 'Last' },
+              positionCode: 'C',
+            },
+          ],
+        }),
+    });
     render(<DraftTicker />);
     await waitFor(() => expect(screen.getByText(/First Last/)).toBeInTheDocument());
   });

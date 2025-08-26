@@ -13,13 +13,16 @@ const TAG = 'news';
 
 const fetchNews = async (): Promise<StoryItem[]> => {
   try {
-    const res = await fetch('https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?context.slug=nhl&tags.slug=news&$skip=0&$limit=22', { cache: 'no-store' });
+    const res = await fetch(
+      'https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?context.slug=nhl&tags.slug=news&$skip=0&$limit=22',
+      { cache: 'no-store' }
+    );
     if (!res.ok) {
       return [];
     }
-  const json: PaginatedContentResponse<StoryItem> = await res.json();
+    const json: PaginatedContentResponse<StoryItem> = await res.json();
 
-  return json.items || [];
+    return json.items || [];
   } catch (_e) {
     return [];
   }
@@ -29,7 +32,9 @@ const NewsPage: React.FC = () => {
   const [news, setNews] = useState<StoryItem[]>([]);
 
   useEffect(() => {
-    if (!TAG) {return;}
+    if (!TAG) {
+      return;
+    }
     fetchNews().then(setNews);
   }, []);
 
@@ -38,7 +43,9 @@ const NewsPage: React.FC = () => {
   }
 
   return (
-    <Suspense fallback={<NewsPageSkeleton />}> {/* Suspense retained for parity, though data is client-fetched */}
+    <Suspense fallback={<NewsPageSkeleton />}>
+      {' '}
+      {/* Suspense retained for parity, though data is client-fetched */}
       <div className="container px-2 mx-auto">
         {news.length > 0 && (
           <div>

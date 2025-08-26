@@ -1,11 +1,15 @@
 import React from 'react';
 import { formatMarkdownContent } from '../utils/formatters';
 
-interface MarkdownPart { _entityId: string; content: string }
-interface ContentMarkdownProps { part: MarkdownPart }
+interface MarkdownPart {
+  _entityId: string;
+  content: string;
+}
+interface ContentMarkdownProps {
+  part: MarkdownPart;
+}
 
 const ContentMarkdown: React.FC<ContentMarkdownProps> = ({ part }) => {
-
   const { _entityId, content } = part;
 
   return (

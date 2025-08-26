@@ -4,43 +4,40 @@ import '@/app/assets/datatables.css';
 import standingsStyles from '@/app/components/StandingsTable.module.scss';
 import TeamLogo from '@/app/components/TeamLogo';
 import DraftYearSelect from '@/app/components/DraftYearSelect';
-
-interface DraftPick {
-  overallPick: number;
-  teamLogoLight?: string; teamAbbrev: string; teamName?: { default?: string };
-  teamPickHistory?: string;
-  firstName?: { default?: string }; lastName?: { default?: string };
-  positionCode?: string; countryCode?: string;
-  height?: number; weight?: number;
-  amateurClubName?: string; amateurLeague?: string;
-  round: number;
-  [k:string]: any;
-}
-interface DraftData {
-  draftYear: number;
-  draftYears: number[];
-  selectableRounds: number[];
-  picks: DraftPick[];
-}
+import type { DraftPick, DraftData } from '@/app/types/draft';
 
 async function getDraftYearData(year: string | number): Promise<DraftData> {
-  const res = await fetch(`https://api-web.nhle.com/v1/draft/picks/${year}/all`, { cache: 'no-store' });
-  
+  const res = await fetch(`https://api-web.nhle.com/v1/draft/picks/${year}/all`, {
+    cache: 'no-store',
+  });
+
   return res.json();
 }
 
-const roundNames = ['', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6', 'Round 7'];
+const roundNames = [
+  '',
+  'Round 1',
+  'Round 2',
+  'Round 3',
+  'Round 4',
+  'Round 5',
+  'Round 6',
+  'Round 7',
+];
 
 export default async function DraftPage(props: any) {
-  const resolved = await props?.params as DraftYearParam | Promise<DraftYearParam>;
+  const resolved = (await props?.params) as DraftYearParam | Promise<DraftYearParam>;
   const { year } = await resolved;
   const draftData = await getDraftYearData(year);
 
-  const picksByRound: Record<number, DraftPick[]> = draftData.selectableRounds.reduce((acc: Record<number, DraftPick[]>, round: number) => {
-    acc[round] = draftData.picks.filter((pick) => pick.round === round);
-    
-    return acc;
-  }, {} as Record<number, DraftPick[]>);
+  const picksByRound: Record<number, DraftPick[]> = draftData.selectableRounds.reduce(
+    (acc: Record<number, DraftPick[]>, round: number) => {
+      acc[round] = draftData.picks.filter((pick) => pick.round === round);
+
+      return acc;
+    },
+    {} as Record<number, DraftPick[]>
+  );
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -76,10 +73,14 @@ export default async function DraftPage(props: any) {
                           className="h-8 w-8 hidden md:block"
                           team={pick.teamAbbrev}
                         />
-                        <a className="font-semibold" href={`/team/${pick.teamAbbrev}`}>{pick.teamName?.default}</a>
+                        <a className="font-semibold" href={`/team/${pick.teamAbbrev}`}>
+                          {pick.teamName?.default}
+                        </a>
                       </div>
                       {pick.teamAbbrev !== pick.teamPickHistory && pick.teamPickHistory && (
-                        <div className="text-slate-500 ps-4 text-xs">↳ {pick.teamPickHistory.replace(/-/g, ' » ')}</div>
+                        <div className="text-slate-500 ps-4 text-xs">
+                          ↳ {pick.teamPickHistory.replace(/-/g, ' » ')}
+                        </div>
                       )}
                     </td>
                     <td>
@@ -87,8 +88,15 @@ export default async function DraftPage(props: any) {
                     </td>
                     <td>{pick.positionCode || ''}</td>
                     <td>{pick.countryCode || ''}</td>
-                    <td>{pick.height && pick.weight ? `${Math.floor(pick.height / 12)}'${pick.height % 12}" / ${pick.weight}` : ''}</td>
-                    <td>{pick.amateurClubName || ''}{pick.amateurLeague ? ` (${pick.amateurLeague})` : ''}</td>
+                    <td>
+                      {pick.height && pick.weight
+                        ? `${Math.floor(pick.height / 12)}'${pick.height % 12}" / ${pick.weight}`
+                        : ''}
+                    </td>
+                    <td>
+                      {pick.amateurClubName || ''}
+                      {pick.amateurLeague ? ` (${pick.amateurLeague})` : ''}
+                    </td>
                   </tr>
                 ))}
               </tbody>

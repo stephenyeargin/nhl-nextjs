@@ -5,12 +5,15 @@ import GameSubPageNavigation from './GameSubPageNavigation';
 jest.mock('next/navigation', () => ({ usePathname: () => '/game/1' }));
 
 // Mock FontAwesome to avoid heavy DOM
-jest.mock('@fortawesome/react-fontawesome', () => ({ FontAwesomeIcon: (props: any) => <span data-icon={props.icon?.iconName || 'icon'} /> }));
+jest.mock('@fortawesome/react-fontawesome', () => ({
+  FontAwesomeIcon: (props: any) => <span data-icon={props.icon?.iconName || 'icon'} />,
+}));
 
 // Mock FloatingAudioPlayer to a simple placeholder to prevent extra async/state side effects
 jest.mock('./FloatingAudioPlayer', () => ({
   __esModule: true,
-  default: ({ isVisible, label }: any) => isVisible ? <div data-testid="audio-player">Audio {label}</div> : null
+  default: ({ isVisible, label }: any) =>
+    isVisible ? <div data-testid="audio-player">Audio {label}</div> : null,
 }));
 
 // Provide minimal GameContext
@@ -23,9 +26,9 @@ jest.mock('../contexts/GameContext', () => ({
         tvBroadcasts: [],
         homeTeam: { radioLink: 'homeRadio', placeName: { default: 'HomeCity' } },
         awayTeam: { radioLink: 'awayRadio', placeName: { default: 'AwayCity' } },
-      }
-    }
-  })
+      },
+    },
+  }),
 }));
 
 describe('GameSubPageNavigation (smoke)', () => {

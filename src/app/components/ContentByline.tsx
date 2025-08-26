@@ -35,9 +35,7 @@ const ContentByline: React.FC<ContentBylineProps> = ({ story }) => {
         <p>
           By <strong className="text-bold">{story.fields.contributorOverride}</strong>
         </p>
-        <p className="text-sm text-gray-500">
-          {formatLocalizedDate(story.contentDate, 'LLL')}
-        </p>
+        <p className="text-sm text-gray-500">{formatLocalizedDate(story.contentDate, 'LLL')}</p>
       </div>
     );
   }
@@ -46,11 +44,13 @@ const ContentByline: React.FC<ContentBylineProps> = ({ story }) => {
     <div className="my-5">
       {story.references.contributor && (
         <p>
-          By <strong className="text-bold">
-      {story.references.contributor?.map((contributor, i) => (
+          By{' '}
+          <strong className="text-bold">
+            {story.references.contributor?.map((contributor, i) => (
               <span key={contributor._entityId}>
-        {contributor.title}{contributor.fields?.source ? `, ${contributor.fields.source}` : ''}
-        {i < (story.references.contributor?.length ?? 0) - 1 && ', '}
+                {contributor.title}
+                {contributor.fields?.source ? `, ${contributor.fields.source}` : ''}
+                {i < (story.references.contributor?.length ?? 0) - 1 && ', '}
               </span>
             ))}
           </strong>

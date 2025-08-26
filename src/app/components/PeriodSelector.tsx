@@ -14,7 +14,12 @@ interface PeriodSelectorProps {
   includeAll?: boolean;
 }
 
-const PeriodSelector: React.FC<PeriodSelectorProps> = ({ periodData, activePeriod, handlePeriodChange, includeAll = false }) => {
+const PeriodSelector: React.FC<PeriodSelectorProps> = ({
+  periodData,
+  activePeriod,
+  handlePeriodChange,
+  includeAll = false,
+}) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     handlePeriodChange(Number(event.target.value));
   };

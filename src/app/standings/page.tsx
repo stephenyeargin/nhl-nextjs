@@ -3,29 +3,61 @@ import StandingsTable from '@/app/components/StandingsTable';
 
 // Mirror the stricter interface expected by StandingsTable
 interface StandingsEntry {
-  wildcardSequence: number; divisionAbbrev: string; divisionSequence: number; points: number;
-  teamAbbrev: { default: string }; teamLogo?: string; teamName: { default: string };
-  clinchIndicator?: string; gamesPlayed: number; wins: number; losses: number; otLosses: number; pointPctg: number;
-  regulationWins: number; regulationPlusOtWins: number; goalFor: number; goalAgainst: number; goalDifferential: number;
-  homeWins: number; homeLosses: number; homeOtLosses: number; roadWins: number; roadLosses: number; roadOtLosses: number;
-  shootoutWins: number; shootoutLosses: number; l10Wins: number; l10Losses: number; l10OtLosses: number; streakCode?: string; streakCount?: number;
-  conferenceAbbrev?: string; [k: string]: any;
+  wildcardSequence: number;
+  divisionAbbrev: string;
+  divisionSequence: number;
+  points: number;
+  teamAbbrev: { default: string };
+  teamLogo?: string;
+  teamName: { default: string };
+  clinchIndicator?: string;
+  gamesPlayed: number;
+  wins: number;
+  losses: number;
+  otLosses: number;
+  pointPctg: number;
+  regulationWins: number;
+  regulationPlusOtWins: number;
+  goalFor: number;
+  goalAgainst: number;
+  goalDifferential: number;
+  homeWins: number;
+  homeLosses: number;
+  homeOtLosses: number;
+  roadWins: number;
+  roadLosses: number;
+  roadOtLosses: number;
+  shootoutWins: number;
+  shootoutLosses: number;
+  l10Wins: number;
+  l10Losses: number;
+  l10OtLosses: number;
+  streakCode?: string;
+  streakCount?: number;
+  conferenceAbbrev?: string;
+  // Allow unknown extra props without encouraging unsafe usage
+  [k: string]: unknown;
 }
 
-interface StandingsApiResponse { standings: StandingsEntry[]; [k: string]: any }
+interface StandingsApiResponse {
+  standings: StandingsEntry[];
+  [k: string]: unknown;
+}
 
 export default async function StandingsPage() {
   let westernConference: StandingsEntry[] = [];
   let easternConference: StandingsEntry[] = [];
 
   try {
-    const apiStandings = await fetch('https://api-web.nhle.com/v1/standings/now', { cache: 'no-store' });
+    const apiStandings = await fetch('https://api-web.nhle.com/v1/standings/now', {
+      cache: 'no-store',
+    });
     if (!apiStandings.ok) {
       throw new Error('Failed to fetch data');
     }
     const jsonStandings: StandingsApiResponse = await apiStandings.json();
-  westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
-  easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
+    westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
+    easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
   } catch (error: any) {
     return (
       <div className="container mx-auto">

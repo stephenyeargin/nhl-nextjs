@@ -12,7 +12,9 @@ describe('GameClock edge cases', () => {
 
   test('does not go negative from 00:00', () => {
     render(<GameClock timeRemaining="00:00" running />);
-    act(() => { jest.advanceTimersByTime(3000); });
+    act(() => {
+      jest.advanceTimersByTime(3000);
+    });
     expect(screen.getByText('00:00')).toBeTruthy();
   });
 });

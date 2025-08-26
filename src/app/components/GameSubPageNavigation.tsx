@@ -3,7 +3,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHockeyPuck, faList, faRadio, faTable, faTelevision, faVideo } from '@fortawesome/free-solid-svg-icons';
+import {
+  faHockeyPuck,
+  faList,
+  faRadio,
+  faTable,
+  faTelevision,
+  faVideo,
+} from '@fortawesome/free-solid-svg-icons';
 import { usePathname } from 'next/navigation';
 import { formatBroadcasts } from '../utils/formatters';
 import FloatingAudioPlayer from './FloatingAudioPlayer';
@@ -46,7 +53,7 @@ const GameSubPageNavigation: React.FC = () => {
           <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1 hidden md:inline" />
           {!['FUT', 'PRE'].includes(game.gameState || '') ? 'Summary' : 'Preview'}
         </Link>
-  {!['FUT', 'PRE'].includes(game.gameState || '') && (
+        {!['FUT', 'PRE'].includes(game.gameState || '') && (
           <Link
             href={`/game/${id}/boxscore`}
             className={`p-3 ${activeRoute === `/game/${id}/boxscore` ? activeClasses : ''}`}
@@ -55,7 +62,7 @@ const GameSubPageNavigation: React.FC = () => {
             Box Score
           </Link>
         )}
-  {!['FUT', 'PRE'].includes(game.gameState || '') && (
+        {!['FUT', 'PRE'].includes(game.gameState || '') && (
           <Link
             href={`/game/${id}/play-by-play`}
             className={`p-3 ${activeRoute === `/game/${id}/play-by-play` ? activeClasses : ''}`}
@@ -64,7 +71,7 @@ const GameSubPageNavigation: React.FC = () => {
             Play-by-Play
           </Link>
         )}
-  {!['FUT', 'PRE'].includes(game.gameState || '') && (
+        {!['FUT', 'PRE'].includes(game.gameState || '') && (
           <Link
             href={`/game/${id}/highlights`}
             className={`p-3 ${activeRoute === `/game/${id}/highlights` ? activeClasses : ''}`}
@@ -77,34 +84,36 @@ const GameSubPageNavigation: React.FC = () => {
       <div className="order-first lg:order-last p-3 flex-fill text-center flex gap-4 mb-3 md:mb-0 justify-center items-center lg:justify-end">
         <span className="">
           <FontAwesomeIcon icon={faHockeyPuck} fixedWidth className="mr-1" />
-          <Link href={`https://www.nhl.com/gamecenter/${game.id}`} className="underline">NHL.com GameCenter</Link>
+          <Link href={`https://www.nhl.com/gamecenter/${game.id}`} className="underline">
+            NHL.com GameCenter
+          </Link>
         </span>
-        {game.tvBroadcasts.length > 0 && (
+        {Array.isArray(game.tvBroadcasts) && game.tvBroadcasts.length > 0 && (
           <span className="text-center">
-            <FontAwesomeIcon icon={faTelevision} fixedWidth className="mr-1" /> {formatBroadcasts(game.tvBroadcasts)}
+            <FontAwesomeIcon icon={faTelevision} fixedWidth className="mr-1" />{' '}
+            {formatBroadcasts(game.tvBroadcasts)}
           </span>
         )}
-        {game.homeTeam.radioLink && (
+        {game.homeTeam?.radioLink && (
           <span className="text-center">
-            <FontAwesomeIcon icon={faRadio} fixedWidth className="mr-1" />
-            {' '}{' '}
+            <FontAwesomeIcon icon={faRadio} fixedWidth className="mr-1" />{' '}
             <button
               className="font-bold underline"
               onClick={() => {
-                setAudioPlayerUrl(game.homeTeam.radioLink);
-                setAudioPlayerLabel(game.homeTeam.placeName.default);
+                setAudioPlayerUrl(game.homeTeam.radioLink as string);
+                setAudioPlayerLabel(game.homeTeam.placeName?.default || game.homeTeam.abbrev);
                 setAudioPlayerPlaying(true);
                 setAudioPlayerVisible(true);
               }}
             >
               Home
-            </button>
-            {' '}|{' '}
+            </button>{' '}
+            |{' '}
             <button
               className="font-bold underline"
               onClick={() => {
-                setAudioPlayerUrl(game.awayTeam.radioLink);
-                setAudioPlayerLabel(game.awayTeam.placeName.default);
+                setAudioPlayerUrl(game.awayTeam.radioLink as string);
+                setAudioPlayerLabel(game.awayTeam.placeName?.default || game.awayTeam.abbrev);
                 setAudioPlayerPlaying(true);
                 setAudioPlayerVisible(true);
               }}
@@ -114,7 +123,14 @@ const GameSubPageNavigation: React.FC = () => {
           </span>
         )}
       </div>
-  <FloatingAudioPlayer isVisible={isAudioPlayerVisible} isPlaying={isAudioPlayerPlaying} url={audioPlayerUrl || ''} label={audioPlayerLabel || ''} onTogglePlay={handleTogglePlaying} onClose={handleAudioPlayerClose} />
+      <FloatingAudioPlayer
+        isVisible={isAudioPlayerVisible}
+        isPlaying={isAudioPlayerPlaying}
+        url={audioPlayerUrl || ''}
+        label={audioPlayerLabel || ''}
+        onTogglePlay={handleTogglePlaying}
+        onClose={handleAudioPlayerClose}
+      />
     </div>
   );
 };

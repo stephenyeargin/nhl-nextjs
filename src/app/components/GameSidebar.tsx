@@ -7,32 +7,52 @@ import { useGameContext } from '../contexts/GameContext';
 import Scoreboard from './Scoreboard';
 import TeamLogo from './TeamLogo';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
-import { GAME_STATES, GAME_REPORT_NAMES, NHL_BRIGHTCOVE_ACCOUNT, STAT_CONTEXT } from '../utils/constants';
-import { formatSeriesStatus, formatLocalizedTime, formatPeriodLabel, formatSeason } from '../utils/formatters';
+import {
+  GAME_STATES,
+  GAME_REPORT_NAMES,
+  NHL_BRIGHTCOVE_ACCOUNT,
+  STAT_CONTEXT,
+} from '../utils/constants';
+import {
+  formatSeriesStatus,
+  formatLocalizedTime,
+  formatPeriodLabel,
+  formatSeason,
+} from '../utils/formatters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faPlayCircle, faWarning } from '@fortawesome/free-solid-svg-icons';
 import GameSidebarSkeleton from './GameSidebarSkeleton';
 import StatComparisonRow from './StatComparisonRow';
 import FloatingVideoPlayer from './FloatingVideoPlayer';
 
-interface SimpleGame { gameState: string; periodDescriptor?: any; clock?: any }
+interface SimpleGame {
+  gameState: string;
+  periodDescriptor?: any;
+  clock?: any;
+}
 const gameIsInProgress = (game: SimpleGame) => {
   const state = GAME_STATES[game.gameState as keyof typeof GAME_STATES];
   switch (state) {
-  case GAME_STATES.PRE:
-  case GAME_STATES.LIVE:
-  case GAME_STATES.CRIT:
-    return true;
-  default:
-    return false;
+    case GAME_STATES.PRE:
+    case GAME_STATES.LIVE:
+    case GAME_STATES.CRIT:
+      return true;
+    default:
+      return false;
   }
 };
 
-interface SimplePlayer { id: string | number; firstName?: { default?: string }; lastName?: { default?: string } }
+interface SimplePlayer {
+  id: string | number;
+  firstName?: { default?: string };
+  lastName?: { default?: string };
+}
 const renderPlayer = (player: SimplePlayer) => {
   return (
     <>
-      <Link href={`/player/${player.id}`}>{player.firstName?.default} {player.lastName?.default}</Link>
+      <Link href={`/player/${player.id}`}>
+        {player.firstName?.default} {player.lastName?.default}
+      </Link>
     </>
   );
 };
@@ -46,7 +66,7 @@ const GameSidebar = () => {
 
   // Hide the video player if escape key pressed
   useEffect(() => {
-  const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setVideoPlayerVisible(false);
       }
@@ -56,7 +76,14 @@ const GameSidebar = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  if (!gameData || !gameData.homeTeam || !gameData.awayTeam || !gameData.game || !gameData.rightRail || !gameData.story) {
+  if (
+    !gameData ||
+    !gameData.homeTeam ||
+    !gameData.awayTeam ||
+    !gameData.game ||
+    !gameData.rightRail ||
+    !gameData.story
+  ) {
     return <GameSidebarSkeleton />;
   }
 
@@ -64,8 +91,14 @@ const GameSidebar = () => {
   const { homeTeam, awayTeam, game, rightRail, story } = gameData;
   const { gameVideo } = rightRail;
 
-  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev, true) || { teamColor: '#000', secondaryTeamColor: '#000' };
-  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev, false) || { teamColor: '#000', secondaryTeamColor: '#000' };
+  homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev, true) || {
+    teamColor: '#000',
+    secondaryTeamColor: '#000',
+  };
+  awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev, false) || {
+    teamColor: '#000',
+    secondaryTeamColor: '#000',
+  };
 
   // Update logo map
   const logos: Record<string, string> = {};
@@ -73,8 +106,10 @@ const GameSidebar = () => {
   logos[awayTeam.abbrev as string] = awayTeam.logo as string;
 
   const gameStats: Record<string, { awayValue: any; homeValue: any }> = {};
-  story.summary?.teamGameStats.forEach((s: any) => {
-    gameStats[s.category] = { awayValue: s.awayValue, homeValue: s.homeValue };
+  story.summary?.teamGameStats?.forEach((s: any) => {
+    if (s && s.category) {
+      gameStats[s.category] = { awayValue: s.awayValue, homeValue: s.homeValue };
+    }
   });
 
   const handleVideoPlayerClose = () => {
@@ -84,7 +119,7 @@ const GameSidebar = () => {
   };
 
   if (homeTeam.abbrev === 'TBD' || awayTeam.abbrev === 'TBD') {
-    return (<></>);
+    return <></>;
   }
 
   return (
@@ -94,7 +129,9 @@ const GameSidebar = () => {
           {gameVideo?.threeMinRecap && (
             <button
               onClick={() => {
-                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.threeMinRecap}`);
+                setVideoPlayerUrl(
+                  `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.threeMinRecap}`
+                );
                 setVideoPlayerLabel('3:00 Recap');
                 setVideoPlayerVisible(true);
               }}
@@ -106,7 +143,9 @@ const GameSidebar = () => {
           {gameVideo?.condensedGame && (
             <button
               onClick={() => {
-                setVideoPlayerUrl(`https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.condensedGame}`);
+                setVideoPlayerUrl(
+                  `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.condensedGame}`
+                );
                 setVideoPlayerLabel('Condensed Game');
                 setVideoPlayerVisible(true);
               }}
@@ -118,9 +157,9 @@ const GameSidebar = () => {
         </div>
       )}
 
-      {rightRail.linescore && (
+      {rightRail.linescore?.byPeriod && rightRail.linescore?.totals && (
         <div className="mb-5">
-          <Scoreboard game={game as any} linescore={rightRail.linescore} />
+          <Scoreboard game={game as any} linescore={rightRail.linescore as any} />
         </div>
       )}
       {rightRail.shotsByPeriod && (
@@ -147,7 +186,12 @@ const GameSidebar = () => {
           {rightRail.shotsByPeriod.map((period: any, index: number) => (
             <div key={index} className={`flex text-center ${index % 2 ? '' : 'bg-slate-500/10'}`}>
               <div className="w-1/4 p-2">{period.away}</div>
-              <div className="w-1/2 p-3 text-xs">{formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor?.number })}</div>
+              <div className="w-1/2 p-3 text-xs">
+                {formatPeriodLabel({
+                  ...game.periodDescriptor,
+                  number: period.periodDescriptor?.number,
+                })}
+              </div>
               <div className="w-1/4 p-2">{period.home}</div>
             </div>
           ))}
@@ -236,109 +280,129 @@ const GameSidebar = () => {
           </div>
         </div>
       )}
-      {rightRail.teamSeasonStats !== undefined && (
+      {rightRail.teamSeasonStats && (
         <div className="mb-5">
           <div className="flex text-center items-center justify-between">
             <div className="w-1/4 p-2 text-bold flex justify-center">
-              <TeamLogo
-                src={logos[awayTeam.abbrev]}
-                alt={awayTeam.abbrev}
-                className="h-12 w-12"
-              />
+              <TeamLogo src={logos[awayTeam.abbrev]} alt={awayTeam.abbrev} className="h-12 w-12" />
             </div>
             <div className="w-1/2 p-3">
               <div className="text-2xl font-bold">Season Stats</div>
-              {rightRail.teamSeasonStats.contextLabel && (
-                <div className="text-xs text-center text-gray-500">{formatSeason(rightRail.teamSeasonStats.contextSeason)} {STAT_CONTEXT[rightRail.teamSeasonStats.contextLabel as keyof typeof STAT_CONTEXT]}</div>
+              {rightRail.teamSeasonStats?.contextLabel && (
+                <div className="text-xs text-center text-gray-500">
+                  {formatSeason(rightRail.teamSeasonStats?.contextSeason)}{' '}
+                  {
+                    STAT_CONTEXT[
+                      rightRail.teamSeasonStats?.contextLabel as keyof typeof STAT_CONTEXT
+                    ]
+                  }
+                </div>
               )}
             </div>
             <div className="w-1/4 p-2 text-bold flex justify-center">
-              <TeamLogo
-                src={logos[homeTeam.abbrev]}
-                alt={homeTeam.abbrev}
-                className="h-12 w-12"
-              />
+              <TeamLogo src={logos[homeTeam.abbrev]} alt={homeTeam.abbrev} className="h-12 w-12" />
             </div>
           </div>
 
-          <StatComparisonRow
-            awayStat={rightRail.teamSeasonStats.awayTeam.ppPctg}
-            awayStatRank={rightRail.teamSeasonStats.awayTeam.ppPctgRank}
-            awayTeam={awayTeam as any}
-            homeStat={rightRail.teamSeasonStats.homeTeam.ppPctg}
-            homeStatRank={rightRail.teamSeasonStats.homeTeam.ppPctgRank}
-            homeTeam={homeTeam as any}
-            stat="ppPctg"
-          />
-          <StatComparisonRow
-            awayStat={rightRail.teamSeasonStats.awayTeam.pkPctg}
-            awayStatRank={rightRail.teamSeasonStats.awayTeam.pkPctgRank}
-            awayTeam={awayTeam as any}
-            homeStat={rightRail.teamSeasonStats.homeTeam.pkPctg}
-            homeStatRank={rightRail.teamSeasonStats.homeTeam.pkPctgRank}
-            homeTeam={homeTeam as any}
-            stat="pkPctg"
-          />
-          <StatComparisonRow
-            awayStat={rightRail.teamSeasonStats.awayTeam.faceoffWinningPctg}
-            awayStatRank={rightRail.teamSeasonStats.awayTeam.faceoffWinningPctgRank}
-            awayTeam={awayTeam as any}
-            homeStat={rightRail.teamSeasonStats.homeTeam.faceoffWinningPctg}
-            homeStatRank={rightRail.teamSeasonStats.homeTeam.faceoffWinningPctgRank}
-            homeTeam={homeTeam as any}
-            stat="faceoffWinningPctg"
-          />
-          <StatComparisonRow
-            awayStat={rightRail.teamSeasonStats.awayTeam.goalsForPerGamePlayed}
-            awayStatRank={rightRail.teamSeasonStats.awayTeam.goalsForPerGamePlayedRank}
-            awayTeam={awayTeam as any}
-            homeStat={rightRail.teamSeasonStats.homeTeam.goalsForPerGamePlayed}
-            homeStatRank={rightRail.teamSeasonStats.homeTeam.goalsForPerGamePlayedRank}
-            homeTeam={homeTeam as any}
-            stat="goalsForPerGamePlayed"
-          />
-          <StatComparisonRow
-            awayStat={rightRail.teamSeasonStats.awayTeam.goalsAgainstPerGamePlayed}
-            awayStatRank={rightRail.teamSeasonStats.awayTeam.goalsAgainstPerGamePlayedRank}
-            awayTeam={awayTeam as any}
-            homeStat={rightRail.teamSeasonStats.homeTeam.goalsAgainstPerGamePlayed}
-            homeStatRank={rightRail.teamSeasonStats.homeTeam.goalsAgainstPerGamePlayedRank}
-            homeTeam={homeTeam as any}
-            stat="goalsAgainstPerGamePlayed"
-          />
+          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
+            <StatComparisonRow
+              awayStat={rightRail.teamSeasonStats.awayTeam.ppPctg || 0}
+              awayStatRank={rightRail.teamSeasonStats.awayTeam.ppPctgRank}
+              awayTeam={awayTeam as any}
+              homeStat={rightRail.teamSeasonStats.homeTeam.ppPctg || 0}
+              homeStatRank={rightRail.teamSeasonStats.homeTeam.ppPctgRank}
+              homeTeam={homeTeam as any}
+              stat="ppPctg"
+            />
+          )}
+          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
+            <StatComparisonRow
+              awayStat={rightRail.teamSeasonStats.awayTeam.pkPctg || 0}
+              awayStatRank={rightRail.teamSeasonStats.awayTeam.pkPctgRank}
+              awayTeam={awayTeam as any}
+              homeStat={rightRail.teamSeasonStats.homeTeam.pkPctg || 0}
+              homeStatRank={rightRail.teamSeasonStats.homeTeam.pkPctgRank}
+              homeTeam={homeTeam as any}
+              stat="pkPctg"
+            />
+          )}
+          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
+            <StatComparisonRow
+              awayStat={rightRail.teamSeasonStats.awayTeam.faceoffWinningPctg || 0}
+              awayStatRank={rightRail.teamSeasonStats.awayTeam.faceoffWinningPctgRank}
+              awayTeam={awayTeam as any}
+              homeStat={rightRail.teamSeasonStats.homeTeam.faceoffWinningPctg || 0}
+              homeStatRank={rightRail.teamSeasonStats.homeTeam.faceoffWinningPctgRank}
+              homeTeam={homeTeam as any}
+              stat="faceoffWinningPctg"
+            />
+          )}
+          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
+            <StatComparisonRow
+              awayStat={rightRail.teamSeasonStats.awayTeam.goalsForPerGamePlayed || 0}
+              awayStatRank={rightRail.teamSeasonStats.awayTeam.goalsForPerGamePlayedRank}
+              awayTeam={awayTeam as any}
+              homeStat={rightRail.teamSeasonStats.homeTeam.goalsForPerGamePlayed || 0}
+              homeStatRank={rightRail.teamSeasonStats.homeTeam.goalsForPerGamePlayedRank}
+              homeTeam={homeTeam as any}
+              stat="goalsForPerGamePlayed"
+            />
+          )}
+          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
+            <StatComparisonRow
+              awayStat={rightRail.teamSeasonStats.awayTeam.goalsAgainstPerGamePlayed || 0}
+              awayStatRank={rightRail.teamSeasonStats.awayTeam.goalsAgainstPerGamePlayedRank}
+              awayTeam={awayTeam as any}
+              homeStat={rightRail.teamSeasonStats.homeTeam.goalsAgainstPerGamePlayed || 0}
+              homeStatRank={rightRail.teamSeasonStats.homeTeam.goalsAgainstPerGamePlayedRank}
+              homeTeam={homeTeam as any}
+              stat="goalsAgainstPerGamePlayed"
+            />
+          )}
         </div>
       )}
 
-      {rightRail.last10Record && (
+      {rightRail.last10Record?.awayTeam && rightRail.last10Record?.homeTeam && (
         <div className="mb-5">
           <div className="flex text-center items-center justify-between">
             <div className="w-1/4 p-2 text-bold flex justify-center">
-              <TeamLogo
-                src={logos[awayTeam.abbrev]}
-                alt={awayTeam.abbrev}
-                className="h-12 w-12"
-              />
+              <TeamLogo src={logos[awayTeam.abbrev]} alt={awayTeam.abbrev} className="h-12 w-12" />
             </div>
             <div className="w-1/2 p-2 text-2xl font-bold">Last 10 Games</div>
             <div className="w-1/4 p-2 text-bold flex justify-center">
-              <TeamLogo
-                src={logos[homeTeam.abbrev]}
-                alt={homeTeam.abbrev}
-                className="h-12 w-12"
-              />
+              <TeamLogo src={logos[homeTeam.abbrev]} alt={homeTeam.abbrev} className="h-12 w-12" />
             </div>
           </div>
           <div className="flex text-center">
-            <div className="w-1/2">{rightRail.last10Record.awayTeam.record} ({rightRail.last10Record.awayTeam.streakType}{rightRail.last10Record.awayTeam.streak})</div>
-            <div className="w-1/2">{rightRail.last10Record.homeTeam.record} ({rightRail.last10Record.homeTeam.streakType}{rightRail.last10Record.homeTeam.streak})</div>
+            <div className="w-1/2">
+              {rightRail.last10Record.awayTeam?.record} (
+              {rightRail.last10Record.awayTeam?.streakType}
+              {rightRail.last10Record.awayTeam?.streak})
+            </div>
+            <div className="w-1/2">
+              {rightRail.last10Record.homeTeam?.record} (
+              {rightRail.last10Record.homeTeam?.streakType}
+              {rightRail.last10Record.homeTeam?.streak})
+            </div>
           </div>
-          {rightRail.last10Record.awayTeam.pastGameResults.map((_g: any, i: number) => (
-            <div key={i} className={`flex text-center text-xs my-1 gap-1 ${i % 2 ? '' : 'bg-slate-500/10'}`}>
-              <div className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record.awayTeam.pastGameResults[i].gameResult) ? 'font-bold' : 'opacity-50'}`} style={{ borderWidth: '1pt', borderColor:  awayTeam.data.teamColor }}>
-                {rightRail.last10Record.awayTeam.pastGameResults[i].opponentAbbrev} ({rightRail.last10Record.awayTeam.pastGameResults[i].gameResult})
+          {rightRail.last10Record?.awayTeam?.pastGameResults?.map((_g: any, i: number) => (
+            <div
+              key={i}
+              className={`flex text-center text-xs my-1 gap-1 ${i % 2 ? '' : 'bg-slate-500/10'}`}
+            >
+              <div
+                className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-50'}`}
+                style={{ borderWidth: '1pt', borderColor: awayTeam.data?.teamColor || '#000' }}
+              >
+                {rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.opponentAbbrev} (
+                {rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.gameResult})
               </div>
-              <div className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record.homeTeam.pastGameResults[i].gameResult) ? 'font-bold' : 'opacity-50'}`} style={{ borderWidth: '1pt', borderColor:  homeTeam.data.teamColor }}>
-                {rightRail.last10Record.homeTeam.pastGameResults[i].opponentAbbrev} ({rightRail.last10Record.homeTeam.pastGameResults[i].gameResult})
+              <div
+                className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-50'}`}
+                style={{ borderWidth: '1pt', borderColor: homeTeam.data?.teamColor || '#000' }}
+              >
+                {rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.opponentAbbrev} (
+                {rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.gameResult})
               </div>
             </div>
           ))}
@@ -350,30 +414,28 @@ const GameSidebar = () => {
           <div className="p-2 text-2xl font-bold text-center">
             {rightRail.seasonSeries[0]?.gameType === 3 ? 'Playoff Series' : 'Season Series'}
           </div>
-          <div className="text-center text-xs">
-            {formatSeriesStatus(game, rightRail)}
-          </div>
+          <div className="text-center text-xs">{formatSeriesStatus(game, rightRail)}</div>
           <div className="grid grid-cols-12 gap-3 py-4 items-center">
             {rightRail.seasonSeries.map((g: any, i: number) => (
-              <Link href={`/game/${g.id}`} key={i} className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded ${g.gameState === 'CRIT' ? 'border-red-900' : ''}`}>
-                <div className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}>
+              <Link
+                href={`/game/${g.id}`}
+                key={i}
+                className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded ${g.gameState === 'CRIT' ? 'border-red-900' : ''}`}
+              >
+                <div
+                  className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}
+                >
                   <div className="flex items-center font-bold gap-1">
-                    <TeamLogo
-                      src={g.awayTeam.logo}
-                      alt="Logo"
-                      className="w-8 h-8"
-                    />
+                    <TeamLogo src={g.awayTeam.logo} alt="Logo" className="w-8 h-8" />
                     {g.awayTeam.abbrev}
                   </div>
                   <div className="text-lg font-bold">{g.awayTeam.score}</div>
                 </div>
-                <div className={`flex justify-between ${g.awayTeam.score > g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}>
+                <div
+                  className={`flex justify-between ${g.awayTeam.score > g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}
+                >
                   <div className="flex items-center font-bold gap-1">
-                    <TeamLogo
-                      src={g.homeTeam.logo}
-                      alt="Logo"
-                      className="w-8 h-8"
-                    />
+                    <TeamLogo src={g.homeTeam.logo} alt="Logo" className="w-8 h-8" />
                     {g.homeTeam.abbrev}
                   </div>
                   <div className="text-lg font-bold">{g.homeTeam.score}</div>
@@ -387,25 +449,37 @@ const GameSidebar = () => {
                       </span>
                       <span className="text-xs font-bold">{g.clock?.timeRemaining}</span>
                     </div>
-                    <div className="text-xs py-1 text-right">{dayjs(g.startTimeUTC).format('MMM D')}</div>
+                    <div className="text-xs py-1 text-right">
+                      {dayjs(g.startTimeUTC).format('MMM D')}
+                    </div>
                   </div>
                 ) : (
                   <div className="flex justify-between">
                     <div>
-                      {(['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">Final</span>
+                      {['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">
+                          Final
+                        </span>
                       )}
-                      {(['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK') && (
-                        <span className="text-xs py-1">{formatLocalizedTime(game.startTimeUTC)}</span>
+                      {['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                        <span className="text-xs py-1">
+                          {formatLocalizedTime(game.startTimeUTC)}
+                        </span>
                       )}
                       {g.gameScheduleState === 'CNCL' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase"><FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled</span>
+                        <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase">
+                          <FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled
+                        </span>
                       )}
                       {g.gameScheduleState === 'PPD' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"><FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed</span>
+                        <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase">
+                          <FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed
+                        </span>
                       )}
                       {g.gameScheduleState === 'TBD' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">TBD</span>
+                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">
+                          TBD
+                        </span>
                       )}
                     </div>
                     <div>
@@ -422,12 +496,28 @@ const GameSidebar = () => {
       {rightRail.gameInfo && (
         <div className="mb-5 text-xs">
           <div className="p-2 text-2xl font-bold text-center">Game Info</div>
-          {rightRail.gameInfo.referees.length > 0 && rightRail.gameInfo.linesmen.length > 0 && (
+          {rightRail.gameInfo.referees?.length && rightRail.gameInfo.linesmen?.length && (
             <div className="flex">
               <div className="w-full p-2">
                 <div className="font-bold">Officials</div>
-                <div>Referees: {rightRail.gameInfo.referees.map((o: any, i: number) => <span key={i}>{i > 0 && ', '}{o.default}</span>)}</div>
-                <div>Linesmen: {rightRail.gameInfo.linesmen.map((o: any, i: number) => <span key={i}>{i > 0 && ', '}{o.default}</span>)}</div>
+                <div>
+                  Referees:{' '}
+                  {rightRail.gameInfo.referees?.map((o: any, i: number) => (
+                    <span key={i}>
+                      {i > 0 && ', '}
+                      {o.default}
+                    </span>
+                  ))}
+                </div>
+                <div>
+                  Linesmen:{' '}
+                  {rightRail.gameInfo.linesmen?.map((o: any, i: number) => (
+                    <span key={i}>
+                      {i > 0 && ', '}
+                      {o.default}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -435,23 +525,33 @@ const GameSidebar = () => {
             <div className="w-1/2 p-2">
               <div className="my-2">
                 <div className="font-bold">{awayTeam.abbrev} Head Coach</div>
-                {rightRail.gameInfo.awayTeam.headCoach.default}
+                {rightRail.gameInfo.awayTeam?.headCoach?.default}
               </div>
               <div className="my-2">
                 <div className="font-bold">{awayTeam.abbrev} Scratches</div>
-                {rightRail.gameInfo.awayTeam.scratches.length === 0 && (<>No players listed.</>)}
-                {rightRail.gameInfo.awayTeam.scratches.map((p: any, i: number) => <span key={p.id}>{i > 0 && ', '}{renderPlayer(p)}</span>)}
+                {rightRail.gameInfo.awayTeam?.scratches?.length === 0 && <>No players listed.</>}
+                {rightRail.gameInfo.awayTeam?.scratches?.map((p: any, i: number) => (
+                  <span key={p.id}>
+                    {i > 0 && ', '}
+                    {renderPlayer(p)}
+                  </span>
+                ))}
               </div>
             </div>
             <div className="w-1/2 p-2">
               <div className="my-2">
                 <div className="font-bold">{homeTeam.abbrev} Head Coach</div>
-                {rightRail.gameInfo.homeTeam.headCoach.default}
+                {rightRail.gameInfo.homeTeam?.headCoach?.default}
               </div>
               <div className="my-2">
                 <div className="font-bold">{homeTeam.abbrev} Scratches</div>
-                {rightRail.gameInfo.homeTeam.scratches.length === 0 && (<>No players listed.</>)}
-                {rightRail.gameInfo.homeTeam.scratches.map((p: any, i: number) => <span key={p.id}>{i > 0 && ', '}{renderPlayer(p)}</span>)}
+                {rightRail.gameInfo.homeTeam?.scratches?.length === 0 && <>No players listed.</>}
+                {rightRail.gameInfo.homeTeam?.scratches?.map((p: any, i: number) => (
+                  <span key={p.id}>
+                    {i > 0 && ', '}
+                    {renderPlayer(p)}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
@@ -462,15 +562,25 @@ const GameSidebar = () => {
         <div>
           <div className="p-2 text-2xl font-bold text-center">Game Reports</div>
           <ul className="text-xs flex flex-wrap mt-2">
-      {Object.keys(rightRail.gameReports).map((reportKey) => (
+            {Object.keys(rightRail.gameReports || {}).map((reportKey) => (
               <li key={reportKey} className="p-1 w-1/2 text-center">
-        <Link href={rightRail.gameReports[reportKey]} className="font-bold underline">{GAME_REPORT_NAMES[reportKey as keyof typeof GAME_REPORT_NAMES] || reportKey}</Link>
+                <Link
+                  href={rightRail.gameReports?.[reportKey] || '#'}
+                  className="font-bold underline"
+                >
+                  {GAME_REPORT_NAMES[reportKey as keyof typeof GAME_REPORT_NAMES] || reportKey}
+                </Link>
               </li>
             ))}
           </ul>
         </div>
       )}
-  <FloatingVideoPlayer isVisible={isVideoPlayerVisible} url={videoPlayerUrl || ''} label={videoPlayerLabel || ''} onClose={handleVideoPlayerClose} />
+      <FloatingVideoPlayer
+        isVisible={isVideoPlayerVisible}
+        url={videoPlayerUrl || ''}
+        label={videoPlayerLabel || ''}
+        onClose={handleVideoPlayerClose}
+      />
     </div>
   );
 };

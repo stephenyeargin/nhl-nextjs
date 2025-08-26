@@ -21,4 +21,3 @@ const GameSidebarSkeleton = () => {
 GameSidebarSkeleton.propTypes = {};
 
 export default GameSidebarSkeleton;
-

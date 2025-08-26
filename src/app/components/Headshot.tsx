@@ -18,12 +18,12 @@ const Headshot: React.FC<HeadshotProps> = ({
   className = '',
   size = '4',
   playerId = 0,
-  team
+  team,
 }) => {
   const sizeValue = typeof size === 'number' ? size : parseFloat(size) || 0;
   const style: React.CSSProperties = { maxHeight: `${sizeValue}rem`, maxWidth: `${sizeValue}rem` };
   if (team) {
-    const { teamColor, secondaryTeamColor } = getTeamDataByAbbreviation(team, true) || {} as any;
+    const { teamColor, secondaryTeamColor } = getTeamDataByAbbreviation(team, true) || ({} as any);
     if (teamColor) {
       (style as any).backgroundColor = teamColor;
       (style as any).backgroundImage = `linear-gradient(to bottom, ${teamColor}, #FFFFFF)`;
@@ -40,14 +40,7 @@ const Headshot: React.FC<HeadshotProps> = ({
   }
 
   const image = (
-    <Image
-      src={src}
-      alt={alt}
-      className={finalClassName}
-      width={256}
-      height={256}
-      style={style}
-    />
+    <Image src={src} alt={alt} className={finalClassName} width={256} height={256} style={style} />
   );
 
   if (playerId && Number(playerId) > 0) {

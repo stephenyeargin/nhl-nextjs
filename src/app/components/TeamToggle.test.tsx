@@ -15,13 +15,20 @@ const makeTeam = (abbrev: string, name: string, place: string, color: string) =>
   logo: `logo-${abbrev}`,
   commonName: { default: name },
   placeName: { default: place },
-  data: { teamColor: color }
+  data: { teamColor: color },
 });
 
 describe('TeamToggle', () => {
   test('renders both teams and handles clicks', () => {
     const handler = jest.fn();
-    render(<TeamToggle homeTeam={makeTeam('BOS','Boston Bruins','Boston','#000000')} awayTeam={makeTeam('NYR','New York Rangers','New York','#123456')} activeStatTeam="homeTeam" handleStatTeamClick={handler} />);
+    render(
+      <TeamToggle
+        homeTeam={makeTeam('BOS', 'Boston Bruins', 'Boston', '#000000')}
+        awayTeam={makeTeam('NYR', 'New York Rangers', 'New York', '#123456')}
+        activeStatTeam="homeTeam"
+        handleStatTeamClick={handler}
+      />
+    );
     expect(screen.getByTestId('logo-Boston Bruins')).toBeTruthy();
     fireEvent.click(screen.getByText(/New York/));
     expect(handler).toHaveBeenCalledWith('awayTeam');

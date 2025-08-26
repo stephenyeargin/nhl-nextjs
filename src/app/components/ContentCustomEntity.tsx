@@ -14,7 +14,10 @@ interface CustomEntityFields {
   headline?: string;
   biography?: string;
 }
-interface Thumbnail { templateUrl: string; title?: string }
+interface Thumbnail {
+  templateUrl: string;
+  title?: string;
+}
 interface CustomEntityPart {
   _entityId: string;
   fields: CustomEntityFields;
@@ -23,20 +26,29 @@ interface CustomEntityPart {
   entityCode: string;
   title?: string;
 }
-interface ContentCustomEntityProps { part: CustomEntityPart }
+interface ContentCustomEntityProps {
+  part: CustomEntityPart;
+}
 
 const ContentCustomEntity: React.FC<ContentCustomEntityProps> = ({ part }) => {
-  const [blurDataURL, setBlurDataURL] = useState('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
+  const [blurDataURL, setBlurDataURL] = useState(
+    'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+  );
 
   useEffect(() => {
     const fetchBlurDataURL = async () => {
       if (part?.thumbnail?.templateUrl) {
-        const data = await fetch(part.thumbnail?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size10/f_png'));
-        const base64 = await data.blob().then((blob) => new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onloadend = () => resolve(reader.result as string);
-        }));
+        const data = await fetch(
+          part.thumbnail?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size10/f_png')
+        );
+        const base64 = await data.blob().then(
+          (blob) =>
+            new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(blob);
+              reader.onloadend = () => resolve(reader.result as string);
+            })
+        );
         setBlurDataURL(base64);
       }
     };
@@ -57,7 +69,9 @@ const ContentCustomEntity: React.FC<ContentCustomEntityProps> = ({ part }) => {
             loading="lazy"
             title={title}
           />
-          <figcaption className="my-3 text-xs text-gray-500">{fields.description || fields.longDescription}</figcaption>
+          <figcaption className="my-3 text-xs text-gray-500">
+            {fields.description || fields.longDescription}
+          </figcaption>
         </figure>
       </div>
     );
@@ -67,11 +81,19 @@ const ContentCustomEntity: React.FC<ContentCustomEntityProps> = ({ part }) => {
     return (
       <div key={_entityId} className="my-5">
         <div className="grid grid-cols-1 lg:grid-cols-4 items-center border">
-          <div className={`col-span-4 lg:col-span-2 ${contextualFields?.layout && /image right/.test(contextualFields.layout) ? 'order-1' : 'order-0'}`}>
-            <Link href={fields.url?.url || fields.callToAction1Link?.url || '#'} target={fields.url?.openInNewTab ? '_blank' : '_self'}>
+          <div
+            className={`col-span-4 lg:col-span-2 ${contextualFields?.layout && /image right/.test(contextualFields.layout) ? 'order-1' : 'order-0'}`}
+          >
+            <Link
+              href={fields.url?.url || fields.callToAction1Link?.url || '#'}
+              target={fields.url?.openInNewTab ? '_blank' : '_self'}
+            >
               {thumbnail && (
                 <Image
-                  src={thumbnail.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png')}
+                  src={thumbnail.templateUrl.replace(
+                    '{formatInstructions}',
+                    't_ratio16_9-size40/f_png'
+                  )}
                   alt={thumbnail.title || ''}
                   className="w-full"
                   width={832}
@@ -85,9 +107,17 @@ const ContentCustomEntity: React.FC<ContentCustomEntityProps> = ({ part }) => {
           </div>
           <div className="col-span-4 lg:col-span-2 p-10 text-center bg-slate-200 dark:bg-slate-800 flex h-full flex-col justify-center">
             <h3 className="text-2xl font-semibold">
-              <Link href={fields.url?.url || fields.callToAction1Link?.url || '#'} target={fields.url?.openInNewTab ? '_blank' : '_self'}>{fields.headline || title}</Link>
+              <Link
+                href={fields.url?.url || fields.callToAction1Link?.url || '#'}
+                target={fields.url?.openInNewTab ? '_blank' : '_self'}
+              >
+                {fields.headline || title}
+              </Link>
             </h3>
-            <div className="text-sm my-2" dangerouslySetInnerHTML={{__html: formatMarkdownContent(fields.description)}} />
+            <div
+              className="text-sm my-2"
+              dangerouslySetInnerHTML={{ __html: formatMarkdownContent(fields.description) }}
+            />
             <div className="flex justify-center gap-4">
               {fields.callToAction1Link?.url && (
                 <Link
@@ -117,7 +147,10 @@ const ContentCustomEntity: React.FC<ContentCustomEntityProps> = ({ part }) => {
   if (entityCode === 'player') {
     return (
       <div className="columns-1 md:columns-3 gap-8 text-justify">
-        <div className="min-h-96" dangerouslySetInnerHTML={{ __html: formatMarkdownContent(fields.biography) }} />
+        <div
+          className="min-h-96"
+          dangerouslySetInnerHTML={{ __html: formatMarkdownContent(fields.biography) }}
+        />
       </div>
     );
   }

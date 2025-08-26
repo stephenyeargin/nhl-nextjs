@@ -12,7 +12,15 @@ jest.mock('react-player/lazy', () => {
 
 describe('FloatingAudioPlayer', () => {
   it('shows label when visible', () => {
-    render(<FloatingAudioPlayer url="https://example.com/stream" label="Test" isVisible onClose={() => {}} onTogglePlay={() => {}} />);
+    render(
+      <FloatingAudioPlayer
+        url="https://example.com/stream"
+        label="Test"
+        isVisible
+        onClose={() => {}}
+        onTogglePlay={() => {}}
+      />
+    );
     expect(screen.getByText(/test radio/i)).toBeInTheDocument();
   });
 });

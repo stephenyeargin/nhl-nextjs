@@ -1,6 +1,8 @@
 import React from 'react';
 
-interface PlayerNamePart { default: string }
+interface PlayerNamePart {
+  default: string;
+}
 interface PlayerOption {
   playerId: string | number;
   firstName?: PlayerNamePart;
@@ -32,4 +34,3 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ players, activePlayer }
 };
 
 export default PlayerDropdown;
-

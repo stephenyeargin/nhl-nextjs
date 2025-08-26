@@ -1,4 +1,6 @@
-const teamData = [
+import type { TeamDataEntry } from '@/app/types/team';
+
+const teamData: TeamDataEntry[] = [
   {
     name: 'Anaheim Ducks',
     slug: 'ducks',
@@ -27,7 +29,7 @@ const teamData = [
     teamColor: '#003087',
     secondaryTeamColor: '#FFB81C',
     teamId: 7,
-    division: 'Atlantic'
+    division: 'Atlantic',
   },
   {
     name: 'Calgary Flames',
@@ -351,32 +353,21 @@ const teamData = [
     teamId: 0,
     division: 'International',
   },
-
 ];
 
 // Sort teamData by .name
 teamData.sort((a, b) => {
-  if (a.name < b.name) {
+  const an = a.name || '';
+  const bn = b.name || '';
+  if (an < bn) {
     return -1;
   }
-  if (a.name > b.name) {
+  if (an > bn) {
     return 1;
   }
 
   return 0;
 });
-
-interface TeamDataEntry {
-  name: string;
-  hashtag?: string;
-  abbreviation: string;
-  teamColor: string;
-  secondaryTeamColor: string;
-  teamId: number;
-  division?: string;
-  slug?: string;
-  [key: string]: any;
-}
 
 const defaultTeam = (isHome: boolean): TeamDataEntry => {
   let teamColor = '#3A5DAE';
@@ -402,19 +393,21 @@ export const getTeamSlugs = (): (string | undefined)[] => {
 
 export const getTeamDataByAbbreviation = (abbreviation: string, isHome: boolean): TeamDataEntry => {
   const team = (teamData as TeamDataEntry[]).find((t) => t.abbreviation === abbreviation);
-  
+
   return team ? team : defaultTeam(isHome);
 };
 
 export const getTeamDataByCommonName = (name: string, isHome: boolean): TeamDataEntry => {
   const team = (teamData as TeamDataEntry[]).find((t) => t.name === name);
-  
+
   return team ? team : defaultTeam(isHome);
 };
 
 export const getTeamDataBySlug = (slug: string, isHome: boolean): TeamDataEntry => {
-  const team = (teamData as TeamDataEntry[]).find((t) => t.name.toLowerCase().replace(' ', '-') === slug);
-  
+  const team = (teamData as TeamDataEntry[]).find(
+    (t) => (t.name || '').toLowerCase().replace(' ', '-') === slug
+  );
+
   return team ? team : defaultTeam(isHome);
 };
 

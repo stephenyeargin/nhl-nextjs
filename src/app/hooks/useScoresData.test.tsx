@@ -50,7 +50,7 @@ describe('useScoresData', () => {
   });
 
   it('handleDateChange triggers a new fetch with provided date', async () => {
-  let changeDate: (_d: string) => void = () => {};
+    let changeDate: (_d: string) => void = () => {};
     const targetDate = '2024-10-05';
 
     const TestComponent = () => {
@@ -70,7 +70,7 @@ describe('useScoresData', () => {
 
     await waitFor(() => {
       // Expect an additional fetch containing the target date
-      const calls = (global.fetch as jest.Mock).mock.calls.map(c => c[0]);
+      const calls = (global.fetch as jest.Mock).mock.calls.map((c) => c[0]);
       expect(calls.some((u: string) => u.includes(targetDate))).toBe(true);
     });
 

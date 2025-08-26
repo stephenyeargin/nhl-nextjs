@@ -3,12 +3,11 @@
     "next/core-web-vitals",
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    // Keep Prettier last so it can disable conflicting stylistic rules
+    "prettier"
   ],
-  "plugins": [
-    "react",
-    "react-hooks"
-  ],
+  "plugins": ["react", "react-hooks"],
   "env": {
     "browser": true,
     "jest": true,
@@ -30,8 +29,8 @@
     "quotes": ["error", "single"],
 
     // Enforce consistent indentation (2 spaces)
-  // Disabled due to recursion/stack overflow issues with some TSX files; rely on prettier/editor formatting instead
-  "indent": "off",
+    // Disabled due to recursion/stack overflow issues with some TSX files; rely on prettier/editor formatting instead
+    "indent": "off",
 
     // Enforce consistent line breaks between functions and variables
     "newline-before-return": "error",

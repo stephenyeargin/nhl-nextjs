@@ -9,7 +9,11 @@ jest.mock('next/link', () => {
   return MockLink;
 });
 jest.mock('next/image', () => {
-  const MockImage = (props: any) => <span data-testid="mock-image" aria-label={props.alt}>{props.alt}</span>;
+  const MockImage = (props: any) => (
+    <span data-testid="mock-image" aria-label={props.alt}>
+      {props.alt}
+    </span>
+  );
   MockImage.displayName = 'MockImage';
 
   return MockImage;
@@ -28,6 +32,6 @@ describe('Headshot', () => {
     render(<Headshot src="/img.png" alt="Player" playerId={99} team="BOS" />);
     const link = screen.getByRole('link');
     expect(link).toHaveAttribute('href', '/player/99');
-  expect(screen.getByTestId('mock-image').getAttribute('aria-label')).toBe('Player');
+    expect(screen.getByTestId('mock-image').getAttribute('aria-label')).toBe('Player');
   });
 });

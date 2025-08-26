@@ -5,7 +5,7 @@ import TeamLogo from './TeamLogo';
 
 interface TeamCellTeam {
   abbreviation: string;
-  name: string;
+  name?: string;
 }
 
 interface TeamCellProps {
@@ -18,7 +18,7 @@ const TeamCell: React.FC<TeamCellProps> = ({ team }) => {
       <Link href={`/team/${team.abbreviation}`} className="flex gap-2 items-center p-1">
         <TeamLogo team={team.abbreviation} className="h-8 w-8" noLink />
         <div className="underline">
-          <div className="hidden md:block">{team.name}</div>
+          <div className="hidden md:block">{team.name || team.abbreviation}</div>
           <div className="md:hidden">{team.abbreviation}</div>
         </div>
       </Link>

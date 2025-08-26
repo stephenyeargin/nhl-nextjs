@@ -10,8 +10,8 @@ export function middleware(request: NextRequest) {
   // Redirect if team key is prefixed to the URL
   if (pathParts.length > 0 && validTeamKeys.includes(pathParts[0])) {
     const newUrl = `https://nhl.com/${url.pathname}`;
-    
-  return NextResponse.redirect(newUrl, 301);
+
+    return NextResponse.redirect(newUrl, 301);
   }
 
   // Redirect to current year playoffs root
@@ -19,8 +19,8 @@ export function middleware(request: NextRequest) {
     const currentYear = new Date().getFullYear();
     const rewrite = request.nextUrl.clone();
     rewrite.pathname = `/playoffs/${currentYear}`;
-    
-  return NextResponse.rewrite(rewrite);
+
+    return NextResponse.rewrite(rewrite);
   }
 
   // Redirect to current year draft root
@@ -28,8 +28,8 @@ export function middleware(request: NextRequest) {
     const currentYear = new Date().getFullYear();
     const rewrite = request.nextUrl.clone();
     rewrite.pathname = `/draft/${currentYear}`;
-    
-  return NextResponse.rewrite(rewrite);
+
+    return NextResponse.rewrite(rewrite);
   }
 
   return NextResponse.next();

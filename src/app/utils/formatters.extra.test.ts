@@ -4,23 +4,42 @@ import {
   formatSecondsToGameTime,
   formatPeriodLabel,
   formatMarkdownContent,
-  formatStatValue
+  formatStatValue,
 } from './formatters';
 
 describe('formatters extra coverage', () => {
   test('formatSeriesStatus tie zero wins empty', () => {
-    const result = formatSeriesStatus({ homeTeam: { placeName: { default: 'Home' } }, awayTeam: { placeName: { default: 'Away' } } }, { seasonSeriesWins: { homeTeamWins: 0, awayTeamWins: 0, neededToWin: 4 } });
+    const result = formatSeriesStatus(
+      {
+        homeTeam: { placeName: { default: 'Home' } },
+        awayTeam: { placeName: { default: 'Away' } },
+      },
+      { seasonSeriesWins: { homeTeamWins: 0, awayTeamWins: 0, neededToWin: 4 } }
+    );
     expect(result).toBe('');
   });
   test('formatSeriesStatus tie non-zero', () => {
-    const result = formatSeriesStatus({ homeTeam: { placeName: { default: 'Home' } }, awayTeam: { placeName: { default: 'Away' } } }, { seasonSeriesWins: { homeTeamWins: 2, awayTeamWins: 2, neededToWin: 4 } });
+    const result = formatSeriesStatus(
+      {
+        homeTeam: { placeName: { default: 'Home' } },
+        awayTeam: { placeName: { default: 'Away' } },
+      },
+      { seasonSeriesWins: { homeTeamWins: 2, awayTeamWins: 2, neededToWin: 4 } }
+    );
     expect(result).toBe('Series tied.');
   });
   test('formatSeriesStatus leads vs wins', () => {
-    const baseGame: any = { homeTeam: { placeName: { default: 'Home' } }, awayTeam: { placeName: { default: 'Away' } } };
-    const leading = formatSeriesStatus(baseGame, { seasonSeriesWins: { homeTeamWins: 3, awayTeamWins: 1, neededToWin: 4 } });
+    const baseGame: any = {
+      homeTeam: { placeName: { default: 'Home' } },
+      awayTeam: { placeName: { default: 'Away' } },
+    };
+    const leading = formatSeriesStatus(baseGame, {
+      seasonSeriesWins: { homeTeamWins: 3, awayTeamWins: 1, neededToWin: 4 },
+    });
     expect(leading).toBe('Home leads 3-1');
-    const winning = formatSeriesStatus(baseGame, { seasonSeriesWins: { homeTeamWins: 4, awayTeamWins: 2, neededToWin: 4 } });
+    const winning = formatSeriesStatus(baseGame, {
+      seasonSeriesWins: { homeTeamWins: 4, awayTeamWins: 2, neededToWin: 4 },
+    });
     expect(winning).toBe('Home wins 4-2');
   });
 
@@ -41,20 +60,36 @@ describe('formatters extra coverage', () => {
   });
 
   test('formatPeriodLabel branches', () => {
-    expect(formatPeriodLabel({ number: 1, periodType: 'REG', maxRegulationPeriods: 3 }, true)).toBe('1st Period');
-    expect(formatPeriodLabel({ number: 2, periodType: 'REG', maxRegulationPeriods: 3 }, false)).toBe('2nd');
-    expect(formatPeriodLabel({ number: 3, periodType: 'REG', maxRegulationPeriods: 3 }, true)).toBe('3rd Period');
-    expect(formatPeriodLabel({ number: 4, periodType: 'REG', maxRegulationPeriods: 3 }, false)).toBe('OT');
-  // Provide otPeriods so earlier 'number === 4 && !otPeriods' branch is skipped to reach shootout branch
-  expect(formatPeriodLabel({ number: 4, periodType: 'SO', maxRegulationPeriods: 3, otPeriods: true }, true)).toBe('Shootout');
-    expect(formatPeriodLabel({ number: 5, periodType: 'OT', maxRegulationPeriods: 3 }, false)).toBe('2OT');
+    expect(formatPeriodLabel({ number: 1, periodType: 'REG', maxRegulationPeriods: 3 }, true)).toBe(
+      '1st Period'
+    );
+    expect(
+      formatPeriodLabel({ number: 2, periodType: 'REG', maxRegulationPeriods: 3 }, false)
+    ).toBe('2nd');
+    expect(formatPeriodLabel({ number: 3, periodType: 'REG', maxRegulationPeriods: 3 }, true)).toBe(
+      '3rd Period'
+    );
+    expect(
+      formatPeriodLabel({ number: 4, periodType: 'REG', maxRegulationPeriods: 3 }, false)
+    ).toBe('OT');
+    // Provide otPeriods so earlier 'number === 4 && !otPeriods' branch is skipped to reach shootout branch
+    expect(
+      formatPeriodLabel(
+        { number: 4, periodType: 'SO', maxRegulationPeriods: 3, otPeriods: true },
+        true
+      )
+    ).toBe('Shootout');
+    expect(formatPeriodLabel({ number: 5, periodType: 'OT', maxRegulationPeriods: 3 }, false)).toBe(
+      '2OT'
+    );
   });
 
   test('formatMarkdownContent replacements', () => {
-    const md = '<forge-entity title="Player" slug="john-doe" code="player">John Doe</forge-entity>\n\n# Heading\n\n## Subhead\n\n<p>Paragraph</p> <a href="https://www.nhl.com/team">Link</a>';
+    const md =
+      '<forge-entity title="Player" slug="john-doe" code="player">John Doe</forge-entity>\n\n# Heading\n\n## Subhead\n\n<p>Paragraph</p> <a href="https://www.nhl.com/team">Link</a>';
     const html = formatMarkdownContent(md);
-  // Anchor will have class added by formatter
-  expect(html).toContain('href="/player/john-doe"');
+    // Anchor will have class added by formatter
+    expect(html).toContain('href="/player/john-doe"');
     expect(html).toContain('/team');
     expect(html).toContain('class="text-xl font-bold mb-4"'); // h2
   });

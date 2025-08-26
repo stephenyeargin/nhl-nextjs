@@ -11,12 +11,15 @@ function buildError(message: string, status?: number, url?: string): FetchError 
   const err: FetchError = new Error(message);
   err.status = status;
   err.url = url;
-  
+
   return err;
 }
 
 // Fetch JSON and return parsed value. If allow404 is true and response.status === 404, returns null instead of throwing.
-export async function safeFetchJSON<T>(url: string, init?: RequestInit & { allow404?: boolean }): Promise<T | null> {
+export async function safeFetchJSON<T>(
+  url: string,
+  init?: RequestInit & { allow404?: boolean }
+): Promise<T | null> {
   let res: Response;
   try {
     res = await fetch(url, init);
@@ -32,7 +35,7 @@ export async function safeFetchJSON<T>(url: string, init?: RequestInit & { allow
   }
 
   try {
-    return await res.json() as T;
+    return (await res.json()) as T;
   } catch {
     throw buildError(`Invalid JSON in response from ${url}`, res.status, url);
   }

@@ -6,22 +6,24 @@ import { redirect, useParams } from 'next/navigation';
 import VideoCard from '@/app/components/VideoCard';
 import { useGameContext } from '@/app/contexts/GameContext';
 import { formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters';
-
-interface VideoItem { [k: string]: any }
+import type { VideoItemBase, VideoApiResponse } from '@/app/types/video';
 
 const Highlights: React.FC = () => {
   const { id } = useParams() as { id: string };
   const { gameState } = useGameContext();
   const videoPlayerRef = useRef<HTMLIFrameElement | null>(null);
-  const [videos, setVideos] = useState<VideoItem[] | null>(null);
-  const [activeVideo, setActiveVideo] = useState<VideoItem | null>(null);
+  const [videos, setVideos] = useState<VideoItemBase[] | null>(null);
+  const [activeVideo, setActiveVideo] = useState<VideoItemBase | null>(null);
 
   useEffect(() => {
     const fetchGameVideos = async () => {
       try {
-        const videosResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?tags.slug=gameid-${id}&context.slug=nhl`, { cache: 'no-store' });
-        const v = await videosResponse.json();
-        setVideos(v.items);
+        const videosResponse = await fetch(
+          `https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?tags.slug=gameid-${id}&context.slug=nhl`,
+          { cache: 'no-store' }
+        );
+        const v: VideoApiResponse = await videosResponse.json();
+        setVideos(v.items as VideoItemBase[]);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Error fetching related videos:', error);
@@ -30,7 +32,7 @@ const Highlights: React.FC = () => {
     fetchGameVideos();
     if (['PRE', 'LIVE', 'CRIT'].includes(gameState || '')) {
       const intervalId = setInterval(fetchGameVideos, 20000);
-      
+
       return () => {
         clearInterval(intervalId);
       };
@@ -70,15 +72,18 @@ const Highlights: React.FC = () => {
           />
           <div className="text-3xl font-bold my-5">{activeVideo.title}</div>
           <div className="my-5">{activeVideo.fields.longDescription}</div>
-            <div className="my-5">{formatLocalizedDate(activeVideo.contentDate)} {formatLocalizedTime(activeVideo.contentDate)}</div>
+          <div className="my-5">
+            {formatLocalizedDate(activeVideo.contentDate)}{' '}
+            {formatLocalizedTime(activeVideo.contentDate)}
+          </div>
           <hr className="my-3" />
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-    {videos.map((item: any, i) => (
+        {videos.map((item, i) => (
           <VideoCard
             key={i}
-      item={item as any}
+            item={item}
             className="col-span-1"
             handleCardClick={(e) => {
               const myDiv = document.getElementById('viewTop');

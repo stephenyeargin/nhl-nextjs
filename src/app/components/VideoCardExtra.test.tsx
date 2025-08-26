@@ -13,22 +13,34 @@ jest.mock('next/image', () => {
 // Mock formatMarkdownContent to simple passthrough
 jest.mock('../utils/formatters', () => ({
   ...jest.requireActual('../utils/formatters'),
-  formatMarkdownContent: (s: string) => s || ''
+  formatMarkdownContent: (s: string) => s || '',
 }));
 
 describe('VideoCard variants (smoke)', () => {
   beforeEach(() => {
     // Provide minimal fetch mock for blurDataURL path (large/default variants)
-    global.fetch = jest.fn().mockResolvedValue({ blob: async () => new Blob(['x'], { type: 'image/png' }) });
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue({ blob: async () => new Blob(['x'], { type: 'image/png' }) });
   });
   afterEach(() => {
     (global.fetch as jest.Mock).mockReset();
   });
 
-  const base = { slug: 'clip', headline: 'Great Clip', summary: 'Some summary', contentDate: '2024-03-10T12:00:00Z', fields: { description: 'Desc' } } as any;
+  const base = {
+    slug: 'clip',
+    headline: 'Great Clip',
+    summary: 'Some summary',
+    contentDate: '2024-03-10T12:00:00Z',
+    fields: { description: 'Desc' },
+  } as any;
 
   it('renders default size with description', () => {
-    render(<VideoCard item={{ ...base, thumbnail: { templateUrl: 'http://x/{formatInstructions}/img.png' }}} />);
+    render(
+      <VideoCard
+        item={{ ...base, thumbnail: { templateUrl: 'http://x/{formatInstructions}/img.png' } }}
+      />
+    );
     expect(screen.getByText(/Great Clip/i)).toBeInTheDocument();
     expect(screen.getByText(/Desc/i)).toBeInTheDocument();
   });
@@ -44,7 +56,12 @@ describe('VideoCard variants (smoke)', () => {
   });
 
   it('renders large size with Read Story link', () => {
-    render(<VideoCard item={{ ...base, thumbnail: { templateUrl: 'http://x/{formatInstructions}/img.png' }}} size="large" />);
+    render(
+      <VideoCard
+        item={{ ...base, thumbnail: { templateUrl: 'http://x/{formatInstructions}/img.png' } }}
+        size="large"
+      />
+    );
     expect(screen.getByText(/Great Clip/i)).toBeInTheDocument();
     expect(screen.getByText(/Read Story/i)).toBeInTheDocument();
   });

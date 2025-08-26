@@ -34,17 +34,38 @@ describe('ContentCustomEntity', () => {
   });
 
   it('renders video entity', () => {
-    render(<ContentCustomEntity part={{ _entityId: '1', entityCode: 'video', fields: { brightcoveAccountId: 'acc', brightcoveId: 'vid', description: 'Desc' } }} />);
+    render(
+      <ContentCustomEntity
+        part={{
+          _entityId: '1',
+          entityCode: 'video',
+          fields: { brightcoveAccountId: 'acc', brightcoveId: 'vid', description: 'Desc' },
+        }}
+      />
+    );
     expect(screen.getByText('Desc')).toBeInTheDocument();
   });
 
   it('renders promo entity', () => {
-    render(<ContentCustomEntity part={{ _entityId: '2', entityCode: 'promo', fields: { headline: 'Promo Head', description: 'Some *markdown*' }, thumbnail: { templateUrl: 'https://example.com/{formatInstructions}', title: 'Thumb' } }} />);
+    render(
+      <ContentCustomEntity
+        part={{
+          _entityId: '2',
+          entityCode: 'promo',
+          fields: { headline: 'Promo Head', description: 'Some *markdown*' },
+          thumbnail: { templateUrl: 'https://example.com/{formatInstructions}', title: 'Thumb' },
+        }}
+      />
+    );
     expect(screen.getByText('Promo Head')).toBeInTheDocument();
   });
 
   it('renders player entity', () => {
-    render(<ContentCustomEntity part={{ _entityId: '3', entityCode: 'player', fields: { biography: 'Bio' } }} />);
+    render(
+      <ContentCustomEntity
+        part={{ _entityId: '3', entityCode: 'player', fields: { biography: 'Bio' } }}
+      />
+    );
     expect(screen.getByText(/Bio/)).toBeInTheDocument();
   });
 });

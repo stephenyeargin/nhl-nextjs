@@ -13,7 +13,7 @@ jest.mock('next/image', () => {
 
 // Mock fetch to return no items (empty state)
 beforeEach(() => {
-  global.fetch = jest.fn().mockResolvedValue({ json: async () => ({ items: [] })});
+  global.fetch = jest.fn().mockResolvedValue({ json: async () => ({ items: [] }) });
 });
 
 afterEach(() => {

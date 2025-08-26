@@ -18,7 +18,7 @@ const part = {
   _entityId: 'p1',
   image: { templateUrl: 'https://example.com/{formatInstructions}' },
   fields: { altText: 'Alt', credit: 'Credit' },
-  contentDate: '2024-01-01T00:00:00Z'
+  contentDate: '2024-01-01T00:00:00Z',
 };
 
 describe('ContentPhoto', () => {

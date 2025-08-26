@@ -18,8 +18,8 @@ describe('middleware', () => {
     const url = new URL(`https://example.com${path}`);
     const nextUrl: any = url;
     nextUrl.clone = () => new URL(url.toString());
-    
-  return { url: url.toString(), nextUrl } as any;
+
+    return { url: url.toString(), nextUrl } as any;
   };
 
   test('redirects team slug root', () => {

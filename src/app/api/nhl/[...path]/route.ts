@@ -12,7 +12,7 @@ export async function GET(_req: NextRequest, context: any) {
   const upstreamUrl = `https://api-web.nhle.com/v1/${pathSegs.join('/')}`;
 
   const res = await fetch(upstreamUrl, {
-    headers: { 'accept': 'application/json' },
+    headers: { accept: 'application/json' },
     next: { revalidate, tags: ['nhl'] },
   });
 

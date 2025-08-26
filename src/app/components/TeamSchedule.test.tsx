@@ -32,18 +32,38 @@ const gameBase = {
 describe('TeamSchedule', () => {
   test('renders final game with W/L logic and broadcasts', () => {
     const team = { abbreviation: 'HOM' };
-    render(<TeamSchedule team={team} fullSeasonSchedule={{ games: [{ ...gameBase, tvBroadcasts: [{ network: 'NET', market: 'NAT' }], gameOutcome: { lastPeriodType: 'OT' } }] }} />);
+    render(
+      <TeamSchedule
+        team={team}
+        fullSeasonSchedule={{
+          games: [
+            {
+              ...gameBase,
+              tvBroadcasts: [{ network: 'NET', market: 'NAT' }],
+              gameOutcome: { lastPeriodType: 'OT' },
+            },
+          ],
+        }}
+      />
+    );
     expect(screen.getByText(/OT/)).toBeTruthy();
     expect(screen.getByText('NET (NAT)')).toBeTruthy();
   });
 
   test('renders live game badge and cancelled', () => {
     const team = { abbreviation: 'AWY' };
-    render(<TeamSchedule team={team} fullSeasonSchedule={{ games: [
-      { ...gameBase, id: 2, gameState: 'LIVE' },
-      { ...gameBase, id: 3, gameState: 'FUT', gameScheduleState: 'CNCL' },
-      { ...gameBase, id: 4, gameState: 'FUT', gameScheduleState: 'PPD' },
-    ] }} />);
+    render(
+      <TeamSchedule
+        team={team}
+        fullSeasonSchedule={{
+          games: [
+            { ...gameBase, id: 2, gameState: 'LIVE' },
+            { ...gameBase, id: 3, gameState: 'FUT', gameScheduleState: 'CNCL' },
+            { ...gameBase, id: 4, gameState: 'FUT', gameScheduleState: 'PPD' },
+          ],
+        }}
+      />
+    );
     expect(screen.getByText(/Live/i)).toBeTruthy();
     expect(screen.getByText(/Cancelled/)).toBeTruthy();
     expect(screen.getByText(/Postponed/)).toBeTruthy();

@@ -15,12 +15,19 @@ import {
 
 describe('formatters', () => {
   test('formatSeriesStatus basic paths', () => {
-    const game: any = { homeTeam: { placeName: { default: 'Home' } }, awayTeam: { placeName: { default: 'Away' } } };
-    const rightRail: any = { seasonSeriesWins: { homeTeamWins: 0, awayTeamWins: 0, neededToWin: 4 } };
+    const game: any = {
+      homeTeam: { placeName: { default: 'Home' } },
+      awayTeam: { placeName: { default: 'Away' } },
+    };
+    const rightRail: any = {
+      seasonSeriesWins: { homeTeamWins: 0, awayTeamWins: 0, neededToWin: 4 },
+    };
     expect(formatSeriesStatus(game, rightRail)).toBe('');
-    rightRail.seasonSeriesWins.homeTeamWins = 1; rightRail.seasonSeriesWins.awayTeamWins = 1;
+    rightRail.seasonSeriesWins.homeTeamWins = 1;
+    rightRail.seasonSeriesWins.awayTeamWins = 1;
     expect(formatSeriesStatus(game, rightRail)).toBe('Series tied.');
-    rightRail.seasonSeriesWins.homeTeamWins = 2; rightRail.seasonSeriesWins.awayTeamWins = 1;
+    rightRail.seasonSeriesWins.homeTeamWins = 2;
+    rightRail.seasonSeriesWins.awayTeamWins = 1;
     expect(formatSeriesStatus(game, rightRail)).toMatch(/Home leads 2-1/);
   });
 

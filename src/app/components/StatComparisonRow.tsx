@@ -25,7 +25,15 @@ interface StatComparisonRowProps {
   stat: TeamStatKey; // key into TEAM_STATS
 }
 
-const StatComparisonRow: React.FC<StatComparisonRowProps> = ({ awayStat, awayStatRank, awayTeam, stat, homeStat, homeStatRank, homeTeam }) => {
+const StatComparisonRow: React.FC<StatComparisonRowProps> = ({
+  awayStat,
+  awayStatRank,
+  awayTeam,
+  stat,
+  homeStat,
+  homeStatRank,
+  homeTeam,
+}) => {
   // Calculate the total for scaling the indicator bar
   const totalStat = awayStat + homeStat;
   const awayPercentage = totalStat > 0 ? (awayStat / totalStat) * 100 : 50;
@@ -44,18 +52,30 @@ const StatComparisonRow: React.FC<StatComparisonRowProps> = ({ awayStat, awaySta
       <div className="relative my-1 bg-inherit h-3">
         <div
           className="absolute top-0 left-0 bg-black-500 h-3"
-          style={{ width: `${awayPercentage < 100 ? awayPercentage - 1 : 100}%`, backgroundColor: awayTeam.data.teamColor, borderBottom: `2px solid ${awayTeam.data.secondaryTeamColor}` }}
+          style={{
+            width: `${awayPercentage < 100 ? awayPercentage - 1 : 100}%`,
+            backgroundColor: awayTeam.data.teamColor,
+            borderBottom: `2px solid ${awayTeam.data.secondaryTeamColor}`,
+          }}
         />
         <div
           className="absolute top-0 right-0 bg-white-500 h-3"
-          style={{ width: `${homePercentage < 100 ? homePercentage - 1 : 100}%`, backgroundColor: homeTeam.data.teamColor, borderBottom: `2px solid ${homeTeam.data.secondaryTeamColor}` }}
+          style={{
+            width: `${homePercentage < 100 ? homePercentage - 1 : 100}%`,
+            backgroundColor: homeTeam.data.teamColor,
+            borderBottom: `2px solid ${homeTeam.data.secondaryTeamColor}`,
+          }}
         />
       </div>
       {/* Third Row: Ranks in the Center */}
       {awayStatRank && homeStatRank && (
         <div className="flex items-center">
-          <div className="flex-1 text-left text-black/50 dark:text-white/50">{typeof awayStatRank === 'string' ? awayStatRank : formatOrdinalNumber(awayStatRank)}</div>
-          <div className="flex-1 text-right text-black/50 dark:text-white/50">{typeof homeStatRank === 'string' ? homeStatRank : formatOrdinalNumber(homeStatRank)}</div>
+          <div className="flex-1 text-left text-black/50 dark:text-white/50">
+            {typeof awayStatRank === 'string' ? awayStatRank : formatOrdinalNumber(awayStatRank)}
+          </div>
+          <div className="flex-1 text-right text-black/50 dark:text-white/50">
+            {typeof homeStatRank === 'string' ? homeStatRank : formatOrdinalNumber(homeStatRank)}
+          </div>
         </div>
       )}
     </div>

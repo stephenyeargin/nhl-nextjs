@@ -8,31 +8,40 @@ import Link from 'next/link';
 import { faFilm, faVideoCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import VideoCard from '@/app/components/VideoCard';
-
-interface VideoFields { brightcoveAccountId?: string; brightcoveId?: string; longDescription?: string; title?: string; description?: string }
-// Match VideoCard's expected minimal shape (fields, slug, optional metadata)
-interface VideoItem { slug: string; title?: string; headline?: string; summary?: string; contentDate?: string; status?: number; fields: VideoFields; thumbnail?: { templateUrl: string; thumbnailUrl: string }; [k:string]: any }
-interface VideoApiResponse { items: VideoItem[] }
+import type { VideoApiResponse, VideoDetailItem, VideoItemBase } from '@/app/types/video';
 
 const VideoItemPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [video, setVideo] = useState<VideoItem | null>(null);
-  const [videos, setVideos] = useState<VideoItem[]>([]);
+  const [video, setVideo] = useState<VideoDetailItem | null>(null);
+  const [videos, setVideos] = useState<VideoItemBase[]>([]);
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const videoResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/videos/${slug}`, { cache: 'no-store' });
-      const videoItem: VideoItem = await videoResponse.json();
+      const videoResponse = await fetch(
+        `https://forge-dapi.d3.nhle.com/v2/content/en-us/videos/${slug}`,
+        { cache: 'no-store' }
+      );
+      const videoItem: VideoDetailItem = await videoResponse.json();
       setVideo(videoItem);
 
-      const videosResponse = await fetch('https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?context.slug=nhl&$skip=0&$limit=6', { cache: 'no-store' });
+      const videosResponse = await fetch(
+        'https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?context.slug=nhl&$skip=0&$limit=6',
+        { cache: 'no-store' }
+      );
       const videoItems: VideoApiResponse = await videosResponse.json();
-      setVideos(videoItems.items.map((it: any) => ({ 
-        slug: it.slug || String(it._entityId || ''), 
-        fields: it.fields || { description: it.summary }, 
-        thumbnail: it.thumbnail ? { templateUrl: it.thumbnail.templateUrl || '', thumbnailUrl: it.thumbnail.thumbnailUrl || it.thumbnail.templateUrl || '' } : undefined,
-        ...it 
-      })));
+      setVideos(
+        videoItems.items.map((it: any) => ({
+          slug: it.slug || String(it._entityId || ''),
+          fields: it.fields || { description: it.summary },
+          thumbnail: it.thumbnail
+            ? {
+                templateUrl: it.thumbnail.templateUrl || '',
+                thumbnailUrl: it.thumbnail.thumbnailUrl || it.thumbnail.templateUrl || '',
+              }
+            : undefined,
+          ...it,
+        }))
+      );
     };
     fetchVideos();
   }, [slug]);
@@ -51,9 +60,15 @@ const VideoItemPage: React.FC = () => {
   return (
     <div className="container px-2 mx-auto">
       <div className="my-5 text-xs text-center">
-        <Link href="/video/" className="underline font-bold"><FontAwesomeIcon icon={faFilm} fixedWidth className="mr-1" />Back to Videos</Link>
-        {' '}|{' '}
-        <Link href={`https://nhl.com/video/${video.slug}`} className="underline font-bold"><FontAwesomeIcon icon={faVideoCamera} fixedWidth className="mr-1" />NHL.com Video</Link>
+        <Link href="/video/" className="underline font-bold">
+          <FontAwesomeIcon icon={faFilm} fixedWidth className="mr-1" />
+          Back to Videos
+        </Link>{' '}
+        |{' '}
+        <Link href={`https://nhl.com/video/${video.slug}`} className="underline font-bold">
+          <FontAwesomeIcon icon={faVideoCamera} fixedWidth className="mr-1" />
+          NHL.com Video
+        </Link>
       </div>
 
       <iframe
@@ -66,19 +81,17 @@ const VideoItemPage: React.FC = () => {
       ></iframe>
       <div className="text-3xl font-bold my-5">{video.title}</div>
       <div className="my-5">{fields.longDescription}</div>
-      <div className="my-5">{formatLocalizedDate(video.contentDate)} {formatLocalizedTime(video.contentDate)}</div>
+      <div className="my-5">
+        {formatLocalizedDate(video.contentDate)} {formatLocalizedTime(video.contentDate)}
+      </div>
 
       <hr className="my-3" />
 
       <div className="text-2xl font-bold my-5">Latest Videos</div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-  {videos.map((item, i) => (
-          <VideoCard
-            key={i}
-            item={item}
-            className="col-span-1"
-          />
+        {videos.map((item, i) => (
+          <VideoCard key={i} item={item} className="col-span-1" />
         ))}
       </div>
     </div>

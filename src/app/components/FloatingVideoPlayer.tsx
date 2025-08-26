@@ -10,18 +10,29 @@ interface FloatingVideoPlayerProps {
   onClose: () => void;
 }
 
-const FloatingVideoPlayer: React.FC<FloatingVideoPlayerProps> = ({ url, label, isVisible = false, onClose }) => {
+const FloatingVideoPlayer: React.FC<FloatingVideoPlayerProps> = ({
+  url,
+  label,
+  isVisible = false,
+  onClose,
+}) => {
   if (!isVisible) {
     return <></>;
   }
 
   // center on page with tailwind, video aspect ratio
   return (
-    <div className={`${isVisible ? 'block' : 'hidden'} fixed inset-0 bg-black bg-opacity-50 justify-center items-center z-50`}>
+    <div
+      className={`${isVisible ? 'block' : 'hidden'} fixed inset-0 bg-black bg-opacity-50 justify-center items-center z-50`}
+    >
       <div className="relative bg-white rounded-lg w-full max-w-3xl p-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="flex justify-between bg-black text-white p-3 font-bold">
-          <Link href={url} target="_blank">{label}</Link>
-          <button onClick={onClose}><FontAwesomeIcon icon={faClose} fixedWidth className="text-xl" /></button>
+          <Link href={url} target="_blank">
+            {label}
+          </Link>
+          <button onClick={onClose}>
+            <FontAwesomeIcon icon={faClose} fixedWidth className="text-xl" />
+          </button>
         </div>
         <div className="relative pt-[56.25%]">
           <iframe

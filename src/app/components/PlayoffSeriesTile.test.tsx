@@ -31,18 +31,44 @@ describe('PlayoffSeriesTile', () => {
   });
 
   test('renders series logo only variant', () => {
-    render(<PlayoffSeriesTile year={2025} series={{ seriesLetter: 'A', seriesLogo: 'logo.png' }} />);
+    render(
+      <PlayoffSeriesTile year={2025} series={{ seriesLetter: 'A', seriesLogo: 'logo.png' }} />
+    );
     expect(screen.getByTestId('img')).toHaveAttribute('src', 'logo.png');
   });
 
   test('renders SCF variant with teams and losing opacity', () => {
-    render(<PlayoffSeriesTile year={2025} series={{ seriesAbbrev: 'SCF', seriesLetter: 'F', topSeedTeam: { id: 1, abbrev: 'TOP' }, bottomSeedTeam: { id: 2, abbrev: 'BOT' }, losingTeamId: 2, topSeedWins: 4, bottomSeedWins: 2 }} />);
+    render(
+      <PlayoffSeriesTile
+        year={2025}
+        series={{
+          seriesAbbrev: 'SCF',
+          seriesLetter: 'F',
+          topSeedTeam: { id: 1, abbrev: 'TOP' },
+          bottomSeedTeam: { id: 2, abbrev: 'BOT' },
+          losingTeamId: 2,
+          topSeedWins: 4,
+          bottomSeedWins: 2,
+        }}
+      />
+    );
     expect(screen.getByTestId('logo-TOP')).toBeTruthy();
     expect(screen.getByTestId('logo-BOT').parentElement?.className).toMatch(/opacity-50/);
   });
 
   test('renders non-SCF variant with TBD logo', () => {
-    render(<PlayoffSeriesTile year={2025} series={{ seriesLetter: 'B', topSeedTeam: { id: -1, abbrev: 'TBD' }, bottomSeedTeam: { id: 2, abbrev: 'BOT' }, topSeedWins: 0, bottomSeedWins: 1 }} />);
+    render(
+      <PlayoffSeriesTile
+        year={2025}
+        series={{
+          seriesLetter: 'B',
+          topSeedTeam: { id: -1, abbrev: 'TBD' },
+          bottomSeedTeam: { id: 2, abbrev: 'BOT' },
+          topSeedWins: 0,
+          bottomSeedWins: 1,
+        }}
+      />
+    );
     expect(screen.getAllByText('TBD').length).toBeGreaterThan(0);
   });
 });

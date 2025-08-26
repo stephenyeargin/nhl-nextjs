@@ -12,7 +12,10 @@ import ContentByline from '@/app/components/ContentByline';
 import PageError from '@/app/components/PageError';
 import ContentTag from '@/app/components/ContentTag';
 
-interface StoryPartBase { type: string; [key: string]: any }
+interface StoryPartBase {
+  type: string;
+  [key: string]: any;
+}
 interface Story {
   _entityId?: string | number;
   status?: number;
@@ -25,12 +28,11 @@ interface Story {
 }
 
 const NewsArticle: React.FC = () => {
-  const { story, pageError }: { story?: Story; pageError?: Error | number } = useStoryContext() as any;
+  const { story, pageError }: { story?: Story; pageError?: Error | number } =
+    useStoryContext() as any;
 
   if (pageError) {
-    return (
-      <PageError pageError={pageError as any} handleRetry={() => window.location.reload()} />
-    );
+    return <PageError pageError={pageError as any} handleRetry={() => window.location.reload()} />;
   }
 
   if (story && story.status === 404) {
@@ -43,7 +45,7 @@ const NewsArticle: React.FC = () => {
 
   let storyParts: StoryPartBase[] = [{ type: 'byline' }, ...story.parts];
   if (['photo', 'customentity'].includes(story.parts[0].type)) {
-    storyParts = [ story.parts[0], { type: 'byline' }, ...story.parts.slice(1) ];
+    storyParts = [story.parts[0], { type: 'byline' }, ...story.parts.slice(1)];
   }
 
   return (
@@ -56,29 +58,19 @@ const NewsArticle: React.FC = () => {
       {storyParts.map((part, i) => {
         const { type } = part;
         switch (type) {
-        case 'byline':
-          return (
-            <ContentByline key={i} story={story as any} />
-          );
-        case 'photo':
-          return(
-            <ContentPhoto key={i} part={part as any} />
-          );
-        case 'customentity':
-          return (
-            <ContentCustomEntity key={i} part={part as any} />
-          );
-        case 'external':
-          return (
-            <ContentExternal key={i} part={part as any} />
-          );
-        case 'markdown':
-          return (
-            <ContentMarkdown key={i} part={part as any} />
-          );
-        default:
-          console.warn(`Unknown story part type: ${type}, rendering as title`);
-          break;
+          case 'byline':
+            return <ContentByline key={i} story={story as any} />;
+          case 'photo':
+            return <ContentPhoto key={i} part={part as any} />;
+          case 'customentity':
+            return <ContentCustomEntity key={i} part={part as any} />;
+          case 'external':
+            return <ContentExternal key={i} part={part as any} />;
+          case 'markdown':
+            return <ContentMarkdown key={i} part={part as any} />;
+          default:
+            console.warn(`Unknown story part type: ${type}, rendering as title`);
+            break;
         }
 
         return null;
@@ -87,12 +79,12 @@ const NewsArticle: React.FC = () => {
       <hr className="my-5" />
 
       <div className="my-5">
-        <span className="inline-block rounded p-1 text-xs font-bold m-1">
-          Tags:
-        </span>
-        {story.tags.filter((t: any) => !t.extraData?.hideOnSite).map((tag: any) => (
-          <ContentTag tag={tag} key={tag._entityId} />
-        ))}
+        <span className="inline-block rounded p-1 text-xs font-bold m-1">Tags:</span>
+        {story.tags
+          .filter((t: any) => !t.extraData?.hideOnSite)
+          .map((tag: any) => (
+            <ContentTag tag={tag} key={tag._entityId} />
+          ))}
       </div>
     </div>
   );

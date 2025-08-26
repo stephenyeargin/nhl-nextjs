@@ -5,45 +5,71 @@ import PlayoffSeriesTile from '../../components/PlayoffSeriesTile';
 import { notFound } from 'next/navigation';
 import PlayoffYearSelector from '@/app/components/PlayoffYearSelector';
 
-interface PlayoffSeries { seriesLetter: string; playoffRound: number; seriesAbbrev?: string; seriesTitle?: string; topSeedTeam?: any; bottomSeedTeam?: any }
-interface PlayoffBracket { series: PlayoffSeries[]; bracketLogo?: string }
+interface PlayoffSeries {
+  seriesLetter: string;
+  playoffRound: number;
+  seriesAbbrev?: string;
+  seriesTitle?: string;
+  topSeedTeam?: any;
+  bottomSeedTeam?: any;
+}
+interface PlayoffBracket {
+  series: PlayoffSeries[];
+  bracketLogo?: string;
+}
 
 async function getPlayoffData(year: string | number): Promise<PlayoffBracket> {
-  const res = await fetch(`https://api-web.nhle.com/v1/playoff-bracket/${year}`, { cache: 'no-store' });
-  if (!res.ok) { throw new Error('Failed to fetch playoff data'); }
-  
+  const res = await fetch(`https://api-web.nhle.com/v1/playoff-bracket/${year}`, {
+    cache: 'no-store',
+  });
+  if (!res.ok) {
+    throw new Error('Failed to fetch playoff data');
+  }
+
   return res.json();
 }
 
 async function getSeasonData(): Promise<any> {
   const res = await fetch('https://api-web.nhle.com/v1/season', { cache: 'no-store' });
-  if (!res.ok) { throw new Error('Failed to fetch season data'); }
-  
+  if (!res.ok) {
+    throw new Error('Failed to fetch season data');
+  }
+
   return res.json();
 }
 
-const getSeriesByLetter = (bracket: PlayoffBracket, letter: string) => bracket.series.find((s) => s.seriesLetter === letter);
+const getSeriesByLetter = (bracket: PlayoffBracket, letter: string) =>
+  bracket.series.find((s) => s.seriesLetter === letter);
 
-const groupByRound = (seriesList: PlayoffSeries[]) => seriesList.reduce<Record<number, PlayoffSeries[]>>((acc, series) => {
-  const round = series.playoffRound;
-  if (!acc[round]) { acc[round] = []; }
-  acc[round].push(series);
-  
-  return acc;
-}, {});
+const groupByRound = (seriesList: PlayoffSeries[]) =>
+  seriesList.reduce<Record<number, PlayoffSeries[]>>((acc, series) => {
+    const round = series.playoffRound;
+    if (!acc[round]) {
+      acc[round] = [];
+    }
+    acc[round].push(series);
+
+    return acc;
+  }, {});
 
 export default async function PlayoffsPage(props: any) {
-  const resolved = await props?.params as YearParam | Promise<YearParam>;
+  const resolved = (await props?.params) as YearParam | Promise<YearParam>;
   const { year } = await resolved;
   const bracket = await getPlayoffData(year);
   const seasons = await getSeasonData();
 
-  if (!bracket.series) { return notFound(); }
+  if (!bracket.series) {
+    return notFound();
+  }
 
   const groupedSeries = groupByRound(bracket.series);
   let columnCount = 7;
-  if (bracket.series.find((s) => s.seriesAbbrev === 'SCQ')) { columnCount = 9; }
-  if (bracket.series.length < 11) { columnCount = 1; }
+  if (bracket.series.find((s) => s.seriesAbbrev === 'SCQ')) {
+    columnCount = 9;
+  }
+  if (bracket.series.length < 11) {
+    columnCount = 1;
+  }
 
   const shownSeriesTitles = new Set<string>();
 
@@ -63,7 +89,7 @@ export default async function PlayoffsPage(props: any) {
 
       <div className="flex justify-center">
         <label className="block p-2 text-xl font-bold">Season:</label>
-  <PlayoffYearSelector seasons={seasons} year={Number(year)} />
+        <PlayoffYearSelector seasons={seasons} year={Number(year)} />
       </div>
 
       <div className={`hidden sm:grid grid-cols-${columnCount} align-center gap-5`}>
@@ -123,15 +149,21 @@ export default async function PlayoffsPage(props: any) {
               {seriesList.map((series, i) => {
                 const top = series.topSeedTeam;
                 const bottom = series.bottomSeedTeam;
-                if (!top || !bottom) { return null; }
+                if (!top || !bottom) {
+                  return null;
+                }
                 const thisSeriesHeading = series.seriesTitle || `Round ${round}`;
                 const shouldShowHeading = !shownSeriesTitles.has(thisSeriesHeading);
-                if (shouldShowHeading) { shownSeriesTitles.add(thisSeriesHeading); }
-                
+                if (shouldShowHeading) {
+                  shownSeriesTitles.add(thisSeriesHeading);
+                }
+
                 return (
                   <div key={i}>
                     {shouldShowHeading && (
-                      <h2 className="text-2xl font-bold mb-6 text-center text-white">{thisSeriesHeading}</h2>
+                      <h2 className="text-2xl font-bold mb-6 text-center text-white">
+                        {thisSeriesHeading}
+                      </h2>
                     )}
                     <PlayoffSeriesTile year={Number(year)} series={series} />
                   </div>

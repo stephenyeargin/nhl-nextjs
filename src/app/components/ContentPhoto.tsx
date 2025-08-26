@@ -6,23 +6,42 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dayjs from 'dayjs';
 
-interface PhotoFields { altText?: string; credit?: string }
-interface PhotoImage { templateUrl: string }
-interface PhotoPart { _entityId: string; image: PhotoImage; fields: PhotoFields; contentDate?: string }
-interface ContentPhotoProps { part: PhotoPart }
+interface PhotoFields {
+  altText?: string;
+  credit?: string;
+}
+interface PhotoImage {
+  templateUrl: string;
+}
+interface PhotoPart {
+  _entityId: string;
+  image: PhotoImage;
+  fields: PhotoFields;
+  contentDate?: string;
+}
+interface ContentPhotoProps {
+  part: PhotoPart;
+}
 
 const ContentPhoto: React.FC<ContentPhotoProps> = ({ part }) => {
-  const [blurDataURL, setBlurDataURL] = useState('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
+  const [blurDataURL, setBlurDataURL] = useState(
+    'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+  );
   const [isPhotoViewerVisible, setPhotoViewerVisible] = useState(false);
 
   useEffect(() => {
     const fetchBlurDataURL = async () => {
-      const data = await fetch(part.image?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size10/f_png'));
-      const base64 = await data.blob().then((blob) => new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => resolve(reader.result as string);
-      }));
+      const data = await fetch(
+        part.image?.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size10/f_png')
+      );
+      const base64 = await data.blob().then(
+        (blob) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => resolve(reader.result as string);
+          })
+      );
       setBlurDataURL(base64);
     };
     fetchBlurDataURL();
@@ -36,8 +55,8 @@ const ContentPhoto: React.FC<ContentPhotoProps> = ({ part }) => {
       }
     };
     window.addEventListener('keydown', onKeyDown);
-    
-  return () => window.removeEventListener('keydown', onKeyDown);
+
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
   // blurDataURL always initialized, so no early return needed
@@ -48,7 +67,10 @@ const ContentPhoto: React.FC<ContentPhotoProps> = ({ part }) => {
     <>
       <div key={_entityId} className="my-5">
         <figure>
-          <div className="relative group cursor-pointer" onClick={() => setPhotoViewerVisible(true)}>
+          <div
+            className="relative group cursor-pointer"
+            onClick={() => setPhotoViewerVisible(true)}
+          >
             <Image
               src={image.templateUrl.replace('{formatInstructions}', 't_ratio16_9-size40/f_png/')}
               alt={fields.altText || 'Photo'}
@@ -95,9 +117,7 @@ const ContentPhoto: React.FC<ContentPhotoProps> = ({ part }) => {
               />
               {fields.credit && (
                 <div className="flex justify-between">
-                  <div className="text-xs text-gray-500 py-2 mt-2">
-                    &copy; {fields.credit}
-                  </div>
+                  <div className="text-xs text-gray-500 py-2 mt-2">&copy; {fields.credit}</div>
                   <div className="text-xs text-gray-500 py-2 mt-2 text-right">
                     {dayjs(contentDate).format('lll')}
                   </div>

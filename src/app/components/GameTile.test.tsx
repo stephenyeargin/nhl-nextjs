@@ -52,7 +52,17 @@ describe('GameTile', () => {
   });
 
   test('final game shows FINAL/OT when last period OT', () => {
-    render(<GameTile game={makeGame({ gameState: 'FINAL', awayTeam: { ...baseTeam('AWY'), score: 3 }, homeTeam: { ...baseTeam('HOM'), score: 4 }, gameOutcome: { lastPeriodType: 'OT' }, periodDescriptor: { periodType: 'OT' } })} />);
+    render(
+      <GameTile
+        game={makeGame({
+          gameState: 'FINAL',
+          awayTeam: { ...baseTeam('AWY'), score: 3 },
+          homeTeam: { ...baseTeam('HOM'), score: 4 },
+          gameOutcome: { lastPeriodType: 'OT' },
+          periodDescriptor: { periodType: 'OT' },
+        })}
+      />
+    );
     expect(screen.getByText(/FINAL\/OT/)).toBeTruthy();
   });
 

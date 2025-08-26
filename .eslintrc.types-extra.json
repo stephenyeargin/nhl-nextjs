@@ -1,0 +1,14 @@
+{
+  "extends": ["next", "next/core-web-vitals"],
+  "plugins": ["@typescript-eslint"],
+  "parserOptions": {
+    "project": ["./tsconfig.json"],
+    "tsconfigRootDir": "."
+  },
+  "rules": {
+    "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/no-explicit-any": ["warn", { "ignoreRestArgs": true }],
+    "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+    "@typescript-eslint/prefer-string-starts-ends-with": "warn"
+  }
+}

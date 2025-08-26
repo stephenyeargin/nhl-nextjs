@@ -11,7 +11,15 @@ import { formatLocalizedDate } from '../utils/formatters';
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
-interface ScheduleGameTeam { abbrev: string; score: number; record?: string; logo?: string; placeName?: { default: string }; commonName?: { default: string }; id?: string | number }
+interface ScheduleGameTeam {
+  abbrev: string;
+  score: number;
+  record?: string;
+  logo?: string;
+  placeName?: { default: string };
+  commonName?: { default: string };
+  id?: string | number;
+}
 interface ScheduleGame {
   id: string | number;
   gameState: string;
@@ -30,8 +38,12 @@ interface ScheduleGame {
 
 const sortGamesByState = (games: ScheduleGame[]): ScheduleGame[] => {
   const sortedGames = [...games].sort((a, b) => {
-    if (a.gameState === 'LIVE' || a.gameState === 'CRIT') {return -1;}
-    if (b.gameState === 'LIVE' || b.gameState === 'CRIT') {return 1;}
+    if (a.gameState === 'LIVE' || a.gameState === 'CRIT') {
+      return -1;
+    }
+    if (b.gameState === 'LIVE' || b.gameState === 'CRIT') {
+      return 1;
+    }
 
     return 0;
   });
@@ -39,7 +51,9 @@ const sortGamesByState = (games: ScheduleGame[]): ScheduleGame[] => {
   return sortedGames;
 };
 
-interface TopBarScheduleProps { gameDate?: string }
+interface TopBarScheduleProps {
+  gameDate?: string;
+}
 const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
   const [games, setGames] = useState<ScheduleGame[] | null>(null);
   const [focusedDate, setFocusedDate] = useState<string | null>(gameDate || null);
@@ -58,10 +72,11 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
         }
 
         // Set the available dates from the API response
-  setDates(data.gamesByDate.map((d: any) => d.date));
+        setDates(data.gamesByDate.map((d: any) => d.date));
 
         // Find the games for the focused date
-  const gamesForFocusedDate = data.gamesByDate.find((g: any) => focusedDate === g.date)?.games || [];
+        const gamesForFocusedDate =
+          data.gamesByDate.find((g: any) => focusedDate === g.date)?.games || [];
         setGames(sortGamesByState(gamesForFocusedDate));
       } catch (error) {
         console.error('Error fetching games:', error);
@@ -78,7 +93,8 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
         try {
           const response = await fetch('/api/nhl/scoreboard/now', { cache: 'reload' });
           const data = await response.json();
-          const gamesForFocusedDate = data.gamesByDate.find((g: any) => focusedDate === g.date)?.games || [];
+          const gamesForFocusedDate =
+            data.gamesByDate.find((g: any) => focusedDate === g.date)?.games || [];
           setGames(sortGamesByState(gamesForFocusedDate));
         } catch (error) {
           console.error('Error fetching games on interval:', error);
@@ -97,7 +113,7 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
   };
 
   if (!games) {
-    return (<TopBarScheduleSkeleton />);
+    return <TopBarScheduleSkeleton />;
   }
 
   return (
@@ -113,7 +129,12 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
           }
 
           return (
-            <button key={date} className={dateClass} onClick={() => handleDateClick(date)} title={formatLocalizedDate(date, 'dddd, MMMM D, YYYY')}>
+            <button
+              key={date}
+              className={dateClass}
+              onClick={() => handleDateClick(date)}
+              title={formatLocalizedDate(date, 'dddd, MMMM D, YYYY')}
+            >
               <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
             </button>
           );
@@ -122,11 +143,21 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
       <div className="overflow-x-auto scrollbar-hidden my-3">
         <div className="flex flex-nowrap gap-4">
           {games.length === 0 && (
-            <div className="flex items-center border rounded" style={{ minHeight: '9.25rem', minWidth: '360px' }}>
+            <div
+              className="flex items-center border rounded"
+              style={{ minHeight: '9.25rem', minWidth: '360px' }}
+            >
               <div className="p-4 text-gray-500">No games scheduled for today.</div>
             </div>
           )}
-          {games.map((game) => (<GameTile key={game.id} game={game as any} hideDate={true} style={{minWidth: '360px'}} /> ))}
+          {games.map((game) => (
+            <GameTile
+              key={game.id}
+              game={game as any}
+              hideDate={true}
+              style={{ minWidth: '360px' }}
+            />
+          ))}
         </div>
       </div>
     </div>

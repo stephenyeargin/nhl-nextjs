@@ -2,6 +2,7 @@ import { faCheckCircle, faTrophy, faXmarkCircle } from '@fortawesome/free-solid-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import TeamLogo from './TeamLogo';
+import type { TeamAbbrevLogo } from '@/app/types/team';
 
 interface ShootoutPlayerNamePart {
   default: string;
@@ -16,9 +17,7 @@ interface ShootoutShot {
   lastName?: ShootoutPlayerNamePart;
 }
 
-interface TeamBasicInfo {
-  abbrev: string;
-  logo?: string;
+interface TeamBasicInfo extends TeamAbbrevLogo {
   commonName: ShootoutPlayerNamePart;
 }
 
@@ -28,17 +27,20 @@ interface ShootoutScoreboardProps {
   homeTeam: TeamBasicInfo;
 }
 
-const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboardProps) => { 
+const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboardProps) => {
   const maxRounds = Math.max(Math.floor(shootout.length / 2), 3);
 
   let shootingFirst = awayTeam;
-  if (shootout.length > 0 && shootout.find((s) => s.sequence === 1)?.teamAbbrev.default === homeTeam.abbrev) {
+  if (
+    shootout.length > 0 &&
+    shootout.find((s) => s.sequence === 1)?.teamAbbrev.default === homeTeam.abbrev
+  ) {
     shootingFirst = homeTeam;
   }
 
   const getRoundData = (roundIndex: number): ShootoutShot | { result: null } => {
     const shot = shootout.find((i) => i.sequence === roundIndex);
-    
+
     return shot || { result: null };
   };
 
@@ -50,13 +52,25 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
     return shot.result === 'goal' ? (
       <>
         {shot.gameWinner ? (
-          <FontAwesomeIcon icon={faTrophy} className="text-3xl text-green-500" title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: Game Winner!`} />
+          <FontAwesomeIcon
+            icon={faTrophy}
+            className="text-3xl text-green-500"
+            title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: Game Winner!`}
+          />
         ) : (
-          <FontAwesomeIcon icon={faCheckCircle} className="text-3xl text-green-500" title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: ${shot.result.toUpperCase()}`} />
+          <FontAwesomeIcon
+            icon={faCheckCircle}
+            className="text-3xl text-green-500"
+            title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: ${shot.result.toUpperCase()}`}
+          />
         )}
       </>
     ) : (
-      <FontAwesomeIcon icon={faXmarkCircle} className="text-3xl text-slate-500" title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: ${shot.result.toUpperCase()}`} />
+      <FontAwesomeIcon
+        icon={faXmarkCircle}
+        className="text-3xl text-slate-500"
+        title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: ${shot.result.toUpperCase()}`}
+      />
     );
   };
 
@@ -65,9 +79,13 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
       <table className="my-5 border text-sm">
         <thead>
           <tr>
-            <th className="bg-slate-200 dark:bg-slate-800 p-2" style={{ minWidth: '100px' }}>Round</th>
+            <th className="bg-slate-200 dark:bg-slate-800 p-2" style={{ minWidth: '100px' }}>
+              Round
+            </th>
             {Array.from({ length: maxRounds }).map((_, roundIndex) => (
-              <th key={roundIndex} className="bg-slate-200 dark:bg-slate-800 p-2">{roundIndex + 1}</th>
+              <th key={roundIndex} className="bg-slate-200 dark:bg-slate-800 p-2">
+                {roundIndex + 1}
+              </th>
             ))}
           </tr>
         </thead>
@@ -82,9 +100,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
                     alt={awayTeam.commonName.default}
                     className="w-10 h-10 mx-auto"
                   />
-                  <span className="font-bold">
-                    {awayTeam.abbrev}
-                  </span>
+                  <span className="font-bold">{awayTeam.abbrev}</span>
                 </div>
               ) : (
                 <div className="flex gap-1 items-center">
@@ -94,15 +110,13 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
                     alt={homeTeam.commonName.default}
                     className="w-10 h-10 mx-auto"
                   />
-                  <span className="font-bold">
-                    {homeTeam.abbrev}
-                  </span>
+                  <span className="font-bold">{homeTeam.abbrev}</span>
                 </div>
               )}
             </td>
             {Array.from({ length: maxRounds }).map((_, roundIndex) => {
               const shot = getRoundData(roundIndex * 2 + 1);
-              
+
               return (
                 <td key={roundIndex} className="p-2 border">
                   {renderShot(shot)}
@@ -120,9 +134,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
                     alt={awayTeam.commonName.default}
                     className="w-10 h-10 mx-auto"
                   />
-                  <span className="font-bold">
-                    {awayTeam.abbrev}
-                  </span>
+                  <span className="font-bold">{awayTeam.abbrev}</span>
                 </div>
               ) : (
                 <div className="flex gap-1 items-center">
@@ -132,15 +144,13 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
                     alt={homeTeam.commonName.default}
                     className="w-10 h-10 mx-auto"
                   />
-                  <span className="font-bold">
-                    {homeTeam.abbrev}
-                  </span>
+                  <span className="font-bold">{homeTeam.abbrev}</span>
                 </div>
               )}
             </td>
             {Array.from({ length: maxRounds }).map((_, roundIndex) => {
               const shot = getRoundData(roundIndex * 2 + 2);
-              
+
               return (
                 <td key={roundIndex} className="p-2 border">
                   {renderShot(shot)}

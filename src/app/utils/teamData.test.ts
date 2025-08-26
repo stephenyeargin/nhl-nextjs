@@ -1,4 +1,10 @@
-import { getTeamSlugs, getTeamDataByAbbreviation, getTeamDataByCommonName, getTeamDataBySlug, getAllTeamsByDivision } from './teamData';
+import {
+  getTeamSlugs,
+  getTeamDataByAbbreviation,
+  getTeamDataByCommonName,
+  getTeamDataBySlug,
+  getAllTeamsByDivision,
+} from './teamData';
 
 describe('teamData utilities', () => {
   test('getTeamSlugs returns array with expected values', () => {
@@ -31,6 +37,6 @@ describe('teamData utilities', () => {
   test('getAllTeamsByDivision groups correctly', () => {
     const byDiv = getAllTeamsByDivision();
     expect(Object.keys(byDiv)).toEqual(['Atlantic', 'Central', 'Metropolitan', 'Pacific']);
-    expect(byDiv.Pacific.find(t => t.abbreviation === 'ANA')).toBeTruthy();
+    expect(byDiv.Pacific.find((t) => t.abbreviation === 'ANA')).toBeTruthy();
   });
 });

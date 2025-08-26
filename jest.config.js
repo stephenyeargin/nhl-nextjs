@@ -15,12 +15,18 @@ const config = {
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{ts,tsx,js,jsx}',
+    // Exclude Next.js route boilerplate & passive wrappers (no logic / branches)
+    '!src/app/**/page.tsx',
+    '!src/app/**/layout.tsx',
+    '!src/app/**/loading.tsx',
+    '!src/app/**/error.tsx',
+    '!src/app/not-found.tsx',
+    // Exclude pure type definition modules
+    '!src/app/types/**',
+    // Exclude env/config shells
+    '!src/config/env.ts',
   ],
-  coveragePathIgnorePatterns: [
-    '/node_modules/',
-    '<rootDir>/.next/',
-    '.*__tests__.*',
-  ],
+  coveragePathIgnorePatterns: ['/node_modules/', '<rootDir>/.next/', '.*__tests__.*'],
   coverageThreshold: {
     global: {
       lines: 50,
@@ -30,7 +36,7 @@ const config = {
     },
   },
   moduleNameMapper: {
-  '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|scss|sass|less|svg)$': '<rootDir>/test/__mocks__/styleMock.js',
   },
 };

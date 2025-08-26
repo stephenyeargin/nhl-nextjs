@@ -2,10 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHockeyPuck, faPeopleGroup, faTag, faUser } from '@fortawesome/free-solid-svg-icons';
-
-interface TagExtraData { playerId?: string; abbreviation?: string; gameId?: string }
-interface Tag { _entityId: string; slug: string; title: string; externalSourceName?: string; extraData?: TagExtraData }
-interface ContentTagProps { tag: Tag }
+import type { Tag } from '@/app/types/tag';
+interface ContentTagProps {
+  tag: Tag;
+}
 
 const ContentTag: React.FC<ContentTagProps> = ({ tag }) => {
   let url = `/news/topic/${tag.slug}`;

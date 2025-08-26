@@ -8,8 +8,10 @@ const baseGame = {
   homeTeam: { abbrev: 'NSH', logo: '/home.png', commonName: { default: 'Predators' }, id: 1 },
   awayTeam: { abbrev: 'CBJ', logo: '/away.png', commonName: { default: 'Blue Jackets' }, id: 2 },
   matchup: {
-    skaterComparison: { leaders: [ { category: 'points', /* awayLeader intentionally undefined */ } ] }
-  }
+    skaterComparison: {
+      leaders: [{ category: 'points' /* awayLeader intentionally undefined */ }],
+    },
+  },
 };
 
 describe('GamePreview (smoke)', () => {

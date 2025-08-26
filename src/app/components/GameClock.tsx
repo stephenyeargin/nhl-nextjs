@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-interface GameClockProps { timeRemaining: string; running?: boolean }
+interface GameClockProps {
+  timeRemaining: string;
+  running?: boolean;
+}
 
 const GameClock: React.FC<GameClockProps> = ({ timeRemaining, running = false }) => {
   const [time, setTime] = useState<string>(timeRemaining);
@@ -11,7 +14,7 @@ const GameClock: React.FC<GameClockProps> = ({ timeRemaining, running = false })
   }, [timeRemaining]);
 
   useEffect(() => {
-  let intervalId: ReturnType<typeof setInterval> | undefined;
+    let intervalId: ReturnType<typeof setInterval> | undefined;
     // Only start the interval if running is true and time isn't at 00:00
     if (running && time !== '00:00') {
       intervalId = setInterval(() => {
@@ -26,7 +29,7 @@ const GameClock: React.FC<GameClockProps> = ({ timeRemaining, running = false })
           if (newMinutes < 0) {
             return '00:00';
           }
-          
+
           return `${newMinutes.toString().padStart(2, '0')}:${newSeconds.toString().padStart(2, '0')}`;
         });
       }, 1000);
@@ -43,4 +46,3 @@ const GameClock: React.FC<GameClockProps> = ({ timeRemaining, running = false })
 };
 
 export default GameClock;
- 

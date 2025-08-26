@@ -1,9 +1,15 @@
 // Centralized route params types to replace scattered `any` usage on Next.js App Router pages.
 // Keep them minimal and string-based because Next.js will supply strings in params.
 
-export interface YearParam { year: string }
-export interface SeriesParam extends YearParam { seriesLetter: string }
-export interface TeamSlugParam { slug: string }
+export interface YearParam {
+  year: string;
+}
+export interface SeriesParam extends YearParam {
+  seriesLetter: string;
+}
+export interface TeamSlugParam {
+  slug: string;
+}
 
 // Draft year page (same as YearParam but explicit alias for clarity)
 export type DraftYearParam = YearParam;

@@ -18,12 +18,18 @@ const PlayoffYearSelector: React.FC<PlayoffYearSelectorProps> = ({ seasons, year
   };
 
   return (
-    <select className="p-2 rounded text-xl border bg-inherit text-white" value={year} onChange={handlePlayoffYearChange}>
+    <select
+      className="p-2 rounded text-xl border bg-inherit text-white"
+      value={year}
+      onChange={handlePlayoffYearChange}
+    >
       {seasons.map((y) => {
         const display = String(y).replace(/^\d{4}/, '');
 
         return (
-          <option key={y} value={display}>{display}</option>
+          <option key={y} value={display}>
+            {display}
+          </option>
         );
       })}
     </select>

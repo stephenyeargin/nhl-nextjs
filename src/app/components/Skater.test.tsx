@@ -12,7 +12,17 @@ jest.mock('./Headshot', () => {
 
 describe('Skater', () => {
   it('renders player name', () => {
-  render(<Skater player={{ playerId: 1, name: { default: 'Player One' }, sweaterNumber: 9, positionCode: 'C' }} team="ANA" />);
-  expect(screen.getAllByText(/Player One/).length).toBeGreaterThan(0);
+    render(
+      <Skater
+        player={{
+          playerId: 1,
+          name: { default: 'Player One' },
+          sweaterNumber: 9,
+          positionCode: 'C',
+        }}
+        team="ANA"
+      />
+    );
+    expect(screen.getAllByText(/Player One/).length).toBeGreaterThan(0);
   });
 });

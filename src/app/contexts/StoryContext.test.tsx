@@ -15,7 +15,9 @@ const TestConsumer: React.FC = () => {
       <div data-testid="story-headline">{story.headline}</div>
       {game && <div data-testid="game-loaded">yes</div>}
       <div data-testid="players-count">{players.length}</div>
-      <div data-testid="sidebar-count">{sidebarStories.items ? sidebarStories.items.length : 0}</div>
+      <div data-testid="sidebar-count">
+        {(sidebarStories as any).items ? (sidebarStories as any).items.length : 0}
+      </div>
       {pageError && <div data-testid="story-error">{pageError.message}</div>}
     </div>
   );
@@ -28,13 +30,15 @@ describe('StoryContext', () => {
     jest.resetAllMocks();
     (global as any).fetch = jest.fn();
     jest.useFakeTimers();
-  jest.spyOn(console, 'error').mockImplementation(() => { /* silent expected error */ });
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      /* silent expected error */
+    });
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
-  (console.error as unknown as jest.Mock).mockRestore?.();
+    (console.error as unknown as jest.Mock).mockRestore?.();
   });
 
   test('loads story, players, game, and sidebar', async () => {
@@ -55,28 +59,42 @@ describe('StoryContext', () => {
       // game
       .mockResolvedValueOnce(makeFetchResponse(true, { some: 'game' }));
 
-    render(<StoryProvider storyId="abc123"><TestConsumer /></StoryProvider>);
+    render(
+      <StoryProvider storyId="abc123">
+        <TestConsumer />
+      </StoryProvider>
+    );
     await waitFor(() => expect(screen.getByTestId('story-headline').textContent).toBe('Big Win'));
     expect(screen.getByTestId('players-count').textContent).toBe('2');
     expect(screen.getByTestId('game-loaded')).toBeTruthy();
   });
 
   test('legacy story redirects', async () => {
-    (global as any).fetch.mockResolvedValueOnce(makeFetchResponse(true, { items: [{ slug: 'legacy-slug' }] }));
+    (global as any).fetch.mockResolvedValueOnce(
+      makeFetchResponse(true, { items: [{ slug: 'legacy-slug' }] })
+    );
     const originalLocation = window.location;
     const replaceSpy = jest.fn();
     Object.defineProperty(window, 'location', {
       configurable: true,
       value: { ...originalLocation, replace: replaceSpy },
     });
-    render(<StoryProvider storyId="c-12345"><div /> </StoryProvider>);
+    render(
+      <StoryProvider storyId="c-12345">
+        <div />{' '}
+      </StoryProvider>
+    );
     await waitFor(() => expect(replaceSpy).toHaveBeenCalledWith('/news/legacy-slug'));
     Object.defineProperty(window, 'location', { configurable: true, value: originalLocation });
   });
 
   test('handles fetch error', async () => {
     (global as any).fetch.mockResolvedValueOnce({ ok: false });
-    render(<StoryProvider storyId="broken"><TestConsumer /></StoryProvider>);
+    render(
+      <StoryProvider storyId="broken">
+        <TestConsumer />
+      </StoryProvider>
+    );
     await waitFor(() => expect(screen.getByTestId('story-error')).toBeTruthy());
   });
 });

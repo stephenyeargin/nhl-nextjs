@@ -1,12 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
 
-interface GameWeekDay { date: string; dayAbbrev: string; numberOfGames: number }
-interface ScoreGame { id: string | number; [k:string]: any }
+interface GameWeekDay {
+  date: string;
+  dayAbbrev: string;
+  numberOfGames: number;
+}
+interface ScoreGame {
+  id: string | number;
+  [k: string]: any;
+}
 export interface ScoresResponse {
   gameWeek: GameWeekDay[];
   games: ScoreGame[];
-  prevDate: string; currentDate: string; nextDate?: string;
-  [k:string]: any;
+  prevDate: string;
+  currentDate: string;
+  nextDate?: string;
+  [k: string]: any;
 }
 
 export interface UseScoresDataResult {
@@ -24,8 +33,8 @@ export const useScoresData = (): UseScoresDataResult => {
     const now = new Date();
     const easternTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
     easternTime.setHours(12, 0, 0, 0);
-    
-  return easternTime.toISOString().split('T')[0];
+
+    return easternTime.toISOString().split('T')[0];
   }, []);
 
   useEffect(() => {
@@ -33,7 +42,9 @@ export const useScoresData = (): UseScoresDataResult => {
 
     const getScores = async () => {
       const todayString = typeof today === 'string' ? today : today?.toISOString().slice(0, 10);
-  if (!todayString) { return; }
+      if (!todayString) {
+        return;
+      }
       try {
         const scoresResponse = await fetch(`/api/nhl/score/${todayString}`, { cache: 'no-store' });
         setScores(await scoresResponse.json());
@@ -51,7 +62,9 @@ export const useScoresData = (): UseScoresDataResult => {
     }
 
     return () => {
-  if (interval) { clearInterval(interval); }
+      if (interval) {
+        clearInterval(interval);
+      }
     };
   }, [today, setTodayNoonET]);
 

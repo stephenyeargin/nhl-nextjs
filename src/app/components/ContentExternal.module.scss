@@ -1,16 +1,16 @@
 .content-external {
-    table {
-        @apply border;
-        tr {
-            th {
-                @apply p-2 border bg-slate-200 dark:bg-slate-800 text-black dark:text-white;
-            }
-            td {
-                @apply p-2 border;
-            }
-        }
-        tr:nth-child(even) {
-            @apply bg-slate-500/10;
-        }
+  table {
+    @apply border;
+    tr {
+      th {
+        @apply p-2 border bg-slate-200 dark:bg-slate-800 text-black dark:text-white;
+      }
+      td {
+        @apply p-2 border;
+      }
     }
+    tr:nth-child(even) {
+      @apply bg-slate-500/10;
+    }
+  }
 }

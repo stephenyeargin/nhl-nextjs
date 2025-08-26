@@ -7,6 +7,7 @@ import TeamLogo from './TeamLogo';
 import { Skater } from './Skater';
 import { GAME_EVENTS } from '../utils/constants';
 import { formatPeriodLabel } from '../utils/formatters';
+import type { PeriodDescriptor } from '@/app/types/game';
 
 interface TeamDataColors {
   teamColor?: string;
@@ -20,8 +21,6 @@ interface BasicTeamInfo {
   id?: number | string;
   data?: TeamDataColors;
 }
-
-interface PeriodDescriptor { periodType?: string }
 
 interface PlayDetails {
   xCoord?: number;
@@ -40,7 +39,9 @@ interface RinkPlay {
   homeTeamDefendingSide?: string; // present on first play
 }
 
-interface IceSurfaceRosterPlayer { playerId: number }
+interface IceSurfaceRosterPlayer {
+  playerId: number;
+}
 
 interface IceSurfaceTeamGroup {
   goalies: IceSurfaceRosterPlayer[];
@@ -54,7 +55,9 @@ interface IceSurfaceSummary {
   homeTeam: IceSurfaceTeamGroup;
 }
 
-interface GameSummary { iceSurface?: IceSurfaceSummary }
+interface GameSummary {
+  iceSurface?: IceSurfaceSummary;
+}
 
 interface IceRinkGame {
   summary?: GameSummary;
@@ -69,12 +72,20 @@ interface IceRinkProps {
   renderTeamLogo: (_teamId?: number | string) => React.ReactNode;
 }
 
-const IceRink: React.FC<IceRinkProps> = ({ game, plays = [], homeTeam, awayTeam, renderPlayByPlayEvent, renderTeamLogo }) => {
+const IceRink: React.FC<IceRinkProps> = ({
+  game,
+  plays = [],
+  homeTeam,
+  awayTeam,
+  renderPlayByPlayEvent,
+  renderTeamLogo,
+}) => {
   const [playBoxContent, setPlayBoxContent] = useState<React.ReactNode>(null);
   const [activePlay, setActivePlay] = useState<number | string | null>(null);
   const [hoverPlay, setHoverPlay] = useState<RinkPlay | null>(null);
 
-  let mappedPlays: RinkPlay[] = plays.filter((p) => p.details?.xCoord !== undefined && p.details?.yCoord !== undefined) || [];
+  let mappedPlays: RinkPlay[] =
+    plays.filter((p) => p.details?.xCoord !== undefined && p.details?.yCoord !== undefined) || [];
   mappedPlays = mappedPlays.sort((a, b) => b.sortOrder - a.sortOrder);
 
   const mappedPlayMostRecent = mappedPlays[0]?.eventId;
@@ -89,11 +100,17 @@ const IceRink: React.FC<IceRinkProps> = ({ game, plays = [], homeTeam, awayTeam,
 
   const handleMarkerAction = (e: React.MouseEvent<HTMLDivElement>) => {
     const marker = (e.target as HTMLElement).closest('div');
-  if (!marker) { return; }
-  const indexAttr = marker.getAttribute('data-index');
-  if (indexAttr === null) { return; }
-  const play = mappedPlays[Number(indexAttr)];
-  if (!play) { return; }
+    if (!marker) {
+      return;
+    }
+    const indexAttr = marker.getAttribute('data-index');
+    if (indexAttr === null) {
+      return;
+    }
+    const play = mappedPlays[Number(indexAttr)];
+    if (!play) {
+      return;
+    }
     setActivePlay(play.eventId);
 
     setPlayBoxContent(
@@ -105,9 +122,11 @@ const IceRink: React.FC<IceRinkProps> = ({ game, plays = [], homeTeam, awayTeam,
           <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
         </div>
         <TeamLogo
-          team={play.details.eventOwnerTeamId === homeTeam.id
-            ? homeTeam.data?.abbreviation || homeTeam.abbrev
-            : awayTeam.data?.abbreviation || awayTeam.abbrev}
+          team={
+            play.details.eventOwnerTeamId === homeTeam.id
+              ? homeTeam.data?.abbreviation || homeTeam.abbrev
+              : awayTeam.data?.abbreviation || awayTeam.abbrev
+          }
           className="h-16 w-16"
         />
         {renderPlayByPlayEvent(play)}
@@ -124,11 +143,17 @@ const IceRink: React.FC<IceRinkProps> = ({ game, plays = [], homeTeam, awayTeam,
       clearTimeout(hoverTimeOut);
     }
     const marker = (e.target as HTMLElement).closest('div');
-  if (!marker) { return; }
-  const indexAttr = marker.getAttribute('data-index');
-  if (indexAttr === null) { return; }
-  const play = mappedPlays[Number(indexAttr)];
-  if (!play) { return; }
+    if (!marker) {
+      return;
+    }
+    const indexAttr = marker.getAttribute('data-index');
+    if (indexAttr === null) {
+      return;
+    }
+    const play = mappedPlays[Number(indexAttr)];
+    if (!play) {
+      return;
+    }
     setHoverPlay(play);
   };
 
@@ -190,14 +215,14 @@ const IceRink: React.FC<IceRinkProps> = ({ game, plays = [], homeTeam, awayTeam,
             key={index}
             className={`absolute ${activePlay === play.eventId ? 'animate-pulse border-2 border-slate-800 dark:border-slate-200 rounded-full' : ''}`}
             style={{
-              top: `${-1 * ((play.details?.yCoord ?? 0)/0.88) + 50}%`,
-              left: `${((play.details?.xCoord ?? 0)/2.02) + 50}%`,
+              top: `${-1 * ((play.details?.yCoord ?? 0) / 0.88) + 50}%`,
+              left: `${(play.details?.xCoord ?? 0) / 2.02 + 50}%`,
               transform: 'translate(-50%, -50%)',
               opacity: index < 3 || play.typeDescKey === 'goal' ? 1 : 0.75,
               zIndex: index < 3 || play.typeDescKey === 'goal' ? 1 : 0,
               cursor: 'pointer',
             }}
-            data-debug={`Event #${play.eventId}: ${(GAME_EVENTS as Record<string,string>)[play.typeDescKey] || play.typeDescKey} @ ${play.timeInPeriod} (${play.details?.xCoord},${play.details?.yCoord})`}
+            data-debug={`Event #${play.eventId}: ${(GAME_EVENTS as Record<string, string>)[play.typeDescKey] || play.typeDescKey} @ ${play.timeInPeriod} (${play.details?.xCoord},${play.details?.yCoord})`}
             data-index={index}
             onClick={handleMarkerAction}
             onMouseEnter={handleHoverEnter}
@@ -210,46 +235,90 @@ const IceRink: React.FC<IceRinkProps> = ({ game, plays = [], homeTeam, awayTeam,
             >
               {play.typeDescKey === 'goal' ? (
                 <>
-                  <circle cx="5" cy="5" r="5" fill={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data?.teamColor : awayTeam.data?.teamColor} />
-                  <text x={1} y={8} className="fill-white font-sans" style={{ fontSize: '6pt' }}>{play.periodDescriptor?.periodType !== 'SO' ? '★' : '✓' }</text>
+                  <circle
+                    cx="5"
+                    cy="5"
+                    r="5"
+                    fill={
+                      play.details.eventOwnerTeamId === homeTeam.id
+                        ? homeTeam.data?.teamColor
+                        : awayTeam.data?.teamColor
+                    }
+                  />
+                  <text x={1} y={8} className="fill-white font-sans" style={{ fontSize: '6pt' }}>
+                    {play.periodDescriptor?.periodType !== 'SO' ? '★' : '✓'}
+                  </text>
                 </>
               ) : (
                 <>
-                  <circle cx="5" cy="5" r="4" strokeWidth="2" stroke={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data?.secondaryTeamColor : awayTeam.data?.secondaryTeamColor} />
-                  <circle cx="5" cy="5" r="4" strokeWidth="1" stroke={play.details.eventOwnerTeamId === homeTeam.id ? homeTeam.data?.teamColor : awayTeam.data?.teamColor} />
-                  <text x={5} y={6.5} fontFamily="Arial" fontWeight="bold" fontSize="4pt" textAnchor="middle" alignmentBaseline="middle" className="font-bold uppercase fill-white">{play.typeDescKey.substr(0,1)}</text>
+                  <circle
+                    cx="5"
+                    cy="5"
+                    r="4"
+                    strokeWidth="2"
+                    stroke={
+                      play.details.eventOwnerTeamId === homeTeam.id
+                        ? homeTeam.data?.secondaryTeamColor
+                        : awayTeam.data?.secondaryTeamColor
+                    }
+                  />
+                  <circle
+                    cx="5"
+                    cy="5"
+                    r="4"
+                    strokeWidth="1"
+                    stroke={
+                      play.details.eventOwnerTeamId === homeTeam.id
+                        ? homeTeam.data?.teamColor
+                        : awayTeam.data?.teamColor
+                    }
+                  />
+                  <text
+                    x={5}
+                    y={6.5}
+                    fontFamily="Arial"
+                    fontWeight="bold"
+                    fontSize="4pt"
+                    textAnchor="middle"
+                    alignmentBaseline="middle"
+                    className="font-bold uppercase fill-white"
+                  >
+                    {play.typeDescKey.substr(0, 1)}
+                  </text>
                 </>
               )}
             </svg>
           </div>
         ))}
-    {hoverPlay && (
+        {hoverPlay && (
           <div
             className="absolute m-20"
             style={{
-      top: `${-1 * (((hoverPlay.details?.yCoord) ?? 0)/0.88) + 45}%`,
-      left: `${(((hoverPlay.details?.xCoord) ?? 0)/2.02) + 45}%`,
+              top: `${-1 * ((hoverPlay.details?.yCoord ?? 0) / 0.88) + 45}%`,
+              left: `${(hoverPlay.details?.xCoord ?? 0) / 2.02 + 45}%`,
               transform: 'translate(-50%, -50%)',
               zIndex: 1000,
             }}
           >
             <div className="bg-slate-200 dark:bg-slate-800 p-4 rounded-lg shadow-lg flex gap-2 items-center">
               <div className="text-xs text-center">
-                <div className="p-1" style={{width: '75px'}}>
-                  <span className="text-xs p-1 border rounded font-bold">{hoverPlay.timeRemaining}</span>
+                <div className="p-1" style={{ width: '75px' }}>
+                  <span className="text-xs p-1 border rounded font-bold">
+                    {hoverPlay.timeRemaining}
+                  </span>
                 </div>
                 <div className="mt-1">{formatPeriodLabel(hoverPlay.periodDescriptor, true)}</div>
               </div>
-              <div style={{width: '50px'}}>
+              <div style={{ width: '50px' }}>
                 {renderTeamLogo(hoverPlay.details?.eventOwnerTeamId)}
               </div>
-              <div className="text-lg font-bold" style={{minWidth: '100px'}}>
-                {(GAME_EVENTS as Record<string,string>)[hoverPlay.typeDescKey]}
+              <div className="text-lg font-bold" style={{ minWidth: '100px' }}>
+                {(GAME_EVENTS as Record<string, string>)[hoverPlay.typeDescKey]}
               </div>
             </div>
           </div>
         )}
-  {!plays.length && game?.summary?.iceSurface && (
+        {!plays.length && game?.summary?.iceSurface && (
           <div className="absolute top-1 bottom-2 left-0 right-0 grid grid-cols-6 items-center">
             <div className="col-span-1 text-center">
               {game.summary.iceSurface.awayTeam.goalies.map((p) => (
@@ -286,28 +355,40 @@ const IceRink: React.FC<IceRinkProps> = ({ game, plays = [], homeTeam, awayTeam,
       </div>
       <div id="playBox" className="my-2 text-sm flex items-center justify-center">
         <div>{playBoxContent || <span className="leading-10">&nbsp;</span>}</div>
-        {!plays.length && game?.summary?.iceSurface && (
+        {!plays.length &&
+          game?.summary?.iceSurface &&
           (() => {
             const awayPen = game.summary?.iceSurface?.awayTeam.penaltyBox || [];
             const homePen = game.summary?.iceSurface?.homeTeam.penaltyBox || [];
-            if (!awayPen.length && !homePen.length) { return null; }
-            
+            if (!awayPen.length && !homePen.length) {
+              return null;
+            }
+
             return (
               <div className="grid grid-cols-2 gap-5">
                 <div className="col-span-1 flex gap-2 justify-end">
                   {awayPen.map((p, i) => (
-                    <Skater key={`${p.playerId}-${i}`} player={p} isHomeTeam={false} team={awayTeam.abbrev} />
+                    <Skater
+                      key={`${p.playerId}-${i}`}
+                      player={p}
+                      isHomeTeam={false}
+                      team={awayTeam.abbrev}
+                    />
                   ))}
                 </div>
                 <div className="col-span-1 flex gap-2 justify-start">
                   {homePen.map((p, i) => (
-                    <Skater key={`${p.playerId}-${i}`} player={p} isHomeTeam={true} team={homeTeam.abbrev} />
+                    <Skater
+                      key={`${p.playerId}-${i}`}
+                      player={p}
+                      isHomeTeam={true}
+                      team={homeTeam.abbrev}
+                    />
                   ))}
                 </div>
               </div>
             );
-          })()
-        )}
+          })()}
       </div>
     </div>
   );

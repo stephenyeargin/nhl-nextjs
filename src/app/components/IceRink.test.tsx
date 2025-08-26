@@ -19,20 +19,53 @@ jest.mock('./TeamLogo', () => {
 });
 
 const baseProps = {
-  game: { summary: { iceSurface: { awayTeam: { goalies: [], defensemen: [], forwards: [], penaltyBox: [] }, homeTeam: { goalies: [], defensemen: [], forwards: [], penaltyBox: [] } } } },
+  game: {
+    summary: {
+      iceSurface: {
+        awayTeam: { goalies: [], defensemen: [], forwards: [], penaltyBox: [] },
+        homeTeam: { goalies: [], defensemen: [], forwards: [], penaltyBox: [] },
+      },
+    },
+  },
   plays: [
-    { eventId: 1, sortOrder: 2, details: { xCoord: 10, yCoord: 5, eventOwnerTeamId: 1 }, typeDescKey: 'shot', timeRemaining: '10:00', periodDescriptor: {}, timeInPeriod: '10:00' },
-    { eventId: 2, sortOrder: 1, details: { xCoord: -20, yCoord: -10, eventOwnerTeamId: 2 }, typeDescKey: 'goal', timeRemaining: '05:00', periodDescriptor: {}, timeInPeriod: '05:00' }
+    {
+      eventId: 1,
+      sortOrder: 2,
+      details: { xCoord: 10, yCoord: 5, eventOwnerTeamId: 1 },
+      typeDescKey: 'shot',
+      timeRemaining: '10:00',
+      periodDescriptor: {},
+      timeInPeriod: '10:00',
+    },
+    {
+      eventId: 2,
+      sortOrder: 1,
+      details: { xCoord: -20, yCoord: -10, eventOwnerTeamId: 2 },
+      typeDescKey: 'goal',
+      timeRemaining: '05:00',
+      periodDescriptor: {},
+      timeInPeriod: '05:00',
+    },
   ],
-  homeTeam: { abbrev: 'NSH', logo: '/nsh.png', id: 1, data: { teamColor: '#000', secondaryTeamColor: '#ccc', abbreviation: 'NSH' } },
-  awayTeam: { abbrev: 'CBJ', logo: '/cbj.png', id: 2, data: { teamColor: '#111', secondaryTeamColor: '#ddd', abbreviation: 'CBJ' } },
+  homeTeam: {
+    abbrev: 'NSH',
+    logo: '/nsh.png',
+    id: 1,
+    data: { teamColor: '#000', secondaryTeamColor: '#ccc', abbreviation: 'NSH' },
+  },
+  awayTeam: {
+    abbrev: 'CBJ',
+    logo: '/cbj.png',
+    id: 2,
+    data: { teamColor: '#111', secondaryTeamColor: '#ddd', abbreviation: 'CBJ' },
+  },
   renderPlayByPlayEvent: () => <div data-testid="play-event">Play</div>,
-  renderTeamLogo: () => <div data-testid="hover-logo" />
+  renderTeamLogo: () => <div data-testid="hover-logo" />,
 };
 
 describe('IceRink (smoke)', () => {
   it('renders plays and opens play box on click', () => {
-    const { container } = render(<IceRink {...baseProps as any} />);
+    const { container } = render(<IceRink {...(baseProps as any)} />);
     const firstMarker = container.querySelector('div[data-index="0"]');
     expect(firstMarker).not.toBeNull();
     if (firstMarker) {

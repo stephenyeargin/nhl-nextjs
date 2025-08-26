@@ -22,23 +22,29 @@ const NewsTagPage: React.FC = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const tagResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/tags/${tag}`, { cache: 'no-store' });
+        const tagResponse = await fetch(
+          `https://forge-dapi.d3.nhle.com/v2/content/en-us/tags/${tag}`,
+          { cache: 'no-store' }
+        );
         if (!tagResponse.ok) {
           setHasMore(false);
-          
+
           return;
         }
         const tagJson: TagData = await tagResponse.json();
         setTagData(tagJson);
 
-        const newsResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${tag}&context.slug=nhl&$skip=${offset}&$limit=24`, { cache: 'no-store' });
+        const newsResponse = await fetch(
+          `https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${tag}&context.slug=nhl&$skip=${offset}&$limit=24`,
+          { cache: 'no-store' }
+        );
         if (!newsResponse.ok) {
           setHasMore(false);
-          
+
           return;
         }
         const news: PaginatedContentResponse<StoryItem> = await newsResponse.json();
-        setNewsItems(prev => [...prev, ...news.items]);
+        setNewsItems((prev) => [...prev, ...news.items]);
 
         if (!news.pagination?.nextUrl) {
           setHasMore(false);
@@ -62,7 +68,7 @@ const NewsTagPage: React.FC = () => {
   }
 
   const handleLoadMoreButton = () => {
-    setOffset(prev => prev + 24);
+    setOffset((prev) => prev + 24);
   };
 
   return (
@@ -80,9 +86,7 @@ const NewsTagPage: React.FC = () => {
             </div>
           </div>
         )}
-        {hasMore && (
-          <LoadMoreButton handleClick={handleLoadMoreButton} />
-        )}
+        {hasMore && <LoadMoreButton handleClick={handleLoadMoreButton} />}
       </div>
     </Suspense>
   );

@@ -24,12 +24,12 @@ jest.mock('@/app/hooks/useScoresData', () => ({
       games: [{ id: 1 }],
       prevDate: '2024-12-31',
       currentDate: '2025-01-01',
-      nextDate: '2025-01-02'
+      nextDate: '2025-01-02',
     },
     today: '2025-01-01',
     setToday: jest.fn(),
-    handleDateChange: jest.fn()
-  })
+    handleDateChange: jest.fn(),
+  }),
 }));
 
 describe('ScoresPage', () => {

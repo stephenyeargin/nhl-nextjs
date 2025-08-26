@@ -10,7 +10,11 @@ jest.mock('./components/StoryCard', () => {
   const StoryCard = (props: any) => {
     captured.push({ size: props.size, showDate: !!props.showDate, item: props.item });
 
-  return <div data-testid={`story-card-${props.item?._entityId || 'unknown'}`}>StoryCard-{props.size || 'default'}</div>;
+    return (
+      <div data-testid={`story-card-${props.item?._entityId || 'unknown'}`}>
+        StoryCard-{props.size || 'default'}
+      </div>
+    );
   };
   (StoryCard as any).displayName = 'StoryCardMock';
 
@@ -40,7 +44,9 @@ describe('NewsPage (page component)', () => {
   });
 
   it('renders skeleton when API returns empty list', async () => {
-    (global as any).fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [] }) });
+    (global as any).fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => ({ items: [] }) });
     render(<NewsPage />);
     // Wait a tick to allow effect to settle
     await waitFor(() => expect((global as any).fetch).toHaveBeenCalled());
@@ -49,14 +55,18 @@ describe('NewsPage (page component)', () => {
   });
 
   it('renders only large card when one item', async () => {
-    (global as any).fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [makeItem(1)] }) });
+    (global as any).fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => ({ items: [makeItem(1)] }) });
     render(<NewsPage />);
     await waitFor(() => expect(captured.length).toBe(1));
     expect(captured[0].size).toBe('large');
   });
 
   it('renders large and medium cards when two items', async () => {
-    (global as any).fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ items: [makeItem(1), makeItem(2)] }) });
+    (global as any).fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => ({ items: [makeItem(1), makeItem(2)] }) });
     render(<NewsPage />);
     await waitFor(() => expect(captured.length).toBe(2));
     expect(captured[0].size).toBe('large');
@@ -64,8 +74,10 @@ describe('NewsPage (page component)', () => {
   });
 
   it('renders additional default cards with showDate when more than two items', async () => {
-    const items = [1,2,3,4].map(makeItem);
-    (global as any).fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ items }) });
+    const items = [1, 2, 3, 4].map(makeItem);
+    (global as any).fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => ({ items }) });
     render(<NewsPage />);
     await waitFor(() => expect(captured.length).toBe(4));
     // first two sizes

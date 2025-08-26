@@ -5,24 +5,28 @@ import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
 import VideoCard from '@/app/components/VideoCard';
 import { formatHeadTitle } from '@/app/utils/formatters';
 import LoadMoreButton from '@/app/components/LoadMoreButton';
-
-interface VideoItem { _entityId?: string | number; slug: string; fields: { description?: string }; [k:string]: any }
-interface VideoApiResponse { items: VideoItem[]; pagination?: { nextUrl?: string | null } }
+import type { VideoApiResponse, VideoItemBase } from '@/app/types/video';
 
 const VideoPage: React.FC = () => {
-  const [videos, setVideos] = useState<VideoItem[]>([]);
+  const [videos, setVideos] = useState<VideoItemBase[]>([]);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const videosResponse = await fetch(`https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?context.slug=nhl&$skip=${offset}&$limit=24`, { cache: 'no-store' });
+      const videosResponse = await fetch(
+        `https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?context.slug=nhl&$skip=${offset}&$limit=24`,
+        { cache: 'no-store' }
+      );
       const videoItems: VideoApiResponse = await videosResponse.json();
-      const normalized = videoItems.items.map((it: any) => ({
-        slug: it.slug || String(it._entityId || ''),
-        fields: it.fields || { description: it.summary },
-        ...it,
-      } as VideoItem));
+      const normalized: VideoItemBase[] = videoItems.items.map(
+        (it: any) =>
+          ({
+            slug: it.slug || String(it._entityId || ''),
+            fields: it.fields || { description: it.summary },
+            ...it,
+          }) as VideoItemBase
+      );
       setVideos((prev) => [...prev, ...normalized]);
       if (!videoItems.pagination?.nextUrl) {
         setHasMore(false);
@@ -49,9 +53,7 @@ const VideoPage: React.FC = () => {
           <VideoCard key={i} item={item} className="col-span-1" />
         ))}
       </div>
-      {hasMore && (
-        <LoadMoreButton handleClick={handleLoadMoreButton} />
-      )}
+      {hasMore && <LoadMoreButton handleClick={handleLoadMoreButton} />}
     </div>
   );
 };
