@@ -1,0 +1,21 @@
+.standingsTable {
+  @apply w-full table-auto border-collapse border;
+
+  th {
+    @apply p-2;
+  }
+
+  td {
+    @apply text-sm p-2 border;
+    &.ranking {
+      @apply text-xs;
+    }
+  }
+
+  tr:nth-child(even) {
+    @apply bg-slate-500/10;
+  }
+  td.sorting_1 {
+    @apply bg-blue-100 text-black;
+  }
+}

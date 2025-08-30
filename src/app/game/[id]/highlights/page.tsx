@@ -1,0 +1,104 @@
+'use client';
+
+import React, { useEffect, useState, useRef } from 'react';
+import GameBodySkeleton from '@/app/components/GameBodySkeleton';
+import { redirect, useParams } from 'next/navigation';
+import VideoCard from '@/app/components/VideoCard';
+import { useGameContext } from '@/app/contexts/GameContext';
+import { formatLocalizedDate, formatLocalizedTime } from '@/app/utils/formatters';
+import type { VideoItemBase, VideoApiResponse } from '@/app/types/video';
+
+const Highlights: React.FC = () => {
+  const { id } = useParams() as { id: string };
+  const { gameState } = useGameContext();
+  const videoPlayerRef = useRef<HTMLIFrameElement | null>(null);
+  const [videos, setVideos] = useState<VideoItemBase[] | null>(null);
+  const [activeVideo, setActiveVideo] = useState<VideoItemBase | null>(null);
+
+  useEffect(() => {
+    const fetchGameVideos = async () => {
+      try {
+        const videosResponse = await fetch(
+          `https://forge-dapi.d3.nhle.com/v2/content/en-us/videos?tags.slug=gameid-${id}&context.slug=nhl`,
+          { cache: 'no-store' }
+        );
+        const v: VideoApiResponse = await videosResponse.json();
+        setVideos(v.items as VideoItemBase[]);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching related videos:', error);
+      }
+    };
+    fetchGameVideos();
+    if (['PRE', 'LIVE', 'CRIT'].includes(gameState || '')) {
+      const intervalId = setInterval(fetchGameVideos, 20000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [id, gameState]);
+
+  if (!videos) {
+    return <GameBodySkeleton />;
+  }
+  if (['PRE', 'FUT'].includes(gameState || '')) {
+    return redirect(`/game/${id}`);
+  }
+
+  if (videos.length === 0) {
+    return (
+      <div className="text-center">
+        <div className="p-10 text-2xl mx-40">
+          <div className="text-center bg-gray-500 aspect-video p-10 items-center opacity-50 animate-pulse" />
+          <div className="my-5">No game highlight videos yet.</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div id="viewTop" className="mb-10">
+      {activeVideo && (
+        <div className="mb-5">
+          <iframe
+            ref={videoPlayerRef}
+            src={`https://players.brightcove.net/${activeVideo.fields.brightcoveAccountId}/default_default/index.html?videoId=${activeVideo.fields.brightcoveId}`}
+            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            className="w-full aspect-video"
+            loading="lazy"
+            title={activeVideo.fields.title}
+          />
+          <div className="text-3xl font-bold my-5">{activeVideo.title}</div>
+          <div className="my-5">{activeVideo.fields.longDescription}</div>
+          <div className="my-5">
+            {formatLocalizedDate(activeVideo.contentDate)}{' '}
+            {formatLocalizedTime(activeVideo.contentDate)}
+          </div>
+          <hr className="my-3" />
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {videos.map((item, i) => (
+          <VideoCard
+            key={i}
+            item={item}
+            className="col-span-1"
+            handleCardClick={(e) => {
+              const myDiv = document.getElementById('viewTop');
+              if (myDiv) {
+                const rect = myDiv.getBoundingClientRect();
+                e.preventDefault();
+                setActiveVideo(item);
+                window.scrollTo({ top: window.scrollY + rect.top - 200, behavior: 'smooth' });
+              }
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Highlights;
