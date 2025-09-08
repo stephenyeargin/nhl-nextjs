@@ -30,18 +30,21 @@ const DraftYearSelect: React.FC<DraftYearSelectProps> = ({ draftYears, draftYear
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <div className="w-20 text-right">
-        {prevYear && (
-          <button onClick={handlePrevYear} className="font-bold underline" type="button">
-            « {prevYear}
-          </button>
-        )}
-      </div>
+    <div className="inline-flex items-stretch gap-1 rounded-md bg-inherit border overflow-hidden whitespace-nowrap">
+      <button
+        type="button"
+        onClick={handlePrevYear}
+        disabled={!prevYear}
+        className="px-3 py-2 text-sm font-semibold disabled:opacity-30 whitespace-nowrap"
+        aria-label={prevYear ? `Go to ${prevYear} draft` : 'No previous draft year'}
+      >
+        « {prevYear}
+      </button>
       <select
-        className="p-2 rounded text-xl border bg-inherit text-black dark:text-white"
+        className="px-3 py-2 text-base font-bold bg-inherit whitespace-nowrap border-l border-r"
         value={draftYear}
         onChange={handleDraftYearChange}
+        aria-label="Draft year"
       >
         {draftYears.map((y) => (
           <option key={y} value={y}>
@@ -49,13 +52,15 @@ const DraftYearSelect: React.FC<DraftYearSelectProps> = ({ draftYears, draftYear
           </option>
         ))}
       </select>
-      <div className="w-20 text-left">
-        {nextYear && (
-          <button onClick={handleNextYear} className="font-bold underline" type="button">
-            {nextYear} »
-          </button>
-        )}
-      </div>
+      <button
+        type="button"
+        onClick={handleNextYear}
+        disabled={!nextYear}
+        className="px-3 py-2 text-sm font-semibold disabled:opacity-30 whitespace-nowrap"
+        aria-label={nextYear ? `Go to ${nextYear} draft` : 'No next draft year'}
+      >
+        {nextYear} »
+      </button>
     </div>
   );
 };
