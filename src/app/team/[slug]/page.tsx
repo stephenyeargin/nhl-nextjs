@@ -3,17 +3,14 @@ import GameTile from '@/app/components/GameTile';
 import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation, getTeamDataBySlug } from '@/app/utils/teamData';
-import {
-  formatOrdinalNumber,
-  formatStat,
-  formatTextColorByBackgroundColor,
-} from '@/app/utils/formatters';
+import { formatOrdinalNumber, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 import type { TeamSlugParam } from '@/app/types/routeParams';
 import StoryCard from '@/app/components/StoryCard';
 import TeamSchedule from '@/app/components/TeamSchedule';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faNewspaper } from '@fortawesome/free-solid-svg-icons';
+import TeamStatsSummary from '@/app/components/TeamStatsSummary';
 
 export const metadata = {
   title: 'Team Schedule & Stats',
@@ -172,54 +169,7 @@ export default async function SchedulePage(props: any) {
         </h1>
       </div>
 
-      {teamStanding && (
-        <div className="mb-5 overflow-x-scroll scrollbar-hidden">
-          <div className="flex flex-row mb-5 gap-2">
-            {(
-              [
-                { label: 'Games Played', value: teamStanding.gamesPlayed },
-                {
-                  label: 'Overall Record',
-                  value: `${teamStanding.wins}-${teamStanding.losses}-${teamStanding.otLosses}`,
-                },
-                { label: 'Points', value: teamStanding.points },
-                { label: 'Points %', value: formatStat(teamStanding.pointPctg, 3) },
-                { label: 'Regulation Wins', value: teamStanding.regulationWins },
-                { label: 'R+OT Wins', value: teamStanding.regulationPlusOtWins },
-                { label: 'Goals For', value: teamStanding.goalFor },
-                { label: 'Goals Against', value: teamStanding.goalAgainst },
-                { label: 'Goal Differential', value: teamStanding.goalDifferential },
-                {
-                  label: 'Home Record',
-                  value: `${teamStanding.homeWins}-${teamStanding.homeLosses}-${teamStanding.homeOtLosses}`,
-                },
-                {
-                  label: 'Road Record',
-                  value: `${teamStanding.roadWins}-${teamStanding.roadLosses}-${teamStanding.roadOtLosses}`,
-                },
-                {
-                  label: 'Shootout Record',
-                  value: `${teamStanding.shootoutWins}-${teamStanding.shootoutLosses}`,
-                },
-                {
-                  label: 'Last 10 Record',
-                  value: `${teamStanding.l10Wins}-${teamStanding.l10Losses}-${teamStanding.l10OtLosses}`,
-                },
-                { label: 'Streak', value: `${teamStanding.streakCode}${teamStanding.streakCount}` },
-              ] as const
-            ).map((stat, i) => (
-              <div
-                key={i}
-                className="flex flex-col p-2 bg-transparent text-center border rounded content-center"
-                style={{ minWidth: '7rem' }}
-              >
-                <div className="text-2xl capitalize">{stat.value}</div>
-                <div className="text-xs font-light">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {teamStanding && <TeamStatsSummary className="mb-8" standing={teamStanding} />}
 
       <div className="my-3 text-center text-xs">
         <Link href={`https://nhl.com/${team.slug}`} className="underline font-bold">

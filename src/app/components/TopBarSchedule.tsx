@@ -65,19 +65,51 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
       try {
         const response = await fetch('/api/nhl/scoreboard/now', { cache: 'reload' });
         const data = await response.json();
+        // Establish initial target date preference order
+        let targetDate =
+          focusedDate || gameDate || data.focusedDate || data.gamesByDate[0]?.date || null;
 
-        // If focusedDate is not set initially, set it from the API response
-        if (!focusedDate) {
-          setFocusedDate(gameDate || data.focusedDate || data.gamesByDate[0]?.date);
-        }
-
-        // Set the available dates from the API response
+        // Set list of all dates provided by API (even those without games)
         setDates(data.gamesByDate.map((d: any) => d.date));
 
-        // Find the games for the focused date
-        const gamesForFocusedDate =
-          data.gamesByDate.find((g: any) => focusedDate === g.date)?.games || [];
-        setGames(sortGamesByState(gamesForFocusedDate));
+        const findGames = (date: string | null) =>
+          date ? data.gamesByDate.find((g: any) => date === g.date)?.games || [] : [];
+
+        let gamesForTarget = findGames(targetDate);
+
+        // If no games for the chosen date, find the closest date with games.
+        if (targetDate && gamesForTarget.length === 0) {
+          const candidates = data.gamesByDate.filter(
+            (d: any) => Array.isArray(d.games) && d.games.length > 0
+          );
+
+          // Helper to compute closest date (prefers later date when equidistant)
+          if (candidates.length > 0) {
+            const pivot = dayjs(targetDate);
+            let best = candidates[0];
+            let bestDiff = Math.abs(dayjs(best.date).diff(pivot, 'day'));
+            for (const c of candidates) {
+              const diff = Math.abs(dayjs(c.date).diff(pivot, 'day'));
+              if (diff < bestDiff) {
+                best = c;
+                bestDiff = diff;
+              } else if (diff === bestDiff && dayjs(c.date).isAfter(dayjs(best.date))) {
+                // Tie -> choose the later calendar date
+                best = c;
+              }
+            }
+            if (best.date !== targetDate) {
+              targetDate = best.date;
+              setFocusedDate(best.date); // trigger highlight update
+              gamesForTarget = best.games; // use these games immediately (avoid flash)
+            }
+          }
+        } else if (!focusedDate && targetDate) {
+          // If we just derived an initial date (with games) set it.
+          setFocusedDate(targetDate);
+        }
+
+        setGames(sortGamesByState(gamesForTarget));
       } catch (error) {
         console.error('Error fetching games:', error);
       }
@@ -95,7 +127,38 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
           const data = await response.json();
           const gamesForFocusedDate =
             data.gamesByDate.find((g: any) => focusedDate === g.date)?.games || [];
-          setGames(sortGamesByState(gamesForFocusedDate));
+          if (gamesForFocusedDate.length > 0) {
+            setGames(sortGamesByState(gamesForFocusedDate));
+
+            return;
+          }
+          // Fallback again if the currently focused date now has zero games (e.g., data update)
+          const candidates = data.gamesByDate.filter(
+            (d: any) => Array.isArray(d.games) && d.games.length > 0
+          );
+          if (candidates.length > 0 && focusedDate) {
+            const pivot = dayjs(focusedDate);
+            let best = candidates[0];
+            let bestDiff = Math.abs(dayjs(best.date).diff(pivot, 'day'));
+            for (const c of candidates) {
+              const diff = Math.abs(dayjs(c.date).diff(pivot, 'day'));
+              if (diff < bestDiff) {
+                best = c;
+                bestDiff = diff;
+              } else if (diff === bestDiff && dayjs(c.date).isAfter(dayjs(best.date))) {
+                best = c;
+              }
+            }
+            if (best.date !== focusedDate) {
+              setFocusedDate(best.date);
+              setGames(sortGamesByState(best.games));
+
+              return;
+            }
+            setGames(sortGamesByState(best.games));
+          } else {
+            setGames([]);
+          }
         } catch (error) {
           console.error('Error fetching games on interval:', error);
         }
