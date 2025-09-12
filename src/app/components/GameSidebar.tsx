@@ -32,14 +32,8 @@ interface SimpleGame {
 }
 const gameIsInProgress = (game: SimpleGame) => {
   const state = GAME_STATES[game.gameState as keyof typeof GAME_STATES];
-  switch (state) {
-    case GAME_STATES.PRE:
-    case GAME_STATES.LIVE:
-    case GAME_STATES.CRIT:
-      return true;
-    default:
-      return false;
-  }
+
+  return [GAME_STATES.PRE, GAME_STATES.LIVE, GAME_STATES.CRIT].includes(state);
 };
 
 interface SimplePlayer {
@@ -47,15 +41,11 @@ interface SimplePlayer {
   firstName?: { default?: string };
   lastName?: { default?: string };
 }
-const renderPlayer = (player: SimplePlayer) => {
-  return (
-    <>
-      <Link href={`/player/${player.id}`}>
-        {player.firstName?.default} {player.lastName?.default}
-      </Link>
-    </>
-  );
-};
+const renderPlayer = (player: SimplePlayer) => (
+  <Link href={`/player/${player.id}`}>
+    {player.firstName?.default} {player.lastName?.default}
+  </Link>
+);
 
 const GameSidebar = () => {
   const [videoPlayerLabel, setVideoPlayerLabel] = useState<string | null>(null);
@@ -91,26 +81,59 @@ const GameSidebar = () => {
   const { homeTeam, awayTeam, game, rightRail, story } = gameData;
   const { gameVideo } = rightRail;
 
+  // Enrich team objects (mutating like original implementation to preserve downstream expectations)
   homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev, true) || {
-    teamColor: '#000',
+    teamColor: '#999',
     secondaryTeamColor: '#000',
   };
   awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev, false) || {
-    teamColor: '#000',
+    teamColor: '#999',
     secondaryTeamColor: '#000',
   };
 
-  // Update logo map
-  const logos: Record<string, string> = {};
-  logos[homeTeam.abbrev as string] = homeTeam.logo as string;
-  logos[awayTeam.abbrev as string] = awayTeam.logo as string;
+  // Logos map
+  const logos: Record<string, string> = {
+    [homeTeam.abbrev as string]: homeTeam.logo as string,
+    [awayTeam.abbrev as string]: awayTeam.logo as string,
+  };
 
+  // Flatten game stats for quick lookup
   const gameStats: Record<string, { awayValue: any; homeValue: any }> = {};
   story.summary?.teamGameStats?.forEach((s: any) => {
-    if (s && s.category) {
+    if (s?.category) {
       gameStats[s.category] = { awayValue: s.awayValue, homeValue: s.homeValue };
     }
   });
+
+  const gameStatRows = [
+    { stat: 'sog' },
+    { stat: 'faceoffWinningPctg' },
+    { stat: 'powerPlayPctg', rank: 'powerPlay' },
+    { stat: 'pim' },
+    { stat: 'hits' },
+    { stat: 'blockedShots' },
+    { stat: 'giveaways' },
+    { stat: 'takeaways' },
+  ];
+
+  const seasonStatRows = [
+    { stat: 'ppPctg' },
+    { stat: 'pkPctg' },
+    { stat: 'faceoffWinningPctg' },
+    { stat: 'goalsForPerGamePlayed' },
+    { stat: 'goalsAgainstPerGamePlayed' },
+  ];
+
+  const handleOpenVideo = (videoId: string | undefined, label: string) => {
+    if (!videoId) {
+      return;
+    }
+    setVideoPlayerUrl(
+      `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${videoId}`
+    );
+    setVideoPlayerLabel(label);
+    setVideoPlayerVisible(true);
+  };
 
   const handleVideoPlayerClose = () => {
     setVideoPlayerVisible(false);
@@ -128,13 +151,7 @@ const GameSidebar = () => {
         <div className="flex justify-items-end gap-2 mb-3">
           {gameVideo?.threeMinRecap && (
             <button
-              onClick={() => {
-                setVideoPlayerUrl(
-                  `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.threeMinRecap}`
-                );
-                setVideoPlayerLabel('3:00 Recap');
-                setVideoPlayerVisible(true);
-              }}
+              onClick={() => handleOpenVideo(gameVideo.threeMinRecap, '3:00 Recap')}
               className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
             >
               <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> 3:00 Recap
@@ -142,13 +159,7 @@ const GameSidebar = () => {
           )}
           {gameVideo?.condensedGame && (
             <button
-              onClick={() => {
-                setVideoPlayerUrl(
-                  `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${gameVideo.condensedGame}`
-                );
-                setVideoPlayerLabel('Condensed Game');
-                setVideoPlayerVisible(true);
-              }}
+              onClick={() => handleOpenVideo(gameVideo.condensedGame, 'Condensed Game')}
               className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
             >
               <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Condensed Game
@@ -219,68 +230,22 @@ const GameSidebar = () => {
                 />
               </div>
             </div>
-            <StatComparisonRow
-              awayStat={gameStats.sog.awayValue}
-              awayTeam={awayTeam as any}
-              homeStat={gameStats.sog.homeValue}
-              homeTeam={homeTeam as any}
-              stat="sog"
-            />
-            <StatComparisonRow
-              awayStat={gameStats.faceoffWinningPctg.awayValue}
-              awayTeam={awayTeam as any}
-              homeStat={gameStats.faceoffWinningPctg.homeValue}
-              homeTeam={homeTeam as any}
-              stat="faceoffWinningPctg"
-            />
-            <StatComparisonRow
-              awayStat={gameStats.powerPlayPctg.awayValue}
-              awayStatRank={gameStats.powerPlay.awayValue}
-              awayTeam={awayTeam as any}
-              homeStat={gameStats.powerPlayPctg.homeValue}
-              homeStatRank={gameStats.powerPlay.homeValue}
-              homeTeam={homeTeam as any}
-              stat="powerPlayPctg"
-            />
-            <StatComparisonRow
-              awayStat={gameStats.pim.awayValue}
-              awayTeam={awayTeam as any}
-              homeStat={gameStats.pim.homeValue}
-              homeTeam={homeTeam as any}
-              stat="pim"
-            />
-            <StatComparisonRow
-              awayStat={gameStats.hits.awayValue}
-              awayTeam={awayTeam as any}
-              homeStat={gameStats.hits.homeValue}
-              homeTeam={homeTeam as any}
-              stat="hits"
-            />
-            <StatComparisonRow
-              awayStat={gameStats.blockedShots.awayValue}
-              awayTeam={awayTeam as any}
-              homeStat={gameStats.blockedShots.homeValue}
-              homeTeam={homeTeam as any}
-              stat="blockedShots"
-            />
-            <StatComparisonRow
-              awayStat={gameStats.giveaways.awayValue}
-              awayTeam={awayTeam as any}
-              homeStat={gameStats.giveaways.homeValue}
-              homeTeam={homeTeam as any}
-              stat="giveaways"
-            />
-            <StatComparisonRow
-              awayStat={gameStats.takeaways.awayValue}
-              awayTeam={awayTeam as any}
-              homeStat={gameStats.takeaways.homeValue}
-              homeTeam={homeTeam as any}
-              stat="takeaways"
-            />
+            {gameStatRows.map(({ stat, rank }) => (
+              <StatComparisonRow
+                key={stat}
+                awayStat={gameStats?.[stat]?.awayValue || 0}
+                homeStat={gameStats?.[stat]?.homeValue || 0}
+                awayStatRank={rank ? gameStats?.[rank]?.awayValue : undefined}
+                homeStatRank={rank ? gameStats?.[rank]?.homeValue : undefined}
+                awayTeam={awayTeam as any}
+                homeTeam={homeTeam as any}
+                stat={stat as any}
+              />
+            ))}
           </div>
         </div>
       )}
-      {rightRail.teamSeasonStats && (
+      {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
         <div className="mb-5">
           <div className="flex text-center items-center justify-between">
             <div className="w-1/4 p-2 text-bold flex justify-center">
@@ -304,61 +269,24 @@ const GameSidebar = () => {
             </div>
           </div>
 
-          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
-            <StatComparisonRow
-              awayStat={rightRail.teamSeasonStats.awayTeam.ppPctg || 0}
-              awayStatRank={rightRail.teamSeasonStats.awayTeam.ppPctgRank}
-              awayTeam={awayTeam as any}
-              homeStat={rightRail.teamSeasonStats.homeTeam.ppPctg || 0}
-              homeStatRank={rightRail.teamSeasonStats.homeTeam.ppPctgRank}
-              homeTeam={homeTeam as any}
-              stat="ppPctg"
-            />
-          )}
-          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
-            <StatComparisonRow
-              awayStat={rightRail.teamSeasonStats.awayTeam.pkPctg || 0}
-              awayStatRank={rightRail.teamSeasonStats.awayTeam.pkPctgRank}
-              awayTeam={awayTeam as any}
-              homeStat={rightRail.teamSeasonStats.homeTeam.pkPctg || 0}
-              homeStatRank={rightRail.teamSeasonStats.homeTeam.pkPctgRank}
-              homeTeam={homeTeam as any}
-              stat="pkPctg"
-            />
-          )}
-          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
-            <StatComparisonRow
-              awayStat={rightRail.teamSeasonStats.awayTeam.faceoffWinningPctg || 0}
-              awayStatRank={rightRail.teamSeasonStats.awayTeam.faceoffWinningPctgRank}
-              awayTeam={awayTeam as any}
-              homeStat={rightRail.teamSeasonStats.homeTeam.faceoffWinningPctg || 0}
-              homeStatRank={rightRail.teamSeasonStats.homeTeam.faceoffWinningPctgRank}
-              homeTeam={homeTeam as any}
-              stat="faceoffWinningPctg"
-            />
-          )}
-          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
-            <StatComparisonRow
-              awayStat={rightRail.teamSeasonStats.awayTeam.goalsForPerGamePlayed || 0}
-              awayStatRank={rightRail.teamSeasonStats.awayTeam.goalsForPerGamePlayedRank}
-              awayTeam={awayTeam as any}
-              homeStat={rightRail.teamSeasonStats.homeTeam.goalsForPerGamePlayed || 0}
-              homeStatRank={rightRail.teamSeasonStats.homeTeam.goalsForPerGamePlayedRank}
-              homeTeam={homeTeam as any}
-              stat="goalsForPerGamePlayed"
-            />
-          )}
-          {rightRail.teamSeasonStats?.awayTeam && rightRail.teamSeasonStats?.homeTeam && (
-            <StatComparisonRow
-              awayStat={rightRail.teamSeasonStats.awayTeam.goalsAgainstPerGamePlayed || 0}
-              awayStatRank={rightRail.teamSeasonStats.awayTeam.goalsAgainstPerGamePlayedRank}
-              awayTeam={awayTeam as any}
-              homeStat={rightRail.teamSeasonStats.homeTeam.goalsAgainstPerGamePlayed || 0}
-              homeStatRank={rightRail.teamSeasonStats.homeTeam.goalsAgainstPerGamePlayedRank}
-              homeTeam={homeTeam as any}
-              stat="goalsAgainstPerGamePlayed"
-            />
-          )}
+          {(() => {
+            const seasonStats = rightRail.teamSeasonStats; // already truthy due to outer conditional
+            const awaySeason: any = seasonStats.awayTeam;
+            const homeSeason: any = seasonStats.homeTeam;
+
+            return seasonStatRows.map(({ stat }) => (
+              <StatComparisonRow
+                key={stat}
+                awayStat={awaySeason?.[stat] || 0}
+                homeStat={homeSeason?.[stat] || 0}
+                awayStatRank={awaySeason?.[`${stat}Rank`]}
+                homeStatRank={homeSeason?.[`${stat}Rank`]}
+                awayTeam={awayTeam as any}
+                homeTeam={homeTeam as any}
+                stat={stat as any}
+              />
+            ));
+          })()}
         </div>
       )}
 
