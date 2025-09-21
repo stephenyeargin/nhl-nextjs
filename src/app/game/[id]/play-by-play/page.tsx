@@ -269,7 +269,8 @@ const PlayByPlay: React.FC = () => {
               />
               <div>
                 <div className="font-medium text-lg mb-3">
-                  {renderPlayer(e.scoringPlayerId)} ({e.scoringPlayerTotal}) scored{' '}
+                  {renderPlayer(e.scoringPlayerId)}{' '}
+                  {e.scoringPlayerTotal ? `(${e.scoringPlayerTotal})` : ''} scored{' '}
                   {e.shotType
                     ? `(${(GAME_EVENTS as Record<string, string>)[e.shotType]?.toLowerCase()})`
                     : ''}
