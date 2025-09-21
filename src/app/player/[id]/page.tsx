@@ -309,7 +309,21 @@ export default function PlayerPage() {
         className="p-2 bg-transparent text-center border rounded content-center"
         style={{ minWidth: '7rem' }}
       >
-        <div className="text-2xl capitalize">{formatStat(value, precision)}</div>
+        <div className="text-2xl capitalize">
+          {stat === 'plusMinus'
+            ? (() => {
+                if (value === undefined || value === null || value === '') {
+                  return '--';
+                }
+                const n = typeof value === 'number' ? value : Number(value);
+                if (Number.isNaN(n)) {
+                  return '--';
+                }
+
+                return n > 0 ? `+${n}` : `${n}`;
+              })()
+            : formatStat(value, precision)}
+        </div>
         <div className="text-xs font-light">{title}</div>
       </div>
     );
@@ -341,6 +355,20 @@ export default function PlayerPage() {
     stats: PlayerSeasonTotals[];
     showLeague: boolean;
   }) => {
+    // Determine which stat headers are actually present in this dataset (so columns are consistent per table)
+    const visibleHeaders = statHeaders.filter((h) => {
+      const key = h.key as string;
+      const altKey = getAltKey(h);
+
+      const present = stats.some(
+        (season) =>
+          Object.prototype.hasOwnProperty.call(season, key) ||
+          (altKey && Object.prototype.hasOwnProperty.call(season, altKey))
+      );
+
+      return present;
+    });
+
     return (
       <div className="overflow-x-auto">
         <table className={statsStyles.statsTable}>
@@ -357,19 +385,10 @@ export default function PlayerPage() {
                   League
                 </th>
               )}
-              {statHeaders.map((h) => {
+              {visibleHeaders.map((h) => {
                 const key = h.key;
                 const label = h.label;
                 const title = (h as any).title;
-                const altKey = getAltKey(h);
-                const statExists = seasonTotals.some(
-                  (season) =>
-                    Object.prototype.hasOwnProperty.call(season, key) ||
-                    (altKey && Object.prototype.hasOwnProperty.call(season, altKey))
-                );
-                if (!statExists) {
-                  return null;
-                }
 
                 return (
                   <th
@@ -402,15 +421,10 @@ export default function PlayerPage() {
                   </div>
                 </td>
                 {showLeague && <td className="text-left">{season.leagueAbbrev}</td>}
-                {statHeaders.map((h) => {
+                {visibleHeaders.map((h) => {
                   const key = h.key;
                   const altKey = getAltKey(h);
                   const precision = getPrecision(h);
-                  const hasKey = Object.prototype.hasOwnProperty.call(season, key);
-                  const hasAlt = altKey && Object.prototype.hasOwnProperty.call(season, altKey);
-                  if (!hasKey && !hasAlt) {
-                    return null;
-                  }
                   const primaryVal = season[key];
                   const altVal = altKey ? season[altKey] : undefined;
                   const value =
@@ -419,13 +433,27 @@ export default function PlayerPage() {
                       : typeof altVal === 'number' || typeof altVal === 'string'
                         ? altVal
                         : undefined;
-                  if (value === undefined) {
-                    return <td key={key} className="p-2 border text-center text-xs" />;
-                  }
+
+                  // Always render a cell; show '--' when missing to prevent row shift
+                  const content = (() => {
+                    if (value === undefined) {
+                      return '--';
+                    }
+                    if (key === 'plusMinus') {
+                      const n = typeof value === 'number' ? value : Number(value);
+                      if (Number.isNaN(n)) {
+                        return '--';
+                      }
+
+                      return n > 0 ? `+${n}` : `${n}`;
+                    }
+
+                    return formatStat(value as any, precision);
+                  })();
 
                   return (
                     <td key={key} className="p-2 border text-center text-xs">
-                      {formatStat(value as any, precision)}
+                      {content}
                     </td>
                   );
                 })}
@@ -639,9 +667,11 @@ export default function PlayerPage() {
                     const altKey = getAltKey(h);
                     const title = (h as any).title;
                     const label = h.label;
-                    const show =
-                      Object.prototype.hasOwnProperty.call(last5Games[0], key) ||
-                      (altKey && Object.prototype.hasOwnProperty.call(last5Games[0], altKey));
+                    const show = last5Games.some(
+                      (g) =>
+                        Object.prototype.hasOwnProperty.call(g, key) ||
+                        (altKey && Object.prototype.hasOwnProperty.call(g, altKey))
+                    );
                     if (!show) {
                       return null;
                     }
@@ -702,23 +732,40 @@ export default function PlayerPage() {
                       const altKey = getAltKey(h);
                       const precision = getPrecision(h);
                       const unit = getUnit(h);
-                      const show =
-                        Object.prototype.hasOwnProperty.call(last5Games[0], key) ||
-                        (altKey && Object.prototype.hasOwnProperty.call(last5Games[0], altKey));
+                      const show = last5Games.some(
+                        (gg) =>
+                          Object.prototype.hasOwnProperty.call(gg, key) ||
+                          (altKey && Object.prototype.hasOwnProperty.call(gg, altKey))
+                      );
                       if (!show) {
                         return null;
                       }
 
                       return (
                         <td key={key} className="p-2 border text-center text-xs">
-                          {g[key] !== undefined &&
-                          (typeof g[key] === 'number' || typeof g[key] === 'string') ? (
-                            <>{formatStat(g[key] as any, precision, unit)}</>
-                          ) : altKey &&
-                            g[altKey] !== undefined &&
-                            (typeof g[altKey] === 'number' || typeof g[altKey] === 'string') ? (
-                            <>{formatStat(g[altKey] as any, precision, unit)}</>
-                          ) : null}
+                          {(() => {
+                            const primary = g[key];
+                            const alt = altKey ? g[altKey] : undefined;
+                            const val =
+                              typeof primary === 'number' || typeof primary === 'string'
+                                ? primary
+                                : typeof alt === 'number' || typeof alt === 'string'
+                                  ? alt
+                                  : undefined;
+                            if (val === undefined) {
+                              return '--';
+                            }
+                            if (key === 'plusMinus') {
+                              const n = typeof val === 'number' ? val : Number(val);
+                              if (Number.isNaN(n)) {
+                                return '--';
+                              }
+
+                              return n > 0 ? `+${n}` : `${n}`;
+                            }
+
+                            return formatStat(val as any, precision, unit);
+                          })()}
                         </td>
                       );
                     })}
