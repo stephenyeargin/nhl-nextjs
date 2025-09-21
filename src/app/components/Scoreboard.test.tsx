@@ -34,13 +34,14 @@ describe('Scoreboard', () => {
       { periodDescriptor: { number: 4 }, away: 0, home: 0 }, // empty OT (skipped)
       { periodDescriptor: { number: 5 }, away: 0, home: 0 }, // empty 2OT (skipped)
     ]);
-    render(<Scoreboard game={makeGame()} linescore={linescore} />);
+    const { asFragment } = render(<Scoreboard game={makeGame()} linescore={linescore} />);
     // Column headers only include 1,2,3 and T
     const headers = screen.getAllByRole('columnheader').map((h) => (h as HTMLElement).textContent);
     expect(headers).toEqual(['', '1', '2', '3', 'T']);
     // Ensure skipped OT headers 4 and 5 are absent
     expect(headers.includes('4')).toBe(false);
     expect(headers.includes('5')).toBe(false);
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('renders overtime period when it has scoring', () => {
@@ -53,7 +54,7 @@ describe('Scoreboard', () => {
       ],
       { away: 3, home: 2 }
     );
-    render(
+    const { asFragment } = render(
       <Scoreboard
         game={makeGame({ periodDescriptor: { number: 4, periodType: 'OT' } })}
         linescore={linescore}
@@ -61,5 +62,6 @@ describe('Scoreboard', () => {
     );
     const headers = screen.getAllByRole('columnheader').map((h) => (h as HTMLElement).textContent);
     expect(headers).toEqual(['', '1', '2', '3', '4', 'T']);
+    expect(asFragment()).toMatchSnapshot();
   });
 });

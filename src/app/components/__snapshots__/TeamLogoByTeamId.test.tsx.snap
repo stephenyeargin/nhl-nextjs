@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeamLogoByTeamId renders away team logo when teamId matches away 1`] = `
+<DocumentFragment>
+  <div
+    class="h-10 w-10"
+    data-alt="CBJ"
+    data-testid="team-logo"
+  />
+</DocumentFragment>
+`;
+
+exports[`TeamLogoByTeamId renders home team logo when teamId matches home 1`] = `
+<DocumentFragment>
+  <div
+    class="h-16 w-16"
+    data-alt="NSH"
+    data-testid="team-logo"
+  />
+</DocumentFragment>
+`;
+
+exports[`TeamLogoByTeamId renders nothing when teamId is unknown 1`] = `<DocumentFragment />`;

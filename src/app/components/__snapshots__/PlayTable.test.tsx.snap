@@ -1,0 +1,193 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlayTable renders empty state when no plays 1`] = `
+<DocumentFragment>
+  <div
+    class="overflow-x-auto"
+  >
+    <table
+      class="text-xs min-w-full table-auto"
+    >
+      <thead>
+        <tr
+          class="hidden"
+        >
+          <th
+            class="p-2 text-center"
+          >
+            Time
+          </th>
+          <th
+            class="p-2 text-center"
+          >
+            Event Type
+          </th>
+          <th
+            class="p-2 text-center"
+          >
+            Details
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="p-2 text-center"
+            colspan="3"
+          >
+            No matching plays.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PlayTable renders rows and delegates details and logos 1`] = `
+<DocumentFragment>
+  <div
+    class="overflow-x-auto"
+  >
+    <table
+      class="text-xs min-w-full table-auto"
+    >
+      <thead>
+        <tr
+          class="hidden"
+        >
+          <th
+            class="p-2 text-center"
+          >
+            Time
+          </th>
+          <th
+            class="p-2 text-center"
+          >
+            Event Type
+          </th>
+          <th
+            class="p-2 text-center"
+          >
+            Details
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="bg-slate-500/10"
+        >
+          <td
+            class="p-2 text-xs text-center"
+          >
+            <div
+              class="mt-1"
+            >
+              <span
+                class="p-1 mx-auto font-bold border rounded"
+              >
+                12:34
+              </span>
+            </div>
+            <div
+              class="p-2"
+            >
+              1st Period
+            </div>
+          </td>
+          <td
+            class="p-2 flex flex-wrap gap-2 items-center"
+          >
+            <div
+              class="w-10 h-10"
+            >
+              <div
+                data-testid="logo-1"
+              />
+            </div>
+            <div>
+              <span
+                class="hidden lg:block p-1 border rounded font-bold text-xs uppercase"
+              >
+                Goal
+              </span>
+              <div>
+                <img
+                  alt="Goal"
+                  class="p-2 w-12 h-12 animate-pulse mx-auto"
+                  data-nimg="1"
+                  decoding="async"
+                  height="200"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fimg.jpg&w=640&q=75"
+                  srcset="/_next/image?url=%2Fimg.jpg&w=256&q=75 1x, /_next/image?url=%2Fimg.jpg&w=640&q=75 2x"
+                  style="color: transparent;"
+                  width="200"
+                />
+              </div>
+            </div>
+          </td>
+          <td
+            class="p-2 text-sm"
+          >
+            <div
+              data-testid="details-1"
+            >
+              D
+            </div>
+          </td>
+        </tr>
+        <tr
+          class=""
+        >
+          <td
+            class="p-2 text-xs text-center"
+          >
+            <div
+              class="mt-1"
+            >
+              <span
+                class="p-1 mx-auto font-bold border rounded"
+              >
+                05:00
+              </span>
+            </div>
+            <div
+              class="p-2"
+            >
+              1st Period
+            </div>
+          </td>
+          <td
+            class="p-2 flex flex-wrap gap-2 items-center"
+          >
+            <div
+              class="w-10 h-10"
+            >
+              <div
+                data-testid="logo-2"
+              />
+            </div>
+            <div>
+              <span
+                class="hidden lg:block p-1 border rounded font-bold text-xs uppercase"
+              >
+                Hit
+              </span>
+            </div>
+          </td>
+          <td
+            class="p-2 text-sm"
+          >
+            <div
+              data-testid="details-2"
+            >
+              D
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</DocumentFragment>
+`;

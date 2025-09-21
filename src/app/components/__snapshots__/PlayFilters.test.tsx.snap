@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlayFilters invokes handlers on change and displays selected values 1`] = `
+<DocumentFragment>
+  <div
+    class="flex justify-center items-center my-5 text-xs md:text-sm"
+  >
+    <button
+      data-testid="period-selector"
+    >
+      Period: 0
+    </button>
+    <div
+      class="mx-2"
+    >
+      <select
+        class="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
+      >
+        <option
+          value="all"
+        >
+          All Events
+        </option>
+        <option
+          value="goal"
+        >
+          Goals
+        </option>
+        <option
+          value="shot-on-goal"
+        >
+          Shots on Goal
+        </option>
+        <option
+          value="missed-shot"
+        >
+          Missed Shots
+        </option>
+        <option
+          value="blocked-shot"
+        >
+          Blocked Shots
+        </option>
+        <option
+          value="hit"
+        >
+          Hits
+        </option>
+        <option
+          value="giveaway"
+        >
+          Giveaways
+        </option>
+        <option
+          value="takeaway"
+        >
+          Takeaways
+        </option>
+        <option
+          value="delayed-penalty"
+        >
+          Delayed Penalties
+        </option>
+        <option
+          value="penalty"
+        >
+          Penalties
+        </option>
+        <option
+          value="faceoff"
+        >
+          Faceoffs
+        </option>
+        <option
+          value="stoppage"
+        >
+          Stoppage
+        </option>
+      </select>
+    </div>
+    <div>
+      <select
+        class="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
+      >
+        <option
+          value="all"
+        >
+          Both Teams
+        </option>
+        <option
+          value="2"
+        >
+          Columbus
+        </option>
+        <option
+          value="1"
+        >
+          Nashville
+        </option>
+      </select>
+    </div>
+  </div>
+</DocumentFragment>
+`;

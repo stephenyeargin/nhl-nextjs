@@ -56,10 +56,12 @@ describe('TopBarSchedule (smoke)', () => {
   });
 
   it('renders dates and switches focused date', async () => {
-    render(<TopBarSchedule gameDate="2024-10-01" />);
+    const { asFragment } = render(<TopBarSchedule gameDate="2024-10-01" />);
     await waitFor(() => expect(screen.getByText(/Oct 1/i)).toBeInTheDocument());
     expect(screen.getByTestId('game-tile')).toHaveTextContent('Game 1');
+    expect(asFragment()).toMatchSnapshot();
     fireEvent.click(screen.getByTitle(/October 2/i));
     await waitFor(() => expect(screen.getByTestId('game-tile')).toHaveTextContent('Game 2'));
+    expect(asFragment()).toMatchSnapshot();
   });
 });

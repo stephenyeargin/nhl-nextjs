@@ -143,7 +143,7 @@ jest.mock('../contexts/GameContext', () => ({
 
 describe('GameSidebar (smoke)', () => {
   it('renders key sections and opens video player', async () => {
-    render(<GameSidebar />);
+    const { asFragment } = render(<GameSidebar />);
 
     // Headings indicating most conditional blocks rendered
     expect(screen.getByText(/Game Stats/i)).toBeInTheDocument();
@@ -152,8 +152,14 @@ describe('GameSidebar (smoke)', () => {
     expect(screen.getByText(/Game Info/i)).toBeInTheDocument();
     expect(screen.getByText(/Game Reports/i)).toBeInTheDocument();
 
+    // Snapshot initial render
+    expect(asFragment()).toMatchSnapshot();
+
     // Click recap button to trigger FloatingVideoPlayer visibility
     fireEvent.click(screen.getByText(/3:00 Recap/i));
     await waitFor(() => expect(screen.getByTestId('video-player')).toBeInTheDocument());
+
+    // Snapshot after opening video
+    expect(asFragment()).toMatchSnapshot();
   });
 });

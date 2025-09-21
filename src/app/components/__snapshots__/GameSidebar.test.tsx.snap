@@ -1,0 +1,1022 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="flex justify-items-end gap-2 mb-3"
+    >
+      <button
+        class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+      >
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-circle-play fa-fw "
+          data-icon="circle-play"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"
+            fill="currentColor"
+          />
+        </svg>
+         3:00 Recap
+      </button>
+      <button
+        class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+      >
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-circle-play fa-fw "
+          data-icon="circle-play"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"
+            fill="currentColor"
+          />
+        </svg>
+         Condensed Game
+      </button>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div
+        class="flex text-center items-center"
+      >
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-AWY"
+          >
+            AWY
+          </span>
+        </div>
+        <div
+          class="w-1/2 p-2 text-2xl font-bold"
+        >
+          Shots
+        </div>
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-HOM"
+          >
+            HOM
+          </span>
+        </div>
+      </div>
+      <div
+        class="flex text-center bg-slate-500/10"
+      >
+        <div
+          class="w-1/4 p-2"
+        >
+          5
+        </div>
+        <div
+          class="w-1/2 p-3 text-xs"
+        >
+          P1
+        </div>
+        <div
+          class="w-1/4 p-2"
+        >
+          7
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div>
+        <div
+          class="flex text-center items-center justify-between"
+        >
+          <div
+            class="w-1/4 p-2 text-bold flex justify-center"
+          >
+            <span
+              data-testid="logo-AWY"
+            >
+              AWY
+            </span>
+          </div>
+          <div
+            class="w-1/2 p-2 text-2xl font-bold"
+          >
+            Game Stats
+          </div>
+          <div
+            class="w-1/4 p-2 text-bold flex justify-center"
+          >
+            <span
+              data-testid="logo-HOM"
+            >
+              HOM
+            </span>
+          </div>
+        </div>
+        <div
+          data-testid="stat-sog"
+        >
+          sog
+        </div>
+        <div
+          data-testid="stat-faceoffWinningPctg"
+        >
+          faceoffWinningPctg
+        </div>
+        <div
+          data-testid="stat-powerPlayPctg"
+        >
+          powerPlayPctg
+        </div>
+        <div
+          data-testid="stat-pim"
+        >
+          pim
+        </div>
+        <div
+          data-testid="stat-hits"
+        >
+          hits
+        </div>
+        <div
+          data-testid="stat-blockedShots"
+        >
+          blockedShots
+        </div>
+        <div
+          data-testid="stat-giveaways"
+        >
+          giveaways
+        </div>
+        <div
+          data-testid="stat-takeaways"
+        >
+          takeaways
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div
+        class="flex text-center items-center justify-between"
+      >
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-AWY"
+          >
+            AWY
+          </span>
+        </div>
+        <div
+          class="w-1/2 p-3"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            Season Stats
+          </div>
+          <div
+            class="text-xs text-center text-gray-500"
+          >
+            2024-25 
+          </div>
+        </div>
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-HOM"
+          >
+            HOM
+          </span>
+        </div>
+      </div>
+      <div
+        data-testid="stat-ppPctg"
+      >
+        ppPctg
+      </div>
+      <div
+        data-testid="stat-pkPctg"
+      >
+        pkPctg
+      </div>
+      <div
+        data-testid="stat-faceoffWinningPctg"
+      >
+        faceoffWinningPctg
+      </div>
+      <div
+        data-testid="stat-goalsForPerGamePlayed"
+      >
+        goalsForPerGamePlayed
+      </div>
+      <div
+        data-testid="stat-goalsAgainstPerGamePlayed"
+      >
+        goalsAgainstPerGamePlayed
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div
+        class="flex text-center items-center justify-between"
+      >
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-AWY"
+          >
+            AWY
+          </span>
+        </div>
+        <div
+          class="w-1/2 p-2 text-2xl font-bold"
+        >
+          Last 10 Games
+        </div>
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-HOM"
+          >
+            HOM
+          </span>
+        </div>
+      </div>
+      <div
+        class="flex text-center"
+      >
+        <div
+          class="w-1/2"
+        >
+          6-3-1 (W2)
+        </div>
+        <div
+          class="w-1/2"
+        >
+          5-4-1 (L1)
+        </div>
+      </div>
+      <div
+        class="flex text-center text-xs my-1 gap-1 bg-slate-500/10"
+      >
+        <div
+          class="p-2 w-1/2 font-bold"
+          style="border-width: 1pt; border-color: #123456;"
+        >
+          ABC (W)
+        </div>
+        <div
+          class="p-2 w-1/2 opacity-50"
+          style="border-width: 1pt; border-color: #123456;"
+        >
+          XYZ (L)
+        </div>
+      </div>
+      <div
+        class="flex text-center text-xs my-1 gap-1 "
+      >
+        <div
+          class="p-2 w-1/2 opacity-50"
+          style="border-width: 1pt; border-color: #123456;"
+        >
+          DEF (L)
+        </div>
+        <div
+          class="p-2 w-1/2 font-bold"
+          style="border-width: 1pt; border-color: #123456;"
+        >
+          QRS (W)
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div
+        class="p-2 text-2xl font-bold text-center"
+      >
+        Season Series
+      </div>
+      <div
+        class="text-center text-xs"
+      >
+        Series Tied 1-1
+      </div>
+      <div
+        class="grid grid-cols-12 gap-3 py-4 items-center"
+      >
+        <a
+          class="col-span-12 lg:col-span-6 p-1 mb-1 border rounded "
+          href="/game/1001"
+        >
+          <div
+            class="flex justify-between opacity-50"
+          >
+            <div
+              class="flex items-center font-bold gap-1"
+            >
+              <span
+                data-testid="logo-Logo"
+              >
+                Logo
+              </span>
+              AWY
+            </div>
+            <div
+              class="text-lg font-bold"
+            >
+              2
+            </div>
+          </div>
+          <div
+            class="flex justify-between "
+          >
+            <div
+              class="flex items-center font-bold gap-1"
+            >
+              <span
+                data-testid="logo-Logo"
+              >
+                Logo
+              </span>
+              HOM
+            </div>
+            <div
+              class="text-lg font-bold"
+            >
+              3
+            </div>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <div>
+              <span
+                class="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"
+              >
+                Final
+              </span>
+            </div>
+            <div>
+              <span
+                class="text-xs py-1"
+              >
+                Oct 1
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div
+      class="mb-5 text-xs"
+    >
+      <div
+        class="p-2 text-2xl font-bold text-center"
+      >
+        Game Info
+      </div>
+      <div
+        class="flex"
+      >
+        <div
+          class="w-full p-2"
+        >
+          <div
+            class="font-bold"
+          >
+            Officials
+          </div>
+          <div>
+            Referees: 
+            <span>
+              Ref A
+            </span>
+            <span>
+              , Ref B
+            </span>
+          </div>
+          <div>
+            Linesmen: 
+            <span>
+              Lines A
+            </span>
+            <span>
+              , Lines B
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex"
+      >
+        <div
+          class="w-1/2 p-2"
+        >
+          <div
+            class="my-2"
+          >
+            <div
+              class="font-bold"
+            >
+              AWY Head Coach
+            </div>
+            Coach Away
+          </div>
+          <div
+            class="my-2"
+          >
+            <div
+              class="font-bold"
+            >
+              AWY Scratches
+            </div>
+            No players listed.
+          </div>
+        </div>
+        <div
+          class="w-1/2 p-2"
+        >
+          <div
+            class="my-2"
+          >
+            <div
+              class="font-bold"
+            >
+              HOM Head Coach
+            </div>
+            Coach Home
+          </div>
+          <div
+            class="my-2"
+          >
+            <div
+              class="font-bold"
+            >
+              HOM Scratches
+            </div>
+            No players listed.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="p-2 text-2xl font-bold text-center"
+      >
+        Game Reports
+      </div>
+      <ul
+        class="text-xs flex flex-wrap mt-2"
+      >
+        <li
+          class="p-1 w-1/2 text-center"
+        >
+          <a
+            class="font-bold underline"
+            href="https://example.com/report"
+          >
+            GAME_SUMMARY
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="flex justify-items-end gap-2 mb-3"
+    >
+      <button
+        class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+      >
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-circle-play fa-fw "
+          data-icon="circle-play"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"
+            fill="currentColor"
+          />
+        </svg>
+         3:00 Recap
+      </button>
+      <button
+        class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+      >
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-circle-play fa-fw "
+          data-icon="circle-play"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"
+            fill="currentColor"
+          />
+        </svg>
+         Condensed Game
+      </button>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div
+        class="flex text-center items-center"
+      >
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-AWY"
+          >
+            AWY
+          </span>
+        </div>
+        <div
+          class="w-1/2 p-2 text-2xl font-bold"
+        >
+          Shots
+        </div>
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-HOM"
+          >
+            HOM
+          </span>
+        </div>
+      </div>
+      <div
+        class="flex text-center bg-slate-500/10"
+      >
+        <div
+          class="w-1/4 p-2"
+        >
+          5
+        </div>
+        <div
+          class="w-1/2 p-3 text-xs"
+        >
+          P1
+        </div>
+        <div
+          class="w-1/4 p-2"
+        >
+          7
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div>
+        <div
+          class="flex text-center items-center justify-between"
+        >
+          <div
+            class="w-1/4 p-2 text-bold flex justify-center"
+          >
+            <span
+              data-testid="logo-AWY"
+            >
+              AWY
+            </span>
+          </div>
+          <div
+            class="w-1/2 p-2 text-2xl font-bold"
+          >
+            Game Stats
+          </div>
+          <div
+            class="w-1/4 p-2 text-bold flex justify-center"
+          >
+            <span
+              data-testid="logo-HOM"
+            >
+              HOM
+            </span>
+          </div>
+        </div>
+        <div
+          data-testid="stat-sog"
+        >
+          sog
+        </div>
+        <div
+          data-testid="stat-faceoffWinningPctg"
+        >
+          faceoffWinningPctg
+        </div>
+        <div
+          data-testid="stat-powerPlayPctg"
+        >
+          powerPlayPctg
+        </div>
+        <div
+          data-testid="stat-pim"
+        >
+          pim
+        </div>
+        <div
+          data-testid="stat-hits"
+        >
+          hits
+        </div>
+        <div
+          data-testid="stat-blockedShots"
+        >
+          blockedShots
+        </div>
+        <div
+          data-testid="stat-giveaways"
+        >
+          giveaways
+        </div>
+        <div
+          data-testid="stat-takeaways"
+        >
+          takeaways
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div
+        class="flex text-center items-center justify-between"
+      >
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-AWY"
+          >
+            AWY
+          </span>
+        </div>
+        <div
+          class="w-1/2 p-3"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            Season Stats
+          </div>
+          <div
+            class="text-xs text-center text-gray-500"
+          >
+            2024-25 
+          </div>
+        </div>
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-HOM"
+          >
+            HOM
+          </span>
+        </div>
+      </div>
+      <div
+        data-testid="stat-ppPctg"
+      >
+        ppPctg
+      </div>
+      <div
+        data-testid="stat-pkPctg"
+      >
+        pkPctg
+      </div>
+      <div
+        data-testid="stat-faceoffWinningPctg"
+      >
+        faceoffWinningPctg
+      </div>
+      <div
+        data-testid="stat-goalsForPerGamePlayed"
+      >
+        goalsForPerGamePlayed
+      </div>
+      <div
+        data-testid="stat-goalsAgainstPerGamePlayed"
+      >
+        goalsAgainstPerGamePlayed
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div
+        class="flex text-center items-center justify-between"
+      >
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-AWY"
+          >
+            AWY
+          </span>
+        </div>
+        <div
+          class="w-1/2 p-2 text-2xl font-bold"
+        >
+          Last 10 Games
+        </div>
+        <div
+          class="w-1/4 p-2 text-bold flex justify-center"
+        >
+          <span
+            data-testid="logo-HOM"
+          >
+            HOM
+          </span>
+        </div>
+      </div>
+      <div
+        class="flex text-center"
+      >
+        <div
+          class="w-1/2"
+        >
+          6-3-1 (W2)
+        </div>
+        <div
+          class="w-1/2"
+        >
+          5-4-1 (L1)
+        </div>
+      </div>
+      <div
+        class="flex text-center text-xs my-1 gap-1 bg-slate-500/10"
+      >
+        <div
+          class="p-2 w-1/2 font-bold"
+          style="border-width: 1pt; border-color: #123456;"
+        >
+          ABC (W)
+        </div>
+        <div
+          class="p-2 w-1/2 opacity-50"
+          style="border-width: 1pt; border-color: #123456;"
+        >
+          XYZ (L)
+        </div>
+      </div>
+      <div
+        class="flex text-center text-xs my-1 gap-1 "
+      >
+        <div
+          class="p-2 w-1/2 opacity-50"
+          style="border-width: 1pt; border-color: #123456;"
+        >
+          DEF (L)
+        </div>
+        <div
+          class="p-2 w-1/2 font-bold"
+          style="border-width: 1pt; border-color: #123456;"
+        >
+          QRS (W)
+        </div>
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <div
+        class="p-2 text-2xl font-bold text-center"
+      >
+        Season Series
+      </div>
+      <div
+        class="text-center text-xs"
+      >
+        Series Tied 1-1
+      </div>
+      <div
+        class="grid grid-cols-12 gap-3 py-4 items-center"
+      >
+        <a
+          class="col-span-12 lg:col-span-6 p-1 mb-1 border rounded "
+          href="/game/1001"
+        >
+          <div
+            class="flex justify-between opacity-50"
+          >
+            <div
+              class="flex items-center font-bold gap-1"
+            >
+              <span
+                data-testid="logo-Logo"
+              >
+                Logo
+              </span>
+              AWY
+            </div>
+            <div
+              class="text-lg font-bold"
+            >
+              2
+            </div>
+          </div>
+          <div
+            class="flex justify-between "
+          >
+            <div
+              class="flex items-center font-bold gap-1"
+            >
+              <span
+                data-testid="logo-Logo"
+              >
+                Logo
+              </span>
+              HOM
+            </div>
+            <div
+              class="text-lg font-bold"
+            >
+              3
+            </div>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <div>
+              <span
+                class="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"
+              >
+                Final
+              </span>
+            </div>
+            <div>
+              <span
+                class="text-xs py-1"
+              >
+                Oct 1
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div
+      class="mb-5 text-xs"
+    >
+      <div
+        class="p-2 text-2xl font-bold text-center"
+      >
+        Game Info
+      </div>
+      <div
+        class="flex"
+      >
+        <div
+          class="w-full p-2"
+        >
+          <div
+            class="font-bold"
+          >
+            Officials
+          </div>
+          <div>
+            Referees: 
+            <span>
+              Ref A
+            </span>
+            <span>
+              , Ref B
+            </span>
+          </div>
+          <div>
+            Linesmen: 
+            <span>
+              Lines A
+            </span>
+            <span>
+              , Lines B
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex"
+      >
+        <div
+          class="w-1/2 p-2"
+        >
+          <div
+            class="my-2"
+          >
+            <div
+              class="font-bold"
+            >
+              AWY Head Coach
+            </div>
+            Coach Away
+          </div>
+          <div
+            class="my-2"
+          >
+            <div
+              class="font-bold"
+            >
+              AWY Scratches
+            </div>
+            No players listed.
+          </div>
+        </div>
+        <div
+          class="w-1/2 p-2"
+        >
+          <div
+            class="my-2"
+          >
+            <div
+              class="font-bold"
+            >
+              HOM Head Coach
+            </div>
+            Coach Home
+          </div>
+          <div
+            class="my-2"
+          >
+            <div
+              class="font-bold"
+            >
+              HOM Scratches
+            </div>
+            No players listed.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="p-2 text-2xl font-bold text-center"
+      >
+        Game Reports
+      </div>
+      <ul
+        class="text-xs flex flex-wrap mt-2"
+      >
+        <li
+          class="p-1 w-1/2 text-center"
+        >
+          <a
+            class="font-bold underline"
+            href="https://example.com/report"
+          >
+            GAME_SUMMARY
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div
+      data-testid="video-player"
+    >
+      Video 3:00 Recap
+    </div>
+  </div>
+</DocumentFragment>
+`;

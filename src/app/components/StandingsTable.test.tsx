@@ -82,7 +82,7 @@ describe('StandingsTable', () => {
       }),
     ];
 
-    render(<StandingsTable standings={rows} />);
+    const { asFragment } = render(<StandingsTable standings={rows} />);
 
     const table = screen.getByRole('table');
     const bodyRows = within(table).getAllByRole('row').slice(1); // skip header
@@ -106,5 +106,8 @@ describe('StandingsTable', () => {
     // Streak column (last cell) combines code+count
     const streakCell = bodyRows[0].querySelector('td:last-child');
     expect(streakCell?.textContent).toBe('W2');
+
+    // Snapshot the complex table rendering
+    expect(asFragment()).toMatchSnapshot();
   });
 });

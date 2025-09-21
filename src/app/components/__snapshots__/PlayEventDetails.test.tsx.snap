@@ -1,0 +1,232 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlayEventDetails renders faceoff details 1`] = `
+<DocumentFragment>
+  <div>
+    <span
+      class="p-1 border rounded text-xs mx-1"
+    >
+      #92
+    </span>
+     
+    <a
+      class="font-bold"
+      href="/player/92"
+    >
+      Ryan Johansen
+    </a>
+     won a faceoff against 
+    <span
+      class="p-1 border rounded text-xs mx-1"
+    >
+      #9
+    </span>
+     
+    <a
+      class="font-bold"
+      href="/player/9"
+    >
+      Filip Forsberg
+    </a>
+     in the offensive zone
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PlayEventDetails renders goal with highlight button and triggers callback 1`] = `
+<DocumentFragment>
+  <div
+    class="p-2 gap-5 rounded-lg flex flex-wrap justify-center md:justify-between items-center bg-red-900/80 text-white"
+    style="border-left: 25px solid #111;"
+  >
+    <div
+      class="flex gap-5 items-center justify-start"
+    >
+      <div
+        class="h-16 w-16 hidden lg:block"
+        data-testid="headshot-9"
+      />
+      <div>
+        <div
+          class="font-medium text-lg mb-3"
+        >
+          <span
+            class="p-1 border rounded text-xs mx-1"
+          >
+            #9
+          </span>
+           
+          <a
+            class="font-bold"
+            href="/player/9"
+          >
+            Filip Forsberg
+          </a>
+            scored 
+        </div>
+        <span>
+          Assisted By: 
+        </span>
+        <span>
+          <span
+            class="p-1 border rounded text-xs mx-1"
+          >
+            #92
+          </span>
+           
+          <a
+            class="font-bold"
+            href="/player/92"
+          >
+            Ryan Johansen
+          </a>
+           (1)
+        </span>
+      </div>
+    </div>
+    <div
+      class="w-10"
+    >
+      <div
+        class="text-2xl font-bold"
+      >
+        1-0
+      </div>
+    </div>
+    <div
+      class="text-center text-white"
+    >
+      <button>
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-circle-play fa-2x align-middle mx-auto"
+          data-icon="circle-play"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PlayEventDetails renders penalty summary 1`] = `
+<DocumentFragment>
+  <div
+    class="p-2 gap-5 rounded-lg flex flex-wrap justify-center md:justify-start items-center bg-slate-500/80 text-white"
+    style="border-left: 25px solid #111;"
+  >
+    <div
+      class="h-16 w-16 hidden lg:block"
+      data-testid="headshot-92"
+    />
+    <div>
+      <div
+        class="font-medium text-lg mb-3"
+      >
+        <span
+          class="p-1 border rounded text-xs mx-1"
+        >
+          #92
+        </span>
+         
+        <a
+          class="font-bold"
+          href="/player/92"
+        >
+          Ryan Johansen
+        </a>
+      </div>
+    </div>
+    <div>
+      <div
+        class="text-xs font-light"
+      >
+        Duration
+      </div>
+      <div>
+        2 minutes
+      </div>
+    </div>
+    <div>
+      <div
+        class="text-xs font-light"
+      />
+      <div>
+        Tripping
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PlayEventDetails renders shootout goal without player total parentheses 1`] = `
+<DocumentFragment>
+  <div
+    class="p-2 gap-5 rounded-lg flex flex-wrap justify-center md:justify-between items-center bg-red-900/80 text-white"
+    style="border-left: 25px solid #111;"
+  >
+    <div
+      class="flex gap-5 items-center justify-start"
+    >
+      <div
+        class="h-16 w-16 hidden lg:block"
+        data-testid="headshot-9"
+      />
+      <div>
+        <div
+          class="font-medium text-lg mb-3"
+        >
+          <span
+            class="p-1 border rounded text-xs mx-1"
+          >
+            #9
+          </span>
+           
+          <a
+            class="font-bold"
+            href="/player/9"
+          >
+            Filip Forsberg
+          </a>
+            scored 
+        </div>
+        <span>
+          Unassisted
+        </span>
+      </div>
+    </div>
+    <div
+      class="w-10"
+    >
+      <div
+        class="text-2xl text-yellow-500"
+      >
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-circle-check "
+          data-icon="circle-check"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

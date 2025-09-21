@@ -1,0 +1,168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VideoCard renders default (no size) variant with fallback thumbnail 1`] = `
+<DocumentFragment>
+  <div>
+    <p
+      class="hidden"
+    >
+      3/10/2024 7:00 AM CST
+    </p>
+    <a
+      class=""
+      href="/video/great-goal"
+    >
+      <div
+        class="w-full bg-gray-200 flex items-center justify-center aspect-square mb-2 aspect-video"
+      >
+        <img
+          alt="Story Photo"
+        />
+      </div>
+      <h2
+        class="text-xl font-bold"
+      >
+        Great Goal
+      </h2>
+      <div
+        class="text-sm mt-3"
+      >
+        desc
+      </div>
+    </a>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`VideoCard renders large variant with template image 1`] = `
+<DocumentFragment>
+  <div
+    class="md:relative undefined"
+  >
+    <a
+      class=""
+      href="/video/great-goal"
+    >
+      <img
+        alt="Story Photo"
+      />
+    </a>
+    <div
+      class="md:absolute md:bottom-0 md:right-0 md:left-0 md:p-5 md:bg-black/70 md:text-white"
+    >
+      <a
+        class=""
+        href="/video/great-goal"
+      >
+        <h2
+          class="text-2xl font-bold"
+        >
+          Great Goal
+        </h2>
+      </a>
+      <div
+        class="text-justify line-clamp-3 text-sm"
+      >
+        <p
+          class="mb-4"
+        >
+          Some 
+          <strong>
+            markdown
+          </strong>
+        </p>
+        
+
+      </div>
+      <a
+        class="block font-bold py-3 underline"
+        href="/video/great-goal"
+      >
+        Read Story
+      </a>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`VideoCard renders medium variant missing thumbnail 1`] = `
+<DocumentFragment>
+  <div>
+    <p
+      class="hidden"
+    >
+      3/10/2024 7:00 AM CST
+    </p>
+    <a
+      class=""
+      href="/video/great-goal"
+    >
+      <div
+        class="w-full bg-gray-200 flex items-center justify-center aspect-square mb-2 aspect-square"
+      >
+        <img
+          alt="Story Photo"
+        />
+      </div>
+    </a>
+    <a
+      class=""
+      href="/video/great-goal"
+    >
+      <h2
+        class="text-xl font-bold"
+      >
+        Great Goal
+      </h2>
+    </a>
+    <div
+      class="text-justify line-clamp-3 text-sm"
+    >
+      <p
+        class="mb-4"
+      >
+        Some 
+        <strong>
+          markdown
+        </strong>
+      </p>
+      
+
+    </div>
+    <a
+      class="block font-bold py-3 underline"
+      href="/video/great-goal"
+    >
+      Watch
+    </a>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`VideoCard renders small variant with provided thumbnail url 1`] = `
+<DocumentFragment>
+  <div>
+    <a
+      class="grid grid-cols-3 gap-4 items-center"
+      href="/video/great-goal"
+    >
+      <div
+        class="col-span-1"
+      >
+        <img
+          alt="Story Photo"
+        />
+      </div>
+      <div
+        class="col-span-2"
+      >
+        <h2
+          class="text-base font-bold"
+        >
+          Great Goal
+        </h2>
+      </div>
+    </a>
+  </div>
+</DocumentFragment>
+`;

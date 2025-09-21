@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TopBarSchedule (smoke) renders dates and switches focused date 1`] = `
+<DocumentFragment>
+  <div
+    class="px-2 my-3"
+  >
+    <div
+      class="flex text-xs gap-2 overflow-x-auto scrollbar-hidden"
+    >
+      <button
+        class="active rounded-xl bg-slate-500 text-white"
+        title="Tuesday, October 1, 2024"
+      >
+        <div
+          class="px-4 text-center"
+        >
+          Oct 1
+        </div>
+      </button>
+      <button
+        class="border rounded-xl"
+        title="Wednesday, October 2, 2024"
+      >
+        <div
+          class="px-4 text-center"
+        >
+          Oct 2
+        </div>
+      </button>
+    </div>
+    <div
+      class="overflow-x-auto scrollbar-hidden my-3"
+    >
+      <div
+        class="flex flex-nowrap gap-4"
+      >
+        <div
+          data-testid="game-tile"
+          game="[object Object]"
+          style="min-width: 360px;"
+        >
+          Game 1
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`TopBarSchedule (smoke) renders dates and switches focused date 2`] = `
+<DocumentFragment>
+  <div
+    class="px-2 my-3"
+  >
+    <div
+      class="flex text-xs gap-2 overflow-x-auto scrollbar-hidden"
+    >
+      <button
+        class="border rounded-xl"
+        title="Tuesday, October 1, 2024"
+      >
+        <div
+          class="px-4 text-center"
+        >
+          Oct 1
+        </div>
+      </button>
+      <button
+        class="active rounded-xl bg-slate-500 text-white"
+        title="Wednesday, October 2, 2024"
+      >
+        <div
+          class="px-4 text-center"
+        >
+          Oct 2
+        </div>
+      </button>
+    </div>
+    <div
+      class="overflow-x-auto scrollbar-hidden my-3"
+    >
+      <div
+        class="flex flex-nowrap gap-4"
+      >
+        <div
+          data-testid="game-tile"
+          game="[object Object]"
+          style="min-width: 360px;"
+        >
+          Game 2
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

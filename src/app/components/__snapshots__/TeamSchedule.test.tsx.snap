@@ -1,0 +1,287 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeamSchedule renders final game with W/L logic and broadcasts 1`] = `
+<DocumentFragment>
+  <div
+    class="overflow-x-auto"
+  >
+    <table
+      class="statsTable"
+    >
+      <thead>
+        <tr>
+          <th
+            class="text-left"
+          >
+            Date
+          </th>
+          <th
+            class="text-left"
+          >
+            Matchup
+          </th>
+          <th
+            class=""
+            colspan="2"
+          >
+            Result
+          </th>
+          <th
+            class=""
+          >
+            Broadcasts
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <time
+              datetime="2025-01-01T00:00:00Z"
+            >
+              Jan 1
+            </time>
+             
+            <time
+              datetime="2025-01-01T00:00:00Z"
+            >
+              7:00 PM
+            </time>
+          </td>
+          <td>
+            <div
+              class="flex gap-2 items-center"
+            >
+              <div
+                data-testid="logo-AWY"
+              />
+              <a
+                href="/game/1"
+              >
+                Away @ Home
+              </a>
+            </div>
+          </td>
+          <td
+            class="text-center"
+          >
+            OTW
+          </td>
+          <td>
+            <a
+              href="/game/1"
+            >
+              AWY 2-3 HOM
+            </a>
+          </td>
+          <td>
+            NET (NAT)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`TeamSchedule renders live game badge and cancelled 1`] = `
+<DocumentFragment>
+  <div
+    class="overflow-x-auto"
+  >
+    <table
+      class="statsTable"
+    >
+      <thead>
+        <tr>
+          <th
+            class="text-left"
+          >
+            Date
+          </th>
+          <th
+            class="text-left"
+          >
+            Matchup
+          </th>
+          <th
+            class=""
+            colspan="2"
+          >
+            Result
+          </th>
+          <th
+            class=""
+          >
+            Broadcasts
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <time
+              datetime="2025-01-01T00:00:00Z"
+            >
+              Jan 1
+            </time>
+             
+            <time
+              datetime="2025-01-01T00:00:00Z"
+            >
+              7:00 PM
+            </time>
+          </td>
+          <td>
+            <div
+              class="flex gap-2 items-center"
+            >
+              <div
+                data-testid="logo-HOM"
+              />
+              <a
+                href="/game/2"
+              >
+                Away @ Home
+              </a>
+            </div>
+          </td>
+          <td
+            class="text-center"
+          >
+            <span
+              class="p-1 text-xs font-bold rounded text-white bg-red-900 uppercase"
+            >
+              Live
+            </span>
+          </td>
+          <td>
+            <a
+              href="/game/2"
+            >
+              AWY 2-3 HOM
+            </a>
+          </td>
+          <td>
+            No Broadcasts
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <time
+              datetime="2025-01-01T00:00:00Z"
+            >
+              Jan 1
+            </time>
+             
+            <time
+              datetime="2025-01-01T00:00:00Z"
+            >
+              7:00 PM
+            </time>
+          </td>
+          <td>
+            <div
+              class="flex gap-2 items-center"
+            >
+              <div
+                data-testid="logo-HOM"
+              />
+              <a
+                href="/game/3"
+              >
+                Away @ Home
+              </a>
+            </div>
+          </td>
+          <td
+            class="text-center"
+          />
+          <td>
+            <span
+              class="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"
+            >
+              <svg
+                aria-hidden="true"
+                class="svg-inline--fa fa-ban fa-fw "
+                data-icon="ban"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M367.2 412.5L99.5 144.8C77.1 176.1 64 214.5 64 256c0 106 86 192 192 192c41.5 0 79.9-13.1 111.2-35.5zm45.3-45.3C434.9 335.9 448 297.5 448 256c0-106-86-192-192-192c-41.5 0-79.9 13.1-111.2 35.5L412.5 367.2zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"
+                  fill="currentColor"
+                />
+              </svg>
+               Cancelled
+            </span>
+          </td>
+          <td>
+            No Broadcasts
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <time
+              datetime="2025-01-01T00:00:00Z"
+            >
+              Jan 1
+            </time>
+             
+            <time
+              datetime="2025-01-01T00:00:00Z"
+            >
+              7:00 PM
+            </time>
+          </td>
+          <td>
+            <div
+              class="flex gap-2 items-center"
+            >
+              <div
+                data-testid="logo-HOM"
+              />
+              <a
+                href="/game/4"
+              >
+                Away @ Home
+              </a>
+            </div>
+          </td>
+          <td
+            class="text-center"
+          />
+          <td>
+            <span
+              class="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase"
+            >
+              <svg
+                aria-hidden="true"
+                class="svg-inline--fa fa-triangle-exclamation fa-fw "
+                data-icon="triangle-exclamation"
+                data-prefix="fas"
+                focusable="false"
+                role="img"
+                viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480L40 480c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24 24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"
+                  fill="currentColor"
+                />
+              </svg>
+               Postponed
+            </span>
+          </td>
+          <td>
+            No Broadcasts
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</DocumentFragment>
+`;

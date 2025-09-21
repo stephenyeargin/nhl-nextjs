@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GamePreview (smoke) renders unavailable fallback when leaders missing 1`] = `
+<DocumentFragment>
+  <div
+    class="col-span-1 md:col-span-2"
+  >
+    <div
+      class="text-center font-bold py-20"
+    >
+      Game preview unavailable.
+    </div>
+  </div>
+</DocumentFragment>
+`;

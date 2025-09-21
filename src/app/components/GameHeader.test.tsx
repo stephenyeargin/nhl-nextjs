@@ -63,7 +63,7 @@ const ctx = (gameOverrides: any = {}) => {
 
 describe('GameHeader', () => {
   it('renders team names (baseline OFF state)', () => {
-    render(
+    const { asFragment } = render(
       <GameContext.Provider value={ctx()}>
         <GameHeader />
       </GameContext.Provider>
@@ -71,6 +71,7 @@ describe('GameHeader', () => {
     expect(screen.getAllByText(/AWY/)[0]).toBeInTheDocument();
     expect(screen.getAllByText(/HOM/)[0]).toBeInTheDocument();
     expect(screen.getByText('Final')).toBeInTheDocument();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('shows preseason badge when gameType = 1', () => {

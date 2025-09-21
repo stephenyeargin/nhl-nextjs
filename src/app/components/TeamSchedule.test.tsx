@@ -32,7 +32,7 @@ const gameBase = {
 describe('TeamSchedule', () => {
   test('renders final game with W/L logic and broadcasts', () => {
     const team = { abbreviation: 'HOM' };
-    render(
+    const { asFragment } = render(
       <TeamSchedule
         team={team}
         fullSeasonSchedule={{
@@ -48,11 +48,12 @@ describe('TeamSchedule', () => {
     );
     expect(screen.getByText(/OT/)).toBeTruthy();
     expect(screen.getByText('NET (NAT)')).toBeTruthy();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   test('renders live game badge and cancelled', () => {
     const team = { abbreviation: 'AWY' };
-    render(
+    const { asFragment } = render(
       <TeamSchedule
         team={team}
         fullSeasonSchedule={{
@@ -67,5 +68,6 @@ describe('TeamSchedule', () => {
     expect(screen.getByText(/Live/i)).toBeTruthy();
     expect(screen.getByText(/Cancelled/)).toBeTruthy();
     expect(screen.getByText(/Postponed/)).toBeTruthy();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
