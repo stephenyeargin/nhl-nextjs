@@ -1,0 +1,156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlayerStatsTable matches snapshot (basic NHL table) 1`] = `
+<div
+  class="overflow-x-auto"
+>
+  <table
+    class="statsTable"
+  >
+    <thead>
+      <tr
+        class="text-xs border "
+      >
+        <th
+          class="p-2 text-center"
+        >
+          Season
+        </th>
+        <th
+          class="p-2 text-left"
+        >
+          Team
+        </th>
+        <th
+          class="p-2 text-center "
+        >
+          <abbr
+            class="underline decoration-dashed"
+            title="Games Played"
+          >
+            GP
+          </abbr>
+        </th>
+        <th
+          class="p-2 text-center "
+        >
+          <abbr
+            class="underline decoration-dashed"
+            title="Goals"
+          >
+            G
+          </abbr>
+        </th>
+        <th
+          class="p-2 text-center "
+        >
+          <abbr
+            class="underline decoration-dashed"
+            title="Plus/Minus"
+          >
+            +/-
+          </abbr>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class=""
+      >
+        <td
+          class="p-2 border text-center"
+        >
+          2019-20
+        </td>
+        <td
+          class=""
+        >
+          <div
+            class="flex gap-1 items-center"
+          >
+            <a
+              href="/team/NSH"
+            >
+              <img
+                alt="NSH"
+                class="h-8 w-8 hidden md:block"
+                data-nimg="1"
+                decoding="async"
+                height="256"
+                loading="lazy"
+                src="https://assets.nhle.com/logos/nhl/svg/NSH_light.svg"
+                style="color: transparent;"
+                width="256"
+              />
+            </a>
+            NSH
+          </div>
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          82
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          10
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          +5
+        </td>
+      </tr>
+      <tr
+        class="bg-slate-500/10"
+      >
+        <td
+          class="p-2 border text-center"
+        >
+          2019-20
+        </td>
+        <td
+          class=""
+        >
+          <div
+            class="flex gap-1 items-center"
+          >
+            <a
+              href="/team/NSH"
+            >
+              <img
+                alt="NSH"
+                class="h-8 w-8 hidden md:block"
+                data-nimg="1"
+                decoding="async"
+                height="256"
+                loading="lazy"
+                src="https://assets.nhle.com/logos/nhl/svg/NSH_light.svg"
+                style="color: transparent;"
+                width="256"
+              />
+            </a>
+            NSH
+          </div>
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          70
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          --
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          --
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

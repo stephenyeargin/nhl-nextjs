@@ -6,10 +6,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Headshot from '@/app/components/Headshot';
 import {
-  formatStat,
   formatSeason,
   formatOrdinalNumber,
-  formatLocalizedDate,
   formatTextColorByBackgroundColor,
   formatHeadTitle,
 } from '@/app/utils/formatters';
@@ -21,12 +19,15 @@ import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import LeagueToggle from '@/app/components/LeagueToggle';
 import StoryCard from '@/app/components/StoryCard';
 import PlayerDropdown from '@/app/components/PlayerDropdown';
-import statsStyles from '@/app/components/StatsTable.module.scss';
+// stats table styles handled within components
 import ContentCustomEntity from '@/app/components/ContentCustomEntity';
 import { STAT_CONTEXT } from '@/app/utils/constants';
 import LoadMoreButton from '@/app/components/LoadMoreButton';
 import ContentPhoto from '@/app/components/ContentPhoto';
 import { StoryItem, PaginatedContentResponse, LocalizedString } from '@/app/types/content';
+import StatBox from '@/app/components/StatBox';
+import PlayerStatsTable from '@/app/components/PlayerStatsTable';
+import LastGamesTable from '@/app/components/LastGamesTable';
 
 // --- Domain Types (partial shapes focusing on accessed fields) ---
 interface DraftDetails {
@@ -177,18 +178,10 @@ const statHeaders = [
   { key: 'timeOnIce', label: 'TOI', title: 'Time On Ice', altKey: 'toi' },
 ] as const;
 
-type StatHeader = (typeof statHeaders)[number];
+// StatHeader type used by child components directly
 
 // Helper narrow functions for optional properties (runtime presence varies per header)
-function getAltKey(h: StatHeader): string | undefined {
-  return (h as any).altKey;
-}
-function getPrecision(h: StatHeader): number | undefined {
-  return (h as any).precision;
-}
-function getUnit(h: StatHeader): string | undefined {
-  return (h as any).unit;
-}
+// helpers for headers now live inside components
 
 export default function PlayerPage() {
   const { id } = useParams<{ id: string }>();
@@ -298,36 +291,7 @@ export default function PlayerPage() {
     );
   }
 
-  const renderStatBox = (stat: string, value: number | string | undefined) => {
-    const statMeta = statHeaders.find((s) => s.key === stat || getAltKey(s) === stat) as any;
-    const title = statMeta?.title ?? stat;
-    const precision = getPrecision(statMeta) ?? 0;
-
-    return (
-      <div
-        key={stat}
-        className="p-2 bg-transparent text-center border rounded content-center"
-        style={{ minWidth: '7rem' }}
-      >
-        <div className="text-2xl capitalize">
-          {stat === 'plusMinus'
-            ? (() => {
-                if (value === undefined || value === null || value === '') {
-                  return '--';
-                }
-                const n = typeof value === 'number' ? value : Number(value);
-                if (Number.isNaN(n)) {
-                  return '--';
-                }
-
-                return n > 0 ? `+${n}` : `${n}`;
-              })()
-            : formatStat(value, precision)}
-        </div>
-        <div className="text-xs font-light">{title}</div>
-      </div>
-    );
-  };
+  // Stat boxes now rendered via <StatBox /> component
 
   // Current team if present
   const team = getTeamDataByAbbreviation(player.currentTeamAbbrev, true);
@@ -348,122 +312,7 @@ export default function PlayerPage() {
     (l) => l.leagueAbbrev !== 'NHL' && l.gameTypeId === seasonType
   );
 
-  const renderStatsTable = ({
-    stats,
-    showLeague,
-  }: {
-    stats: PlayerSeasonTotals[];
-    showLeague: boolean;
-  }) => {
-    // Determine which stat headers are actually present in this dataset (so columns are consistent per table)
-    const visibleHeaders = statHeaders.filter((h) => {
-      const key = h.key as string;
-      const altKey = getAltKey(h);
-
-      const present = stats.some(
-        (season) =>
-          Object.prototype.hasOwnProperty.call(season, key) ||
-          (altKey && Object.prototype.hasOwnProperty.call(season, altKey))
-      );
-
-      return present;
-    });
-
-    return (
-      <div className="overflow-x-auto">
-        <table className={statsStyles.statsTable}>
-          <thead>
-            <tr className={`text-xs border ${headerColorClass}`}>
-              <th className={'p-2 text-center'} style={headerStyle}>
-                Season
-              </th>
-              <th className={'p-2 text-left'} style={headerStyle}>
-                Team
-              </th>
-              {showLeague && (
-                <th className={'p-2 text-left'} style={headerStyle}>
-                  League
-                </th>
-              )}
-              {visibleHeaders.map((h) => {
-                const key = h.key;
-                const label = h.label;
-                const title = (h as any).title;
-
-                return (
-                  <th
-                    key={key}
-                    className={`p-2 text-center ${headerColorClass}`}
-                    style={headerStyle}
-                  >
-                    <abbr className="underline decoration-dashed" title={title}>
-                      {label}
-                    </abbr>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {stats.map((season, i) => (
-              <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
-                <td className="p-2 border text-center">{formatSeason(season.season)}</td>
-                <td className="">
-                  <div className="flex gap-1 items-center">
-                    {season.leagueAbbrev === 'NHL' && (
-                      <TeamLogo
-                        team={season.teamName?.default}
-                        className="h-8 w-8 hidden md:block"
-                        alt={String(season.teamName?.default || '')}
-                      />
-                    )}
-                    {season.teamName?.default}
-                  </div>
-                </td>
-                {showLeague && <td className="text-left">{season.leagueAbbrev}</td>}
-                {visibleHeaders.map((h) => {
-                  const key = h.key;
-                  const altKey = getAltKey(h);
-                  const precision = getPrecision(h);
-                  const primaryVal = season[key];
-                  const altVal = altKey ? season[altKey] : undefined;
-                  const value =
-                    typeof primaryVal === 'number' || typeof primaryVal === 'string'
-                      ? primaryVal
-                      : typeof altVal === 'number' || typeof altVal === 'string'
-                        ? altVal
-                        : undefined;
-
-                  // Always render a cell; show '--' when missing to prevent row shift
-                  const content = (() => {
-                    if (value === undefined) {
-                      return '--';
-                    }
-                    if (key === 'plusMinus') {
-                      const n = typeof value === 'number' ? value : Number(value);
-                      if (Number.isNaN(n)) {
-                        return '--';
-                      }
-
-                      return n > 0 ? `+${n}` : `${n}`;
-                    }
-
-                    return formatStat(value as any, precision);
-                  })();
-
-                  return (
-                    <td key={key} className="p-2 border text-center text-xs">
-                      {content}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  };
+  // Season totals table now rendered via <PlayerStatsTable /> component
 
   const handleChangeLeagues = (league: 'nhl' | 'other') => {
     setActiveLeague(league);
@@ -584,7 +433,14 @@ export default function PlayerPage() {
                       return null;
                     }
 
-                    return renderStatBox(stat.key, val);
+                    return (
+                      <StatBox
+                        key={stat.key}
+                        statKey={stat.key}
+                        value={val}
+                        statHeaders={statHeaders}
+                      />
+                    );
                   })}
                 </div>
               )}
@@ -601,7 +457,14 @@ export default function PlayerPage() {
                       return null;
                     }
 
-                    return renderStatBox(stat.key, val);
+                    return (
+                      <StatBox
+                        key={stat.key}
+                        statKey={stat.key}
+                        value={val}
+                        statHeaders={statHeaders}
+                      />
+                    );
                   })}
                 </div>
               ) : (
@@ -656,124 +519,12 @@ export default function PlayerPage() {
       {last5Games && last5Games.length > 0 && (
         <div className="my-5">
           <div className="text-3xl font-bold my-3">{STAT_CONTEXT['last_5_games']}</div>
-          <div className="overflow-x-auto">
-            <table className="text-sm w-full">
-              <thead>
-                <tr className={`text-xs border ${headerColorClass}`} style={headerStyle}>
-                  <th className="p-2 text-center w-10">Date</th>
-                  <th className="p-2 text-left">Opponent</th>
-                  {statHeaders.map((h) => {
-                    const key = h.key;
-                    const altKey = getAltKey(h);
-                    const title = (h as any).title;
-                    const label = h.label;
-                    const show = last5Games.some(
-                      (g) =>
-                        Object.prototype.hasOwnProperty.call(g, key) ||
-                        (altKey && Object.prototype.hasOwnProperty.call(g, altKey))
-                    );
-                    if (!show) {
-                      return null;
-                    }
-
-                    return (
-                      <th key={key} className="p-2 text-center">
-                        <abbr className="underline decoration-dashed" title={title}>
-                          {label}
-                        </abbr>
-                      </th>
-                    );
-                  })}
-                </tr>
-              </thead>
-              <tbody>
-                {last5Games.map((g, i) => (
-                  <tr key={i} className={`${i % 2 ? 'bg-slate-500/10' : ''}`}>
-                    <td className="p-2 border text-center">{formatLocalizedDate(g.gameDate)}</td>
-                    <td className="p-2 border text-left">
-                      <div className="font-bold">
-                        {g.homeRoadFlag !== 'H' ? (
-                          <div className="flex items-center gap-2">
-                            <TeamLogo
-                              team={g.teamAbbrev}
-                              className="hidden md:block h-8 w-8"
-                              alt={g.teamAbbrev}
-                            />
-                            <Link href={`/game/${g.gameId}`} className="font-bold underline">
-                              {g.teamAbbrev}@{g.opponentAbbrev}
-                            </Link>
-                            <TeamLogo
-                              team={g.opponentAbbrev}
-                              className="hidden md:block h-8 w-8"
-                              alt={g.opponentAbbrev}
-                            />
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <TeamLogo
-                              team={g.opponentAbbrev}
-                              className="hidden md:block h-8 w-8"
-                              alt={g.opponentAbbrev}
-                            />
-                            <Link href={`/game/${g.gameId}`} className="font-bold underline">
-                              {g.opponentAbbrev}@{g.teamAbbrev}
-                            </Link>
-                            <TeamLogo
-                              team={g.teamAbbrev}
-                              className="hidden md:block h-8 w-8"
-                              alt={g.teamAbbrev}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    {statHeaders.map((h) => {
-                      const key = h.key;
-                      const altKey = getAltKey(h);
-                      const precision = getPrecision(h);
-                      const unit = getUnit(h);
-                      const show = last5Games.some(
-                        (gg) =>
-                          Object.prototype.hasOwnProperty.call(gg, key) ||
-                          (altKey && Object.prototype.hasOwnProperty.call(gg, altKey))
-                      );
-                      if (!show) {
-                        return null;
-                      }
-
-                      return (
-                        <td key={key} className="p-2 border text-center text-xs">
-                          {(() => {
-                            const primary = g[key];
-                            const alt = altKey ? g[altKey] : undefined;
-                            const val =
-                              typeof primary === 'number' || typeof primary === 'string'
-                                ? primary
-                                : typeof alt === 'number' || typeof alt === 'string'
-                                  ? alt
-                                  : undefined;
-                            if (val === undefined) {
-                              return '--';
-                            }
-                            if (key === 'plusMinus') {
-                              const n = typeof val === 'number' ? val : Number(val);
-                              if (Number.isNaN(n)) {
-                                return '--';
-                              }
-
-                              return n > 0 ? `+${n}` : `${n}`;
-                            }
-
-                            return formatStat(val as any, precision, unit);
-                          })()}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <LastGamesTable
+            games={last5Games}
+            statHeaders={statHeaders}
+            headerColorClass={`text-xs border ${headerColorClass}`}
+            headerStyle={headerStyle}
+          />
         </div>
       )}
 
@@ -813,12 +564,24 @@ export default function PlayerPage() {
                 otherLeagueStats.length === 0 || activeLeague === 'nhl' ? 'block' : 'hidden'
               }
             >
-              {renderStatsTable({ stats: nhlStats, showLeague: false })}
+              <PlayerStatsTable
+                stats={nhlStats as any}
+                statHeaders={statHeaders}
+                showLeague={false}
+                headerColorClass={headerColorClass}
+                headerStyle={headerStyle}
+              />
             </div>
           )}
           {otherLeagueStats.length > 0 && (
             <div className={nhlStats.length === 0 || activeLeague === 'other' ? 'block' : 'hidden'}>
-              {renderStatsTable({ stats: otherLeagueStats, showLeague: true })}
+              <PlayerStatsTable
+                stats={otherLeagueStats as any}
+                statHeaders={statHeaders}
+                showLeague={true}
+                headerColorClass={headerColorClass}
+                headerStyle={headerStyle}
+              />
             </div>
           )}
           {nhlStats.length === 0 && otherLeagueStats.length === 0 && (
@@ -850,7 +613,7 @@ export default function PlayerPage() {
 
                         return (
                           <div key={stat.key} className="col-span-1">
-                            {renderStatBox(stat.key, val)}
+                            <StatBox statKey={stat.key} value={val} statHeaders={statHeaders} />
                           </div>
                         );
                       })}

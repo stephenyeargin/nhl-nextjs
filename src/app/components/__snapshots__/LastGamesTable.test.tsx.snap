@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LastGamesTable matches snapshot (two games) 1`] = `
+<div
+  class="overflow-x-auto"
+>
+  <table
+    class="text-sm w-full"
+  >
+    <thead>
+      <tr
+        class=""
+      >
+        <th
+          class="p-2 text-center w-10"
+        >
+          Date
+        </th>
+        <th
+          class="p-2 text-left"
+        >
+          Opponent
+        </th>
+        <th
+          class="p-2 text-center"
+        >
+          <abbr
+            class="underline decoration-dashed"
+            title="Goals"
+          >
+            G
+          </abbr>
+        </th>
+        <th
+          class="p-2 text-center"
+        >
+          <abbr
+            class="underline decoration-dashed"
+            title="Plus/Minus"
+          >
+            +/-
+          </abbr>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class=""
+      >
+        <td
+          class="p-2 border text-center"
+        >
+          1/1/2024
+        </td>
+        <td
+          class="p-2 border text-left"
+        >
+          <div
+            class="font-bold"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <a
+                href="/team/NSH"
+              >
+                <img
+                  alt="NSH"
+                  class="hidden md:block h-8 w-8"
+                  data-nimg="1"
+                  decoding="async"
+                  height="256"
+                  loading="lazy"
+                  src="https://assets.nhle.com/logos/nhl/svg/NSH_light.svg"
+                  style="color: transparent;"
+                  width="256"
+                />
+              </a>
+              <a
+                class="font-bold underline"
+                href="/game/2024010101"
+              >
+                NSH
+                @
+                COL
+              </a>
+              <a
+                href="/team/COL"
+              >
+                <img
+                  alt="COL"
+                  class="hidden md:block h-8 w-8"
+                  data-nimg="1"
+                  decoding="async"
+                  height="256"
+                  loading="lazy"
+                  src="https://assets.nhle.com/logos/nhl/svg/COL_light.svg"
+                  style="color: transparent;"
+                  width="256"
+                />
+              </a>
+            </div>
+          </div>
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          1
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          -1
+        </td>
+      </tr>
+      <tr
+        class="bg-slate-500/10"
+      >
+        <td
+          class="p-2 border text-center"
+        >
+          1/1/2024
+        </td>
+        <td
+          class="p-2 border text-left"
+        >
+          <div
+            class="font-bold"
+          >
+            <div
+              class="flex items-center gap-2"
+            >
+              <a
+                href="/team/NSH"
+              >
+                <img
+                  alt="NSH"
+                  class="hidden md:block h-8 w-8"
+                  data-nimg="1"
+                  decoding="async"
+                  height="256"
+                  loading="lazy"
+                  src="https://assets.nhle.com/logos/nhl/svg/NSH_light.svg"
+                  style="color: transparent;"
+                  width="256"
+                />
+              </a>
+              <a
+                class="font-bold underline"
+                href="/game/2024010101"
+              >
+                NSH
+                @
+                COL
+              </a>
+              <a
+                href="/team/COL"
+              >
+                <img
+                  alt="COL"
+                  class="hidden md:block h-8 w-8"
+                  data-nimg="1"
+                  decoding="async"
+                  height="256"
+                  loading="lazy"
+                  src="https://assets.nhle.com/logos/nhl/svg/COL_light.svg"
+                  style="color: transparent;"
+                  width="256"
+                />
+              </a>
+            </div>
+          </div>
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          0
+        </td>
+        <td
+          class="p-2 border text-center text-xs"
+        >
+          +2
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
