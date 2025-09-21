@@ -6,10 +6,11 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import MainNav from '@/app/components/MainNav';
 import TopBarSchedule from '@/app/components/TopBarSchedule';
-import DraftTicker from './components/DraftTicker';
+import DraftTicker from '@/app/components/DraftTicker';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from 'next/link';
+import MatomoAnalytics from '@/app/components/MatomoAnalytics';
 import './globals.css';
-import MatomoAnalytics from './components/MatomoAnalytics';
 
 config.autoAddCss = false;
 
@@ -65,6 +66,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         {env.MATOMO_URL && env.MATOMO_SITE_ID && (
           <MatomoAnalytics url={env.MATOMO_URL} siteId={env.MATOMO_SITE_ID} />
         )}
+        <SpeedInsights />
       </body>
     </html>
   );
