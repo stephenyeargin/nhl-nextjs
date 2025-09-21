@@ -6,7 +6,7 @@ exports[`VideoCard renders default (no size) variant with fallback thumbnail 1`]
     <p
       class="hidden"
     >
-      3/10/2024 7:00 AM CST
+      3/10/2024 8:00 AM EDT
     </p>
     <a
       class=""
@@ -91,7 +91,7 @@ exports[`VideoCard renders medium variant missing thumbnail 1`] = `
     <p
       class="hidden"
     >
-      3/10/2024 7:00 AM CST
+      3/10/2024 8:00 AM EDT
     </p>
     <a
       class=""

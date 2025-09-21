@@ -10,6 +10,15 @@ jest.mock('next/image', () => {
   return Img;
 });
 
+// Make date/time formatting deterministic across environments
+jest.mock('../utils/formatters', () => ({
+  ...jest.requireActual('../utils/formatters'),
+  // Match formatter defaults: date uses 'l' (M/D/YYYY), time uses 'LT z' (h:mm A z)
+  // With TZ set to ET, 12:00 PM UTC becomes 8:00 AM ET on 3/10/2024
+  formatLocalizedDate: () => '3/10/2024',
+  formatLocalizedTime: () => '8:00 AM EDT',
+}));
+
 const baseItem = (overrides: any = {}) => ({
   slug: 'great-goal',
   headline: 'Great Goal',

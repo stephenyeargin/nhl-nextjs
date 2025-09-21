@@ -1,3 +1,6 @@
+// Force a consistent timezone across environments for deterministic dates/times (Eastern Time)
+process.env.TZ = 'America/New_York';
+
 // Learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
