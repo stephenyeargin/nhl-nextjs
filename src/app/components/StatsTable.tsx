@@ -70,7 +70,7 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
     { key: 'goals', label: 'G', title: 'Goals Scored' },
     { key: 'assists', label: 'A', title: 'Assists' },
     { key: 'points', label: 'P', title: 'Points' },
-    { key: 'plusMinus', label: '+/-', title: 'Plus/Minus' },
+    { key: 'plusMinus', label: '+/-', title: 'Plus/Minus', unit: 'plusMinus' },
     { key: 'pim', label: 'PIM', title: 'Penalty Minutes', altKey: 'penaltyMinutes' },
     { key: 'powerPlayGoals', label: 'PPG', title: 'Power Play Goals' },
     { key: 'gameWinningGoals', label: 'GWG', title: 'Game-Winning Goals' },

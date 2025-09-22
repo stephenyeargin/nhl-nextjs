@@ -3,7 +3,11 @@ import GameTile from '@/app/components/GameTile';
 import StatsTable from '@/app/components/StatsTable';
 import TeamLogo from '@/app/components/TeamLogo';
 import { getTeamDataByAbbreviation, getTeamDataBySlug } from '@/app/utils/teamData';
-import { formatOrdinalNumber, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
+import {
+  formatOrdinalNumber,
+  formatSeason,
+  formatTextColorByBackgroundColor,
+} from '@/app/utils/formatters';
 import type { TeamSlugParam } from '@/app/types/routeParams';
 import StoryCard from '@/app/components/StoryCard';
 import TeamSchedule from '@/app/components/TeamSchedule';
@@ -205,7 +209,11 @@ export default async function SchedulePage(props: any) {
         </>
       )}
 
-      <h1 className="text-3xl font-bold mb-6">Team Stats</h1>
+      <h1 className="text-3xl font-bold mb-2">Team Stats</h1>
+      <h2 className="text-lg mb-6">
+        {formatSeason(teamStats.season)} {teamStats.gameType === 2 ? 'Regular Season' : 'Playoffs'}
+      </h2>
+
       <div className="mb-5">
         <div className="font-bold my-2">Forwards</div>
         <StatsTable

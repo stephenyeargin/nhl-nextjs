@@ -56,7 +56,7 @@ export const formatLocalizedTime = (timeString: string | number | Date | undefin
 export const formatStat = (
   value: number | string | undefined,
   precision?: number,
-  unit?: 'start' | 'time' | string
+  unit?: 'start' | 'time' | 'plusMinus' | string
 ): string | number => {
   if (unit === 'start') {
     return value ? 'Yes' : 'No';
@@ -66,11 +66,13 @@ export const formatStat = (
     return formatSecondsToGameTime(value);
   }
 
+  const numeric = typeof value === 'number' ? value : Number(value);
+
   if (precision) {
     if (value === undefined || value === null || value === '') {
       return '--';
     }
-    const numeric = typeof value === 'number' ? value : Number(value);
+
     if (Number.isNaN(numeric)) {
       return '--';
     }
@@ -83,6 +85,10 @@ export const formatStat = (
 
   if (value === undefined) {
     return '--';
+  }
+
+  if (numeric && unit === 'plusMinus') {
+    return Number(value) > 0 ? `+${value}` : value;
   }
 
   return value;
