@@ -61,4 +61,8 @@ export interface ScheduleTeam {
   placeName: { default: string };
 }
 
-// (TeamSlugParam moved to routeParams.ts to avoid duplicate declarations)
+export interface PlayerName {
+  sweaterNumber?: number;
+  firstName: { default: string };
+  lastName: { default: string };
+}

@@ -4,6 +4,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { marked } from 'marked';
+import { PlayerName } from '../types';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -223,4 +224,12 @@ export const formatHeadTitle = (value: string | undefined): void => {
   if (value) {
     window.document.title = value;
   }
+};
+
+export const formatPlayerName = (name: PlayerName): string => {
+  if (name.firstName?.default && name.lastName?.default) {
+    return `${name.firstName.default} ${name.lastName.default}`;
+  }
+
+  return '';
 };

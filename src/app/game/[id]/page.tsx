@@ -23,7 +23,7 @@ import {
 } from '@/app/utils/constants';
 import PageError from '@/app/components/PageError';
 import TeamLogo from '@/app/components/TeamLogo';
-import { formatPeriodLabel, formatStat } from '@/app/utils/formatters';
+import { formatPeriodLabel, formatPlayerName, formatStat } from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
 import GameStory from '@/app/components/GameStory';
 import FloatingVideoPlayer from '@/app/components/FloatingVideoPlayer';
@@ -341,17 +341,17 @@ const GamePage: React.FC = () => {
                                 />
                                 <div>
                                   <div className="font-bold">
-                                    {penalty.committedByPlayer?.default ||
+                                    {formatPlayerName(penalty.committedByPlayer) ||
                                       penalty.teamAbbrev.default}
                                   </div>
                                   {penalty.drawnBy && (
                                     <div className="text-xs text-slate-600">
-                                      Drawn by: {penalty.drawnBy.default}
+                                      Drawn by: {formatPlayerName(penalty.drawnBy)}
                                     </div>
                                   )}
                                   {penalty.servedBy && (
                                     <div className="text-xs text-slate-600">
-                                      Served by: {penalty.servedBy.default}
+                                      Served by: {formatPlayerName(penalty.servedBy)}
                                     </div>
                                   )}
                                 </div>
