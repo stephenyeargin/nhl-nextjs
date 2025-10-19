@@ -62,7 +62,8 @@ export interface ScheduleTeam {
 }
 
 export interface PlayerName {
+  default?: string;
   sweaterNumber?: number;
-  firstName: { default: string };
-  lastName: { default: string };
+  firstName?: { default: string };
+  lastName?: { default: string };
 }

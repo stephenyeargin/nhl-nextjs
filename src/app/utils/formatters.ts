@@ -227,6 +227,14 @@ export const formatHeadTitle = (value: string | undefined): void => {
 };
 
 export const formatPlayerName = (name: PlayerName): string => {
+  if (!name) {
+    return '(Unnamed)';
+  }
+
+  if (name.default) {
+    return name.default;
+  }
+
   if (name.firstName?.default && name.lastName?.default) {
     return `${name.firstName.default} ${name.lastName.default}`;
   }

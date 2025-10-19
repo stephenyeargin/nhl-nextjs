@@ -341,8 +341,9 @@ const GamePage: React.FC = () => {
                                 />
                                 <div>
                                   <div className="font-bold">
-                                    {formatPlayerName(penalty.committedByPlayer) ||
-                                      penalty.teamAbbrev.default}
+                                    {penalty.committedByPlayer
+                                      ? formatPlayerName(penalty.committedByPlayer)
+                                      : penalty.teamAbbrev.default}
                                   </div>
                                   {penalty.drawnBy && (
                                     <div className="text-xs text-slate-600">
