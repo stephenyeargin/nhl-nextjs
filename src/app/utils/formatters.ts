@@ -226,7 +226,7 @@ export const formatHeadTitle = (value: string | undefined): void => {
   }
 };
 
-export const formatPlayerName = (name: PlayerName): string => {
+export const formatPlayerName = (name?: PlayerName): string => {
   if (!name) {
     return '(Unnamed)';
   }
