@@ -76,7 +76,7 @@ export default async function PlayoffsPage(props: any) {
   return (
     <main className="px-2 py-10 text-white" style={{ backgroundColor: '#121212' }}>
       <div className="max-w-4xl my-5 mx-auto p-5 rounded-xl">
-        {bracket.bracketLogo && (
+        {Array.isArray(bracket.series) && bracket.series.length > 0 && bracket.bracketLogo ? (
           <Image
             src={bracket.bracketLogo}
             alt="NHL Playoffs"
@@ -84,6 +84,17 @@ export default async function PlayoffsPage(props: any) {
             height={1024}
             className="h-auto w-auto"
           />
+        ) : (
+          <div className="flex justify-center align-middle">
+            <Image
+              src={'https://assets.nhle.com/logos/nhl/svg/NHL_light.svg'}
+              alt="NHL Playoffs"
+              width={1024}
+              height={1024}
+              className="h-10 w-10 pe-2"
+            />
+            <div className="text-2xl font-bold leading-10">{year} Stanley Cup Playoffs</div>
+          </div>
         )}
       </div>
 
@@ -92,53 +103,57 @@ export default async function PlayoffsPage(props: any) {
         <PlayoffYearSelector seasons={seasons} year={Number(year)} />
       </div>
 
-      <div className={`hidden sm:grid grid-cols-${columnCount} align-center gap-5`}>
-        {bracket.series.find((s) => s.seriesAbbrev === 'SCQ') && (
-          <div>
-            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'W')} />
-            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'X')} />
-            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'Y')} />
-            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'Z')} />
+      {Array.isArray(bracket.series) && bracket.series.length > 0 ? (
+        <div className={`hidden sm:grid grid-cols-${columnCount} align-center gap-5`}>
+          {bracket.series.find((s) => s.seriesAbbrev === 'SCQ') && (
+            <div>
+              <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'W')} />
+              <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'X')} />
+              <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'Y')} />
+              <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'Z')} />
+            </div>
+          )}
+          <div className="col-span-1 my-auto">
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'E')} />
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'F')} />
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'G')} />
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'H')} />
           </div>
-        )}
-        <div className="col-span-1 my-auto">
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'E')} />
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'F')} />
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'G')} />
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'H')} />
-        </div>
-        <div className="col-span-1 my-auto">
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'K')} />
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'L')} />
-        </div>
-        <div className="col-span-1 my-auto">
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'N')} />
-        </div>
-        <div className="col-span-1 my-auto">
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'O')} />
-        </div>
-        <div className="col-span-1 my-auto">
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'M')} />
-        </div>
-        <div className="col-span-1 my-auto">
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'I')} />
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'J')} />
-        </div>
-        <div className="col-span-1 my-auto">
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'A')} />
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'B')} />
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'C')} />
-          <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'D')} />
-        </div>
-        {bracket.series.find((s) => s.seriesAbbrev === 'SCQ') && (
-          <div>
-            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'S')} />
-            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'T')} />
-            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'U')} />
-            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'V')} />
+          <div className="col-span-1 my-auto">
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'K')} />
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'L')} />
           </div>
-        )}
-      </div>
+          <div className="col-span-1 my-auto">
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'N')} />
+          </div>
+          <div className="col-span-1 my-auto">
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'O')} />
+          </div>
+          <div className="col-span-1 my-auto">
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'M')} />
+          </div>
+          <div className="col-span-1 my-auto">
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'I')} />
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'J')} />
+          </div>
+          <div className="col-span-1 my-auto">
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'A')} />
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'B')} />
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'C')} />
+            <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'D')} />
+          </div>
+          {bracket.series.find((s) => s.seriesAbbrev === 'SCQ') && (
+            <div>
+              <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'S')} />
+              <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'T')} />
+              <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'U')} />
+              <PlayoffSeriesTile year={Number(year)} series={getSeriesByLetter(bracket, 'V')} />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="text-center my-40">No scheduled games.</div>
+      )}
 
       {Object.entries(groupedSeries)
         .filter(([, seriesList]) => seriesList.some((s) => s.topSeedTeam && s.bottomSeedTeam))
