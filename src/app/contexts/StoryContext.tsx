@@ -112,7 +112,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ storyId, children 
         );
       } catch (error) {
         setPageError({ message: 'Failed to load story. Please try again later.', error });
-        // eslint-disable-next-line no-console
+
         console.error('Error fetching story data:', error);
       }
     };

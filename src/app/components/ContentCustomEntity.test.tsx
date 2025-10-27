@@ -3,11 +3,9 @@ import { render, screen } from '@testing-library/react';
 import ContentCustomEntity from './ContentCustomEntity';
 
 // Mock next/image to avoid layout issues
-// eslint-disable-next-line react/display-name, @next/next/no-img-element
 jest.mock('next/image', () => {
-  // eslint-disable-next-line @next/next/no-img-element
-  const Img = (props: any) => <img alt={props.alt} />;
-  (Img as any).displayName = 'NextImageMock';
+  const Img = (props: { alt: string }) => <img alt={props.alt} />;
+  (Img as { displayName?: string }).displayName = 'NextImageMock';
 
   return Img;
 });
@@ -16,7 +14,7 @@ describe('ContentCustomEntity', () => {
   beforeAll(() => {
     // Mock FileReader used in component
     class FileReaderMock {
-      public result: any;
+      public result: string | null = null;
       public onloadend: (() => void) | null = null;
       readAsDataURL() {
         this.result = 'data:image/gif;base64,AAAA';
@@ -25,11 +23,10 @@ describe('ContentCustomEntity', () => {
         }
       }
     }
-    // @ts-ignore
+    // @ts-expect-error - Mocking global FileReader for tests
     global.FileReader = FileReaderMock;
 
     // Mock fetch for blur image request
-    // @ts-ignore
     global.fetch = jest.fn().mockResolvedValue({ blob: () => Promise.resolve({}) });
   });
 

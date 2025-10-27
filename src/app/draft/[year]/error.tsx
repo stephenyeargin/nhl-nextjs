@@ -9,7 +9,6 @@ export default function DraftYearError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.error('Draft year page error', error);
   }, [error]);
 

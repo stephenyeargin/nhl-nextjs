@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import TeamStatsSummary, { TeamStandingLite } from './TeamStatsSummary';
+import type { TeamStandingLite } from './TeamStatsSummary';
+import TeamStatsSummary from './TeamStatsSummary';
 
 const makeStanding = (overrides: Partial<TeamStandingLite> = {}): TeamStandingLite => ({
   gamesPlayed: 82,

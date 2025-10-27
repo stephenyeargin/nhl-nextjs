@@ -9,7 +9,6 @@ export default function NewsArticleError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.error('News article page error', error);
   }, [error]);
 

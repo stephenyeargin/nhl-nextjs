@@ -12,7 +12,7 @@ import Link from 'next/link';
 
 interface GamePreviewProps {
   game: any;
-} // TODO: refine typing
+}
 
 const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
   const [activeStatTeam, setActiveStatTeam] = useState<'awayTeam' | 'homeTeam'>('awayTeam');

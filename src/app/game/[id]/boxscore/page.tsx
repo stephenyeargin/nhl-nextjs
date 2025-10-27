@@ -53,7 +53,6 @@ const BoxScore: React.FC = () => {
         } as BoxScoreData);
         setGameState(game.gameState);
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error fetching game data:', error);
       }
     };

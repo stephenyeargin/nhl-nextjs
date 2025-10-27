@@ -10,6 +10,8 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    // Next.js 16 changes: minimumCacheTTL default is now 4 hours (14400s)
+    // and imageSizes no longer includes 16 by default
     remotePatterns: [
       {
         protocol: 'https',
@@ -37,6 +39,8 @@ const nextConfig = {
       },
     ],
   },
+  // Turbopack is now the default bundler in Next.js 16
+  // To use webpack instead, run: next dev --webpack or next build --webpack
 };
 
 export default nextConfig;

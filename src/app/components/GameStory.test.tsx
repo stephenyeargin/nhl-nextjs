@@ -3,9 +3,9 @@ import { render, waitFor } from '@testing-library/react';
 import GameStory from './GameStory';
 
 // Mock next/image (add displayName); allow native img for simplicity
-// eslint-disable-next-line @next/next/no-img-element
+
 jest.mock('next/image', () => {
-  const MockImage = (props: any) => <img {...props} alt={props.alt || 'image'} />; // eslint-disable-line @next/next/no-img-element
+  const MockImage = (props: any) => <img {...props} alt={props.alt || 'image'} />;
   (MockImage as any).displayName = 'NextImageMock';
 
   return MockImage;

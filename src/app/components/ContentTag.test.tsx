@@ -1,15 +1,16 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ContentTag from './ContentTag';
+import type { Tag } from '../types/tag';
 
 jest.mock(
   'next/link',
   () =>
-    ({ children }: any) =>
+    ({ children }: { children: React.ReactNode }) =>
       children
 );
 
-const base = { _entityId: '1', slug: 'topic', title: 'Title' } as any;
+const base: Tag = { _entityId: '1', slug: 'topic', title: 'Title' };
 
 describe('ContentTag', () => {
   test('defaults to news topic url', () => {

@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
 import type { Metadata } from 'next';
 import { env } from '@/config/env';
 import localFont from 'next/font/local';

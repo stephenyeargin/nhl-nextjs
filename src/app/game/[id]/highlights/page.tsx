@@ -25,7 +25,6 @@ const Highlights: React.FC = () => {
         const v: VideoApiResponse = await videosResponse.json();
         setVideos(v.items as VideoItemBase[]);
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error fetching related videos:', error);
       }
     };

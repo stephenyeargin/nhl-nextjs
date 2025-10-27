@@ -2,8 +2,10 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 // Mock next/image to avoid base URL issues in tests
 jest.mock('next/image', () => {
-  const MockImage = (props: any) => <span data-testid="mock-image" {...props} />;
-  (MockImage as any).displayName = 'MockNextImage';
+  const MockImage = (props: React.ImgHTMLAttributes<HTMLSpanElement>) => (
+    <span data-testid="mock-image" {...props} />
+  );
+  (MockImage as { displayName?: string }).displayName = 'MockNextImage';
 
   return MockImage;
 });

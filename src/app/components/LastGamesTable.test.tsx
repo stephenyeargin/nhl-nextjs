@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
-import LastGamesTable, { PlayerGameSummary } from '@/app/components/LastGamesTable';
+import type { PlayerGameSummary } from '@/app/components/LastGamesTable';
+import LastGamesTable from '@/app/components/LastGamesTable';
 
 const headers = [
   { key: 'goals', label: 'G', title: 'Goals' },

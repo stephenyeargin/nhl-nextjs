@@ -3,9 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import IceRink from './IceRink';
 
 // Mock next/image with displayName
-// eslint-disable-next-line @next/next/no-img-element
+
 jest.mock('next/image', () => {
-  const MockImg = (props: any) => <img {...props} alt={props.alt || 'img'} />; // eslint-disable-line @next/next/no-img-element
+  const MockImg = (props: any) => <img {...props} alt={props.alt || 'img'} />;
   (MockImg as any).displayName = 'NextImageMock';
 
   return MockImg;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
-import PlayerStatsTable, { PlayerSeasonTotals } from '@/app/components/PlayerStatsTable';
+import type { PlayerSeasonTotals } from '@/app/components/PlayerStatsTable';
+import PlayerStatsTable from '@/app/components/PlayerStatsTable';
 
 const headers = [
   { key: 'gamesPlayed', label: 'GP', title: 'Games Played' },

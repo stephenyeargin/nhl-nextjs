@@ -49,7 +49,6 @@ export const useScoresData = (): UseScoresDataResult => {
         const scoresResponse = await fetch(`/api/nhl/score/${todayString}`, { cache: 'no-store' });
         setScores(await scoresResponse.json());
       } catch (e) {
-        // eslint-disable-next-line no-console
         console.error('Failed to fetch scores:', e);
       }
     };

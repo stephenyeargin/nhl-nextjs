@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import StoryCard from '@/app/components/StoryCard';
 import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
-import { StoryItem, PaginatedContentResponse } from '@/app/types/content';
+import type { StoryItem, PaginatedContentResponse } from '@/app/types/content';
 
 // Contract:
 // - Fetch latest 22 news stories for NHL context tagged 'news'.
@@ -23,7 +23,7 @@ const fetchNews = async (): Promise<StoryItem[]> => {
     const json: PaginatedContentResponse<StoryItem> = await res.json();
 
     return json.items || [];
-  } catch (_e) {
+  } catch {
     return [];
   }
 };

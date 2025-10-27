@@ -3,21 +3,18 @@ import { render, screen } from '@testing-library/react';
 import PlayoffSeriesTile from './PlayoffSeriesTile';
 
 jest.mock('next/image', () => {
-  // eslint-disable-next-line @next/next/no-img-element, react/display-name
   const Img = ({ src, alt }: any) => <img data-testid="img" src={src} alt={alt} />;
   (Img as any).displayName = 'NextImageMock';
 
   return Img;
 });
 jest.mock('./TeamLogo', () => {
-  // eslint-disable-next-line react/display-name
   const Logo = ({ alt }: any) => <div data-testid={`logo-${alt}`} />;
   (Logo as any).displayName = 'TeamLogoMock';
 
   return Logo;
 });
 jest.mock('next/link', () => {
-  // eslint-disable-next-line react/display-name
   const Link = ({ children, href }: any) => <a href={href}>{children}</a>;
   (Link as any).displayName = 'NextLinkMock';
 

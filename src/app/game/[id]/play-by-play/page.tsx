@@ -37,7 +37,6 @@ const PlayByPlay: React.FC = () => {
           setActivePeriod(playByPlayData.periodDescriptor?.number);
         }
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error fetching game data:', error);
       }
     };

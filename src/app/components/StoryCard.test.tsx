@@ -3,8 +3,6 @@ import { render, screen } from '@testing-library/react';
 import StoryCard from './StoryCard';
 
 jest.mock('next/image', () => {
-  /* eslint-disable @next/next/no-img-element */
-  // eslint-disable-next-line react/display-name
   const Img = ({ src, alt, blurDataURL }: any) => (
     <img alt={alt} data-src={src} data-blur={blurDataURL ? '1' : '0'} />
   );

@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 const validTeamKeys = getTeamSlugs();
 
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const url = new URL(request.url);
   const pathParts = url.pathname.split('/').filter(Boolean);
 

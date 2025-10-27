@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import TeamLogo from './TeamLogo';
 
 jest.mock('next/image', () => {
-  // eslint-disable-next-line @next/next/no-img-element, react/display-name
   const MockImage = (props: any) => <img alt={props.alt || 'img'} {...props} />;
   MockImage.displayName = 'MockImage';
 

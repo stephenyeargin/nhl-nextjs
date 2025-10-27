@@ -62,7 +62,7 @@ const StoryCard: React.FC<StoryCardProps> = ({
             })
         );
         setBlurDataURL(base64);
-      } catch (e) {
+      } catch {
         // swallow errors, keep placeholder
       }
     };

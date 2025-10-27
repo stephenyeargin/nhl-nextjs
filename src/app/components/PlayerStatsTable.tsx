@@ -85,12 +85,28 @@ const PlayerStatsTable: React.FC<PlayerStatsTableProps> = ({
                 <div className="flex gap-1 items-center">
                   {season.leagueAbbrev === 'NHL' && (
                     <TeamLogo
-                      team={(season.teamName as any)?.default}
+                      team={
+                        typeof season.teamName === 'object' &&
+                        season.teamName !== null &&
+                        'default' in season.teamName
+                          ? (season.teamName as { default?: string }).default
+                          : undefined
+                      }
                       className="h-8 w-8 hidden md:block"
-                      alt={String((season.teamName as any)?.default || '')}
+                      alt={String(
+                        typeof season.teamName === 'object' &&
+                          season.teamName !== null &&
+                          'default' in season.teamName
+                          ? (season.teamName as { default?: string }).default
+                          : undefined
+                      )}
                     />
                   )}
-                  {(season.teamName as any)?.default}
+                  {typeof season.teamName === 'object' &&
+                  season.teamName !== null &&
+                  'default' in season.teamName
+                    ? (season.teamName as { default?: string }).default
+                    : undefined}
                 </div>
               </td>
               {showLeague && <td className="text-left">{season.leagueAbbrev}</td>}
@@ -120,7 +136,7 @@ const PlayerStatsTable: React.FC<PlayerStatsTableProps> = ({
                     return n > 0 ? `+${n}` : `${n}`;
                   }
 
-                  return formatStat(value as any, precision);
+                  return formatStat(value as number | string, precision);
                 })();
 
                 return (

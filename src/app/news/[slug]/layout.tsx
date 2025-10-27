@@ -1,6 +1,7 @@
 'use client';
 
-import React, { Suspense, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React, { Suspense } from 'react';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

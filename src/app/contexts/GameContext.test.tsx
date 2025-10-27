@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import GameProvider, { useGameContext } from './GameContext';
+import * as formatters from '@/app/utils/formatters';
 
 jest.mock('@/app/utils/formatters', () => ({
   formatHeadTitle: jest.fn(),
@@ -63,8 +64,7 @@ describe('GameContext', () => {
     await waitFor(() => expect(screen.getByTestId('game-state').textContent).toBe('LIVE'));
     expect(screen.getByTestId('home-team').textContent).toBe('HOM');
     // formatHeadTitle should have been called twice (initial and live update)
-    const { formatHeadTitle } = require('@/app/utils/formatters');
-    expect(formatHeadTitle).toHaveBeenCalled();
+    expect(formatters.formatHeadTitle).toHaveBeenCalled();
   });
 
   test('sets pageError on 404', async () => {

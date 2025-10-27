@@ -1,14 +1,18 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 export const revalidate = 30; // default revalidation window
 
+interface RouteContext {
+  params: Promise<{
+    path: string[];
+  }>;
+}
+
 // Simple proxy to NHL API with basic caching.
-// NOTE: Next.js 15 tightened validation of the second argument's type for Route Handlers.
-// Providing a custom inline type for the context object can trigger a build-time error
-// ("invalid 'GET' export"). We accept `any` here and narrow inside to stay compatible.
-export async function GET(_req: NextRequest, context: any) {
-  const pathSegs: string[] = context?.params?.path || [];
+export async function GET(_req: NextRequest, context: RouteContext) {
+  const params = await context.params;
+  const pathSegs: string[] = params?.path || [];
   const upstreamUrl = `https://api-web.nhle.com/v1/${pathSegs.join('/')}`;
 
   const res = await fetch(upstreamUrl, {

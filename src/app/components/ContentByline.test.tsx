@@ -2,17 +2,31 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ContentByline from './ContentByline';
 
+interface Story {
+  contentDate: string;
+  fields: {
+    contributorOverride?: string;
+  };
+  references: {
+    contributor?: Array<{
+      _entityId: string;
+      title: string;
+      fields?: { source?: string };
+    }>;
+  };
+}
+
 jest.mock('../utils/formatters', () => ({
   ...jest.requireActual('../utils/formatters'),
   formatLocalizedDate: (d: string) => `DATE(${d})`,
 }));
 
 describe('ContentByline', () => {
-  const baseStory = {
+  const baseStory: Story = {
     contentDate: '2024-01-01T00:00:00Z',
     fields: {},
     references: {},
-  } as any;
+  };
 
   it('renders contributor override when present', () => {
     render(

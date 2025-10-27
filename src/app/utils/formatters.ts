@@ -4,7 +4,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { marked } from 'marked';
-import { PlayerName } from '../types';
+import type { PlayerName } from '../types';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);

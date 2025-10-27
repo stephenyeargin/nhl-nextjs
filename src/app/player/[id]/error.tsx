@@ -9,7 +9,6 @@ export default function PlayerError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.error('Player page error', error);
   }, [error]);
 

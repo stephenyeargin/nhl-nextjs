@@ -9,7 +9,6 @@ export default function ScoresError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.error('Scores page error', error);
   }, [error]);
 

@@ -4,9 +4,8 @@ import FloatingAudioPlayer from './FloatingAudioPlayer';
 import FloatingVideoPlayer from './FloatingVideoPlayer';
 
 // Mock next/image (not strictly needed here) with display name & suppress @next/next rule
-// eslint-disable-next-line @next/next/no-img-element
+
 jest.mock('next/image', () => {
-  // eslint-disable-next-line @next/next/no-img-element
   const Img = ({ alt }: any) => <img alt={alt || 'img'} />;
   (Img as any).displayName = 'MockImage';
 
@@ -15,7 +14,6 @@ jest.mock('next/image', () => {
 
 // Mock react-player lazy import (suspends internally) to avoid act() Suspense warning
 jest.mock('react-player/lazy', () => {
-  // eslint-disable-next-line react/display-name
   const Player = () => <div data-testid="react-player" />;
   (Player as any).displayName = 'ReactPlayerMock';
 

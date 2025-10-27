@@ -23,7 +23,7 @@ export async function safeFetchJSON<T>(
   let res: Response;
   try {
     res = await fetch(url, init);
-  } catch (e) {
+  } catch {
     throw buildError(`Network error while fetching ${url}`, undefined, url);
   }
 

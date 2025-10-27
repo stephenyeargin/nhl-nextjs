@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import VideoCard from './VideoCard';
 
 jest.mock('next/image', () => {
-  // eslint-disable-next-line @next/next/no-img-element, react/display-name
   const Img = ({ alt }: any) => <img alt={alt} />;
   (Img as any).displayName = 'NextImageMock';
 

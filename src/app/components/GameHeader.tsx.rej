@@ -1,0 +1,9 @@
+@@ -249,7 +247,7 @@
+               </div>
+               <div className="px-4 py-2 text-center text-sm">
+                 <div className="font-light">
+-                  {formatPeriodLabel(periodDescriptor)}
++                  {formatPeriodLabel(periodDescriptor as any)}
+                 </div>
+                 {gameScheduleState !== 'PPD' && gameState !== 'OFF' && gameState !== 'FINAL' && (
+                   <GameClock clock={clock} gameState={gameState} />

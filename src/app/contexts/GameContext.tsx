@@ -197,7 +197,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ gameId, children }) 
         }
       } catch (error) {
         // Already captured high-level error above; just log for diagnostics
-        // eslint-disable-next-line no-console
+
         console.error('Error fetching game data:', error);
       }
 

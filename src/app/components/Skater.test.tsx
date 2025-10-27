@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import { Skater } from './Skater';
 
 jest.mock('./Headshot', () => {
-  // eslint-disable-next-line react/display-name
   const HS = ({ alt }: any) => <div data-testid="headshot">{alt}</div>;
   (HS as any).displayName = 'HeadshotMock';
 

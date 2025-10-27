@@ -9,7 +9,6 @@ export default function PlayoffsYearError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.error('Playoffs year page error', error);
   }, [error]);
 

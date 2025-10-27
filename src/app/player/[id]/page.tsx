@@ -24,108 +24,22 @@ import ContentCustomEntity from '@/app/components/ContentCustomEntity';
 import { STAT_CONTEXT } from '@/app/utils/constants';
 import LoadMoreButton from '@/app/components/LoadMoreButton';
 import ContentPhoto from '@/app/components/ContentPhoto';
-import { StoryItem, PaginatedContentResponse, LocalizedString } from '@/app/types/content';
+import type { StoryItem, PaginatedContentResponse } from '@/app/types/content';
+import type { PlayerLandingResponse, StatHeader } from '@/app/types/player';
 import StatBox from '@/app/components/StatBox';
-import PlayerStatsTable from '@/app/components/PlayerStatsTable';
+import PlayerStatsTable, {
+  type PlayerSeasonTotals as PlayerSeasonTotalsRow,
+} from '@/app/components/PlayerStatsTable';
 import LastGamesTable from '@/app/components/LastGamesTable';
 
-// --- Domain Types (partial shapes focusing on accessed fields) ---
-interface DraftDetails {
-  round?: number;
-  pickInRound?: number;
-  overallPick?: number;
-  year?: number;
-  teamAbbrev?: string;
-}
-// Stats container; dynamic keys for various stat metrics (numbers) while preserving known fields
-interface PlayerSeasonTotals {
-  season: string | number;
-  leagueAbbrev: string;
-  gameTypeId: number; // 2 regular, 3 playoffs
-  teamName?: LocalizedString;
-  // Dynamically keyed stat metrics (goalie or skater); values numeric or undefined
-  [stat: string]: string | number | LocalizedString | undefined;
-}
-interface PlayerGameSummary {
-  gameId: string | number;
-  gameDate: string;
-  homeRoadFlag: 'H' | 'A';
-  teamAbbrev: string;
-  opponentAbbrev: string;
-  [k: string]: unknown;
-}
-interface PlayerBadge {
-  logoUrl: LocalizedString;
-  title: LocalizedString;
-}
-interface PlayerFeaturedStatsSubSeason {
-  [stat: string]: number | undefined;
-}
-interface PlayerFeaturedStats {
-  season?: string | number;
-  regularSeason?: { subSeason?: PlayerFeaturedStatsSubSeason };
-  playoffs?: { subSeason?: PlayerFeaturedStatsSubSeason };
-  [k: string]: unknown;
-}
-interface PlayerCareerTotals {
-  regularSeason?: Record<string, number>;
-  playoffs?: Record<string, number>;
-}
-interface PlayerAwardSeason {
-  seasonId: string | number;
-  [k: string]: unknown;
-}
-interface PlayerAward {
-  trophy: LocalizedString;
-  seasons: PlayerAwardSeason[];
-  [k: string]: unknown;
-}
-interface PlayerPhoto {
-  [k: string]: unknown;
-}
-interface PlayerEntityContent {
-  _entityId: string | number;
-  fields?: { biography?: unknown };
-  [k: string]: unknown;
-}
-
-interface PlayerLandingResponse {
-  playerId: number | string;
-  firstName: LocalizedString;
-  lastName: LocalizedString;
-  heightInInches: number;
-  weightInPounds: number;
-  birthDate: string;
-  birthCity: LocalizedString;
-  birthStateProvince?: LocalizedString;
-  birthCountry?: string;
-  badges: PlayerBadge[];
-  shootsCatches?: string;
-  draftDetails?: DraftDetails;
-  sweaterNumber?: number | string;
-  currentTeamAbbrev: string;
-  position: string;
-  headshot?: string;
-  teamLogo?: string;
-  heroImage?: string;
-  seasonTotals: PlayerSeasonTotals[];
-  last5Games?: PlayerGameSummary[];
-  featuredStats?: PlayerFeaturedStats;
-  careerTotals?: PlayerCareerTotals;
-  awards?: PlayerAward[];
-  isActive?: boolean;
-  currentTeamRoster?: unknown[];
-  [k: string]: unknown;
-}
-
-interface PlayerNewsResponse extends PaginatedContentResponse<StoryItem> {}
+type PlayerNewsResponse = PaginatedContentResponse<StoryItem>;
 
 const SEASON_TYPES: Record<number, 'regularSeason' | 'playoffs'> = {
   2: 'regularSeason',
   3: 'playoffs',
 };
 
-const statHeaders = [
+const statHeaders: readonly StatHeader[] = [
   { key: 'gamesPlayed', label: 'GP', title: 'Games Played' },
   { key: 'gamesStarted', label: 'GS', title: 'Games Started', unit: 'start' },
   { key: 'decision', label: 'D', title: 'Decision' },
@@ -190,11 +104,15 @@ export default function PlayerPage() {
   const [player, setPlayer] = useState<PlayerLandingResponse | null>(null);
   const [photoOffset, setPhotoOffset] = useState(0);
   const [hasMorePhotos, setHasMorePhotos] = useState(true);
-  const [playerContent, setPlayerContent] = useState<PaginatedContentResponse<PlayerEntityContent>>(
-    { items: [] }
-  );
+  // Infer the prop types from the component to avoid 'any' and duplication
+  type ContentCustomEntityPart = React.ComponentProps<typeof ContentCustomEntity>['part'];
+  type PhotoPart = React.ComponentProps<typeof ContentPhoto>['part'];
+
+  const [playerContent, setPlayerContent] = useState<
+    PaginatedContentResponse<ContentCustomEntityPart>
+  >({ items: [] });
   const [playerNews, setPlayerNews] = useState<PlayerNewsResponse>({ items: [] });
-  const [playerPhotos, setPlayerPhotos] = useState<PlayerPhoto[]>([]);
+  const [playerPhotos, setPlayerPhotos] = useState<PhotoPart[]>([]);
   const [activeLeague, setActiveLeague] = useState<'nhl' | 'other'>('nhl');
   const [seasonType, setSeasonType] = useState<2 | 3>(2); // [2: Regular season, 3: Post-season]
 
@@ -213,7 +131,7 @@ export default function PlayerPage() {
         `https://forge-dapi.d3.nhle.com/v2/content/en-us/players?tags.slug=playerid-${playerData.playerId}`,
         { cache: 'no-store' }
       );
-      const playerContentJson: PaginatedContentResponse<PlayerEntityContent> =
+      const playerContentJson: PaginatedContentResponse<ContentCustomEntityPart> =
         await playerContentResponse.json();
       setPlayerContent(playerContentJson);
 
@@ -228,7 +146,7 @@ export default function PlayerPage() {
         `https://forge-dapi.d3.nhle.com/v2/content/en-us/photos/?tags.slug=playerid-${playerData.playerId}&$skip=${photoOffset}&$limit=8`,
         { cache: 'no-store' }
       );
-      const photosJson: PaginatedContentResponse<PlayerPhoto> = await photosResponse.json();
+      const photosJson: PaginatedContentResponse<PhotoPart> = await photosResponse.json();
       setPlayerPhotos((prevPhotos) => [...prevPhotos, ...photosJson.items]);
 
       if (!photosJson.pagination?.nextUrl) {
@@ -305,10 +223,10 @@ export default function PlayerPage() {
     };
   }
 
-  const nhlStats = seasonTotals.filter(
+  const nhlStats: PlayerSeasonTotalsRow[] = seasonTotals.filter(
     (l) => l.leagueAbbrev === 'NHL' && l.gameTypeId === seasonType
   );
-  const otherLeagueStats = seasonTotals.filter(
+  const otherLeagueStats: PlayerSeasonTotalsRow[] = seasonTotals.filter(
     (l) => l.leagueAbbrev !== 'NHL' && l.gameTypeId === seasonType
   );
 
@@ -345,7 +263,11 @@ export default function PlayerPage() {
         <div>
           {player.currentTeamRoster && (
             <PlayerDropdown
-              players={player.currentTeamRoster as any}
+              players={player.currentTeamRoster.map((p) => ({
+                playerId: p.playerId ?? p.id!,
+                firstName: { default: p.firstName?.default || '' },
+                lastName: { default: p.lastName?.default || '' },
+              }))}
               activePlayer={player.playerId}
             />
           )}
@@ -483,7 +405,7 @@ export default function PlayerPage() {
           </summary>
           <hr className="my-5" />
           {playerContent.items.map((item) => (
-            <ContentCustomEntity key={item._entityId} part={item as any} />
+            <ContentCustomEntity key={item._entityId} part={item as ContentCustomEntityPart} />
           ))}
         </details>
       )}
@@ -565,7 +487,7 @@ export default function PlayerPage() {
               }
             >
               <PlayerStatsTable
-                stats={nhlStats as any}
+                stats={nhlStats}
                 statHeaders={statHeaders}
                 showLeague={false}
                 headerColorClass={headerColorClass}
@@ -576,7 +498,7 @@ export default function PlayerPage() {
           {otherLeagueStats.length > 0 && (
             <div className={nhlStats.length === 0 || activeLeague === 'other' ? 'block' : 'hidden'}>
               <PlayerStatsTable
-                stats={otherLeagueStats as any}
+                stats={otherLeagueStats}
                 statHeaders={statHeaders}
                 showLeague={true}
                 headerColorClass={headerColorClass}
@@ -606,7 +528,9 @@ export default function PlayerPage() {
                         {formatSeason(s.seasonId)}
                       </div>
                       {statHeaders.map((stat) => {
-                        const val = (s as any)[stat.key];
+                        const raw = (s as Record<string, unknown>)[stat.key];
+                        const val =
+                          typeof raw === 'number' || typeof raw === 'string' ? raw : undefined;
                         if (val === undefined) {
                           return null;
                         }
@@ -632,7 +556,7 @@ export default function PlayerPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {playerPhotos.map((item, i) => (
               <div key={i} className="col-span-4 md:col-span-1">
-                <ContentPhoto part={item as any} />
+                <ContentPhoto part={item as PhotoPart} />
               </div>
             ))}
           </div>

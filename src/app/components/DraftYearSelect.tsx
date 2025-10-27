@@ -7,7 +7,6 @@ const handleDraftYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   if (/^\d+$/.test(year)) {
     window.location.href = `/draft/${year}`;
   } else {
-    // eslint-disable-next-line no-console
     console.error('Invalid year selected:', year);
   }
 };

@@ -98,12 +98,14 @@ const GameSidebar = () => {
   };
 
   // Flatten game stats for quick lookup
-  const gameStats: Record<string, { awayValue: any; homeValue: any }> = {};
-  story.summary?.teamGameStats?.forEach((s: any) => {
-    if (s?.category) {
-      gameStats[s.category] = { awayValue: s.awayValue, homeValue: s.homeValue };
+  const gameStats: Record<string, { awayValue: number | string; homeValue: number | string }> = {};
+  story.summary?.teamGameStats?.forEach(
+    (s: { category?: string; awayValue?: number | string; homeValue?: number | string }) => {
+      if (s?.category && s.awayValue !== undefined && s.homeValue !== undefined) {
+        gameStats[s.category] = { awayValue: s.awayValue, homeValue: s.homeValue };
+      }
     }
-  });
+  );
 
   const gameStatRows = [
     { stat: 'sog' },
@@ -168,7 +170,7 @@ const GameSidebar = () => {
         </div>
       )}
 
-      {rightRail.linescore?.byPeriod && rightRail.linescore?.totals && (
+      {rightRail.linescore?.byPeriod && rightRail.linescore?.totals && game.periodDescriptor && (
         <div className="mb-5">
           <Scoreboard game={game as any} linescore={rightRail.linescore as any} />
         </div>
@@ -233,10 +235,30 @@ const GameSidebar = () => {
             {gameStatRows.map(({ stat, rank }) => (
               <StatComparisonRow
                 key={stat}
-                awayStat={gameStats?.[stat]?.awayValue || 0}
-                homeStat={gameStats?.[stat]?.homeValue || 0}
-                awayStatRank={rank ? gameStats?.[rank]?.awayValue : undefined}
-                homeStatRank={rank ? gameStats?.[rank]?.homeValue : undefined}
+                awayStat={
+                  typeof gameStats?.[stat]?.awayValue === 'number'
+                    ? gameStats[stat].awayValue
+                    : Number(gameStats?.[stat]?.awayValue) || 0
+                }
+                homeStat={
+                  typeof gameStats?.[stat]?.homeValue === 'number'
+                    ? gameStats[stat].homeValue
+                    : Number(gameStats?.[stat]?.homeValue) || 0
+                }
+                awayStatRank={
+                  rank
+                    ? typeof gameStats?.[rank]?.awayValue === 'number'
+                      ? gameStats[rank].awayValue
+                      : Number(gameStats?.[rank]?.awayValue)
+                    : undefined
+                }
+                homeStatRank={
+                  rank
+                    ? typeof gameStats?.[rank]?.homeValue === 'number'
+                      ? gameStats[rank].homeValue
+                      : Number(gameStats?.[rank]?.homeValue)
+                    : undefined
+                }
                 awayTeam={awayTeam as any}
                 homeTeam={homeTeam as any}
                 stat={stat as any}
