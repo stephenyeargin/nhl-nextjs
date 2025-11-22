@@ -246,18 +246,10 @@ const GameSidebar = () => {
                     : Number(gameStats?.[stat]?.homeValue) || 0
                 }
                 awayStatRank={
-                  rank
-                    ? typeof gameStats?.[rank]?.awayValue === 'number'
-                      ? gameStats[rank].awayValue
-                      : Number(gameStats?.[rank]?.awayValue)
-                    : undefined
+                  rank && gameStats?.[rank]?.awayValue ? gameStats[rank].awayValue : undefined
                 }
                 homeStatRank={
-                  rank
-                    ? typeof gameStats?.[rank]?.homeValue === 'number'
-                      ? gameStats[rank].homeValue
-                      : Number(gameStats?.[rank]?.homeValue)
-                    : undefined
+                  rank && gameStats?.[rank]?.homeValue ? gameStats[rank].homeValue : undefined
                 }
                 awayTeam={awayTeam as any}
                 homeTeam={homeTeam as any}
