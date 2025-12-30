@@ -156,7 +156,7 @@ describe('GameSidebar (smoke)', () => {
     expect(asFragment()).toMatchSnapshot();
 
     // Click recap button to trigger FloatingVideoPlayer visibility
-    fireEvent.click(screen.getByText(/3:00 Recap/i));
+    fireEvent.click(screen.getByText(/Recap/i));
     await waitFor(() => expect(screen.getByTestId('video-player')).toBeInTheDocument());
 
     // Snapshot after opening video

@@ -153,10 +153,10 @@ const GameSidebar = () => {
         <div className="flex justify-items-end gap-2 mb-3">
           {gameVideo?.threeMinRecap && (
             <button
-              onClick={() => handleOpenVideo(gameVideo.threeMinRecap, '3:00 Recap')}
+              onClick={() => handleOpenVideo(gameVideo.threeMinRecap, 'Recap')}
               className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
             >
-              <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> 3:00 Recap
+              <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Recap
             </button>
           )}
           {gameVideo?.condensedGame && (

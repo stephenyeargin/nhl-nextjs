@@ -24,7 +24,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
             fill="currentColor"
           />
         </svg>
-         3:00 Recap
+         Recap
       </button>
       <button
         class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
@@ -532,7 +532,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
             fill="currentColor"
           />
         </svg>
-         3:00 Recap
+         Recap
       </button>
       <button
         class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
@@ -1015,7 +1015,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
     <div
       data-testid="video-player"
     >
-      Video 3:00 Recap
+      Video Recap
     </div>
   </div>
 </DocumentFragment>
