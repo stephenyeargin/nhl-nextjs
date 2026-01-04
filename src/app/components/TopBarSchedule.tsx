@@ -207,7 +207,7 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
         <div className="flex flex-nowrap gap-4">
           {games.length === 0 && (
             <div
-              className="flex items-center border rounded"
+              className="flex items-center border rounded-sm"
               style={{ minHeight: '9.25rem', minWidth: '360px' }}
             >
               <div className="p-4 text-gray-500">No games scheduled for today.</div>

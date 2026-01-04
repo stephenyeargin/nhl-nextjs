@@ -2,7 +2,7 @@
 
 exports[`StatBox matches snapshot (plusMinus positive) 1`] = `
 <div
-  class="p-2 bg-transparent text-center border rounded content-center"
+  class="p-2 bg-transparent text-center border rounded-sm content-center"
   style="min-width: 7rem;"
 >
   <div

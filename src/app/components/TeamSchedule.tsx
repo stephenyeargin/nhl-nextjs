@@ -87,7 +87,7 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }: TeamSchedulePro
               <td>
                 <div className="flex gap-2 items-center">
                   {game.gameType === 1 && (
-                    <span className="text-xs p-1 border rounded">Preseason</span>
+                    <span className="text-xs p-1 border rounded-sm">Preseason</span>
                   )}
                   <TeamLogo
                     team={
@@ -118,7 +118,7 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }: TeamSchedulePro
                   </>
                 )}
                 {['LIVE', 'CRIT'].includes(game.gameState) && (
-                  <span className="p-1 text-xs font-bold rounded text-white bg-red-900 uppercase">
+                  <span className="p-1 text-xs font-bold rounded-sm text-white bg-red-900 uppercase">
                     Live
                   </span>
                 )}
@@ -131,12 +131,12 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }: TeamSchedulePro
                   </Link>
                 )}
                 {game.gameScheduleState === 'CNCL' && (
-                  <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase">
+                  <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded-sm mr-1 uppercase">
                     <FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled
                   </span>
                 )}
                 {game.gameScheduleState === 'PPD' && (
-                  <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase">
+                  <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded-sm mr-1 uppercase">
                     <FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed
                   </span>
                 )}

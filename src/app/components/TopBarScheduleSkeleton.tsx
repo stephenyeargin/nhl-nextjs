@@ -21,7 +21,7 @@ const TopBarScheduleSkeleton: React.FC = () => {
         {[0, 1, 3, 4, 5, 6].map((placeholder) => (
           <div
             key={placeholder}
-            className="border border-slate-300 dark:border-slate-700 rounded-lg shadow-sm p-4"
+            className="border border-slate-300 dark:border-slate-700 rounded-lg shadow-xs p-4"
             style={{ minWidth: '380px' }}
           >
             <div className="space-y-2">

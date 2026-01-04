@@ -43,7 +43,7 @@ const DraftTicker: React.FC = () => {
           </div>
           <div className="text-center">
             <select
-              className="w-full mt-3 p-2 rounded border bg-inherit text-xs"
+              className="w-full mt-3 p-2 rounded-sm border bg-inherit text-xs"
               value={selectedRound}
               onChange={(e) => setSelectedRound(Number(e.target.value))}
             >
@@ -67,12 +67,12 @@ const DraftTicker: React.FC = () => {
               <TeamLogo
                 src={pick.teamLogoLight}
                 alt={pick.teamAbbrev}
-                className="h-10 w-10 flex-shrink-0"
+                className="h-10 w-10 shrink-0"
                 team={pick.teamAbbrev}
               />
             </div>
             <div className="flex flex-col items-center w-full">
-              <span className="text-xs font-bold leading-tight text-center break-words">
+              <span className="text-xs font-bold leading-tight text-center wrap-break-word">
                 {pick.firstName?.default} {pick.lastName?.default}
               </span>
               <span className="text-xs ">({pick.positionCode})</span>

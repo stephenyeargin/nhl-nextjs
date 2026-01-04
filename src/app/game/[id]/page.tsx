@@ -209,13 +209,13 @@ const GamePage: React.FC = () => {
                                 ({goal.goalsToDate})
                               </span>
                               {goal.strength !== 'ev' && (
-                                <span className="rounded text-xs ml-2 text-white bg-red-900 p-1 uppercase">
+                                <span className="rounded-sm text-xs ml-2 text-white bg-red-900 p-1 uppercase">
                                   {goal.strength}G
                                 </span>
                               )}
                               {goal.goalModifier !== 'none' && (
                                 <span
-                                  className="rounded text-xs ml-2 text-white bg-red-900  p-1 uppercase"
+                                  className="rounded-sm text-xs ml-2 text-white bg-red-900  p-1 uppercase"
                                   title={
                                     (
                                       GOAL_MODIFIERS as Record<
@@ -327,7 +327,7 @@ const GamePage: React.FC = () => {
                             className={`my-1 flex ${penaltyIndex % 2 ? '' : 'bg-slate-500/10'}`}
                           >
                             <div className="w-20 p-4 text-right">
-                              <span className="m-1 border rounded p-1 font-bold text-xs">
+                              <span className="m-1 border rounded-sm p-1 font-bold text-xs">
                                 {penalty.timeInPeriod}
                               </span>
                             </div>

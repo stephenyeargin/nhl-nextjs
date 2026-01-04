@@ -19,7 +19,7 @@ const PlayoffYearSelector: React.FC<PlayoffYearSelectorProps> = ({ seasons, year
 
   return (
     <select
-      className="p-2 rounded text-xl border bg-inherit text-white"
+      className="p-2 rounded-sm text-xl border bg-inherit text-white"
       value={year}
       onChange={handlePlayoffYearChange}
     >

@@ -21,7 +21,7 @@ const ScoresPage: React.FC = () => {
           {scores.gameWeek.map((day, i) => (
             <button
               key={i}
-              className={`p-1 border rounded w-full ${day.date === today ? 'bg-slate-200 dark:bg-slate-800' : ''}`}
+              className={`p-1 border rounded-sm w-full ${day.date === today ? 'bg-slate-200 dark:bg-slate-800' : ''}`}
               onClick={() => handleDateChange(day.date)}
             >
               <div className="text-xs my-1">

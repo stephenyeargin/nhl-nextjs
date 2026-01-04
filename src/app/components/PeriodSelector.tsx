@@ -44,7 +44,7 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({
 
   return (
     <select
-      className="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
+      className="p-2 min-w-[100px] md:min-w-[150px] border rounded-sm text-black dark:text-white bg-inherit"
       value={activePeriod}
       onChange={handleChange}
     >

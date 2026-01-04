@@ -79,7 +79,7 @@ const NewsArticle: React.FC = () => {
       <hr className="my-5" />
 
       <div className="my-5">
-        <span className="inline-block rounded p-1 text-xs font-bold m-1">Tags:</span>
+        <span className="inline-block rounded-sm p-1 text-xs font-bold m-1">Tags:</span>
         {story.tags
           .filter((t: any) => !t.extraData?.hideOnSite)
           .map((tag: any) => (

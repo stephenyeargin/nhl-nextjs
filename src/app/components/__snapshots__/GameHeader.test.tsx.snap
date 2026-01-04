@@ -3,7 +3,7 @@
 exports[`GameHeader renders team names (baseline OFF state) 1`] = `
 <DocumentFragment>
   <div
-    class="grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center"
+    class="grid grid-cols-12 my-5 border rounded-lg shadow-xs py-4 items-center"
     style="border-left: 10px solid #FFB81C; border-right: 10px solid #3A5DAE;"
   >
     <div
@@ -68,7 +68,7 @@ exports[`GameHeader renders team names (baseline OFF state) 1`] = `
         class="text-center my-2 uppercase"
       >
         <span
-          class="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black text-nowrap rounded"
+          class="text-xs md:text-sm font-medium px-2 py-1 bg-slate-100 dark:text-black text-nowrap rounded-sm"
         >
           Final
         </span>

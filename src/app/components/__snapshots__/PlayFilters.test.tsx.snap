@@ -14,7 +14,7 @@ exports[`PlayFilters invokes handlers on change and displays selected values 1`]
       class="mx-2"
     >
       <select
-        class="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
+        class="p-2 min-w-[100px] md:min-w-[150px] border rounded-sm text-black dark:text-white bg-inherit"
       >
         <option
           value="all"
@@ -80,7 +80,7 @@ exports[`PlayFilters invokes handlers on change and displays selected values 1`]
     </div>
     <div>
       <select
-        class="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
+        class="p-2 min-w-[100px] md:min-w-[150px] border rounded-sm text-black dark:text-white bg-inherit"
       >
         <option
           value="all"

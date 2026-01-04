@@ -33,7 +33,7 @@ const Headshot: React.FC<HeadshotProps> = ({
     }
   }
 
-  const finalClassName = `${className} rounded-full bg-gradient-to-tr from-gray-500 via-gray-300 to-gray-100 shadow-md`;
+  const finalClassName = `${className} rounded-full bg-linear-to-tr from-gray-500 via-gray-300 to-gray-100 shadow-md`;
 
   if (!src) {
     return <div className={finalClassName} />;

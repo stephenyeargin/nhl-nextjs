@@ -4,7 +4,7 @@ exports[`PlayEventDetails renders faceoff details 1`] = `
 <DocumentFragment>
   <div>
     <span
-      class="p-1 border rounded text-xs mx-1"
+      class="p-1 border rounded-sm text-xs mx-1"
     >
       #92
     </span>
@@ -17,7 +17,7 @@ exports[`PlayEventDetails renders faceoff details 1`] = `
     </a>
      won a faceoff against 
     <span
-      class="p-1 border rounded text-xs mx-1"
+      class="p-1 border rounded-sm text-xs mx-1"
     >
       #9
     </span>
@@ -51,7 +51,7 @@ exports[`PlayEventDetails renders goal with highlight button and triggers callba
           class="font-medium text-lg mb-3"
         >
           <span
-            class="p-1 border rounded text-xs mx-1"
+            class="p-1 border rounded-sm text-xs mx-1"
           >
             #9
           </span>
@@ -69,7 +69,7 @@ exports[`PlayEventDetails renders goal with highlight button and triggers callba
         </span>
         <span>
           <span
-            class="p-1 border rounded text-xs mx-1"
+            class="p-1 border rounded-sm text-xs mx-1"
           >
             #92
           </span>
@@ -133,7 +133,7 @@ exports[`PlayEventDetails renders penalty summary 1`] = `
         class="font-medium text-lg mb-3"
       >
         <span
-          class="p-1 border rounded text-xs mx-1"
+          class="p-1 border rounded-sm text-xs mx-1"
         >
           #92
         </span>
@@ -186,7 +186,7 @@ exports[`PlayEventDetails renders shootout goal without player total parentheses
           class="font-medium text-lg mb-3"
         >
           <span
-            class="p-1 border rounded text-xs mx-1"
+            class="p-1 border rounded-sm text-xs mx-1"
           >
             #9
           </span>

@@ -77,7 +77,7 @@ const PlayoffSeriesTile: React.FC<PlayoffSeriesTileProps> = ({ series, year }) =
       <>
         <Link
           href={`/playoffs/${year}/${series.seriesLetter?.toLowerCase()}`}
-          className="text-xs p-2 border rounded-lg shadow my-4 bg-white dark:bg-slate-800 text-black dark:text-white block"
+          className="text-xs p-2 border rounded-lg shadow-sm my-4 bg-white dark:bg-slate-800 text-black dark:text-white block"
         >
           <div className="flex flex-wrap gap-5 justify-center">
             <div
@@ -150,7 +150,7 @@ const PlayoffSeriesTile: React.FC<PlayoffSeriesTileProps> = ({ series, year }) =
     <>
       <Link
         href={`/playoffs/${year}/${series.seriesLetter?.toLowerCase()}`}
-        className="text-xs tracking-tight p-2 border rounded-lg shadow my-4 flex items-center bg-white dark:bg-slate-800 text-black dark:text-white"
+        className="text-xs tracking-tight p-2 border rounded-lg shadow-sm my-4 flex items-center bg-white dark:bg-slate-800 text-black dark:text-white"
       >
         <div className="flex-1">
           <div

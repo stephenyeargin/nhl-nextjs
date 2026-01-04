@@ -22,7 +22,7 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ players, activePlayer }
         const newPlayer = encodeURIComponent(e.target.value);
         window.location.href = `/player/${newPlayer}`;
       }}
-      className=" p-2 rounded text-xl border bg-inherit text-inherit"
+      className=" p-2 rounded-sm text-xl border bg-inherit text-inherit"
     >
       {players.map((player) => (
         <option key={player.playerId} value={player.playerId}>

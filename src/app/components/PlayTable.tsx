@@ -42,7 +42,7 @@ const PlayTable: React.FC<PlayTableProps> = ({
               <tr key={play.eventId} className={i % 2 === 0 ? 'bg-slate-500/10' : ''}>
                 <td className="p-2 text-xs text-center">
                   <div className="mt-1">
-                    <span className="p-1 mx-auto font-bold border rounded">
+                    <span className="p-1 mx-auto font-bold border rounded-sm">
                       {play.timeRemaining}
                     </span>
                   </div>
@@ -56,7 +56,7 @@ const PlayTable: React.FC<PlayTableProps> = ({
                       renderTeamLogo(play.details?.eventOwnerTeamId)}
                   </div>
                   <div>
-                    <span className="hidden lg:block p-1 border rounded font-bold text-xs uppercase">
+                    <span className="hidden lg:block p-1 border rounded-sm font-bold text-xs uppercase">
                       {(GAME_EVENTS as Record<string, string>)[play.typeDescKey]}
                     </span>
                     {play.typeDescKey === 'goal' && (

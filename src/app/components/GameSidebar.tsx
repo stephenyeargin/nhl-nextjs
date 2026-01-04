@@ -154,7 +154,7 @@ const GameSidebar = () => {
           {gameVideo?.threeMinRecap && (
             <button
               onClick={() => handleOpenVideo(gameVideo.threeMinRecap, 'Recap')}
-              className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+              className="block p-1 rounded-sm text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow-sm hover:bg-blue-600"
             >
               <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Recap
             </button>
@@ -162,7 +162,7 @@ const GameSidebar = () => {
           {gameVideo?.condensedGame && (
             <button
               onClick={() => handleOpenVideo(gameVideo.condensedGame, 'Condensed Game')}
-              className="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+              className="block p-1 rounded-sm text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow-sm hover:bg-blue-600"
             >
               <FontAwesomeIcon icon={faPlayCircle} fixedWidth /> Condensed Game
             </button>
@@ -362,7 +362,7 @@ const GameSidebar = () => {
               <Link
                 href={`/game/${g.id}`}
                 key={i}
-                className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded ${g.gameState === 'CRIT' ? 'border-red-900' : ''}`}
+                className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded-sm ${g.gameState === 'CRIT' ? 'border-red-900' : ''}`}
               >
                 <div
                   className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}
@@ -385,7 +385,7 @@ const GameSidebar = () => {
                 {!['OFF', 'FUT', 'FINAL', 'PRE'].includes(g.gameState) ? (
                   <div className="flex justify-between">
                     <div>
-                      <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded mr-1 uppercase">
+                      <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded-sm mr-1 uppercase">
                         {formatPeriodLabel(g.periodDescriptor)}
                         {g.clock?.inIntermission ? ' INT' : ''}
                       </span>
@@ -399,7 +399,7 @@ const GameSidebar = () => {
                   <div className="flex justify-between">
                     <div>
                       {['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">
+                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase">
                           Final
                         </span>
                       )}
@@ -409,17 +409,17 @@ const GameSidebar = () => {
                         </span>
                       )}
                       {g.gameScheduleState === 'CNCL' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase">
+                        <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded-sm mr-1 uppercase">
                           <FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled
                         </span>
                       )}
                       {g.gameScheduleState === 'PPD' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase">
+                        <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded-sm mr-1 uppercase">
                           <FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed
                         </span>
                       )}
                       {g.gameScheduleState === 'TBD' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase">
+                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase">
                           TBD
                         </span>
                       )}

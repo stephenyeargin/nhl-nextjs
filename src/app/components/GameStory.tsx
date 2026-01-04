@@ -40,7 +40,7 @@ const GameStory: React.FC<GameStoryProps> = ({ game }) => {
       {content.items.map((item: StoryItem) => (
         <div
           key={item._entityId}
-          className="mb-4 p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded leading-2"
+          className="mb-4 p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded-sm leading-2"
         >
           {item.thumbnail?.thumbnailUrl && (
             <Link href={`/news/${item.slug}`}>

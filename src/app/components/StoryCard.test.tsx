@@ -25,7 +25,7 @@ const baseItem = {
 const noThumbItem = { ...baseItem, thumbnail: undefined };
 
 describe('StoryCard', () => {
-  it('renders default size with blur placeholder', async () => {
+  it('renders default size with blur-sm placeholder', async () => {
     render(<StoryCard item={baseItem as any} />);
     expect(screen.getByText('Headline')).toBeInTheDocument();
     // blur placeholder image present

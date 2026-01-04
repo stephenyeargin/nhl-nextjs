@@ -99,7 +99,7 @@ export default async function SeriesPage(props: any) {
       )}
 
       <div
-        className="grid grid-cols-12 my-5 border rounded-lg shadow-sm py-4 items-center"
+        className="grid grid-cols-12 my-5 border rounded-lg shadow-xs py-4 items-center"
         style={seriesHeaderStyle}
       >
         <div className="col-span-3 flex mx-auto gap-2 items-center justify-center">

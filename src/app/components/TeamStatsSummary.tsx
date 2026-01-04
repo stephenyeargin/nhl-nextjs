@@ -110,7 +110,7 @@ export default function TeamStatsSummary({ standing }: Props) {
       {stats.map((s) => (
         <li
           key={s.key}
-          className="group relative rounded-lg border bg-white/5 dark:bg-black/30 backdrop-blur-sm p-3 flex flex-col text-center shadow-sm hover:shadow transition-shadow"
+          className="group relative rounded-lg border bg-white/5 dark:bg-black/30 backdrop-blur-xs p-3 flex flex-col text-center shadow-xs hover:shadow-sm transition-shadow"
         >
           <div className="text-xl font-semibold mb-1 tabular-nums">{s.value}</div>
           <div className="text-[0.65rem] tracking-wide uppercase font-medium opacity-80">

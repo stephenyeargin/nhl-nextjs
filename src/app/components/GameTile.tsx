@@ -97,7 +97,7 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
     <Link
       href={`/game/${game.id}`}
       key={game.id}
-      className={`border rounded-lg shadow-sm p-2 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-900' : ''}`}
+      className={`border rounded-lg shadow-xs p-2 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-900' : ''}`}
       style={style}
     >
       <div className="">
@@ -131,7 +131,10 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
                   : game.awayTeam.commonName?.default || game.awayTeam.name?.default}
               </span>
               {game.situation?.awayTeam?.situationDescriptions?.map((situation, i) => (
-                <span key={i} className="text-xs font-bold bg-red-900 text-white p-1 rounded ms-1">
+                <span
+                  key={i}
+                  className="text-xs font-bold bg-red-900 text-white p-1 rounded-sm ms-1"
+                >
                   {situation}
                 </span>
               ))}
@@ -174,7 +177,10 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
                   : game.homeTeam.commonName?.default || game.homeTeam.name?.default}
               </span>
               {game.situation?.homeTeam?.situationDescriptions?.map((situation, i) => (
-                <span key={i} className="text-xs font-bold bg-red-900 text-white p-1 rounded mx-1">
+                <span
+                  key={i}
+                  className="text-xs font-bold bg-red-900 text-white p-1 rounded-sm mx-1"
+                >
                   {situation}
                 </span>
               ))}
@@ -193,12 +199,12 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
           {['CNCL', 'PPD'].includes(game.gameScheduleState || '') ? (
             <div className="text-sm">
               {game.gameScheduleState === 'CNCL' && (
-                <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded mr-1 uppercase">
+                <span className="text-sm font-medium px-2 py-1 bg-slate-900 text-white rounded-sm mr-1 uppercase">
                   <FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled
                 </span>
               )}
               {game.gameScheduleState === 'PPD' && (
-                <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded mr-1 uppercase">
+                <span className="text-sm font-medium px-2 py-1 bg-yellow-500 text-black rounded-sm mr-1 uppercase">
                   <FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed
                 </span>
               )}
@@ -228,7 +234,7 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
               <span className="text-sm mr-2" suppressHydrationWarning>
                 {hideDate ? null : formatLocalizedDate(game.startTimeUTC)}
               </span>
-              <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:text-black rounded text-nowrap">
+              <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:text-black rounded-sm text-nowrap">
                 {(() => {
                   const pd = game.periodDescriptor;
                   const periodType = typeof pd === 'string' ? pd : pd?.periodType;
@@ -247,7 +253,7 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
           )}
           {(game.gameState === 'LIVE' || game.gameState === 'CRIT') && (
             <span>
-              <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded uppercase mr-2">
+              <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded-sm uppercase mr-2">
                 {formatPeriodLabel(game.periodDescriptor)}
                 {game.clock?.inIntermission ? ' INT' : ''}
               </span>
@@ -258,7 +264,7 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
           )}
           {['FUT', 'PRE'].includes(game.gameState) && (
             <span
-              className={`p-1 text-xs ${game.gameState === 'PRE' ? 'bg-red-900 rounded text-white' : ''}`}
+              className={`p-1 text-xs ${game.gameState === 'PRE' ? 'bg-red-900 rounded-sm text-white' : ''}`}
             >
               {game.gameScheduleState !== 'TBD' ? (
                 <span suppressHydrationWarning>{formatLocalizedTime(game.startTimeUTC)}</span>

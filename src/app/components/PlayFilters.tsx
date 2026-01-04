@@ -38,7 +38,7 @@ const PlayFilters: React.FC<PlayFiltersProps> = ({
       />
       <div className="mx-2">
         <select
-          className="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
+          className="p-2 min-w-[100px] md:min-w-[150px] border rounded-sm text-black dark:text-white bg-inherit"
           value={eventFilter || 'all'}
           onChange={(e) => onEventFilterChange(e.target.value)}
         >
@@ -58,7 +58,7 @@ const PlayFilters: React.FC<PlayFiltersProps> = ({
       </div>
       <div>
         <select
-          className="p-2 min-w-[100px] md:min-w-[150px] border rounded text-black dark:text-white bg-inherit"
+          className="p-2 min-w-[100px] md:min-w-[150px] border rounded-sm text-black dark:text-white bg-inherit"
           value={teamFilter || 'all'}
           onChange={(e) => onTeamFilterChange(e.target.value)}
         >

@@ -117,7 +117,7 @@ const IceRink: React.FC<IceRinkProps> = ({
       <div className="flex gap-2 items-center">
         <div className="mt-3 text-xs text-center">
           <div>
-            <span className="p-1 font-bold border rounded">{play.timeRemaining}</span>
+            <span className="p-1 font-bold border rounded-sm">{play.timeRemaining}</span>
           </div>
           <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
         </div>
@@ -303,7 +303,7 @@ const IceRink: React.FC<IceRinkProps> = ({
             <div className="bg-slate-200 dark:bg-slate-800 p-4 rounded-lg shadow-lg flex gap-2 items-center">
               <div className="text-xs text-center">
                 <div className="p-1" style={{ width: '75px' }}>
-                  <span className="text-xs p-1 border rounded font-bold">
+                  <span className="text-xs p-1 border rounded-sm font-bold">
                     {hoverPlay.timeRemaining}
                   </span>
                 </div>

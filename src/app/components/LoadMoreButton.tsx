@@ -9,7 +9,7 @@ const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({ handleClick }) => {
     <div className="flex justify-center py-4">
       <button
         onClick={handleClick}
-        className="p-2 px-5 text-lg font-bold rounded border bg-slate-200 dark:bg-slate-800"
+        className="p-2 px-5 text-lg font-bold rounded-sm border bg-slate-200 dark:bg-slate-800"
       >
         Load More
       </button>

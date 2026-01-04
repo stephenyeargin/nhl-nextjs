@@ -39,7 +39,7 @@ const StatBox: React.FC<StatBoxProps> = ({ statKey, value, statHeaders }) => {
 
   return (
     <div
-      className="p-2 bg-transparent text-center border rounded content-center"
+      className="p-2 bg-transparent text-center border rounded-sm content-center"
       style={{ minWidth: '7rem' }}
     >
       <div className="text-2xl capitalize">{content}</div>

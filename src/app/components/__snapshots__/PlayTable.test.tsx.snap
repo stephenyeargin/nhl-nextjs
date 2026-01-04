@@ -84,7 +84,7 @@ exports[`PlayTable renders rows and delegates details and logos 1`] = `
               class="mt-1"
             >
               <span
-                class="p-1 mx-auto font-bold border rounded"
+                class="p-1 mx-auto font-bold border rounded-sm"
               >
                 12:34
               </span>
@@ -107,7 +107,7 @@ exports[`PlayTable renders rows and delegates details and logos 1`] = `
             </div>
             <div>
               <span
-                class="hidden lg:block p-1 border rounded font-bold text-xs uppercase"
+                class="hidden lg:block p-1 border rounded-sm font-bold text-xs uppercase"
               >
                 Goal
               </span>
@@ -147,7 +147,7 @@ exports[`PlayTable renders rows and delegates details and logos 1`] = `
               class="mt-1"
             >
               <span
-                class="p-1 mx-auto font-bold border rounded"
+                class="p-1 mx-auto font-bold border rounded-sm"
               >
                 05:00
               </span>
@@ -170,7 +170,7 @@ exports[`PlayTable renders rows and delegates details and logos 1`] = `
             </div>
             <div>
               <span
-                class="hidden lg:block p-1 border rounded font-bold text-xs uppercase"
+                class="hidden lg:block p-1 border rounded-sm font-bold text-xs uppercase"
               >
                 Hit
               </span>

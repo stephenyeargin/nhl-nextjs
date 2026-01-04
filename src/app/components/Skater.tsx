@@ -93,7 +93,7 @@ export const Skater: React.FC<SkaterProps> = ({
         </div>
         {game && player.secondsRemaining && (
           <div className="pt-1">
-            <span className="border rounded p-1">
+            <span className="border rounded-sm p-1">
               <GameClock timeRemaining={time} running={!!game.clock?.running} />
             </span>
           </div>

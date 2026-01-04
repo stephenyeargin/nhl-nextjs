@@ -27,7 +27,7 @@ const ContentTag: React.FC<ContentTagProps> = ({ tag }) => {
   }
 
   return (
-    <Link href={url} key={tag._entityId} className="inline-block rounded p-1 border text-xs m-1">
+    <Link href={url} key={tag._entityId} className="inline-block rounded-sm p-1 border text-xs m-1">
       <FontAwesomeIcon icon={icon} fixedWidth className="mr-1" /> {tag.title}
     </Link>
   );

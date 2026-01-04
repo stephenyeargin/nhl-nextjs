@@ -7,7 +7,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
       class="flex justify-items-end gap-2 mb-3"
     >
       <button
-        class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+        class="block p-1 rounded-sm text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow-sm hover:bg-blue-600"
       >
         <svg
           aria-hidden="true"
@@ -27,7 +27,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
          Recap
       </button>
       <button
-        class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+        class="block p-1 rounded-sm text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow-sm hover:bg-blue-600"
       >
         <svg
           aria-hidden="true"
@@ -329,7 +329,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
         class="grid grid-cols-12 gap-3 py-4 items-center"
       >
         <a
-          class="col-span-12 lg:col-span-6 p-1 mb-1 border rounded "
+          class="col-span-12 lg:col-span-6 p-1 mb-1 border rounded-sm "
           href="/game/1001"
         >
           <div
@@ -375,7 +375,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
           >
             <div>
               <span
-                class="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"
+                class="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase"
               >
                 Final
               </span>
@@ -515,7 +515,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
       class="flex justify-items-end gap-2 mb-3"
     >
       <button
-        class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+        class="block p-1 rounded-sm text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow-sm hover:bg-blue-600"
       >
         <svg
           aria-hidden="true"
@@ -535,7 +535,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
          Recap
       </button>
       <button
-        class="block p-1 rounded text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow hover:bg-blue-600"
+        class="block p-1 rounded-sm text-sm flex-1 text-center bg-blue-900 text-white font-bold hover:shadow-sm hover:bg-blue-600"
       >
         <svg
           aria-hidden="true"
@@ -837,7 +837,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
         class="grid grid-cols-12 gap-3 py-4 items-center"
       >
         <a
-          class="col-span-12 lg:col-span-6 p-1 mb-1 border rounded "
+          class="col-span-12 lg:col-span-6 p-1 mb-1 border rounded-sm "
           href="/game/1001"
         >
           <div
@@ -883,7 +883,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
           >
             <div>
               <span
-                class="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded mr-1 uppercase"
+                class="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase"
               >
                 Final
               </span>
