@@ -151,7 +151,7 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => {
               <td className="text-center">{formatStat(team.regulationPlusOtWins)}</td>
               <td className="text-center">{formatStat(team.goalFor)}</td>
               <td className="text-center">{formatStat(team.goalAgainst)}</td>
-              <td className="text-center">{formatStat(team.goalDifferential)}</td>
+              <td className="text-center">{formatStat(team.goalDifferential, 0, 'plusMinus')}</td>
               <td className="text-center">
                 {formatStat(team.homeWins)}-{formatStat(team.homeLosses)}-
                 {formatStat(team.homeOtLosses)}
