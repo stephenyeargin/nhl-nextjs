@@ -204,22 +204,6 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => {
                 </abbr>
               </th>
             ))}
-            {/* <th className="w-15 text-center">GP</th>
-            <th className="w-15 text-center">W</th>
-            <th className="w-15 text-center">L</th>
-            <th className="w-15 text-center">OT</th>
-            <th className="w-15 text-center">PTS</th>
-            <th className="w-15 text-center">P%</th>
-            <th className="w-15 text-center">RW</th>
-            <th className="w-15 text-center">ROW</th>
-            <th className="w-15 text-center">GF</th>
-            <th className="w-15 text-center">GA</th>
-            <th className="w-15 text-center">DIFF</th>
-            <th className="w-15 text-center">HOME</th>
-            <th className="w-15 text-center">AWAY</th>
-            <th className="w-15 text-center">S/O</th>
-            <th className="w-15 text-center">L10</th>
-            <th className="w-15 text-center">STRK</th> */}
           </tr>
         </thead>
         <tbody>

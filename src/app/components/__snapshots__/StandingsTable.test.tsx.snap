@@ -23,82 +23,162 @@ exports[`StandingsTable sorts and swaps first six rows when swap condition met a
           <th
             class="w-15 text-center"
           >
-            GP
+            <abbr
+              class="underline decoration-dashed"
+              title="Games Played"
+            >
+              GP
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            W
+            <abbr
+              class="underline decoration-dashed"
+              title="Wins"
+            >
+              W
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            L
+            <abbr
+              class="underline decoration-dashed"
+              title="Losses"
+            >
+              L
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            OT
+            <abbr
+              class="underline decoration-dashed"
+              title="Overtime Losses"
+            >
+              OT
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            PTS
+            <abbr
+              class="underline decoration-dashed"
+              title="Points"
+            >
+              PTS
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            P%
+            <abbr
+              class="underline decoration-dashed"
+              title="Points Percentage"
+            >
+              P%
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            RW
+            <abbr
+              class="underline decoration-dashed"
+              title="Regulation Wins"
+            >
+              RW
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            ROW
+            <abbr
+              class="underline decoration-dashed"
+              title="Regulation plus Overtime Wins"
+            >
+              ROW
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            GF
+            <abbr
+              class="underline decoration-dashed"
+              title="Goals For"
+            >
+              GF
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            GA
+            <abbr
+              class="underline decoration-dashed"
+              title="Goals Against"
+            >
+              GA
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            DIFF
+            <abbr
+              class="underline decoration-dashed"
+              title="Goal Differential"
+            >
+              DIFF
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            HOME
+            <abbr
+              class="underline decoration-dashed"
+              title="Home Record"
+            >
+              HOME
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            AWAY
+            <abbr
+              class="underline decoration-dashed"
+              title="Away Record"
+            >
+              AWAY
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            S/O
+            <abbr
+              class="underline decoration-dashed"
+              title="Shootout Record"
+            >
+              S/O
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            L10
+            <abbr
+              class="underline decoration-dashed"
+              title="Last 10 Games Record"
+            >
+              L10
+            </abbr>
           </th>
           <th
             class="w-15 text-center"
           >
-            STRK
+            <abbr
+              class="underline decoration-dashed"
+              title="Current Streak"
+            >
+              STRK
+            </abbr>
           </th>
         </tr>
       </thead>
