@@ -45,6 +45,105 @@ interface StandingsTableProps {
   standings: StandingsEntry[];
 }
 
+const columnHeadings = [
+  {
+    key: 'gamesPlayed',
+    label: 'GP',
+    title: 'Games Played',
+    className: 'w-15',
+  },
+  {
+    key: 'wins',
+    label: 'W',
+    title: 'Wins',
+    className: 'w-15',
+  },
+  {
+    key: 'losses',
+    label: 'L',
+    title: 'Losses',
+    className: 'w-15',
+  },
+  {
+    key: 'otLosses',
+    label: 'OT',
+    title: 'Overtime Losses',
+    className: 'w-15',
+  },
+  {
+    key: 'points',
+    label: 'PTS',
+    title: 'Points',
+    className: 'w-15',
+  },
+  {
+    key: 'pointPctg',
+    label: 'P%',
+    title: 'Points Percentage',
+    className: 'w-15',
+  },
+  {
+    key: 'regulationWins',
+    label: 'RW',
+    title: 'Regulation Wins',
+    className: 'w-15',
+  },
+  {
+    key: 'regulationPlusOtWins',
+    label: 'ROW',
+    title: 'Regulation plus Overtime Wins',
+    className: 'w-15',
+  },
+  {
+    key: 'goalFor',
+    label: 'GF',
+    title: 'Goals For',
+    className: 'w-15',
+  },
+  {
+    key: 'goalAgainst',
+    label: 'GA',
+    title: 'Goals Against',
+    className: 'w-15',
+  },
+  {
+    key: 'goalDifferential',
+    label: 'DIFF',
+    title: 'Goal Differential',
+    className: 'w-15',
+  },
+  {
+    key: 'homeRecord',
+    label: 'HOME',
+    title: 'Home Record',
+    className: 'w-15',
+  },
+  {
+    key: 'roadRecord',
+    label: 'AWAY',
+    title: 'Away Record',
+    className: 'w-15',
+  },
+  {
+    key: 'shootoutRecord',
+    label: 'S/O',
+    title: 'Shootout Record',
+    className: 'w-15',
+  },
+  {
+    key: 'l10Record',
+    label: 'L10',
+    title: 'Last 10 Games Record',
+    className: 'w-15',
+  },
+  {
+    key: 'streak',
+    label: 'STRK',
+    title: 'Current Streak',
+    className: 'w-15',
+  },
+];
+
 const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => {
   const tableRows = standings.sort((a, b) => {
     if (a.wildcardSequence === b.wildcardSequence) {
@@ -98,7 +197,14 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => {
           <tr className="text-sm text-nowrap border bg-slate-200 dark:bg-slate-800">
             <th className="w-10 text-center"></th>
             <th className="text-center">Team</th>
-            <th className="w-15 text-center">GP</th>
+            {columnHeadings.map(({ key, label, title, className }) => (
+              <th key={key} className={`${className} text-center`}>
+                <abbr className="underline decoration-dashed" title={title}>
+                  {label}
+                </abbr>
+              </th>
+            ))}
+            {/* <th className="w-15 text-center">GP</th>
             <th className="w-15 text-center">W</th>
             <th className="w-15 text-center">L</th>
             <th className="w-15 text-center">OT</th>
@@ -113,7 +219,7 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => {
             <th className="w-15 text-center">AWAY</th>
             <th className="w-15 text-center">S/O</th>
             <th className="w-15 text-center">L10</th>
-            <th className="w-15 text-center">STRK</th>
+            <th className="w-15 text-center">STRK</th> */}
           </tr>
         </thead>
         <tbody>
