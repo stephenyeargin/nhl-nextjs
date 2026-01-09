@@ -73,6 +73,16 @@ const GamePage: React.FC = () => {
   logos[homeTeam.abbrev] = homeTeam.logo;
   logos[awayTeam.abbrev] = awayTeam.logo;
 
+  const shootoutShots = (() => {
+    const events = summary?.shootout?.events ?? game?.summary?.shootout?.events ?? [];
+
+    if (!Array.isArray(events)) {
+      return [];
+    }
+
+    return events.filter(Boolean).sort((a: any, b: any) => (a?.sequence ?? 0) - (b?.sequence ?? 0));
+  })();
+
   const handleVideoPlayerClose = () => {
     setVideoPlayerVisible(false);
     setVideoPlayerLabel(null);
@@ -119,20 +129,20 @@ const GamePage: React.FC = () => {
                 {period.periodDescriptor.periodType === 'SO' ? (
                   <>
                     <ShootoutScoreboard
-                      shootout={game.summary?.shootout}
+                      shootout={shootoutShots}
                       awayTeam={awayTeam}
                       homeTeam={homeTeam}
                     />
-                    {game.summary?.shootout?.length === 0 && (
+                    {shootoutShots.length === 0 && (
                       <p className="text-slate-500">No shots taken.</p>
                     )}
-                    {game.summary?.shootout?.map((shot: any) => (
+                    {shootoutShots.map((shot: any) => (
                       <div key={shot.sequence} className="border grid grid-cols-12 gap-2 my-5 p-2">
                         <div className="col-span-12 flex">
                           <Headshot
                             playerId={shot.playerId}
                             src={shot.headshot}
-                            alt={`${shot.firstName?.default} ${shot.lastName?.default}`}
+                            alt={`${shot.firstName.default} ${shot.lastName.default}`}
                             team={shot.teamAbbrev.default}
                             size="4"
                             className="mr-2"
@@ -141,7 +151,7 @@ const GamePage: React.FC = () => {
                             <span className="font-bold">
                               {shot.playerId ? (
                                 <Link href={`/player/${shot.playerId}`}>
-                                  {shot.firstName?.default} {shot.lastName?.default}
+                                  {shot.firstName.default} {shot.lastName.default}
                                 </Link>
                               ) : (
                                 <>Unnamed</>
@@ -152,6 +162,7 @@ const GamePage: React.FC = () => {
                                 src={logos[shot.teamAbbrev.default]}
                                 alt="Logo"
                                 className="w-8 h-8"
+                                team={shot.teamAbbrev.default}
                               />
                               <span className="capitalize">
                                 {shot.shotType} •{' '}

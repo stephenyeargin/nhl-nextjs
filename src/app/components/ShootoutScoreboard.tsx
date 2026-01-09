@@ -10,11 +10,16 @@ interface ShootoutPlayerNamePart {
 
 interface ShootoutShot {
   sequence: number;
-  teamAbbrev: ShootoutPlayerNamePart; // using same shape (default) as provided
-  result?: string | null;
-  gameWinner?: boolean;
-  firstName?: ShootoutPlayerNamePart;
-  lastName?: ShootoutPlayerNamePart;
+  playerId: number;
+  teamAbbrev: ShootoutPlayerNamePart;
+  firstName: ShootoutPlayerNamePart;
+  lastName: ShootoutPlayerNamePart;
+  shotType: string;
+  result: 'save' | 'goal';
+  headshot: string;
+  gameWinner: boolean;
+  homeScore: number;
+  awayScore: number;
 }
 
 interface TeamBasicInfo extends TeamAbbrevLogo {
@@ -28,24 +33,31 @@ interface ShootoutScoreboardProps {
 }
 
 const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboardProps) => {
-  const maxRounds = Math.max(Math.floor(shootout.length / 2), 3);
+  // Normalize sequences to numbers and sort in order taken to handle string ids
+  const normalizedShots = Array.isArray(shootout)
+    ? shootout
+        .map((s, idx) => ({ ...s, sequence: Number((s as any).sequence ?? idx + 1) }))
+        .sort((a, b) => a.sequence - b.sequence)
+    : [];
 
-  let shootingFirst = awayTeam;
-  if (
-    shootout.length > 0 &&
-    shootout.find((s) => s.sequence === 1)?.teamAbbrev.default === homeTeam.abbrev
-  ) {
-    shootingFirst = homeTeam;
-  }
+  const maxRounds = Math.max(Math.ceil(normalizedShots.length / 2), 3);
 
-  const getRoundData = (roundIndex: number): ShootoutShot | { result: null } => {
-    const shot = shootout.find((i) => i.sequence === roundIndex);
+  const firstShot = normalizedShots.find((s) => s.sequence === 1);
+  const shootingFirst = firstShot?.teamAbbrev?.default === homeTeam.abbrev ? homeTeam : awayTeam;
+
+  const getRoundData = (roundIndex: number, isHome: boolean): ShootoutShot | { result: null } => {
+    const sequence =
+      shootingFirst === awayTeam
+        ? roundIndex * 2 + (isHome ? 2 : 1)
+        : roundIndex * 2 + (isHome ? 1 : 2);
+
+    const shot = normalizedShots.find((i) => i.sequence === sequence);
 
     return shot || { result: null };
   };
 
-  const renderShot = (shot: ShootoutShot | { result: null }) => {
-    if (!shot.result) {
+  const renderShot = (shot?: ShootoutShot) => {
+    if (!shot?.result) {
       return <div className="text-center">-</div>;
     }
 
@@ -55,13 +67,13 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
           <FontAwesomeIcon
             icon={faTrophy}
             className="text-3xl text-green-500"
-            title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: Game Winner!`}
+            title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: Game Winner!`}
           />
         ) : (
           <FontAwesomeIcon
             icon={faCheckCircle}
             className="text-3xl text-green-500"
-            title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: ${shot.result.toUpperCase()}`}
+            title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: ${shot.result.toUpperCase()}`}
           />
         )}
       </>
@@ -69,7 +81,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
       <FontAwesomeIcon
         icon={faXmarkCircle}
         className="text-3xl text-slate-500"
-        title={`Shot #${shot.sequence} by ${shot.firstName?.default} ${shot.lastName?.default}: ${shot.result.toUpperCase()}`}
+        title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: ${shot.result.toUpperCase()}`}
       />
     );
   };
@@ -115,7 +127,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
               )}
             </td>
             {Array.from({ length: maxRounds }).map((_, roundIndex) => {
-              const shot = getRoundData(roundIndex * 2 + 1);
+              const shot = getRoundData(roundIndex, shootingFirst === homeTeam);
 
               return (
                 <td key={roundIndex} className="p-2 border">
@@ -149,7 +161,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
               )}
             </td>
             {Array.from({ length: maxRounds }).map((_, roundIndex) => {
-              const shot = getRoundData(roundIndex * 2 + 2);
+              const shot = getRoundData(roundIndex, shootingFirst === awayTeam);
 
               return (
                 <td key={roundIndex} className="p-2 border">
