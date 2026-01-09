@@ -45,15 +45,13 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
   const firstShot = normalizedShots.find((s) => s.sequence === 1);
   const shootingFirst = firstShot?.teamAbbrev?.default === homeTeam.abbrev ? homeTeam : awayTeam;
 
-  const getRoundData = (roundIndex: number, isHome: boolean): ShootoutShot | { result: null } => {
+  const getRoundData = (roundIndex: number, isHome: boolean): ShootoutShot | undefined => {
     const sequence =
       shootingFirst === awayTeam
         ? roundIndex * 2 + (isHome ? 2 : 1)
         : roundIndex * 2 + (isHome ? 1 : 2);
 
-    const shot = normalizedShots.find((i) => i.sequence === sequence);
-
-    return shot || { result: null };
+    return normalizedShots.find((i) => i.sequence === sequence);
   };
 
   const renderShot = (shot?: ShootoutShot) => {
