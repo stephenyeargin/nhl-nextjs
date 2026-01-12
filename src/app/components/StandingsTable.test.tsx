@@ -110,4 +110,103 @@ describe('StandingsTable', () => {
     // Snapshot the complex table rendering
     expect(asFragment()).toMatchSnapshot();
   });
+
+  it('groups by division when view=division and ranks within each group', () => {
+    const rows = [
+      row({
+        teamAbbrev: { default: 'C1' },
+        teamName: { default: 'Central 1' },
+        divisionAbbrev: 'C',
+        divisionSequence: 1,
+        points: 50,
+      }),
+      row({
+        teamAbbrev: { default: 'C2' },
+        teamName: { default: 'Central 2' },
+        divisionAbbrev: 'C',
+        divisionSequence: 2,
+        points: 45,
+      }),
+      row({
+        teamAbbrev: { default: 'P1' },
+        teamName: { default: 'Pacific 1' },
+        divisionAbbrev: 'P',
+        divisionSequence: 1,
+        points: 48,
+      }),
+      row({
+        teamAbbrev: { default: 'P2' },
+        teamName: { default: 'Pacific 2' },
+        divisionAbbrev: 'P',
+        divisionSequence: 2,
+        points: 44,
+      }),
+    ];
+
+    render(<StandingsTable standings={rows} view="division" />);
+
+    const headers = screen.getAllByText(/Central|Pacific/, { selector: 'th' });
+    expect(headers).toHaveLength(2);
+
+    const centralRank = within(screen.getByText('Central 1').closest('tr')!).getAllByRole(
+      'cell'
+    )[0];
+    const pacificRank = within(screen.getByText('Pacific 1').closest('tr')!).getAllByRole(
+      'cell'
+    )[0];
+    expect(centralRank.textContent).toBe('1');
+    expect(pacificRank.textContent).toBe('1');
+  });
+
+  it('groups by conference when view=conference and orders by points', () => {
+    const rows = [
+      row({
+        teamAbbrev: { default: 'E1' },
+        teamName: { default: 'East 1' },
+        conferenceAbbrev: 'E',
+        points: 60,
+      }),
+      row({
+        teamAbbrev: { default: 'E2' },
+        teamName: { default: 'East 2' },
+        conferenceAbbrev: 'E',
+        points: 55,
+      }),
+      row({
+        teamAbbrev: { default: 'W1' },
+        teamName: { default: 'West 1' },
+        conferenceAbbrev: 'W',
+        points: 65,
+      }),
+    ];
+
+    render(<StandingsTable standings={rows} view="conference" />);
+
+    const bodyRows = screen.getAllByRole('row').slice(1); // skip header
+    expect(within(bodyRows[0]).getByText('East 1')).toBeInTheDocument();
+    expect(within(bodyRows[0]).getAllByRole('cell')[0].textContent).toBe('1');
+    expect(within(bodyRows[1]).getByText('East 2')).toBeInTheDocument();
+    expect(within(bodyRows[1]).getAllByRole('cell')[0].textContent).toBe('2');
+
+    const firstWestRow = screen.getByText('West 1').closest('tr');
+    const rankingCell = firstWestRow?.querySelector('td');
+    expect(rankingCell?.textContent).toBe('1');
+  });
+
+  it('orders all teams by points in league view with continuous ranking', () => {
+    const rows = [
+      row({ teamAbbrev: { default: 'T1' }, teamName: { default: 'Team 1' }, points: 80 }),
+      row({ teamAbbrev: { default: 'T2' }, teamName: { default: 'Team 2' }, points: 75 }),
+      row({ teamAbbrev: { default: 'T3' }, teamName: { default: 'Team 3' }, points: 90 }),
+    ];
+
+    render(<StandingsTable standings={rows} view="league" />);
+
+    const rowsRendered = screen.getAllByRole('row').slice(1); // skip table header only
+    const ranks = rowsRendered.map((r) => within(r).getAllByRole('cell')[0].textContent);
+    const names = rowsRendered.map((r) => r.textContent || '');
+
+    expect(ranks).toEqual(['1', '2', '3']);
+    expect(names[0]).toMatch(/Team 3/); // highest points first
+  });
 });

@@ -6,13 +6,16 @@ const createJestConfig = nextJest({
   dir: './',
 });
 
+// Toggle coverage on CI; keep focused local runs fast and without global thresholds
+const isCI = process.env.CI === 'true';
+
 // Add any custom config to be passed to Jest
 const config = {
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
   // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  collectCoverage: true,
+  collectCoverage: isCI,
   collectCoverageFrom: [
     'src/**/*.{ts,tsx,js,jsx}',
     // Exclude Next.js route boilerplate & passive wrappers (no logic / branches)
@@ -27,14 +30,16 @@ const config = {
     '!src/config/env.ts',
   ],
   coveragePathIgnorePatterns: ['/node_modules/', '<rootDir>/.next/', '.*__tests__.*'],
-  coverageThreshold: {
-    global: {
-      lines: 50,
-      statements: 50,
-      branches: 60,
-      functions: 60,
-    },
-  },
+  coverageThreshold: isCI
+    ? {
+        global: {
+          lines: 50,
+          statements: 50,
+          branches: 60,
+          functions: 60,
+        },
+      }
+    : undefined,
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|scss|sass|less|svg)$': '<rootDir>/test/__mocks__/styleMock.js',

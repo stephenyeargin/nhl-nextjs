@@ -1,5 +1,5 @@
 import React from 'react';
-import StandingsTable from '@/app/components/StandingsTable';
+import StandingsSwitcher from '@/app/components/StandingsSwitcher';
 
 // Mirror the stricter interface expected by StandingsTable
 interface StandingsEntry {
@@ -70,10 +70,9 @@ export default async function StandingsPage() {
   return (
     <div className="container px-2 mb-10 mx-auto">
       <div className="text-3xl font-bold">Standings</div>
-      <h2 className="text-xl py-4">Western Conference</h2>
-      <StandingsTable standings={westernConference} />
-      <h2 className="text-xl py-4">Eastern Conference</h2>
-      <StandingsTable standings={easternConference} />
+      <div className="py-4">
+        <StandingsSwitcher western={westernConference} eastern={easternConference} />
+      </div>
 
       <div className="flex gap-1 my-5">
         <div className="font-bold">Legend:</div>

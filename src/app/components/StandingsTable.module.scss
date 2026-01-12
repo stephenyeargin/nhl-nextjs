@@ -20,4 +20,12 @@
   td.sorting_1 {
     @apply bg-blue-100 text-black;
   }
+
+  .groupHeader {
+    @apply bg-slate-200 dark:bg-slate-800 font-semibold text-left;
+
+    td {
+      @apply p-2 border;
+    }
+  }
 }
