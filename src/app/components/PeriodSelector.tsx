@@ -4,6 +4,7 @@ import { formatPeriodLabel } from '../utils/formatters';
 interface PeriodData {
   number: number; // total number of periods
   periodType?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any; // retain extra fields passed through to formatter
 }
 
@@ -44,7 +45,7 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({
 
   return (
     <select
-      className="p-2 min-w-[100px] md:min-w-[150px] border rounded-sm text-black dark:text-white bg-inherit"
+      className="p-2 min-w-25 md:min-w-37.5 border rounded-sm text-black dark:text-white bg-inherit"
       value={activePeriod}
       onChange={handleChange}
     >
