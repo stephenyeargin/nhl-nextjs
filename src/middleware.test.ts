@@ -5,7 +5,12 @@ jest.mock('next/server', () => ({
   NextResponse: {
     redirect: (url: string) => ({ type: 'redirect', url }),
     rewrite: (urlObj: any) => ({ type: 'rewrite', url: urlObj.href || urlObj.toString() }),
-    next: () => ({ type: 'next' }),
+    next: () => ({
+      type: 'next',
+      headers: {
+        set: jest.fn(),
+      },
+    }),
   },
 }));
 

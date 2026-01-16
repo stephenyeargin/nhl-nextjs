@@ -6,6 +6,9 @@ export const metadata = {
   description: 'View the schedule and stats for a team in the NHL.',
 };
 
+// ISR: Revalidate team list every 24 hours
+export const revalidate = 86400;
+
 export default async function TeamPage(): Promise<React.ReactElement> {
   metadata.title = 'Teams';
 

@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable static optimization
+  staticPageGenerationTimeout: 120,
+  experimental: {
+    // Enable dynamic IO improvements
+    dynamicIO: true,
+  },
   rewrites: async () => {
     return [
       {

@@ -1,6 +1,9 @@
 import React from 'react';
 import StandingsSwitcher from '@/app/components/StandingsSwitcher';
 
+// ISR: Revalidate standings every 1 hour (3600 seconds)
+export const revalidate = 3600;
+
 // Mirror the stricter interface expected by StandingsTable
 interface StandingsEntry {
   wildcardSequence: number;
