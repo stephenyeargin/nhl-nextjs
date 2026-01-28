@@ -176,29 +176,33 @@ const GameHeader: React.FC = () => {
             )}
           </div>
         </div>
+        {!['FUT', 'PRE'].includes(gameState || '') && (
+          <div
+            className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) < (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}
+          >
+            {situation?.awayTeam?.situationDescriptions?.map((code: string) => (
+              <span
+                key={code}
+                className="mx-1 text-lg rounded-sm text-white bg-red-900 p-1 uppercase"
+              >
+                {code}
+              </span>
+            ))}
+            <span>{awayTeam.score ?? 0}</span>
+            {teamHasRecentGoal(awayTeam.abbrev, game) && (
+              <Image
+                src={SirenOnSVG}
+                height="256"
+                width="256"
+                className="h-10 w-10 ml-2 animate-pulse"
+                alt="Goal"
+              />
+            )}
+          </div>
+        )}
         <div
-          className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) < (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}
+          className={`${['FUT', 'PRE'].includes(gameState || '') ? 'col-span-6' : 'col-span-2'} text-center content-middle`}
         >
-          {situation?.awayTeam?.situationDescriptions?.map((code: string) => (
-            <span
-              key={code}
-              className="mx-1 text-lg rounded-sm text-white bg-red-900 p-1 uppercase"
-            >
-              {code}
-            </span>
-          ))}
-          <span>{awayTeam.score ?? 0}</span>
-          {teamHasRecentGoal(awayTeam.abbrev, game) && (
-            <Image
-              src={SirenOnSVG}
-              height="256"
-              width="256"
-              className="h-10 w-10 ml-2 animate-pulse"
-              alt="Goal"
-            />
-          )}
-        </div>
-        <div className="col-span-2 text-center content-middle">
           {game.gameType === 1 && (
             <div className="text-xs my-1 p-1 border rounded-sm font-bold uppercase">Preseason</div>
           )}
@@ -305,28 +309,30 @@ const GameHeader: React.FC = () => {
             </div>
           )}
         </div>
-        <div
-          className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) > (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}
-        >
-          {teamHasRecentGoal(homeTeam.abbrev, game) && (
-            <Image
-              src={SirenOnSVG}
-              height="256"
-              width="256"
-              className="h-10 w-10 mr-2 animate-pulse"
-              alt="Goal"
-            />
-          )}
-          <span>{homeTeam.score ?? 0}</span>
-          {situation?.homeTeam?.situationDescriptions?.map((code: string) => (
-            <span
-              key={code}
-              className="mx-2 text-lg rounded-sm text-white bg-red-900 p-1 uppercase"
-            >
-              {code}
-            </span>
-          ))}
-        </div>
+        {!['FUT', 'PRE'].includes(gameState || '') && (
+          <div
+            className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${(awayTeam.score ?? 0) > (homeTeam.score ?? 0) && ['FINAL', 'OFF'].includes(gameState || '') ? 'opacity-50' : ''}`}
+          >
+            {teamHasRecentGoal(homeTeam.abbrev, game) && (
+              <Image
+                src={SirenOnSVG}
+                height="256"
+                width="256"
+                className="h-10 w-10 mr-2 animate-pulse"
+                alt="Goal"
+              />
+            )}
+            <span>{homeTeam.score ?? 0}</span>
+            {situation?.homeTeam?.situationDescriptions?.map((code: string) => (
+              <span
+                key={code}
+                className="mx-2 text-lg rounded-sm text-white bg-red-900 p-1 uppercase"
+              >
+                {code}
+              </span>
+            ))}
+          </div>
+        )}
         <div className="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center">
           <div className="text-right order-2 sm:order-1">
             <Link href={`/team/${homeTeam.abbrev}`}>

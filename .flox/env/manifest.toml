@@ -16,6 +16,9 @@ version = 1
 ## -------------------------------------------------------------------
 [install]
 nodejs.pkg-path = "nodejs"
+flox-mcp-server.pkg-path = "flox/flox-mcp-server"
+flox-mcp-server.systems = ["aarch64-linux", "aarch64-darwin", "x86_64-linux"]
+flox-mcp-server.pkg-group = "flox-mcp-server"
 
 
 ## Environment Variables ---------------------------------------------
