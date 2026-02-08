@@ -147,6 +147,12 @@ const GameSidebar = () => {
     return <></>;
   }
 
+  const showLast10 =
+    rightRail.last10Record?.awayTeam?.pastGameResults &&
+    rightRail.last10Record?.homeTeam?.pastGameResults &&
+    rightRail.last10Record?.awayTeam?.pastGameResults?.length > 0 &&
+    rightRail.last10Record?.homeTeam?.pastGameResults?.length > 0;
+
   return (
     <div>
       {(gameVideo?.threeMinRecap || gameVideo?.condensedGame) && (
@@ -304,7 +310,7 @@ const GameSidebar = () => {
         </div>
       )}
 
-      {rightRail.last10Record?.awayTeam && rightRail.last10Record?.homeTeam && (
+      {showLast10 && (
         <div className="mb-5">
           <div className="flex text-center items-center justify-between">
             <div className="w-1/4 p-2 text-bold flex justify-center">
@@ -317,14 +323,14 @@ const GameSidebar = () => {
           </div>
           <div className="flex text-center">
             <div className="w-1/2">
-              {rightRail.last10Record.awayTeam?.record} (
-              {rightRail.last10Record.awayTeam?.streakType}
-              {rightRail.last10Record.awayTeam?.streak})
+              {rightRail?.last10Record?.awayTeam?.record} (
+              {rightRail?.last10Record?.awayTeam?.streakType}
+              {rightRail?.last10Record?.awayTeam?.streak})
             </div>
             <div className="w-1/2">
-              {rightRail.last10Record.homeTeam?.record} (
-              {rightRail.last10Record.homeTeam?.streakType}
-              {rightRail.last10Record.homeTeam?.streak})
+              {rightRail.last10Record?.homeTeam?.record} (
+              {rightRail.last10Record?.homeTeam?.streakType}
+              {rightRail.last10Record?.homeTeam?.streak})
             </div>
           </div>
           {rightRail.last10Record?.awayTeam?.pastGameResults?.map((_g: any, i: number) => (
@@ -470,7 +476,7 @@ const GameSidebar = () => {
             <div className="w-1/2 p-2">
               <div className="my-2">
                 <div className="font-bold">{awayTeam.abbrev} Head Coach</div>
-                {rightRail.gameInfo.awayTeam?.headCoach?.default}
+                {rightRail.gameInfo.awayTeam?.headCoach?.default ?? 'Not Announced'}
               </div>
               <div className="my-2">
                 <div className="font-bold">{awayTeam.abbrev} Scratches</div>
@@ -486,7 +492,7 @@ const GameSidebar = () => {
             <div className="w-1/2 p-2">
               <div className="my-2">
                 <div className="font-bold">{homeTeam.abbrev} Head Coach</div>
-                {rightRail.gameInfo.homeTeam?.headCoach?.default}
+                {rightRail.gameInfo.homeTeam?.headCoach?.default ?? 'Not Announced'}
               </div>
               <div className="my-2">
                 <div className="font-bold">{homeTeam.abbrev} Scratches</div>

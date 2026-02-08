@@ -2,10 +2,7 @@
 const nextConfig = {
   // Enable static optimization
   staticPageGenerationTimeout: 120,
-  experimental: {
-    // Enable dynamic IO improvements
-    dynamicIO: true,
-  },
+  experimental: {},
   rewrites: async () => {
     return [
       {
