@@ -91,7 +91,7 @@ export const PENALTY_DESCRIPTIONS = {
   kneeing: 'Kneeing',
   'late-on-ice': 'Late on ice',
   'leaving-penalty-box': 'Leaving penalty box',
-  'leaving-players-penalty-bench': 'Leaving player\'s penalty bench',
+  'leaving-players-penalty-bench': "Leaving player's penalty bench",
   major: 'Major',
   'match-penalty': 'Match Penalty',
   'match-penalty-10-minutes': 'Match Penalty - 10 minutes',
@@ -126,7 +126,7 @@ export const PENALTY_DESCRIPTIONS = {
   'removing-sweater': 'Removing sweater',
   roughing: 'Roughing',
   'roughing-double-minor': 'Roughing - double minor',
-  'roughing-removing-opponents-helmet': 'Roughing - Removing opponent\'s helmet',
+  'roughing-removing-opponents-helmet': "Roughing - Removing opponent's helmet",
   'shootout-illegal-stick': 'Shootout - Illegal stick',
   'shootout-unsuccessful-challenge': 'Shootout - Unsuccessful challenge',
   slashing: 'Slashing',
@@ -180,6 +180,23 @@ export const SHOOTOUT_RESULT = {
   save: 'Save',
   goal: 'Goal',
   miss: 'Miss',
+};
+
+export const GAME_TYPE_LABELS: Record<number, string> = {
+  1: 'Preseason',
+  // 2: 'Regular Season',
+  3: 'Stanley Cup Playoffs',
+  4: 'NHL All-Star Game',
+  6: 'World Cup of Hockey - Group Stage',
+  7: 'World Cup of Hockey - Knockout Stage',
+  8: 'World Cup of Hockey - Pre Tournament',
+  9: 'Winter Olympic Games',
+  10: 'NHL Young Stars',
+  12: 'All-Star Events',
+  14: 'Canada Cup',
+  18: 'Exhibition',
+  19: 'Four Nations Face-off',
+  20: 'Four Nations Face-off Championship',
 };
 
 export const GAME_EVENTS = {

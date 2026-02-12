@@ -474,10 +474,12 @@ const GameSidebar = () => {
             )}
           <div className="flex">
             <div className="w-1/2 p-2">
-              <div className="my-2">
-                <div className="font-bold">{awayTeam.abbrev} Head Coach</div>
-                {rightRail.gameInfo.awayTeam?.headCoach?.default ?? 'Not Announced'}
-              </div>
+              {rightRail.gameInfo.awayTeam?.headCoach?.default && (
+                <div className="my-2">
+                  <div className="font-bold">{awayTeam.abbrev} Head Coach</div>
+                  {rightRail.gameInfo.awayTeam?.headCoach?.default}
+                </div>
+              )}
               <div className="my-2">
                 <div className="font-bold">{awayTeam.abbrev} Scratches</div>
                 {rightRail.gameInfo.awayTeam?.scratches?.length === 0 && <>No players listed.</>}
@@ -490,10 +492,12 @@ const GameSidebar = () => {
               </div>
             </div>
             <div className="w-1/2 p-2">
-              <div className="my-2">
-                <div className="font-bold">{homeTeam.abbrev} Head Coach</div>
-                {rightRail.gameInfo.homeTeam?.headCoach?.default ?? 'Not Announced'}
-              </div>
+              {rightRail.gameInfo.homeTeam?.headCoach?.default && (
+                <div className="my-2">
+                  <div className="font-bold">{homeTeam.abbrev} Head Coach</div>
+                  {rightRail.gameInfo.homeTeam?.headCoach?.default}
+                </div>
+              )}
               <div className="my-2">
                 <div className="font-bold">{homeTeam.abbrev} Scratches</div>
                 {rightRail.gameInfo.homeTeam?.scratches?.length === 0 && <>No players listed.</>}

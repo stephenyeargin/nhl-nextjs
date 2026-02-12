@@ -34,6 +34,11 @@ const StatComparisonRow: React.FC<StatComparisonRowProps> = ({
   homeStatRank,
   homeTeam,
 }) => {
+  // Don't bother rendering the row if both are zero
+  if (awayStat === 0 && homeStat === 0) {
+    return <></>;
+  }
+
   // Calculate the total for scaling the indicator bar
   const totalStat = awayStat + homeStat;
   const awayPercentage = totalStat > 0 ? (awayStat / totalStat) * 100 : 50;

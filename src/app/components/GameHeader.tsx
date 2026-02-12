@@ -13,6 +13,7 @@ import { useGameContext } from '../contexts/GameContext';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
 import GameHeaderSkeleton from './GameHeaderSkeleton';
 import type { Game } from '@/app/types/game';
+import { GAME_TYPE_LABELS } from '../utils/constants';
 
 const GameHeader: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -126,6 +127,16 @@ const GameHeader: React.FC = () => {
     return timeDifference <= 5;
   };
 
+  const label = typeof game.gameType === 'number' ? GAME_TYPE_LABELS[game.gameType] : undefined;
+
+  const EventLabel = () => (
+    <>
+      {label ? (
+        <div className="text-xs my-1 p-1 border rounded-sm font-bold uppercase">{label}</div>
+      ) : null}
+    </>
+  );
+
   return (
     <>
       {game.specialEvent && (
@@ -203,14 +214,7 @@ const GameHeader: React.FC = () => {
         <div
           className={`${['FUT', 'PRE'].includes(gameState || '') ? 'col-span-6' : 'col-span-2'} text-center content-middle`}
         >
-          {game.gameType === 1 && (
-            <div className="text-xs my-1 p-1 border rounded-sm font-bold uppercase">Preseason</div>
-          )}
-          {game.gameType === 3 && (
-            <div className="text-xs my-1 p-1 border rounded-sm font-bold uppercase">
-              Stanley Cup Playoffs
-            </div>
-          )}
+          <EventLabel />
           {venue?.default && venueLocation?.default && (
             <div className="text-xs my-1">
               {venue.default}, {venueLocation.default}

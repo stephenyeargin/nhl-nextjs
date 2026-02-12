@@ -274,44 +274,45 @@ const GamePage: React.FC = () => {
                               </div>
                             </div>
                           </div>
-                          <div className="col-span-4 md:col-span-2 p-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white rounded-md text-center">
-                            <div className="font-black capitalize">
-                              {goal.awayScore}-{goal.homeScore}
+                          <div className="col-span-12 md:col-span-7 flex justify-evenly gap-2">
+                            <div className="flex-2 p-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white rounded-md text-center">
+                              <div className="font-black capitalize">
+                                {goal.awayScore}-{goal.homeScore}
+                              </div>
+                              <div className="text-sm font-light">Score</div>
                             </div>
-                            <div className="text-sm font-light">Score</div>
-                          </div>
-                          <div className="col-span-4 md:col-span-2 p-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white rounded-md text-center">
-                            <div className="font-black capitalize">{goal.timeInPeriod}</div>
-                            <div className="text-sm font-light">Time</div>
-                          </div>
-                          <div className="col-span-4 md:col-span-2 p-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white rounded-md text-center">
-                            <div className="font-black capitalize">{goal.shotType || '-'}</div>
-                            <div className="text-sm font-light">Shot</div>
-                          </div>
-                          {goal.highlightClip && (
-                            <div className="col-span-12 md:col-span-1 md:py-5 rounded-md mx-4 text-center text-blue-900 hover:text-blue-600">
-                              <button
-                                onClick={() => {
-                                  setVideoPlayerUrl(
-                                    `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${goal.highlightClip}`
-                                  );
-                                  setVideoPlayerLabel(
-                                    `${goal.teamAbbrev.default} | ${goal.timeInPeriod} ${formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number })} | ${goal.firstName?.default} ${goal.lastName?.default}`
-                                  );
-                                  setVideoPlayerVisible(true);
-                                }}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faPlayCircle}
-                                  size="2x"
-                                  className="align-middle mr-2 md:mr-0 bg-white rounded-full"
-                                />
-                                <span className="md:hidden text-sm text-blue-900 hover:text-blue-600 dark:text-white font-bold underline">
-                                  Watch Highlight
-                                </span>
-                              </button>
+                            <div className="flex-2 p-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white rounded-md text-center">
+                              <div className="font-black capitalize">{goal.timeInPeriod}</div>
+                              <div className="text-sm font-light">Time</div>
                             </div>
-                          )}
+                            {goal.shotType && (
+                              <div className="flex-2 p-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white rounded-md text-center">
+                                <div className="font-black capitalize">{goal.shotType || '-'}</div>
+                                <div className="text-sm font-light">Shot</div>
+                              </div>
+                            )}
+                            {goal.highlightClip && (
+                              <div className="py-5 flex-1 rounded-md mx-4 text-center text-blue-900 hover:text-blue-600">
+                                <button
+                                  onClick={() => {
+                                    setVideoPlayerUrl(
+                                      `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${goal.highlightClip}`
+                                    );
+                                    setVideoPlayerLabel(
+                                      `${goal.teamAbbrev.default} | ${goal.timeInPeriod} ${formatPeriodLabel({ ...game.periodDescriptor, number: period.periodDescriptor.number })} | ${goal.firstName?.default} ${goal.lastName?.default}`
+                                    );
+                                    setVideoPlayerVisible(true);
+                                  }}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faPlayCircle}
+                                    size="2x"
+                                    className="align-middle mr-2 md:mr-0 bg-white rounded-full"
+                                  />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       ))}
                   </>

@@ -50,26 +50,4 @@ describe('StatComparisonRow', () => {
     expect(parseFloat(secondWidth)).toBeGreaterThan(43.5);
     expect(parseFloat(secondWidth)).toBeLessThan(44.5);
   });
-
-  it('renders fallback ranks when rank values are strings', () => {
-    render(
-      <StatComparisonRow
-        stat="faceoffWinningPctg"
-        awayStat={0}
-        homeStat={0}
-        awayStatRank="N/A"
-        homeStatRank="--"
-        awayTeam={baseTeam('#123456', '#654321')}
-        homeTeam={baseTeam('#abcdef', '#fedcba')}
-      />
-    );
-
-    // With zero total, widths should be 50 -1 => 49% both
-    const bars = document.querySelectorAll('.relative.my-1 div[style]');
-    expect((bars[0] as HTMLElement).style.width).toMatch(/49/);
-    expect((bars[1] as HTMLElement).style.width).toMatch(/49/);
-
-    expect(screen.getByText('N/A')).toBeInTheDocument();
-    expect(screen.getByText('--')).toBeInTheDocument();
-  });
 });
