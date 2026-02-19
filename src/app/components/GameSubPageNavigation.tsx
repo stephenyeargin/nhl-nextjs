@@ -62,7 +62,7 @@ const GameSubPageNavigation: React.FC = () => {
             Box Score
           </Link>
         )}
-        {!['FUT', 'PRE'].includes(game.gameState || '') && (
+        {!['FUT', 'PRE'].includes(game.gameState || '') && game.gameType !== 9 && (
           <Link
             href={`/game/${id}/play-by-play`}
             className={`p-3 ${activeRoute === `/game/${id}/play-by-play` ? activeClasses : ''}`}

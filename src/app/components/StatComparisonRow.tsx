@@ -35,7 +35,7 @@ const StatComparisonRow: React.FC<StatComparisonRowProps> = ({
   homeTeam,
 }) => {
   // Don't bother rendering the row if both are zero
-  if (awayStat === 0 && homeStat === 0) {
+  if (awayStat === 0 && homeStat === 0 && !awayStatRank && !homeStatRank) {
     return <></>;
   }
 
