@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { formatHeadTitle, formatLocalizedDate } from '@/app/utils/formatters';
+import { replaceLocation } from '@/app/utils/navigation';
 import type { Tag } from '@/app/types/tag';
 
 // --- Domain (partial) ---
@@ -86,7 +87,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ storyId, children 
       try {
         const storyResponse = await fetchStory(storyId);
         if (typeof storyResponse === 'string') {
-          window.location.replace(`/news/${storyResponse}`);
+          replaceLocation(`/news/${storyResponse}`);
 
           return;
         }

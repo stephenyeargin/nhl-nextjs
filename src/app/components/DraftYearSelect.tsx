@@ -1,11 +1,12 @@
 'use client';
 import React from 'react';
 import type { DraftYearSelectProps } from '@/app/types/draft';
+import { navigateTo } from '@/app/utils/navigation';
 
 const handleDraftYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const year = e.target.value;
   if (/^\d+$/.test(year)) {
-    window.location.href = `/draft/${year}`;
+    navigateTo(`/draft/${year}`);
   } else {
     console.error('Invalid year selected:', year);
   }
@@ -18,13 +19,13 @@ const DraftYearSelect: React.FC<DraftYearSelectProps> = ({ draftYears, draftYear
 
   const handlePrevYear = () => {
     if (prevYear) {
-      window.location.href = `/draft/${prevYear}`;
+      navigateTo(`/draft/${prevYear}`);
     }
   };
 
   const handleNextYear = () => {
     if (nextYear) {
-      window.location.href = `/draft/${nextYear}`;
+      navigateTo(`/draft/${nextYear}`);
     }
   };
 

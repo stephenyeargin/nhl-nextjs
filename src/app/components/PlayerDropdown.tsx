@@ -1,4 +1,5 @@
 import React from 'react';
+import { navigateTo } from '@/app/utils/navigation';
 
 interface PlayerNamePart {
   default: string;
@@ -20,7 +21,7 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ players, activePlayer }
       value={activePlayer}
       onChange={(e) => {
         const newPlayer = encodeURIComponent(e.target.value);
-        window.location.href = `/player/${newPlayer}`;
+        navigateTo(`/player/${newPlayer}`);
       }}
       className=" p-2 rounded-sm text-xl border bg-inherit text-inherit"
     >

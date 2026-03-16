@@ -4,7 +4,7 @@ exports[`GameHeader renders team names (baseline OFF state) 1`] = `
 <DocumentFragment>
   <div
     class="grid grid-cols-12 my-5 border rounded-lg shadow-xs py-4 items-center"
-    style="border-left: 10px solid #FFB81C; border-right: 10px solid #3A5DAE;"
+    style="background: var(--background); border-left: 10px solid rgb(255, 184, 28); border-right: 10px solid rgb(58, 93, 174);"
   >
     <div
       class="col-span-3 flex flex-wrap mx-auto gap-2 items-center justify-center"

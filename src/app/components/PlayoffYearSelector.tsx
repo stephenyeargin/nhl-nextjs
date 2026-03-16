@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { navigateTo } from '@/app/utils/navigation';
 
 interface PlayoffYearSelectorProps {
   seasons: number[];
@@ -11,7 +12,7 @@ const PlayoffYearSelector: React.FC<PlayoffYearSelectorProps> = ({ seasons, year
   const handlePlayoffYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value;
     if (/^\d+$/.test(selected)) {
-      window.location.href = `/playoffs/${selected}`;
+      navigateTo(`/playoffs/${selected}`);
     } else {
       console.error('Invalid year selected:', selected);
     }

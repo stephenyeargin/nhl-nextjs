@@ -284,13 +284,13 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
       >
         <div
           class="p-2 w-1/2 font-bold"
-          style="border-width: 1pt; border-color: #123456;"
+          style="border-width: 1pt; border-color: rgb(18, 52, 86);"
         >
           ABC (W)
         </div>
         <div
           class="p-2 w-1/2 opacity-50"
-          style="border-width: 1pt; border-color: #123456;"
+          style="border-width: 1pt; border-color: rgb(18, 52, 86);"
         >
           XYZ (L)
         </div>
@@ -300,13 +300,13 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
       >
         <div
           class="p-2 w-1/2 opacity-50"
-          style="border-width: 1pt; border-color: #123456;"
+          style="border-width: 1pt; border-color: rgb(18, 52, 86);"
         >
           DEF (L)
         </div>
         <div
           class="p-2 w-1/2 font-bold"
-          style="border-width: 1pt; border-color: #123456;"
+          style="border-width: 1pt; border-color: rgb(18, 52, 86);"
         >
           QRS (W)
         </div>
@@ -792,13 +792,13 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
       >
         <div
           class="p-2 w-1/2 font-bold"
-          style="border-width: 1pt; border-color: #123456;"
+          style="border-width: 1pt; border-color: rgb(18, 52, 86);"
         >
           ABC (W)
         </div>
         <div
           class="p-2 w-1/2 opacity-50"
-          style="border-width: 1pt; border-color: #123456;"
+          style="border-width: 1pt; border-color: rgb(18, 52, 86);"
         >
           XYZ (L)
         </div>
@@ -808,13 +808,13 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
       >
         <div
           class="p-2 w-1/2 opacity-50"
-          style="border-width: 1pt; border-color: #123456;"
+          style="border-width: 1pt; border-color: rgb(18, 52, 86);"
         >
           DEF (L)
         </div>
         <div
           class="p-2 w-1/2 font-bold"
-          style="border-width: 1pt; border-color: #123456;"
+          style="border-width: 1pt; border-color: rgb(18, 52, 86);"
         >
           QRS (W)
         </div>

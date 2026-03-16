@@ -40,14 +40,6 @@ const mockDraftData: DraftData = {
 };
 
 describe('DraftHeader', () => {
-  beforeEach(() => {
-    // Ensure a valid base URL for components relying on window.location
-    Object.defineProperty(window, 'location', {
-      value: { href: 'http://localhost/' },
-      writable: true,
-    });
-  });
-
   it('renders heading and year select', () => {
     render(<DraftHeader draftData={mockDraftData} />);
     expect(screen.getByRole('heading', { name: /2025 NHL Entry Draft/i })).toBeInTheDocument();

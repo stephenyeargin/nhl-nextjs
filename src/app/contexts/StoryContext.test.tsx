@@ -1,10 +1,15 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import StoryProvider, { useStoryContext } from './StoryContext';
+import { replaceLocation } from '@/app/utils/navigation';
 
 jest.mock('@/app/utils/formatters', () => ({
   formatHeadTitle: jest.fn(),
   formatLocalizedDate: (d: string) => d,
+}));
+
+jest.mock('@/app/utils/navigation', () => ({
+  replaceLocation: jest.fn(),
 }));
 
 const TestConsumer: React.FC = () => {
@@ -73,19 +78,12 @@ describe('StoryContext', () => {
     (global as any).fetch.mockResolvedValueOnce(
       makeFetchResponse(true, { items: [{ slug: 'legacy-slug' }] })
     );
-    const originalLocation = window.location;
-    const replaceSpy = jest.fn();
-    Object.defineProperty(window, 'location', {
-      configurable: true,
-      value: { ...originalLocation, replace: replaceSpy },
-    });
     render(
       <StoryProvider storyId="c-12345">
         <div />{' '}
       </StoryProvider>
     );
-    await waitFor(() => expect(replaceSpy).toHaveBeenCalledWith('/news/legacy-slug'));
-    Object.defineProperty(window, 'location', { configurable: true, value: originalLocation });
+    await waitFor(() => expect(replaceLocation).toHaveBeenCalledWith('/news/legacy-slug'));
   });
 
   test('handles fetch error', async () => {
