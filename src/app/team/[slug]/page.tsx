@@ -64,7 +64,7 @@ interface NewsItem {
   [k: string]: any;
 }
 
-export default async function SchedulePage(props: any) {
+export default async function TeamPage(props: any) {
   const rawParams = (await props?.params) as TeamSlugParam | Promise<TeamSlugParam>;
   const { slug } = await rawParams;
   let team = getTeamDataByAbbreviation(slug?.toUpperCase(), true);
@@ -109,11 +109,21 @@ export default async function SchedulePage(props: any) {
     ),
   ]);
 
-  const schedule = await scheduleResponse.json();
-  const standings = await standingsResponse.json();
-  const fullSeasonSchedule = await fullSeasonScheduleResponse.json();
-  const teamStats = await teamStatsResponse.json();
-  const news = await newsResponse.json();
+  let schedule = {},
+    standings = { standings: [] },
+    fullSeasonSchedule = {},
+    teamStats = {},
+    news = {};
+
+  try {
+    standings = await standingsResponse.json();
+    teamStats = await teamStatsResponse.json();
+    news = await newsResponse.json();
+    fullSeasonSchedule = await fullSeasonScheduleResponse.json();
+    schedule = await scheduleResponse.json();
+  } catch {
+    // nothing
+  }
 
   const teamStanding: TeamStanding | undefined = standings.standings.find(
     (standing: TeamStanding) => {
@@ -136,7 +146,7 @@ export default async function SchedulePage(props: any) {
         }}
         className="mb-5 flex items-center rounded-xl"
       >
-        <div className="p-5">
+        <div className="p-5 grow">
           <h1
             className="text-3xl font-bold mb-3"
             style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}
@@ -161,7 +171,7 @@ export default async function SchedulePage(props: any) {
           )}
         </div>
         <TeamLogo
-          src={`https://assets.nhle.com/logos/nhl/svg/${team.abbreviation}_dark.svg`}
+          team={team.abbreviation}
           className="w-64 h-64 mx-auto hidden md:block"
           colorMode="dark"
         />
@@ -169,26 +179,34 @@ export default async function SchedulePage(props: any) {
           className="text-5xl font-bold opacity-25 p-5 italic hidden lg:block"
           style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}
         >
-          #{team.hashtag}
+          {team.hashtag && <>#{team.hashtag}</>}
         </h1>
       </div>
 
       {teamStanding && <TeamStatsSummary className="mb-8" standing={teamStanding} />}
 
-      <div className="my-3 text-center text-xs">
-        <Link href={`https://nhl.com/${team.slug}`} className="underline font-bold">
-          <FontAwesomeIcon icon={faGlobe} fixedWidth className="mr-1" />
-          Official Website
-        </Link>
-      </div>
+      {team.slug && (
+        <div className="my-3 text-center text-xs">
+          <Link href={`https://nhl.com/${team.slug}`} className="underline font-bold">
+            <FontAwesomeIcon icon={faGlobe} fixedWidth className="mr-1" />
+            Official Website
+          </Link>
+        </div>
+      )}
 
-      <h1 className="text-3xl font-bold mb-6">Recent &amp; Upcoming Games</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
-        {schedule.gamesByDate?.map((date: any) =>
-          date.games.map((game: any) => <GameTile key={game.id} game={game} />)
-        )}
-        {schedule.gamesByDate?.length === 0 && <div className="text-2xl">No upcoming games</div>}
-      </div>
+      {schedule.gamesByDate?.length > 0 && (
+        <>
+          <h1 className="text-3xl font-bold mb-6">Recent &amp; Upcoming Games</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
+            {schedule.gamesByDate?.map((date: any) =>
+              date.games.map((game: any) => <GameTile key={game.id} game={game} />)
+            )}
+            {schedule.gamesByDate?.length === 0 && (
+              <div className="text-2xl">No upcoming games</div>
+            )}
+          </div>
+        </>
+      )}
 
       {news.items?.length > 0 && (
         <>
@@ -209,28 +227,32 @@ export default async function SchedulePage(props: any) {
         </>
       )}
 
-      <h1 className="text-3xl font-bold mb-2">Team Stats</h1>
-      <h2 className="text-lg mb-6">
-        {formatSeason(teamStats.season)} {teamStats.gameType === 2 ? 'Regular Season' : 'Playoffs'}
-      </h2>
+      {teamStats.skaters?.length > 0 && (
+        <>
+          <h1 className="text-3xl font-bold mb-2">Team Stats</h1>
+          <h2 className="text-lg mb-6">
+            {formatSeason(teamStats.season)}{' '}
+            {teamStats.gameType === 2 ? 'Regular Season' : 'Playoffs'}
+          </h2>
 
-      <div className="mb-5">
-        <div className="font-bold my-2">Forwards</div>
-        <StatsTable
-          stats={teamStats.skaters.filter((t: any) => t.positionCode !== 'D')}
-          team={team.abbreviation}
-        />
-        <div className="font-bold my-2">Defensemen</div>
-        <StatsTable
-          stats={teamStats.skaters.filter((t: any) => t.positionCode === 'D')}
-          team={team.abbreviation}
-        />
-        <div className="font-bold my-2">Goalies</div>
-        <StatsTable stats={teamStats.goalies} team={team.abbreviation} />
-      </div>
+          <div className="mb-5">
+            <div className="font-bold my-2">Forwards</div>
+            <StatsTable
+              stats={teamStats.skaters?.filter((t: any) => t.positionCode !== 'D')}
+              team={team.abbreviation}
+            />
+            <div className="font-bold my-2">Defensemen</div>
+            <StatsTable
+              stats={teamStats.skaters?.filter((t: any) => t.positionCode === 'D')}
+              team={team.abbreviation}
+            />
+            <div className="font-bold my-2">Goalies</div>
+            <StatsTable stats={teamStats.goalies} team={team.abbreviation} />
+          </div>
+        </>
+      )}
 
       <h1 className="text-3xl font-bold mb-6">Season Schedule</h1>
-
       <TeamSchedule team={team} fullSeasonSchedule={fullSeasonSchedule} headerStyle={headerStyle} />
     </div>
   );

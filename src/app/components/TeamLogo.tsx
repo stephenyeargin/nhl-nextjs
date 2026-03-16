@@ -41,17 +41,25 @@ const TeamLogo: React.FC<TeamLogoProps> = ({
   }, [colorMode]);
 
   // If src is empty, extract from team name
-  let updatedSrc = src ? src : 'https://assets.nhle.com/logos/nhl/svg/NHL_light.svg';
+  let league = 'nhl';
+  let updatedSrc = src ? src : `https://assets.nhle.com/logos/${league}/svg/NHL_light.svg`;
   let teamData: any = {};
   if (!src && team) {
     teamData = getTeamDataByAbbreviation(team, true);
+    if (teamData.division === 'International') {
+      league = 'ntl';
+    }
     if (teamData.teamId) {
-      updatedSrc = `https://assets.nhle.com/logos/nhl/svg/${team}_light.svg`;
+      updatedSrc = `https://assets.nhle.com/logos/${league}/svg/${team}_light.svg`;
     } else {
       teamData = getTeamDataByCommonName(team, true);
       if (teamData.teamId) {
-        updatedSrc = `https://assets.nhle.com/logos/nhl/svg/${teamData.abbreviation}_light.svg`;
+        updatedSrc = `https://assets.nhle.com/logos/${league}/svg/${teamData.abbreviation}_light.svg`;
       }
+    }
+    // Override for defunct franchises
+    if (teamData.logo) {
+      updatedSrc = teamData.logo;
     }
   }
 

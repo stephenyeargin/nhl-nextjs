@@ -20,6 +20,9 @@ interface GameTeam {
   abbrev: string;
   score: number;
   placeName: PlaceName;
+  commonName: {
+    default: string;
+  };
 }
 
 interface GameOutcome {
@@ -54,6 +57,10 @@ interface TeamScheduleProps {
 }
 
 const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }: TeamScheduleProps) => {
+  if (!fullSeasonSchedule.games || fullSeasonSchedule.games?.length === 0) {
+    return <div>No games scheduled.</div>;
+  }
+
   return (
     <div className="overflow-x-auto">
       <table className={styles.statsTable}>
@@ -74,7 +81,7 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }: TeamSchedulePro
           </tr>
         </thead>
         <tbody>
-          {fullSeasonSchedule.games.map((game) => (
+          {fullSeasonSchedule.games?.map((game) => (
             <tr key={game.id}>
               <td>
                 <time dateTime={game.startTimeUTC} suppressHydrationWarning={true}>
@@ -98,7 +105,8 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }: TeamSchedulePro
                     className="h-8 w-8"
                   />
                   <Link href={`/game/${game.id}`} className="underline">
-                    {game.awayTeam.placeName.default} @ {game.homeTeam.placeName.default}
+                    {game.awayTeam.placeName.default || game.awayTeam.commonName.default} @{' '}
+                    {game.homeTeam.placeName.default || game.homeTeam.commonName.default}
                   </Link>
                 </div>
               </td>
