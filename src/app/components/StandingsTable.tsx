@@ -6,6 +6,13 @@ import type { LocalizedString } from '@/app/types/content';
 
 import '@/app/assets/datatables.css';
 import styles from '@/app/components/StandingsTable.module.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCheckCircle,
+  faMagicWandSparkles,
+  faSadTear,
+  faXmarkCircle,
+} from '@fortawesome/free-solid-svg-icons';
 
 export interface StandingsEntry {
   wildcardSequence: number;
@@ -267,6 +274,83 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
     return String(idx + 1);
   };
 
+  const showRaceColumns =
+    view === 'wildcard' && tableRows.length > 7 && tableRows.some((team) => team.gamesPlayed > 60);
+  const totalColumns = 2 + columnHeadings.length + (showRaceColumns ? 2 : 0);
+  const maxPossiblePoints = (team: StandingsEntry) => team.points + (82 - team.gamesPlayed) * 2;
+
+  // The reference is the outside team with the highest ceiling (max possible points).
+  // This is the "strongest team that could still finish 9th" per hockeymagicnumbers.com.
+  const ninthPlaceTeam = showRaceColumns
+    ? tableRows.slice(8).reduce<StandingsEntry | null>((best, team) => {
+        if (!best || maxPossiblePoints(team) > maxPossiblePoints(best)) {
+          return team;
+        }
+
+        return best;
+      }, null)
+    : null;
+
+  const getMagicNumber = (team: StandingsEntry) => {
+    if (!ninthPlaceTeam) {
+      return null;
+    }
+
+    // How many points separate the team from the 9th-place ceiling.
+    // Reaches 0 when the team has clinched a playoff spot.
+    return Math.max(0, maxPossiblePoints(ninthPlaceTeam) - team.points);
+  };
+
+  const getTragicNumber = (team: StandingsEntry) => {
+    if (!ninthPlaceTeam) {
+      return null;
+    }
+
+    // How far the team's own ceiling sits above the 9th-place team's current total.
+    // Reaches 0 when the team is mathematically eliminated.
+    return Math.max(0, maxPossiblePoints(team) - ninthPlaceTeam.points);
+  };
+
+  const renderRaceValue = (value: number | null, kind: 'magic' | 'tragic') => {
+    if (value === null) {
+      return '—';
+    }
+
+    if (value === 0) {
+      return kind === 'magic' ? (
+        <FontAwesomeIcon icon={faCheckCircle} fixedWidth title="Clinched" />
+      ) : (
+        <FontAwesomeIcon icon={faXmarkCircle} fixedWidth title="Eliminated" />
+      );
+    }
+
+    return formatStat(value);
+  };
+
+  const renderRaceNumberCells = (team: StandingsEntry) => {
+    if (!showRaceColumns) {
+      return null;
+    }
+
+    const magicNumber = getMagicNumber(team);
+    const tragicNumber = getTragicNumber(team);
+
+    return (
+      <>
+        <td className="text-center">
+          <span className="bg-blue-500 text-white border border-blue-950 rounded p-1 px-3 font-bold">
+            {renderRaceValue(magicNumber, 'magic')}
+          </span>
+        </td>
+        <td className="text-center">
+          <span className="bg-red-500 text-white border border-red-950 rounded p-1 px-3 font-bold">
+            {renderRaceValue(tragicNumber, 'tragic')}
+          </span>
+        </td>
+      </>
+    );
+  };
+
   const renderBodyRows = () => {
     if (!groupedRows) {
       return tableRows.map((team, i) => (
@@ -293,6 +377,7 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
               </div>
             </Link>
           </td>
+          {renderRaceNumberCells(team)}
           <td className="text-center">{formatStat(team.gamesPlayed)}</td>
           <td className="text-center">{formatStat(team.wins)}</td>
           <td className="text-center">{formatStat(team.losses)}</td>
@@ -330,7 +415,7 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
       <React.Fragment key={groupKey}>
         {view === 'division' && (
           <tr className={styles.groupHeader}>
-            <th colSpan={18} className="bg-slate-200 dark:bg-slate-800">
+            <th colSpan={totalColumns} className="bg-slate-200 dark:bg-slate-800">
               {divisionNames[groupKey] || conferenceNames[groupKey] || groupKey}
             </th>
           </tr>
@@ -356,6 +441,7 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
                 </div>
               </Link>
             </td>
+            {renderRaceNumberCells(team)}
             <td className="text-center">{formatStat(team.gamesPlayed)}</td>
             <td className="text-center">{formatStat(team.wins)}</td>
             <td className="text-center">{formatStat(team.losses)}</td>
@@ -395,9 +481,35 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
     <div className="overflow-x-auto scrollbar-hidden">
       <table className={styles.standingsTable}>
         <thead>
-          <tr className="text-sm text-nowrap border bg-slate-200 dark:bg-slate-800">
+          {showRaceColumns && (
+            <tr className="text-xs text-nowrap bg-slate-200 dark:bg-slate-800">
+              <th colSpan={2} />
+              <th
+                colSpan={2}
+                className="text-center font-medium tracking-wide bg-yellow-100 dark:bg-yellow-900"
+              >
+                Playoff Race
+              </th>
+              <th colSpan={columnHeadings.length} />
+            </tr>
+          )}
+          <tr className="text-sm text-nowrap bg-slate-200 dark:bg-slate-800">
             <th className="w-10 text-center"></th>
             <th className="text-center">Team</th>
+            {showRaceColumns && (
+              <>
+                <th className="w-15 text-center bg-blue-100 dark:bg-blue-900">
+                  <abbr className="underline decoration-dashed" title="Magic Number">
+                    <FontAwesomeIcon icon={faMagicWandSparkles} />
+                  </abbr>
+                </th>
+                <th className="w-15 text-center bg-red-100 dark:bg-red-900">
+                  <abbr className="underline decoration-dashed" title="Tragic Number">
+                    <FontAwesomeIcon icon={faSadTear} />
+                  </abbr>
+                </th>
+              </>
+            )}
             {columnHeadings.map(({ key, label, title, className }) => (
               <th key={key} className={`${className} text-center`}>
                 <abbr className="underline decoration-dashed" title={title}>

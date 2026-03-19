@@ -7,6 +7,7 @@ import type { StandingsEntry, StandingsView } from '@/app/components/StandingsTa
 interface StandingsSwitcherProps {
   western: StandingsEntry[];
   eastern: StandingsEntry[];
+  standingsDate?: string;
 }
 
 const viewOptions: { key: StandingsView; label: string }[] = [
@@ -16,12 +17,33 @@ const viewOptions: { key: StandingsView; label: string }[] = [
   { key: 'league', label: 'League' },
 ];
 
-const StandingsSwitcher: React.FC<StandingsSwitcherProps> = ({ western, eastern }) => {
+const getTodayDateString = () => {
+  const now = new Date();
+  const timezoneOffsetInMs = now.getTimezoneOffset() * 60_000;
+
+  return new Date(now.getTime() - timezoneOffsetInMs).toISOString().split('T')[0];
+};
+
+const handleOnChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedDate = event.target.value;
+  const todayDate = getTodayDateString();
+  const nextDate = selectedDate > todayDate ? todayDate : selectedDate;
+  const params = new URLSearchParams(window.location.search);
+  params.set('date', nextDate);
+  window.location.search = params.toString();
+};
+
+const StandingsSwitcher: React.FC<StandingsSwitcherProps> = ({
+  western,
+  eastern,
+  standingsDate,
+}) => {
   const [view, setView] = React.useState<StandingsView>('wildcard');
   const leagueRows = React.useMemo(() => [...western, ...eastern], [western, eastern]);
+  const todayDate = React.useMemo(getTodayDateString, []);
 
   return (
-    <div className="flex flex-col gap-4 text-sm">
+    <div className="flex flex-col gap-4 text-sm align-middle">
       <div className="flex flex-wrap" role="tablist" aria-label="Standings view">
         {viewOptions.map(({ key, label }) => {
           let buttonClasses =
@@ -51,6 +73,20 @@ const StandingsSwitcher: React.FC<StandingsSwitcherProps> = ({ western, eastern 
             </button>
           );
         })}
+        <div className="border rounded-md sm:mt-5 md:mt-0 md:ml-auto p-3">
+          <label>
+            <span className="font-bold">As of</span>
+            <input
+              type="date"
+              value={
+                !standingsDate || standingsDate === 'now' ? getTodayDateString() : standingsDate
+              }
+              max={todayDate}
+              className="ml-3"
+              onChange={handleOnChangeDate}
+            />
+          </label>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6">

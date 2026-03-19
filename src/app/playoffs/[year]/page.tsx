@@ -4,6 +4,7 @@ import Image from 'next/image';
 import PlayoffSeriesTile from '../../components/PlayoffSeriesTile';
 import { notFound } from 'next/navigation';
 import PlayoffYearSelector from '@/app/components/PlayoffYearSelector';
+import type { LocalizedString } from '@/app/types';
 
 interface PlayoffSeries {
   seriesLetter: string;
@@ -15,6 +16,8 @@ interface PlayoffSeries {
 }
 interface PlayoffBracket {
   series: PlayoffSeries[];
+  bracketTitle?: LocalizedString;
+  bracketSubTitle: LocalizedString;
   bracketLogo?: string;
 }
 
@@ -97,6 +100,15 @@ export default async function PlayoffsPage(props: any) {
           </div>
         )}
       </div>
+
+      {bracket.bracketTitle && (
+        <div className="text-center py-7">
+          <h2 className="text-3xl font-bold">{bracket.bracketTitle.default}</h2>
+          <p>
+            <em className="font-thin">{bracket.bracketSubTitle.default}</em>
+          </p>
+        </div>
+      )}
 
       <div className="flex justify-center">
         <label className="block p-2 text-xl font-bold">Season:</label>

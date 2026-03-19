@@ -1,5 +1,11 @@
 import React from 'react';
 import StandingsSwitcher from '@/app/components/StandingsSwitcher';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faMagicWandSparkles,
+  faSadTear,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
 
 // ISR: Revalidate standings every 1 hour (3600 seconds)
 export const revalidate = 3600;
@@ -47,34 +53,79 @@ interface StandingsApiResponse {
   [k: string]: unknown;
 }
 
-export default async function StandingsPage() {
+interface PageProps {
+  searchParams?: Promise<{ date?: string }>;
+}
+
+function getStandingsDate(dateParam?: string): string {
+  if (!dateParam) {
+    return 'now';
+  }
+
+  // Check format YYYY-MM-DD
+  const isValidFormat = /^\d{4}-\d{2}-\d{2}$/.test(dateParam);
+  if (!isValidFormat) {
+    return 'now';
+  }
+
+  // Check if it's a real date
+  const parsed = new Date(dateParam);
+  if (isNaN(parsed.getTime())) {
+    return 'now';
+  }
+
+  return dateParam;
+}
+
+export default async function StandingsPage({ searchParams }: PageProps) {
   let westernConference: StandingsEntry[] = [];
   let easternConference: StandingsEntry[] = [];
 
+  const resolvedSearchParams = await searchParams;
+  const standingsDate = getStandingsDate(resolvedSearchParams?.date);
+
   try {
-    const apiStandings = await fetch('https://api-web.nhle.com/v1/standings/now', {
+    const apiStandings = await fetch(`https://api-web.nhle.com/v1/standings/${standingsDate}`, {
       cache: 'no-store',
     });
     if (!apiStandings.ok) {
       throw new Error('Failed to fetch data');
     }
+
     const jsonStandings: StandingsApiResponse = await apiStandings.json();
+
+    if (jsonStandings.standings.length === 0) {
+      throw new Error('Standings unavailable for selected date.');
+    }
+
     westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
     easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch data';
+
     return (
       <div className="container mx-auto">
         <div className="text-3xl font-bold">Standings</div>
-        <div className="text-lg py-2">{error.message}</div>
+        <div className="text-lg py-10">
+          <FontAwesomeIcon icon={faTriangleExclamation} /> {message}
+        </div>
       </div>
     );
   }
+
+  const shouldShowRaceExplainer = [westernConference, easternConference].some(
+    (conference) => conference.length > 7 && conference.some((team) => team.gamesPlayed > 60)
+  );
 
   return (
     <div className="container px-2 mb-10 mx-auto">
       <div className="text-3xl font-bold">Standings</div>
       <div className="py-4">
-        <StandingsSwitcher western={westernConference} eastern={easternConference} />
+        <StandingsSwitcher
+          western={westernConference}
+          eastern={easternConference}
+          standingsDate={standingsDate}
+        />
       </div>
 
       <div className="flex gap-1 my-5">
@@ -92,6 +143,23 @@ export default async function StandingsPage() {
           <dd className="p-1">Eliminated</dd>
         </dl>
       </div>
+
+      {shouldShowRaceExplainer && (
+        <div className="text-xs space-y-1">
+          <p className="flex items-center gap-2">
+            <FontAwesomeIcon icon={faMagicWandSparkles} fixedWidth />
+            <strong>Magic #:</strong> strongest 9th-place max points minus the team&apos;s current
+            points; the team&apos;s points and other teams gaining points can move it, and 0 means
+            clinched.
+          </p>
+          <p className="flex items-center gap-2">
+            <FontAwesomeIcon icon={faSadTear} fixedWidth />
+            <strong>Tragic #:</strong> the team&apos;s max possible points minus the strongest
+            9th-place current points; the team&apos;s results and other teams gaining points can
+            move it, and 0 means eliminated.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

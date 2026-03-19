@@ -10,7 +10,7 @@ exports[`StandingsTable sorts and swaps first six rows when swap condition met a
     >
       <thead>
         <tr
-          class="text-sm text-nowrap border bg-slate-200 dark:bg-slate-800"
+          class="text-sm text-nowrap bg-slate-200 dark:bg-slate-800"
         >
           <th
             class="w-10 text-center"

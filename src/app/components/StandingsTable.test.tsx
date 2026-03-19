@@ -111,6 +111,116 @@ describe('StandingsTable', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
+  it('shows magic and tragic columns in wildcard view when at least one team has played more than 60 games', () => {
+    // Use distinct wildcardSequence values so sort order is deterministic.
+    // gamesRemaining = 82 - 65 = 17, maxPossiblePoints = pts + 34
+    // ninthPlaceTeam = T9 (78 pts, max = 112)
+    // T1 M# = max(0, 112 - 115) = 0, T# = max(0, 149 - 78) = 71
+    // T9 M# = max(0, 112 - 78) = 34, T# = max(0, 112 - 78) = 34
+    const rows = [
+      row({
+        teamAbbrev: { default: 'T1' },
+        teamName: { default: 'Team 1' },
+        points: 115,
+        gamesPlayed: 65,
+        wildcardSequence: 1,
+      }),
+      row({
+        teamAbbrev: { default: 'T2' },
+        teamName: { default: 'Team 2' },
+        points: 92,
+        gamesPlayed: 65,
+        wildcardSequence: 2,
+      }),
+      row({
+        teamAbbrev: { default: 'T3' },
+        teamName: { default: 'Team 3' },
+        points: 90,
+        gamesPlayed: 65,
+        wildcardSequence: 3,
+      }),
+      row({
+        teamAbbrev: { default: 'T4' },
+        teamName: { default: 'Team 4' },
+        points: 88,
+        gamesPlayed: 65,
+        wildcardSequence: 4,
+      }),
+      row({
+        teamAbbrev: { default: 'T5' },
+        teamName: { default: 'Team 5' },
+        points: 86,
+        gamesPlayed: 65,
+        wildcardSequence: 5,
+      }),
+      row({
+        teamAbbrev: { default: 'T6' },
+        teamName: { default: 'Team 6' },
+        points: 84,
+        gamesPlayed: 65,
+        wildcardSequence: 6,
+      }),
+      row({
+        teamAbbrev: { default: 'T7' },
+        teamName: { default: 'Team 7' },
+        points: 82,
+        gamesPlayed: 65,
+        wildcardSequence: 7,
+      }),
+      row({
+        teamAbbrev: { default: 'T8' },
+        teamName: { default: 'Team 8' },
+        points: 80,
+        gamesPlayed: 65,
+        wildcardSequence: 8,
+      }),
+      row({
+        teamAbbrev: { default: 'T9' },
+        teamName: { default: 'Team 9' },
+        points: 78,
+        gamesPlayed: 65,
+        wildcardSequence: 9,
+      }),
+    ];
+
+    render(<StandingsTable standings={rows} view="wildcard" />);
+
+    const magicHeading = screen.getByTitle('Magic Number');
+    const tragicHeading = screen.getByTitle('Tragic Number');
+
+    expect(screen.getByText('Playoff Race')).toBeInTheDocument();
+    expect(magicHeading).toBeInTheDocument();
+    expect(tragicHeading).toBeInTheDocument();
+
+    // T1 has 115 pts — already above the 9th-place ceiling of 112, so M# = 0
+    const firstTeamRow = screen.getByText('Team 1').closest('tr');
+    const firstTeamCells = within(firstTeamRow!).getAllByRole('cell');
+    expect(within(firstTeamCells[2]).getByTitle('Clinched')).toBeInTheDocument();
+    expect(firstTeamCells[3].textContent).toBe('71');
+
+    // T9 is the reference team itself: M# = T# = max(0, 112 - 78) = 34
+    const ninthTeamRow = screen.getByText('Team 9').closest('tr');
+    const ninthTeamCells = within(ninthTeamRow!).getAllByRole('cell');
+    expect(ninthTeamCells[2].textContent).toBe('34');
+    expect(ninthTeamCells[3].textContent).toBe('34');
+  });
+
+  it('hides magic and tragic columns when no team has played more than 60 games', () => {
+    const rows = Array.from({ length: 8 }, (_, idx) =>
+      row({
+        teamAbbrev: { default: `N${idx + 1}` },
+        teamName: { default: `NoRace ${idx + 1}` },
+        points: 80 - idx,
+        gamesPlayed: 60,
+      })
+    );
+
+    render(<StandingsTable standings={rows} view="wildcard" />);
+
+    expect(screen.queryByTitle('Magic Number')).not.toBeInTheDocument();
+    expect(screen.queryByTitle('Tragic Number')).not.toBeInTheDocument();
+  });
+
   it('groups by division when view=division and ranks within each group', () => {
     const rows = [
       row({
