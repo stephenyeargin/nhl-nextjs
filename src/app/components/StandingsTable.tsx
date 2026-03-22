@@ -296,9 +296,9 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
       return null;
     }
 
-    // How many points separate the team from the 9th-place ceiling.
+    // Points needed to finish strictly above the 9th-place ceiling.
     // Reaches 0 when the team has clinched a playoff spot.
-    return Math.max(0, maxPossiblePoints(ninthPlaceTeam) - team.points);
+    return Math.max(0, maxPossiblePoints(ninthPlaceTeam) - team.points + 1);
   };
 
   const getTragicNumber = (team: StandingsEntry) => {
@@ -306,9 +306,10 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
       return null;
     }
 
-    // How far the team's own ceiling sits above the 9th-place team's current total.
+    // How far the team's own ceiling sits above the 9th-place team's current total,
+    // with +1 to require finishing strictly ahead to avoid elimination.
     // Reaches 0 when the team is mathematically eliminated.
-    return Math.max(0, maxPossiblePoints(team) - ninthPlaceTeam.points);
+    return Math.max(0, maxPossiblePoints(team) - ninthPlaceTeam.points + 1);
   };
 
   const renderRaceValue = (value: number | null, kind: 'magic' | 'tragic') => {
@@ -318,9 +319,13 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
 
     if (value === 0) {
       return kind === 'magic' ? (
-        <FontAwesomeIcon icon={faCheckCircle} fixedWidth title="Clinched" />
+        <span title="Clinched" aria-label="Clinched">
+          <FontAwesomeIcon icon={faCheckCircle} fixedWidth />
+        </span>
       ) : (
-        <FontAwesomeIcon icon={faXmarkCircle} fixedWidth title="Eliminated" />
+        <span title="Eliminated" aria-label="Eliminated">
+          <FontAwesomeIcon icon={faXmarkCircle} fixedWidth />
+        </span>
       );
     }
 
@@ -332,8 +337,11 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
       return null;
     }
 
-    const magicNumber = getMagicNumber(team);
-    const tragicNumber = getTragicNumber(team);
+    const isClinched = ['x', 'y', 'z', 'p'].includes(team.clinchIndicator || '');
+    const isEliminated = team.clinchIndicator === 'e';
+
+    const magicNumber = isClinched ? 0 : getMagicNumber(team);
+    const tragicNumber = isEliminated ? 0 : getTragicNumber(team);
 
     return (
       <>

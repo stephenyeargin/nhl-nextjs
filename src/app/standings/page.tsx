@@ -80,6 +80,7 @@ function getStandingsDate(dateParam?: string): string {
 export default async function StandingsPage({ searchParams }: PageProps) {
   let westernConference: StandingsEntry[] = [];
   let easternConference: StandingsEntry[] = [];
+  let errorMessage: string | null = null;
 
   const resolvedSearchParams = await searchParams;
   const standingsDate = getStandingsDate(resolvedSearchParams?.date);
@@ -101,16 +102,7 @@ export default async function StandingsPage({ searchParams }: PageProps) {
     westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
     easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to fetch data';
-
-    return (
-      <div className="container mx-auto">
-        <div className="text-3xl font-bold">Standings</div>
-        <div className="text-lg py-10">
-          <FontAwesomeIcon icon={faTriangleExclamation} /> {message}
-        </div>
-      </div>
-    );
+    errorMessage = error instanceof Error ? error.message : 'Failed to fetch data';
   }
 
   const shouldShowRaceExplainer = [westernConference, easternConference].some(
@@ -125,8 +117,15 @@ export default async function StandingsPage({ searchParams }: PageProps) {
           western={westernConference}
           eastern={easternConference}
           standingsDate={standingsDate}
+          hideTables={Boolean(errorMessage)}
         />
       </div>
+
+      {errorMessage && (
+        <div className="text-lg py-4">
+          <FontAwesomeIcon icon={faTriangleExclamation} /> {errorMessage}
+        </div>
+      )}
 
       <div className="flex gap-1 my-5">
         <div className="font-bold">Legend:</div>
@@ -149,14 +148,14 @@ export default async function StandingsPage({ searchParams }: PageProps) {
           <p className="flex items-center gap-2">
             <FontAwesomeIcon icon={faMagicWandSparkles} fixedWidth />
             <strong>Magic #:</strong> strongest 9th-place max points minus the team&apos;s current
-            points; the team&apos;s points and other teams gaining points can move it, and 0 means
-            clinched.
+            points, plus 1 (to finish strictly ahead); the team&apos;s points and other teams
+            gaining points can move it, and 0 means clinched.
           </p>
           <p className="flex items-center gap-2">
             <FontAwesomeIcon icon={faSadTear} fixedWidth />
             <strong>Tragic #:</strong> the team&apos;s max possible points minus the strongest
-            9th-place current points; the team&apos;s results and other teams gaining points can
-            move it, and 0 means eliminated.
+            9th-place current points, plus 1 (to stay strictly ahead); the team&apos;s results and
+            other teams gaining points can move it, and 0 means eliminated.
           </p>
         </div>
       )}

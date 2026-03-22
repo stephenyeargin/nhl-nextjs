@@ -115,8 +115,8 @@ describe('StandingsTable', () => {
     // Use distinct wildcardSequence values so sort order is deterministic.
     // gamesRemaining = 82 - 65 = 17, maxPossiblePoints = pts + 34
     // ninthPlaceTeam = T9 (78 pts, max = 112)
-    // T1 M# = max(0, 112 - 115) = 0, T# = max(0, 149 - 78) = 71
-    // T9 M# = max(0, 112 - 78) = 34, T# = max(0, 112 - 78) = 34
+    // T1 M# = max(0, 112 - 115 + 1) = 0, T# = max(0, 149 - 78 + 1) = 72
+    // T9 M# = max(0, 112 - 78 + 1) = 35, T# = max(0, 112 - 78 + 1) = 35
     const rows = [
       row({
         teamAbbrev: { default: 'T1' },
@@ -196,13 +196,94 @@ describe('StandingsTable', () => {
     const firstTeamRow = screen.getByText('Team 1').closest('tr');
     const firstTeamCells = within(firstTeamRow!).getAllByRole('cell');
     expect(within(firstTeamCells[2]).getByTitle('Clinched')).toBeInTheDocument();
-    expect(firstTeamCells[3].textContent).toBe('71');
+    expect(firstTeamCells[3].textContent).toBe('72');
 
-    // T9 is the reference team itself: M# = T# = max(0, 112 - 78) = 34
+    // T9 is the reference team itself: M# = T# = max(0, 112 - 78 + 1) = 35
     const ninthTeamRow = screen.getByText('Team 9').closest('tr');
     const ninthTeamCells = within(ninthTeamRow!).getAllByRole('cell');
-    expect(ninthTeamCells[2].textContent).toBe('34');
-    expect(ninthTeamCells[3].textContent).toBe('34');
+    expect(ninthTeamCells[2].textContent).toBe('35');
+    expect(ninthTeamCells[3].textContent).toBe('35');
+  });
+
+  it('prioritizes official clinch indicators over computed race values', () => {
+    const rows = [
+      row({
+        teamAbbrev: { default: 'A1' },
+        teamName: { default: 'Alpha 1' },
+        points: 116,
+        gamesPlayed: 82,
+        wildcardSequence: 1,
+      }),
+      row({
+        teamAbbrev: { default: 'A2' },
+        teamName: { default: 'Alpha 2' },
+        points: 106,
+        gamesPlayed: 82,
+        wildcardSequence: 2,
+      }),
+      row({
+        teamAbbrev: { default: 'A3' },
+        teamName: { default: 'Alpha 3' },
+        points: 102,
+        gamesPlayed: 82,
+        wildcardSequence: 3,
+      }),
+      row({
+        teamAbbrev: { default: 'A4' },
+        teamName: { default: 'Alpha 4' },
+        points: 110,
+        gamesPlayed: 82,
+        wildcardSequence: 4,
+      }),
+      row({
+        teamAbbrev: { default: 'A5' },
+        teamName: { default: 'Alpha 5' },
+        points: 105,
+        gamesPlayed: 82,
+        wildcardSequence: 5,
+      }),
+      row({
+        teamAbbrev: { default: 'A6' },
+        teamName: { default: 'Alpha 6' },
+        points: 101,
+        gamesPlayed: 82,
+        wildcardSequence: 6,
+      }),
+      row({
+        teamAbbrev: { default: 'A7' },
+        teamName: { default: 'Alpha 7' },
+        points: 97,
+        gamesPlayed: 82,
+        wildcardSequence: 7,
+      }),
+      row({
+        teamAbbrev: { default: 'WC2' },
+        teamName: { default: 'Clinched Team' },
+        points: 96,
+        gamesPlayed: 82,
+        wildcardSequence: 8,
+        clinchIndicator: 'x',
+      }),
+      row({
+        teamAbbrev: { default: 'N9' },
+        teamName: { default: 'Eliminated Team' },
+        points: 96,
+        gamesPlayed: 82,
+        wildcardSequence: 9,
+        clinchIndicator: 'e',
+      }),
+    ];
+
+    render(<StandingsTable standings={rows} view="wildcard" />);
+
+    const clinchedRow = screen.getByText('Clinched Team').closest('tr');
+    const clinchedCells = within(clinchedRow!).getAllByRole('cell');
+    expect(within(clinchedCells[2]).getByTitle('Clinched')).toBeInTheDocument();
+    expect(within(clinchedCells[3]).queryByTitle('Eliminated')).not.toBeInTheDocument();
+
+    const eliminatedRow = screen.getByText('Eliminated Team').closest('tr');
+    const eliminatedCells = within(eliminatedRow!).getAllByRole('cell');
+    expect(within(eliminatedCells[3]).getByTitle('Eliminated')).toBeInTheDocument();
   });
 
   it('hides magic and tragic columns when no team has played more than 60 games', () => {
