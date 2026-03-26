@@ -147,15 +147,14 @@ export default async function StandingsPage({ searchParams }: PageProps) {
         <div className="text-xs space-y-1">
           <p className="flex items-center gap-2">
             <FontAwesomeIcon icon={faMagicWandSparkles} fixedWidth />
-            <strong>Magic #:</strong> strongest 9th-place max points minus the team&apos;s current
-            points, plus 1 (to finish strictly ahead); the team&apos;s points and other teams
-            gaining points can move it, and 0 means clinched.
+            <strong>Magic #:</strong> in-playoff teams use strongest 9th-place max points minus
+            current points plus 1; out-of-playoff teams use the current 8th-place ceiling minus
+            current points. 0 means clinched.
           </p>
           <p className="flex items-center gap-2">
             <FontAwesomeIcon icon={faSadTear} fixedWidth />
-            <strong>Tragic #:</strong> the team&apos;s max possible points minus the strongest
-            9th-place current points, plus 1 (to stay strictly ahead); the team&apos;s results and
-            other teams gaining points can move it, and 0 means eliminated.
+            <strong>Tragic #:</strong> team max possible points minus the anchor line, plus 1: 9th
+            place if currently in a playoff spot, 8th place if currently out. 0 means eliminated.
           </p>
         </div>
       )}

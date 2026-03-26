@@ -114,9 +114,9 @@ describe('StandingsTable', () => {
   it('shows magic and tragic columns in wildcard view when at least one team has played more than 60 games', () => {
     // Use distinct wildcardSequence values so sort order is deterministic.
     // gamesRemaining = 82 - 65 = 17, maxPossiblePoints = pts + 34
-    // ninthPlaceTeam = T9 (78 pts, max = 112)
-    // T1 M# = max(0, 112 - 115 + 1) = 0, T# = max(0, 149 - 78 + 1) = 72
-    // T9 M# = max(0, 112 - 78 + 1) = 35, T# = max(0, 112 - 78 + 1) = 35
+    // ninthPlaceTeam = T9 (78 pts, max = 112), eighthPlaceTeam = T8 (80 pts)
+    // T1 (in playoff spot): M# = max(0, 112 - 115 + 1) = 0, T# = max(0, 149 - 78 + 1) = 72
+    // T9 (outside playoff spot): M# = max(0, 114 - 78) = 36, T# = max(0, 112 - 80 + 1) = 33
     const rows = [
       row({
         teamAbbrev: { default: 'T1' },
@@ -198,11 +198,11 @@ describe('StandingsTable', () => {
     expect(within(firstTeamCells[2]).getByTitle('Clinched')).toBeInTheDocument();
     expect(firstTeamCells[3].textContent).toBe('72');
 
-    // T9 is the reference team itself: M# = T# = max(0, 112 - 78 + 1) = 35
+    // T9 is outside the line: tragic anchors to current 8th-place points (80)
     const ninthTeamRow = screen.getByText('Team 9').closest('tr');
     const ninthTeamCells = within(ninthTeamRow!).getAllByRole('cell');
-    expect(ninthTeamCells[2].textContent).toBe('35');
-    expect(ninthTeamCells[3].textContent).toBe('35');
+    expect(ninthTeamCells[2].textContent).toBe('36');
+    expect(ninthTeamCells[3].textContent).toBe('33');
   });
 
   it('prioritizes official clinch indicators over computed race values', () => {
@@ -284,6 +284,172 @@ describe('StandingsTable', () => {
     const eliminatedRow = screen.getByText('Eliminated Team').closest('tr');
     const eliminatedCells = within(eliminatedRow!).getAllByRole('cell');
     expect(within(eliminatedCells[3]).getByTitle('Eliminated')).toBeInTheDocument();
+  });
+
+  it('matches hockeymagic-style values for western in-hunt teams with wildcardSequence 0-10 shape', () => {
+    const rows = [
+      row({
+        teamAbbrev: { default: 'COL' },
+        teamName: { default: 'Colorado Avalanche' },
+        points: 104,
+        gamesPlayed: 70,
+        wildcardSequence: 0,
+        divisionAbbrev: 'C',
+        divisionSequence: 1,
+      }),
+      row({
+        teamAbbrev: { default: 'DAL' },
+        teamName: { default: 'Dallas Stars' },
+        points: 97,
+        gamesPlayed: 71,
+        wildcardSequence: 0,
+        divisionAbbrev: 'C',
+        divisionSequence: 2,
+      }),
+      row({
+        teamAbbrev: { default: 'MIN' },
+        teamName: { default: 'Minnesota Wild' },
+        points: 92,
+        gamesPlayed: 72,
+        wildcardSequence: 0,
+        divisionAbbrev: 'C',
+        divisionSequence: 3,
+      }),
+      row({
+        teamAbbrev: { default: 'ANA' },
+        teamName: { default: 'Anaheim Ducks' },
+        points: 84,
+        gamesPlayed: 71,
+        wildcardSequence: 0,
+        divisionAbbrev: 'P',
+        divisionSequence: 1,
+      }),
+      row({
+        teamAbbrev: { default: 'EDM' },
+        teamName: { default: 'Edmonton Oilers' },
+        points: 79,
+        gamesPlayed: 72,
+        wildcardSequence: 0,
+        divisionAbbrev: 'P',
+        divisionSequence: 2,
+      }),
+      row({
+        teamAbbrev: { default: 'VGK' },
+        teamName: { default: 'Vegas Golden Knights' },
+        points: 78,
+        gamesPlayed: 72,
+        wildcardSequence: 0,
+        divisionAbbrev: 'P',
+        divisionSequence: 3,
+      }),
+      row({
+        teamAbbrev: { default: 'UTA' },
+        teamName: { default: 'Utah Mammoth' },
+        points: 80,
+        gamesPlayed: 72,
+        wildcardSequence: 1,
+        divisionAbbrev: 'C',
+        divisionSequence: 4,
+      }),
+      row({
+        teamAbbrev: { default: 'NSH' },
+        teamName: { default: 'Nashville Predators' },
+        points: 77,
+        gamesPlayed: 71,
+        wildcardSequence: 2,
+        divisionAbbrev: 'C',
+        divisionSequence: 5,
+      }),
+      row({
+        teamAbbrev: { default: 'LAK' },
+        teamName: { default: 'Los Angeles Kings' },
+        points: 74,
+        gamesPlayed: 71,
+        wildcardSequence: 3,
+        divisionAbbrev: 'P',
+        divisionSequence: 4,
+      }),
+      row({
+        teamAbbrev: { default: 'SEA' },
+        teamName: { default: 'Seattle Kraken' },
+        points: 72,
+        gamesPlayed: 70,
+        wildcardSequence: 4,
+        divisionAbbrev: 'P',
+        divisionSequence: 5,
+      }),
+      row({
+        teamAbbrev: { default: 'WPG' },
+        teamName: { default: 'Winnipeg Jets' },
+        points: 72,
+        gamesPlayed: 71,
+        wildcardSequence: 5,
+        divisionAbbrev: 'C',
+        divisionSequence: 6,
+      }),
+      row({
+        teamAbbrev: { default: 'SJS' },
+        teamName: { default: 'San Jose Sharks' },
+        points: 70,
+        gamesPlayed: 69,
+        wildcardSequence: 6,
+        divisionAbbrev: 'P',
+        divisionSequence: 6,
+      }),
+      row({
+        teamAbbrev: { default: 'STL' },
+        teamName: { default: 'St. Louis Blues' },
+        points: 69,
+        gamesPlayed: 70,
+        wildcardSequence: 7,
+        divisionAbbrev: 'C',
+        divisionSequence: 7,
+      }),
+      row({
+        teamAbbrev: { default: 'CGY' },
+        teamName: { default: 'Calgary Flames' },
+        points: 67,
+        gamesPlayed: 71,
+        wildcardSequence: 8,
+        divisionAbbrev: 'P',
+        divisionSequence: 7,
+      }),
+      row({
+        teamAbbrev: { default: 'CHI' },
+        teamName: { default: 'Chicago Blackhawks' },
+        points: 67,
+        gamesPlayed: 71,
+        wildcardSequence: 9,
+        divisionAbbrev: 'C',
+        divisionSequence: 8,
+      }),
+      row({
+        teamAbbrev: { default: 'VAN' },
+        teamName: { default: 'Vancouver Canucks' },
+        points: 50,
+        gamesPlayed: 70,
+        wildcardSequence: 10,
+        divisionAbbrev: 'P',
+        divisionSequence: 8,
+      }),
+    ];
+
+    render(<StandingsTable standings={rows} view="wildcard" />);
+
+    const lakRow = screen.getByText('Los Angeles Kings').closest('tr');
+    const lakCells = within(lakRow!).getAllByRole('cell');
+    expect(lakCells[2].textContent).toBe('25');
+    expect(lakCells[3].textContent).toBe('20');
+
+    const seaRow = screen.getByText('Seattle Kraken').closest('tr');
+    const seaCells = within(seaRow!).getAllByRole('cell');
+    expect(seaCells[2].textContent).toBe('27');
+    expect(seaCells[3].textContent).toBe('20');
+
+    const vanRow = screen.getByText('Vancouver Canucks').closest('tr');
+    const vanCells = within(vanRow!).getAllByRole('cell');
+    expect(vanCells[2].textContent).toBe('49');
+    expect(within(vanCells[3]).getByTitle('Eliminated')).toBeInTheDocument();
   });
 
   it('hides magic and tragic columns when no team has played more than 60 games', () => {

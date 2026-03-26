@@ -291,25 +291,41 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
       }, null)
     : null;
 
+  const eighthPlaceTeam = showRaceColumns ? tableRows[7] || null : null;
+
   const getMagicNumber = (team: StandingsEntry) => {
-    if (!ninthPlaceTeam) {
+    if (!ninthPlaceTeam || !eighthPlaceTeam) {
       return null;
     }
+
+    const teamIndex = tableRows.indexOf(team);
+    const isInPlayoffPosition = teamIndex > -1 && teamIndex < 8;
 
     // Points needed to finish strictly above the 9th-place ceiling.
     // Reaches 0 when the team has clinched a playoff spot.
-    return Math.max(0, maxPossiblePoints(ninthPlaceTeam) - team.points + 1);
+    if (isInPlayoffPosition) {
+      return Math.max(0, maxPossiblePoints(ninthPlaceTeam) - team.points + 1);
+    }
+
+    // For teams outside the playoff line, anchor to the current 8th-place ceiling.
+    // This matches how external race trackers compute the in-hunt magic values.
+    return Math.max(0, maxPossiblePoints(eighthPlaceTeam) - team.points);
   };
 
   const getTragicNumber = (team: StandingsEntry) => {
-    if (!ninthPlaceTeam) {
+    if (!ninthPlaceTeam || !eighthPlaceTeam) {
       return null;
     }
 
-    // How far the team's own ceiling sits above the 9th-place team's current total,
-    // with +1 to require finishing strictly ahead to avoid elimination.
+    const teamIndex = tableRows.indexOf(team);
+    const isInPlayoffPosition = teamIndex > -1 && teamIndex < 8;
+    const tragicAnchorPoints = isInPlayoffPosition ? ninthPlaceTeam.points : eighthPlaceTeam.points;
+
+    // Teams in playoff position are anchored to the 9th-place chaser.
+    // Teams outside are anchored to the current 8th-place cutoff line.
+    // +1 requires finishing strictly ahead to avoid elimination.
     // Reaches 0 when the team is mathematically eliminated.
-    return Math.max(0, maxPossiblePoints(team) - ninthPlaceTeam.points + 1);
+    return Math.max(0, maxPossiblePoints(team) - tragicAnchorPoints + 1);
   };
 
   const renderRaceValue = (value: number | null, kind: 'magic' | 'tragic') => {
