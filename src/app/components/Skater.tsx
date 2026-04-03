@@ -27,6 +27,7 @@ interface SkaterProps {
   game?: GameInfo;
   isHomeTeam?: boolean;
   team?: string;
+  compactMobile?: boolean;
 }
 
 export const Skater: React.FC<SkaterProps> = ({
@@ -34,6 +35,7 @@ export const Skater: React.FC<SkaterProps> = ({
   game,
   isHomeTeam = true,
   team = 'NHL',
+  compactMobile = false,
 }) => {
   const { teamColor } = getTeamDataByAbbreviation(team, true);
 
@@ -70,7 +72,9 @@ export const Skater: React.FC<SkaterProps> = ({
         <Link
           href={`/player/${player.playerId}`}
           title={player.name?.default || ''}
-          className="font-bold rounded-full p-2 w-10 h-10"
+          className={`font-bold rounded-full inline-flex items-center justify-center ${
+            compactMobile ? 'w-6 h-6 text-[10px]' : 'p-2 w-10 h-10'
+          }`}
           style={skaterStyle}
         >
           {String(player.sweaterNumber ?? '').padStart(2, '0')}

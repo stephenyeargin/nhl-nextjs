@@ -73,4 +73,54 @@ describe('IceRink (smoke)', () => {
     }
     expect(screen.getByTestId('play-event')).toBeInTheDocument();
   });
+
+  it('shows on-ice players above rink during plays on the side they defend', () => {
+    const props = {
+      ...baseProps,
+      plays: [
+        {
+          ...baseProps.plays[0],
+          homeTeamDefendingSide: 'left',
+        },
+      ],
+      game: {
+        summary: {
+          iceSurface: {
+            awayTeam: {
+              goalies: [],
+              defensemen: [],
+              forwards: [
+                {
+                  playerId: 12,
+                  name: { default: 'Away Skater' },
+                  sweaterNumber: 12,
+                  positionCode: 'C',
+                },
+              ],
+              penaltyBox: [],
+            },
+            homeTeam: {
+              goalies: [],
+              defensemen: [],
+              forwards: [
+                {
+                  playerId: 34,
+                  name: { default: 'Home Skater' },
+                  sweaterNumber: 34,
+                  positionCode: 'C',
+                },
+              ],
+              penaltyBox: [],
+            },
+          },
+        },
+      },
+    };
+
+    render(<IceRink {...(props as any)} />);
+
+    expect(screen.getByTestId('on-ice-label')).toHaveTextContent('On The Ice');
+    expect(screen.getByTestId('on-ice-left')).toHaveTextContent('Home Skater');
+    expect(screen.getByTestId('on-ice-right')).toHaveTextContent('Away Skater');
+  });
 });

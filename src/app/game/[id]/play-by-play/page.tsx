@@ -11,6 +11,7 @@ import PlayFilters from '@/app/components/PlayFilters';
 import PlayTable from '@/app/components/PlayTable';
 import PlayEventDetails from '@/app/components/PlayEventDetails';
 import TeamLogoByTeamId from '@/app/components/TeamLogoByTeamId';
+import { sortPlaysByRecency } from '@/app/utils/sortPlays';
 
 const PlayByPlay: React.FC = () => {
   const { gameData } = useGameContext();
@@ -90,7 +91,7 @@ const PlayByPlay: React.FC = () => {
   });
   let sortedPlays = filteredPlays;
   if (['LIVE', 'CRIT'].includes(playByPlay.gameState || '')) {
-    sortedPlays = [...filteredPlays].sort((a, b) => b.sortOrder - a.sortOrder);
+    sortedPlays = sortPlaysByRecency(filteredPlays);
   }
 
   const lookupTeamDataByTeamId = (teamId: number) => {
