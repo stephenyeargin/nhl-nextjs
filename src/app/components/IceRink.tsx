@@ -426,42 +426,53 @@ const IceRink: React.FC<IceRinkProps> = ({
           </div>
         </>
       )}
-      <div id="playBox" className="my-2 text-sm flex items-center justify-center">
-        <div>{playBoxContent || <span className="leading-10">&nbsp;</span>}</div>
-        {!hasPlays &&
-          iceSurface &&
-          (() => {
-            const awayPen = iceSurface?.awayTeam.penaltyBox || [];
-            const homePen = iceSurface?.homeTeam.penaltyBox || [];
-            if (!awayPen.length && !homePen.length) {
-              return null;
-            }
+      {iceSurface &&
+        (() => {
+          const awayPen = iceSurface.awayTeam.penaltyBox || [];
+          const homePen = iceSurface.homeTeam.penaltyBox || [];
+          if (!awayPen.length && !homePen.length) {
+            return null;
+          }
+          const compact = hasPlays;
 
-            return (
-              <div className="grid grid-cols-2 gap-5">
-                <div className="col-span-1 flex gap-2 justify-end">
-                  {awayPen.map((p, i) => (
+          return (
+            <div
+              className="mx-4 mb-2 grid grid-cols-2 md:grid-cols-[1fr_auto_1fr] items-start gap-2 md:gap-3"
+              aria-label="Penalty box"
+              data-testid="penalty-box"
+            >
+              <div className="min-w-0 overflow-hidden flex flex-nowrap gap-2 justify-end">
+                {awayPen.map((p, i) => (
+                  <div key={`${p.playerId}-${i}`} className="shrink-0 text-center">
                     <Skater
-                      key={`${p.playerId}-${i}`}
                       player={p}
                       isHomeTeam={false}
                       team={awayTeam.abbrev}
+                      compactMobile={compact}
                     />
-                  ))}
-                </div>
-                <div className="col-span-1 flex gap-2 justify-start">
-                  {homePen.map((p, i) => (
+                  </div>
+                ))}
+              </div>
+              <div className="hidden md:block pt-3 text-[10px] md:text-xs uppercase tracking-wide opacity-70 whitespace-nowrap">
+                Penalty Box
+              </div>
+              <div className="min-w-0 overflow-hidden flex flex-nowrap gap-2 justify-start">
+                {homePen.map((p, i) => (
+                  <div key={`${p.playerId}-${i}`} className="shrink-0 text-center">
                     <Skater
-                      key={`${p.playerId}-${i}`}
                       player={p}
                       isHomeTeam={true}
                       team={homeTeam.abbrev}
+                      compactMobile={compact}
                     />
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            );
-          })()}
+            </div>
+          );
+        })()}
+      <div id="playBox" className="my-2 text-sm flex items-center justify-center">
+        <div>{playBoxContent || <span className="leading-10">&nbsp;</span>}</div>
       </div>
     </div>
   );
