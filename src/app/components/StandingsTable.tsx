@@ -328,12 +328,12 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
     return Math.max(0, maxPossiblePoints(team) - tragicAnchorPoints + 1);
   };
 
-  const renderRaceValue = (value: number | null, kind: 'magic' | 'tragic') => {
+  const renderRaceValue = (value: number | null, kind: 'magic' | 'tragic', isSettled: boolean) => {
     if (value === null) {
       return '—';
     }
 
-    if (value === 0) {
+    if (value === 0 && isSettled) {
       return kind === 'magic' ? (
         <span title="Clinched" aria-label="Clinched">
           <FontAwesomeIcon icon={faCheckCircle} fixedWidth />
@@ -343,6 +343,10 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
           <FontAwesomeIcon icon={faXmarkCircle} fixedWidth />
         </span>
       );
+    }
+    // Special case: Tied with eighth place, lost other tie breaker
+    if (value === 0) {
+      return kind === 'magic' ? '0*' : formatStat(value);
     }
 
     return formatStat(value);
@@ -361,14 +365,14 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
 
     return (
       <>
-        <td className="text-center">
+        <td className={`text-center ${isEliminated ? 'opacity-50' : ''}`}>
           <span className="bg-blue-500 text-white border border-blue-950 rounded p-1 px-3 font-bold">
-            {renderRaceValue(magicNumber, 'magic')}
+            {renderRaceValue(magicNumber, 'magic', isClinched)}
           </span>
         </td>
-        <td className="text-center">
+        <td className={`text-center ${isClinched ? 'opacity-50' : ''}`}>
           <span className="bg-red-500 text-white border border-red-950 rounded p-1 px-3 font-bold">
-            {renderRaceValue(tragicNumber, 'tragic')}
+            {renderRaceValue(tragicNumber, 'tragic', isEliminated)}
           </span>
         </td>
       </>

@@ -20,7 +20,11 @@ interface GameForScoreboard {
 }
 
 interface LineScorePeriod {
-  periodDescriptor: { number: number };
+  periodDescriptor: {
+    number: number;
+    periodType?: string;
+    maxRegulationPeriods?: number;
+  };
   away: number;
   home: number;
 }
@@ -55,6 +59,24 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ game, linescore }) => {
     );
   };
 
+  const getPeriodLabel = (periodNumber: number, period?: LineScorePeriod) => {
+    const maxRegulationPeriods =
+      period?.periodDescriptor.maxRegulationPeriods ??
+      game.periodDescriptor?.maxRegulationPeriods ??
+      game.regPeriods;
+
+    const periodType =
+      period?.periodDescriptor.periodType ?? (periodNumber > maxRegulationPeriods ? 'OT' : 'REG');
+
+    return formatPeriodLabel({
+      ...game.periodDescriptor,
+      ...period?.periodDescriptor,
+      number: periodNumber,
+      periodType,
+      maxRegulationPeriods,
+    });
+  };
+
   return (
     <table className="w-full text-sm">
       <thead>
@@ -76,7 +98,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ game, linescore }) => {
                 className="w-1/12 text-center bg-slate-200 dark:bg-slate-800 p-2"
                 key={`period-${periodNumber}`}
               >
-                {formatPeriodLabel({ ...game.periodDescriptor, number: periodNumber })}
+                {getPeriodLabel(periodNumber, period)}
               </th>
             );
           })}

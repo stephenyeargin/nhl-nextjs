@@ -23,7 +23,12 @@ import {
 } from '@/app/utils/constants';
 import PageError from '@/app/components/PageError';
 import TeamLogo from '@/app/components/TeamLogo';
-import { formatPeriodLabel, formatPlayerName, formatStat } from '@/app/utils/formatters';
+import {
+  formatPeriodLabel,
+  formatPlayerName,
+  formatShootoutPlayer,
+  formatStat,
+} from '@/app/utils/formatters';
 import IceRink from '@/app/components/IceRink';
 import GameStory from '@/app/components/GameStory';
 import FloatingVideoPlayer from '@/app/components/FloatingVideoPlayer';
@@ -142,7 +147,7 @@ const GamePage: React.FC = () => {
                           <Headshot
                             playerId={shot.playerId}
                             src={shot.headshot}
-                            alt={`${shot.firstName.default} ${shot.lastName.default}`}
+                            alt={formatShootoutPlayer(shot, shot.teamAbbrev?.default)}
                             team={shot.teamAbbrev.default}
                             size="4"
                             className="mr-2"
@@ -151,7 +156,7 @@ const GamePage: React.FC = () => {
                             <span className="font-bold">
                               {shot.playerId ? (
                                 <Link href={`/player/${shot.playerId}`}>
-                                  {shot.firstName.default} {shot.lastName.default}
+                                  {formatShootoutPlayer(shot, shot.teamAbbrev?.default)}
                                 </Link>
                               ) : (
                                 <>Unnamed</>

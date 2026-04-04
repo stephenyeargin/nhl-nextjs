@@ -241,3 +241,11 @@ export const formatPlayerName = (name?: PlayerName): string => {
 
   return '';
 };
+
+export const formatShootoutPlayer = (name?: PlayerName, teamAbbrev?: string) => {
+  if (!name || !name.firstName || !name.lastName) {
+    return `${teamAbbrev ?? 'Unnamed'} Shooter`;
+  }
+
+  return `${name.firstName?.default} ${name.lastName?.default}`;
+};

@@ -407,6 +407,12 @@ const GameSidebar = () => {
                       {['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
                         <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase">
                           Final
+                          {g.gameOutcome?.lastPeriodType !== 'REG' && (
+                            <>
+                              /{g.gameOutcome?.otPeriods > 1 && g.gameOutcome?.otPeriods}
+                              {g.gameOutcome?.lastPeriodType}
+                            </>
+                          )}
                         </span>
                       )}
                       {['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK' && (

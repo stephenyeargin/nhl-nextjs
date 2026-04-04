@@ -25,6 +25,7 @@ interface SeriesStatus {
 
 interface GameOutcome {
   lastPeriodType?: string;
+  otPeriods?: number;
 }
 interface GameClock {
   timeRemaining?: string;
@@ -234,7 +235,7 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
               <span className="text-sm mr-2" suppressHydrationWarning>
                 {hideDate ? null : formatLocalizedDate(game.startTimeUTC)}
               </span>
-              <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:text-black rounded-sm text-nowrap">
+              <span className="text-xs font-medium px-2 py-1 bg-slate-100 dark:text-black rounded-sm text-nowrap capitalize">
                 {(() => {
                   const pd = game.periodDescriptor;
                   const periodType = typeof pd === 'string' ? pd : pd?.periodType;
@@ -243,7 +244,7 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
                     <>
                       FINAL
                       {game.gameOutcome?.lastPeriodType !== 'REG' && periodType !== 'REG'
-                        ? `/${game.gameOutcome?.lastPeriodType ?? periodType}`
+                        ? `/${game.gameOutcome?.otPeriods && game.gameOutcome?.otPeriods > 1 ? game.gameOutcome?.otPeriods : ''}${game.gameOutcome?.lastPeriodType ?? periodType}`
                         : ''}
                     </>
                   );

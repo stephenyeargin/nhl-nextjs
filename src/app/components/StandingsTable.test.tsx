@@ -124,6 +124,7 @@ describe('StandingsTable', () => {
         points: 115,
         gamesPlayed: 65,
         wildcardSequence: 1,
+        clinchIndicator: 'x',
       }),
       row({
         teamAbbrev: { default: 'T2' },
@@ -180,6 +181,7 @@ describe('StandingsTable', () => {
         points: 78,
         gamesPlayed: 65,
         wildcardSequence: 9,
+        clinchIndicator: 'e',
       }),
     ];
 
@@ -202,7 +204,7 @@ describe('StandingsTable', () => {
     const ninthTeamRow = screen.getByText('Team 9').closest('tr');
     const ninthTeamCells = within(ninthTeamRow!).getAllByRole('cell');
     expect(ninthTeamCells[2].textContent).toBe('36');
-    expect(ninthTeamCells[3].textContent).toBe('33');
+    expect(within(ninthTeamCells[3]).getByTitle('Eliminated')).toBeInTheDocument();
   });
 
   it('prioritizes official clinch indicators over computed race values', () => {
@@ -431,6 +433,7 @@ describe('StandingsTable', () => {
         wildcardSequence: 10,
         divisionAbbrev: 'P',
         divisionSequence: 8,
+        clinchIndicator: 'e',
       }),
     ];
 

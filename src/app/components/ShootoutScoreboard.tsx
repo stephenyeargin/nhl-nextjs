@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import TeamLogo from './TeamLogo';
 import type { TeamAbbrevLogo } from '@/app/types/team';
+import { formatShootoutPlayer } from '../utils/formatters';
 
 interface ShootoutPlayerNamePart {
   default: string;
@@ -65,13 +66,13 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
           <FontAwesomeIcon
             icon={faTrophy}
             className="text-3xl text-green-500"
-            title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: Game Winner!`}
+            title={`Shot #${shot.sequence} by ${formatShootoutPlayer(shot, shot.teamAbbrev?.default)}: Game Winner!`}
           />
         ) : (
           <FontAwesomeIcon
             icon={faCheckCircle}
             className="text-3xl text-green-500"
-            title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: ${shot.result.toUpperCase()}`}
+            title={`Shot #${shot.sequence} by ${formatShootoutPlayer(shot, shot.teamAbbrev?.default)}: ${shot.result.toUpperCase()}`}
           />
         )}
       </>
@@ -79,7 +80,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
       <FontAwesomeIcon
         icon={faXmarkCircle}
         className="text-3xl text-slate-500"
-        title={`Shot #${shot.sequence} by ${shot.firstName.default} ${shot.lastName.default}: ${shot.result.toUpperCase()}`}
+        title={`Shot #${shot.sequence} by ${formatShootoutPlayer(shot, shot.teamAbbrev?.default)}: ${shot.result.toUpperCase()}`}
       />
     );
   };

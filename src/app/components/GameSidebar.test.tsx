@@ -110,6 +110,10 @@ const buildGameData = () => ({
         periodDescriptor: { number: 3 },
         startTimeUTC: '2024-10-01T23:00:00Z',
         clock: { inIntermission: false, timeRemaining: '10:00' },
+        gameOutcome: {
+          lastPeriodType: 'OT',
+          otPeriods: 1,
+        },
       },
     ],
     gameInfo: {
