@@ -24,6 +24,7 @@ const PlayByPlay: React.FC = () => {
   const [videoPlayerLabel, setVideoPlayerLabel] = useState<string | null>(null);
   const [videoPlayerUrl, setVideoPlayerUrl] = useState<string | null>(null);
   const [isVideoPlayerVisible, setVideoPlayerVisible] = useState<boolean>(false);
+  const [errorState, setErrorState] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchGameData = async () => {
@@ -39,6 +40,7 @@ const PlayByPlay: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching game data:', error);
+        setErrorState(error instanceof Error ? error : new Error('Unable to load play-by-play.'));
       }
     };
     fetchGameData();
@@ -63,6 +65,10 @@ const PlayByPlay: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  if (errorState) {
+    throw errorState;
+  }
 
   if (!gameData || !playByPlay) {
     return <GameBodySkeleton />;
