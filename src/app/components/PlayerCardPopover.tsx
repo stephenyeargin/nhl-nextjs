@@ -230,10 +230,11 @@ const PlayerCardPopover: React.FC = () => {
     ? computePosition(cardState.rect)
     : { position: 'fixed' as const, top: -9999, left: -9999 };
   const data = cardState?.data;
+  const shootsCatchesLabel = data?.position !== 'G' ? 'Shoots' : 'Catches';
   const detailLine = [
     data?.sweaterNumber ? `#${data.sweaterNumber}` : null,
     data?.position ? POSITION_LABELS[data.position] || data.position : null,
-    data?.shootsCatches ? `Shoots ${data.shootsCatches}` : null,
+    data?.shootsCatches ? `${shootsCatchesLabel} ${data.shootsCatches}` : null,
   ]
     .filter(Boolean)
     .join(' • ');
