@@ -14,6 +14,7 @@ const Highlights: React.FC = () => {
   const videoPlayerRef = useRef<HTMLIFrameElement | null>(null);
   const [videos, setVideos] = useState<VideoItemBase[] | null>(null);
   const [activeVideo, setActiveVideo] = useState<VideoItemBase | null>(null);
+  const [errorState, setErrorState] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchGameVideos = async () => {
@@ -24,8 +25,12 @@ const Highlights: React.FC = () => {
         );
         const v: VideoApiResponse = await videosResponse.json();
         setVideos(v.items as VideoItemBase[]);
+        setErrorState(null);
       } catch (error) {
         console.error('Error fetching related videos:', error);
+        setErrorState(
+          error instanceof Error ? error : new Error('Unable to load highlight videos.')
+        );
       }
     };
     fetchGameVideos();
@@ -37,6 +42,10 @@ const Highlights: React.FC = () => {
       };
     }
   }, [id, gameState]);
+
+  if (errorState) {
+    throw errorState;
+  }
 
   if (!videos) {
     return <GameBodySkeleton />;

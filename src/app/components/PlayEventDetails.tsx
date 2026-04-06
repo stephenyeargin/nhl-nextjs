@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import PlayerLink from './PlayerLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import Headshot from './Headshot';
@@ -68,9 +68,9 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
     return (
       <>
         <span className="p-1 border rounded-sm text-xs mx-1">#{player.sweaterNumber}</span>{' '}
-        <Link href={`/player/${player.playerId}`} className="font-bold">
+        <PlayerLink playerId={player.playerId!} className="font-bold">
           {player.firstName?.default} {player.lastName?.default}
-        </Link>
+        </PlayerLink>
       </>
     );
   };

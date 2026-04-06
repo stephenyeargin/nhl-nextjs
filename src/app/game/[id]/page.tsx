@@ -9,7 +9,7 @@ import {
   faTrophy,
   faXmarkCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
+import PlayerLink from '@/app/components/PlayerLink';
 import { useGameContext } from '@/app/contexts/GameContext';
 import GameBodySkeleton from '@/app/components/GameBodySkeleton';
 import Headshot from '@/app/components/Headshot';
@@ -155,9 +155,9 @@ const GamePage: React.FC = () => {
                           <div className="grow">
                             <span className="font-bold">
                               {shot.playerId ? (
-                                <Link href={`/player/${shot.playerId}`}>
+                                <PlayerLink playerId={shot.playerId}>
                                   {formatShootoutPlayer(shot, shot.teamAbbrev?.default)}
-                                </Link>
+                                </PlayerLink>
                               ) : (
                                 <>Unnamed</>
                               )}
@@ -219,9 +219,9 @@ const GamePage: React.FC = () => {
                             />
                             <div>
                               <span className="font-bold">
-                                <Link href={`/player/${goal.playerId}`}>
+                                <PlayerLink playerId={goal.playerId}>
                                   {goal.firstName?.default} {goal.lastName?.default}
-                                </Link>{' '}
+                                </PlayerLink>{' '}
                                 ({goal.goalsToDate})
                               </span>
                               {goal.strength !== 'ev' && (
@@ -418,7 +418,7 @@ const GamePage: React.FC = () => {
                       />
                     </div>
                     <h4 className="font-semibold">
-                      <Link href={`/player/${p.playerId}`}>{p.name.default}</Link>
+                      <PlayerLink playerId={p.playerId}>{p.name.default}</PlayerLink>
                     </h4>
                     <p className="text-sm">
                       #{p.sweaterNo} • {p.teamAbbrev} • {p.position}

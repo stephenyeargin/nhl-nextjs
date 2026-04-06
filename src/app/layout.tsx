@@ -11,6 +11,8 @@ import DraftTicker from '@/app/components/DraftTicker';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from 'next/link';
 import MatomoAnalytics from '@/app/components/MatomoAnalytics';
+import { PlayerCardProvider } from '@/app/contexts/PlayerCardContext';
+import PlayerCardPopover from '@/app/components/PlayerCardPopover';
 import './globals.css';
 
 config.autoAddCss = false;
@@ -48,11 +50,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <MainNav />
-        <section id="root">
-          {isDraftSeason() ? <DraftTicker /> : <TopBarSchedule />}
-          {children}
-        </section>
+        <PlayerCardProvider>
+          <MainNav />
+          <section id="root">
+            {isDraftSeason() ? <DraftTicker /> : <TopBarSchedule />}
+            {children}
+          </section>
+          <PlayerCardPopover />
+        </PlayerCardProvider>
         <div className="bg-slate-200 dark:bg-slate-800 p-5">
           <div className="text-xs text-center">
             {env.NEXT_PUBLIC_SITE_NAME} — All trademarks are property of their respective owners. |{' '}

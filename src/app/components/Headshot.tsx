@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import PlayerLink from './PlayerLink';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
 
 interface HeadshotProps {
@@ -46,7 +46,7 @@ const Headshot: React.FC<HeadshotProps> = ({
   if (playerId && Number(playerId) > 0) {
     return (
       <div className="flex justify-center">
-        <Link href={`/player/${playerId}`}>{image}</Link>
+        <PlayerLink playerId={playerId}>{image}</PlayerLink>
       </div>
     );
   }

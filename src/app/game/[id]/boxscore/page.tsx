@@ -29,6 +29,7 @@ const BoxScore: React.FC = () => {
   const [gameData, setGameData] = useState<any>(null);
   const [gameState, setGameState] = useState<string | null>(null);
   const [activeStatTeam, setActiveStatTeam] = useState<'awayTeam' | 'homeTeam'>('awayTeam');
+  const [errorState, setErrorState] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchGameData = async () => {
@@ -52,8 +53,10 @@ const BoxScore: React.FC = () => {
           boxScore,
         } as BoxScoreData);
         setGameState(game.gameState);
+        setErrorState(null);
       } catch (error) {
         console.error('Error fetching game data:', error);
+        setErrorState(error instanceof Error ? error : new Error('Unable to load boxscore data.'));
       }
     };
     fetchGameData();
@@ -65,6 +68,10 @@ const BoxScore: React.FC = () => {
       };
     }
   }, [id, gameState]);
+
+  if (errorState) {
+    throw errorState;
+  }
 
   if (!gameData || !gameState) {
     return <GameBodySkeleton />;

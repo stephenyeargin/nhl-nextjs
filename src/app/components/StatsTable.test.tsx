@@ -15,6 +15,8 @@ jest.mock('./Headshot', () => {
   return MockHeadshot;
 });
 
+jest.mock('./PlayerLink', () => ({ children }: { children: React.ReactNode }) => <>{children}</>);
+
 jest.mock('../utils/teamData', () => ({
   getTeamDataByAbbreviation: () => ({ teamColor: '#000000' }),
 }));

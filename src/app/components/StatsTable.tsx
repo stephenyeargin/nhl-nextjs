@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import PlayerLink from '@/app/components/PlayerLink';
 import Headshot from '@/app/components/Headshot';
 import { formatStat, formatTextColorByBackgroundColor } from '@/app/utils/formatters';
 
@@ -115,9 +115,9 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
     <tr key={skater.playerId}>
       <td className="text-center w-10" data-order={skater?.sweaterNumber}>
         {skater.sweaterNumber ? (
-          <Link href={`/player/${skater.playerId}`} className="font-bold">
+          <PlayerLink playerId={skater.playerId} className="font-bold">
             {skater.sweaterNumber}
-          </Link>
+          </PlayerLink>
         ) : (
           <Headshot
             playerId={skater.playerId}
@@ -133,11 +133,11 @@ const StatsTable: React.FC<StatsTableProps> = ({ stats, team }) => {
         className="text-left text-nowrap"
         data-order={skater.lastName?.default || skater.name?.default}
       >
-        <Link href={`/player/${skater.playerId}`} className="font-bold">
+        <PlayerLink playerId={skater.playerId} className="font-bold">
           {skater.name?.default
             ? skater.name.default
             : `${skater.firstName?.default} ${skater.lastName?.default}`}
-        </Link>
+        </PlayerLink>
       </td>
       {statHeaders.map(
         ({ key, altKey, precision, unit }) =>

@@ -97,6 +97,7 @@ export interface PlayerLandingResponse {
   playerId: number | string;
   firstName: LocalizedString;
   lastName: LocalizedString;
+  fullTeamName?: LocalizedString;
   heightInInches: number;
   weightInPounds: number;
   birthDate: string;
@@ -123,6 +124,27 @@ export interface PlayerLandingResponse {
 }
 
 // Stat header configuration
+// Minimal data needed for the player card popover
+export interface PlayerCardData {
+  playerId: number | string;
+  firstName: LocalizedString;
+  lastName: LocalizedString;
+  position: string;
+  headshot?: string;
+  currentTeamAbbrev: string;
+  fullTeamName?: LocalizedString;
+  sweaterNumber?: number | string;
+  shootsCatches?: string;
+  heightInInches?: number;
+  weightInPounds?: number;
+  birthCity?: LocalizedString;
+  birthStateProvince?: LocalizedString;
+  birthCountry?: string;
+  featuredStats?: PlayerFeaturedStats;
+  last5Games?: PlayerGameSummary[];
+  isActive?: boolean;
+}
+
 export interface StatHeader {
   key: string;
   label: string;
