@@ -9,6 +9,8 @@ jest.mock('./Headshot', () => {
   return HS;
 });
 
+jest.mock('./PlayerLink', () => ({ children }: { children: React.ReactNode }) => <>{children}</>);
+
 describe('Skater', () => {
   it('renders player name', () => {
     render(

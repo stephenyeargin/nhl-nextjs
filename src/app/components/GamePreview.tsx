@@ -8,7 +8,7 @@ import { formatStat } from '../utils/formatters';
 import TeamLogo from './TeamLogo';
 import { getTeamDataByAbbreviation } from '../utils/teamData';
 import TeamToggle from './TeamToggle';
-import Link from 'next/link';
+import PlayerLink from './PlayerLink';
 
 interface GamePreviewProps {
   game: any;
@@ -78,13 +78,13 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
             team={team}
           />
           <div className="mx-1">
-            <Link href={`/player/${goaltender.playerId}`}>
+            <PlayerLink playerId={goaltender.playerId}>
               <div>{goaltender.firstName?.default}</div>
               <div className="font-bold">{goaltender.lastName?.default}</div>
               <div className="text-sm">
                 #{goaltender.sweaterNumber} • {goaltender.positionCode}
               </div>
-            </Link>
+            </PlayerLink>
           </div>
         </div>
         <div className="col-span-2 flex flex-col items-center">
@@ -173,13 +173,13 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
                 team={awayTeam.abbrev}
               />
               <div className="mx-1">
-                <Link href={`/player/${leader.awayLeader.playerId}`}>
+                <PlayerLink playerId={leader.awayLeader.playerId}>
                   <div>{leader.awayLeader.firstName?.default}</div>
                   <div className="font-bold">{leader.awayLeader.lastName?.default}</div>
                   <div className="text-sm">
                     #{leader.awayLeader.sweaterNumber} • {leader.awayLeader.positionCode}
                   </div>
-                </Link>
+                </PlayerLink>
               </div>
             </div>
           )}
@@ -195,13 +195,13 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
           {leader.homeLeader && (
             <div className="col-span-3 p-2 flex justify-end">
               <div className="mx-1 text-right">
-                <Link href={`/player/${leader.homeLeader.playerId}`}>
+                <PlayerLink playerId={leader.homeLeader.playerId}>
                   <div>{leader.homeLeader.firstName?.default}</div>
                   <div className="font-bold">{leader.homeLeader.lastName?.default}</div>
                   <div className="text-sm">
                     #{leader.homeLeader.sweaterNumber} • {leader.homeLeader.positionCode}
                   </div>
-                </Link>
+                </PlayerLink>
               </div>
               <Headshot
                 playerId={leader.homeLeader.playerId}

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import Link from 'next/link';
+import PlayerLink from './PlayerLink';
 import { useGameContext } from '../contexts/GameContext';
 import Scoreboard from './Scoreboard';
 import TeamLogo from './TeamLogo';
@@ -42,9 +43,9 @@ interface SimplePlayer {
   lastName?: { default?: string };
 }
 const renderPlayer = (player: SimplePlayer) => (
-  <Link href={`/player/${player.id}`}>
+  <PlayerLink playerId={player.id}>
     {player.firstName?.default} {player.lastName?.default}
-  </Link>
+  </PlayerLink>
 );
 
 const GameSidebar = () => {

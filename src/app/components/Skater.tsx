@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import PlayerLink from './PlayerLink';
 import Headshot from './Headshot';
 import GameClock from './GameClock';
 import { formatTextColorByBackgroundColor } from '../utils/formatters';
@@ -69,16 +69,15 @@ export const Skater: React.FC<SkaterProps> = ({
   return (
     <div key={player.playerId} className="text-xs text-center">
       <div className="lg:hidden my-3">
-        <Link
-          href={`/player/${player.playerId}`}
-          title={player.name?.default || ''}
+        <PlayerLink
+          playerId={player.playerId}
           className={`font-bold rounded-full inline-flex items-center justify-center ${
             compactMobile ? 'w-6 h-6 text-[10px]' : 'p-2 w-10 h-10'
           }`}
           style={skaterStyle}
         >
           {String(player.sweaterNumber ?? '').padStart(2, '0')}
-        </Link>
+        </PlayerLink>
       </div>
       <Headshot
         playerId={typeof player.playerId === 'number' ? player.playerId : undefined}
@@ -89,7 +88,9 @@ export const Skater: React.FC<SkaterProps> = ({
         team={team}
       />
       <div className="hidden lg:block font-bold">
-        <Link href={`/player/${player.playerId}`}>{player.name?.default || player.playerId}</Link>
+        <PlayerLink playerId={player.playerId}>
+          {player.name?.default || player.playerId}
+        </PlayerLink>
       </div>
       <div className="">
         <div className="hidden xl:block">

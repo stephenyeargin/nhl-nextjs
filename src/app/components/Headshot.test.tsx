@@ -18,6 +18,13 @@ jest.mock('next/image', () => {
 
   return MockImage;
 });
+
+jest.mock('./PlayerLink', () => {
+  const Mock = ({ children, playerId }: any) => <a href={`/player/${playerId}`}>{children}</a>;
+  Mock.displayName = 'PlayerLinkMock';
+
+  return Mock;
+});
 jest.mock('../utils/teamData', () => ({
   getTeamDataByAbbreviation: () => ({ teamColor: '#112233', secondaryTeamColor: '#445566' }),
 }));

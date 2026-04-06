@@ -10,6 +10,8 @@ jest.mock(
       children
 );
 
+jest.mock('./PlayerLink', () => ({ children }: { children: React.ReactNode }) => <>{children}</>);
+
 const base: Tag = { _entityId: '1', slug: 'topic', title: 'Title' };
 
 describe('ContentTag', () => {

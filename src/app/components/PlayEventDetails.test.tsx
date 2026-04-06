@@ -18,6 +18,17 @@ jest.mock('./TeamLogo', () => {
   return Mock;
 });
 
+jest.mock('./PlayerLink', () => {
+  const Mock = ({ children, className, playerId }: any) => (
+    <a className={className} href={`/player/${playerId}`}>
+      {children}
+    </a>
+  );
+  (Mock as any).displayName = 'PlayerLinkMock';
+
+  return Mock;
+});
+
 const game = { periodDescriptor: { number: 1 } };
 const rosterSpots = [
   {

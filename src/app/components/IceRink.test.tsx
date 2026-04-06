@@ -18,6 +18,8 @@ jest.mock('./TeamLogo', () => {
   return TL;
 });
 
+jest.mock('./PlayerLink', () => ({ children }: { children: React.ReactNode }) => <>{children}</>);
+
 const baseProps = {
   game: {
     summary: {
