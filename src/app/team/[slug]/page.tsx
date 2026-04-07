@@ -64,6 +64,33 @@ interface NewsItem {
   [k: string]: any;
 }
 
+interface StandingsResponse {
+  standings: TeamStanding[];
+}
+
+interface TeamStatsResponse {
+  season?: number;
+  gameType?: number;
+  skaters: any[];
+  goalies: any[];
+  [k: string]: any;
+}
+
+interface NewsResponse {
+  items: any[];
+  [k: string]: any;
+}
+
+interface ScoreboardResponse {
+  gamesByDate: { games: any[] }[];
+  [k: string]: any;
+}
+
+interface FullSeasonScheduleResponse {
+  games: any[];
+  [k: string]: any;
+}
+
 export default async function TeamPage(props: any) {
   const rawParams = (await props?.params) as TeamSlugParam | Promise<TeamSlugParam>;
   const { slug } = await rawParams;
@@ -109,11 +136,11 @@ export default async function TeamPage(props: any) {
     ),
   ]);
 
-  let schedule = {},
-    standings = { standings: [] },
-    fullSeasonSchedule = {},
-    teamStats = {},
-    news = {};
+  let schedule: ScoreboardResponse = { gamesByDate: [] },
+    standings: StandingsResponse = { standings: [] },
+    fullSeasonSchedule: FullSeasonScheduleResponse = { games: [] },
+    teamStats: TeamStatsResponse = { skaters: [], goalies: [] },
+    news: NewsResponse = { items: [] };
 
   try {
     standings = await standingsResponse.json();

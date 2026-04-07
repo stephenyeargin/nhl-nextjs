@@ -24,26 +24,43 @@ const team = (abbrev: string) => ({
 
 describe('ShootoutScoreboard', () => {
   test('renders shots with correct icons including game winner', () => {
-    const shootout = [
+    const shootout: React.ComponentProps<typeof ShootoutScoreboard>['shootout'] = [
       {
         sequence: 1,
+        playerId: 1001,
         teamAbbrev: { default: 'AWY' },
+        shotType: 'wrist',
         result: 'goal',
+        headshot: '',
         gameWinner: true,
+        homeScore: 0,
+        awayScore: 1,
         firstName: { default: 'A' },
         lastName: { default: 'One' },
       },
       {
         sequence: 2,
+        playerId: 1002,
         teamAbbrev: { default: 'HOM' },
-        result: 'miss',
+        shotType: 'backhand',
+        result: 'save',
+        headshot: '',
+        gameWinner: false,
+        homeScore: 0,
+        awayScore: 1,
         firstName: { default: 'B' },
         lastName: { default: 'Two' },
       },
       {
         sequence: 3,
+        playerId: 1003,
         teamAbbrev: { default: 'AWY' },
+        shotType: 'snap',
         result: 'goal',
+        headshot: '',
+        gameWinner: false,
+        homeScore: 0,
+        awayScore: 2,
         firstName: { default: 'C' },
         lastName: { default: 'Three' },
       },

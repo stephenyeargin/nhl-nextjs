@@ -25,8 +25,18 @@ const gameBase = {
   startTimeUTC: '2025-01-01T00:00:00Z',
   gameType: 2,
   gameState: 'FINAL',
-  awayTeam: { abbrev: 'AWY', score: 2, placeName: { default: 'Away' } },
-  homeTeam: { abbrev: 'HOM', score: 3, placeName: { default: 'Home' } },
+  awayTeam: {
+    abbrev: 'AWY',
+    score: 2,
+    placeName: { default: 'Away' },
+    commonName: { default: 'Away' },
+  },
+  homeTeam: {
+    abbrev: 'HOM',
+    score: 3,
+    placeName: { default: 'Home' },
+    commonName: { default: 'Home' },
+  },
 };
 
 describe('TeamSchedule', () => {
