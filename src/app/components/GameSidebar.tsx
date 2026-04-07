@@ -335,20 +335,17 @@ const GameSidebar = () => {
             </div>
           </div>
           {rightRail.last10Record?.awayTeam?.pastGameResults?.map((_g: any, i: number) => (
-            <div
-              key={i}
-              className={`flex text-center text-xs my-1 gap-1 ${i % 2 ? '' : 'bg-slate-500/10'}`}
-            >
+            <div key={i} className="flex text-center text-xs my-1 gap-1">
               <div
-                className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-50'}`}
-                style={{ borderWidth: '1pt', borderColor: awayTeam.data?.teamColor || '#000' }}
+                className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-25'}`}
+                style={{ backgroundColor: awayTeam.data?.teamColor || '#000' }}
               >
                 {rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.opponentAbbrev} (
                 {rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.gameResult})
               </div>
               <div
-                className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-50'}`}
-                style={{ borderWidth: '1pt', borderColor: homeTeam.data?.teamColor || '#000' }}
+                className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-25'}`}
+                style={{ backgroundColor: homeTeam.data?.teamColor || '#000' }}
               >
                 {rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.opponentAbbrev} (
                 {rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.gameResult})
