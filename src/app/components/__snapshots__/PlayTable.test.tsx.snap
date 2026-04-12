@@ -119,8 +119,7 @@ exports[`PlayTable renders rows and delegates details and logos 1`] = `
                   decoding="async"
                   height="200"
                   loading="lazy"
-                  src="/_next/image?url=%2Fimg.jpg&w=640&q=75"
-                  srcset="/_next/image?url=%2Fimg.jpg&w=256&q=75 1x, /_next/image?url=%2Fimg.jpg&w=640&q=75 2x"
+                  src="/img.jpg"
                   style="color: transparent;"
                   width="200"
                 />
