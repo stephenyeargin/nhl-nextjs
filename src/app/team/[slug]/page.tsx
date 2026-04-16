@@ -179,6 +179,7 @@ export default async function TeamPage(props: any) {
             style={{ color: formatTextColorByBackgroundColor(team.teamColor) }}
           >
             {team.name}
+            {teamStanding?.clinchIndicator && <> ({teamStanding.clinchIndicator})</>}
           </h1>
           {teamStanding && (
             <div
