@@ -7,12 +7,8 @@ schema-version = "1.10.0"
 ##  $ flox show gum     <- show all versions of a package
 ## -------------------------------------------------------------------
 [install]
-flox-mcp-server.pkg-path = "flox/flox-mcp-server"
-flox-mcp-server.systems = ["aarch64-linux", "aarch64-darwin", "x86_64-linux"]
-flox-mcp-server.pkg-group = "flox-mcp-server"
-flox-mcp-server.outputs = "all"
-nodejs_24.pkg-path = "nodejs_24"
-nodejs_24.outputs = "all"
+nodejs.pkg-path = "nodejs"
+nodejs.outputs = "all"
 gum.pkg-path = "gum"
 
 
@@ -22,11 +18,11 @@ gum.pkg-path = "gum"
 ## -------------------------------------------------------------------
 [vars]
 INTRO_MESSAGE = '''
-  Start Dev server:
-    $ flox services start dev
+Start Dev server:
+  $ flox services start dev
 
-  Dev server URL:
-    http://localhost:3000/
+Dev server URL:
+  http://localhost:3000/
 '''
 
 
@@ -36,11 +32,6 @@ INTRO_MESSAGE = '''
 [hook]
 on-activate = """
   npm install
-
-  gum style \
-  --foreground 212 --border-foreground 212 --border double \
-  --width 70 --margin "1 2" --padding "2 4" \
-  $INTRO_MESSAGE
 """
 
 
@@ -48,12 +39,12 @@ on-activate = """
 ## ... sourced by _your shell_ when you run 'flox activate'.
 ## -------------------------------------------------------------------
 [profile]
-# common = '''
-#   gum style \
-#   --foreground 212 --border-foreground 212 --border double \
-#   --align center --width 50 --margin "1 2" --padding "2 4" \
-#     $INTRO_MESSAGE
-# '''
+common = '''
+  gum style \
+  --foreground 212 --border-foreground 212 --border double \
+  --align left --width 40 --margin "1 0" --padding "1 0" \
+    $INTRO_MESSAGE
+'''
 ## Shell-specific customizations such as setting aliases go here:
 # bash = ...
 # zsh  = ...

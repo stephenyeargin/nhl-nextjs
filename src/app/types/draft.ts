@@ -47,3 +47,39 @@ export type DraftPickTicker = Pick<
   | 'lastName'
   | 'positionCode'
 >;
+
+// Draft ranking player shape
+export interface DraftRankingPlayer {
+  midtermRank: number;
+  finalRank?: number;
+  finalRanking?: number;
+  firstName: string;
+  lastName: string;
+  positionCode: string;
+  shootsCatches: string;
+  heightInInches: number;
+  weightInPounds: number;
+  lastAmateurClub: string;
+  lastAmateurLeague: string;
+  birthDate: string;
+  birthCity: string;
+  birthStateProvince?: string;
+  birthCountry: string;
+  [k: string]: unknown;
+}
+
+export interface DraftRankingCategory {
+  id: number;
+  name: string;
+  consumerKey: string;
+}
+
+// API payload shape for draft rankings fetch
+export interface DraftRankingsData {
+  draftYear: number;
+  categoryId: number;
+  categoryKey: string;
+  draftYears: number[];
+  categories: DraftRankingCategory[];
+  rankings: DraftRankingPlayer[];
+}

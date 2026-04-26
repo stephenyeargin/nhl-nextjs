@@ -3,31 +3,23 @@
   "manifest": {
     "schema-version": "1.10.0",
     "install": {
-      "flox-mcp-server": {
-        "pkg-path": "flox/flox-mcp-server",
-        "pkg-group": "flox-mcp-server",
-        "systems": [
-          "aarch64-linux",
-          "aarch64-darwin",
-          "x86_64-linux"
-        ],
-        "outputs": "all"
-      },
       "gum": {
         "pkg-path": "gum"
       },
-      "nodejs_24": {
-        "pkg-path": "nodejs_24",
+      "nodejs": {
+        "pkg-path": "nodejs",
         "outputs": "all"
       }
     },
     "vars": {
-      "INTRO_MESSAGE": "  Start Dev server:\n    $ flox services start dev\n\n  Dev server URL:\n    http://localhost:3000/\n"
+      "INTRO_MESSAGE": "Start Dev server:\n  $ flox services start dev\n\nDev server URL:\n  http://localhost:3000/\n"
     },
     "hook": {
-      "on-activate": "  npm install\n\n  gum style --foreground 212 --border-foreground 212 --border double --width 70 --margin \"1 2\" --padding \"2 4\" $INTRO_MESSAGE\n"
+      "on-activate": "  npm install\n"
     },
-    "profile": {},
+    "profile": {
+      "common": "  gum style \\\n  --foreground 212 --border-foreground 212 --border double \\\n  --align left --width 40 --margin \"1 0\" --padding \"1 0\" \\\n    $INTRO_MESSAGE\n"
+    },
     "options": {},
     "services": {
       "dev": {
@@ -37,123 +29,31 @@
   },
   "packages": [
     {
-      "attr_path": "flox-mcp-server",
-      "broken": false,
-      "derivation": "/nix/store/7my3rgi90s1haw3fz762lrdyy73dx8h3-flox-mcp-server-0.2.0.drv",
-      "description": "MCP server for Flox package manager",
-      "install_id": "flox-mcp-server",
-      "license": "MIT",
-      "locked_url": "https://github.com/flox/mcp-server?rev=86a2d182f1f3bbf6e69a9b73e7936746e4825ebd",
-      "name": "flox-mcp-server-0.2.0",
-      "pname": "flox-mcp-server",
-      "rev": "86a2d182f1f3bbf6e69a9b73e7936746e4825ebd",
-      "rev_count": 28,
-      "rev_date": "2025-11-25T20:47:48Z",
-      "scrape_date": "2026-01-28T03:14:33.558453Z",
-      "stabilities": [
-        "unstable"
-      ],
-      "unfree": false,
-      "version": "0.2.0",
-      "outputs_to_install": [
-        "out"
-      ],
-      "outputs": {
-        "dist": "/nix/store/ci0csf2snc7h5g1qm03mw8ggq64img1m-flox-mcp-server-0.2.0-dist",
-        "out": "/nix/store/dypvq42niihlv88bhdvznn6cy6l0y9gc-flox-mcp-server-0.2.0"
-      },
-      "system": "aarch64-darwin",
-      "group": "flox-mcp-server",
-      "priority": 5
-    },
-    {
-      "attr_path": "flox-mcp-server",
-      "broken": false,
-      "derivation": "/nix/store/8im6dgscbg7hghm2anwi2la5az19p576-flox-mcp-server-0.2.0.drv",
-      "description": "MCP server for Flox package manager",
-      "install_id": "flox-mcp-server",
-      "license": "MIT",
-      "locked_url": "https://github.com/flox/mcp-server?rev=86a2d182f1f3bbf6e69a9b73e7936746e4825ebd",
-      "name": "flox-mcp-server-0.2.0",
-      "pname": "flox-mcp-server",
-      "rev": "86a2d182f1f3bbf6e69a9b73e7936746e4825ebd",
-      "rev_count": 28,
-      "rev_date": "2025-11-25T20:47:48Z",
-      "scrape_date": "2026-01-28T03:14:33.558458Z",
-      "stabilities": [
-        "unstable"
-      ],
-      "unfree": false,
-      "version": "0.2.0",
-      "outputs_to_install": [
-        "out"
-      ],
-      "outputs": {
-        "dist": "/nix/store/cnsh7kmb5bivk2qps25460kyblzh1pp8-flox-mcp-server-0.2.0-dist",
-        "out": "/nix/store/x8dy1d9fzb9kzm6b2lrbij45g10p6r5v-flox-mcp-server-0.2.0"
-      },
-      "system": "aarch64-linux",
-      "group": "flox-mcp-server",
-      "priority": 5
-    },
-    {
-      "attr_path": "flox-mcp-server",
-      "broken": false,
-      "derivation": "/nix/store/kc27v6whcgmfw54fx31j561xfd4l632f-flox-mcp-server-0.2.0.drv",
-      "description": "MCP server for Flox package manager",
-      "install_id": "flox-mcp-server",
-      "license": "MIT",
-      "locked_url": "https://github.com/flox/mcp-server?rev=86a2d182f1f3bbf6e69a9b73e7936746e4825ebd",
-      "name": "flox-mcp-server-0.2.0",
-      "pname": "flox-mcp-server",
-      "rev": "86a2d182f1f3bbf6e69a9b73e7936746e4825ebd",
-      "rev_count": 28,
-      "rev_date": "2025-11-25T20:47:48Z",
-      "scrape_date": "2026-01-28T03:14:33.558459Z",
-      "stabilities": [
-        "unstable"
-      ],
-      "unfree": false,
-      "version": "0.2.0",
-      "outputs_to_install": [
-        "out"
-      ],
-      "outputs": {
-        "dist": "/nix/store/zh9gjf26d589k2fvzn0n08d3p0h8ipbz-flox-mcp-server-0.2.0-dist",
-        "out": "/nix/store/zf8m76x02gga11x1bkmvg5pb65nvayvc-flox-mcp-server-0.2.0"
-      },
-      "system": "x86_64-linux",
-      "group": "flox-mcp-server",
-      "priority": 5
-    },
-    {
       "attr_path": "gum",
       "broken": false,
-      "derivation": "/nix/store/a1l884a7ihsnpbbsv7dgyhrhxr0dy88g-gum-0.17.0.drv",
+      "derivation": "/nix/store/bmz60mbb36nlipdn9n6zmcm6kjls8gll-gum-0.17.0.drv",
       "description": "Tasty Bubble Gum for your shell",
       "install_id": "gum",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=0182a361324364ae3f436a63005877674cf45efb",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
       "name": "gum-0.17.0",
       "pname": "gum",
-      "rev": "0182a361324364ae3f436a63005877674cf45efb",
-      "rev_count": 948083,
-      "rev_date": "2026-02-17T23:04:30Z",
-      "scrape_date": "2026-02-19T04:39:53.488795Z",
+      "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "rev_count": 980183,
+      "rev_date": "2026-04-14T12:31:25Z",
+      "scrape_date": "2026-04-16T06:05:19.446202Z",
       "stabilities": [
-        "unstable",
-        "staging"
+        "staging",
+        "unstable"
       ],
       "unfree": false,
       "version": "0.17.0",
       "outputs_to_install": [
         "out",
-        "out",
-        "out",
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/pjh70r1gc4ylrc925kp6k74223n2r0hb-gum-0.17.0"
+        "out": "/nix/store/cdpxgzcjwidrmrzsq0zkyr9nxccvy3p6-gum-0.17.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -162,29 +62,28 @@
     {
       "attr_path": "gum",
       "broken": false,
-      "derivation": "/nix/store/lx61h7w2incwsb6ijqi26qw14q47l7iv-gum-0.17.0.drv",
+      "derivation": "/nix/store/yhvp5prpjjl5hqk6fhr5svdzf1yfacgk-gum-0.17.0.drv",
       "description": "Tasty Bubble Gum for your shell",
       "install_id": "gum",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=0182a361324364ae3f436a63005877674cf45efb",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
       "name": "gum-0.17.0",
       "pname": "gum",
-      "rev": "0182a361324364ae3f436a63005877674cf45efb",
-      "rev_count": 948083,
-      "rev_date": "2026-02-17T23:04:30Z",
-      "scrape_date": "2026-02-19T05:12:56.379612Z",
+      "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "rev_count": 980183,
+      "rev_date": "2026-04-14T12:31:25Z",
+      "scrape_date": "2026-04-16T06:37:15.447343Z",
       "stabilities": [
-        "unstable",
-        "staging"
+        "staging",
+        "unstable"
       ],
       "unfree": false,
       "version": "0.17.0",
       "outputs_to_install": [
-        "out",
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/7c6164p77vlzpbj5npz4nrn0gvylks50-gum-0.17.0"
+        "out": "/nix/store/kqcb9j9k6wdvb7pjvjzn3p8dc82qmk9x-gum-0.17.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -193,29 +92,28 @@
     {
       "attr_path": "gum",
       "broken": false,
-      "derivation": "/nix/store/wd6qk0640rnnxi361ry2x2fb7bxsdixv-gum-0.17.0.drv",
+      "derivation": "/nix/store/cngbjjxmgsmcbgvihq7q9472rb5rhgdj-gum-0.17.0.drv",
       "description": "Tasty Bubble Gum for your shell",
       "install_id": "gum",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=0182a361324364ae3f436a63005877674cf45efb",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
       "name": "gum-0.17.0",
       "pname": "gum",
-      "rev": "0182a361324364ae3f436a63005877674cf45efb",
-      "rev_count": 948083,
-      "rev_date": "2026-02-17T23:04:30Z",
-      "scrape_date": "2026-02-19T05:45:38.547352Z",
+      "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "rev_count": 980183,
+      "rev_date": "2026-04-14T12:31:25Z",
+      "scrape_date": "2026-04-16T07:08:03.439457Z",
       "stabilities": [
-        "unstable",
-        "staging"
+        "staging",
+        "unstable"
       ],
       "unfree": false,
       "version": "0.17.0",
       "outputs_to_install": [
-        "out",
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/xff8di1nlgqx2k7q5z6ma7jc02k5ravf-gum-0.17.0"
+        "out": "/nix/store/rznkbgxflsbrfy5c359vhhqrrxw4pfkj-gum-0.17.0"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
@@ -224,161 +122,157 @@
     {
       "attr_path": "gum",
       "broken": false,
-      "derivation": "/nix/store/wkbcrdfhd3cifqw3gllsz2bsmik82c7v-gum-0.17.0.drv",
+      "derivation": "/nix/store/f5ahd90j9s46j49lz8k2yn3cmvyq6mbn-gum-0.17.0.drv",
       "description": "Tasty Bubble Gum for your shell",
       "install_id": "gum",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=0182a361324364ae3f436a63005877674cf45efb",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
       "name": "gum-0.17.0",
       "pname": "gum",
-      "rev": "0182a361324364ae3f436a63005877674cf45efb",
-      "rev_count": 948083,
-      "rev_date": "2026-02-17T23:04:30Z",
-      "scrape_date": "2026-02-19T06:23:25.652117Z",
+      "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "rev_count": 980183,
+      "rev_date": "2026-04-14T12:31:25Z",
+      "scrape_date": "2026-04-16T07:42:44.013626Z",
       "stabilities": [
-        "unstable",
-        "staging"
+        "staging",
+        "unstable"
       ],
       "unfree": false,
       "version": "0.17.0",
       "outputs_to_install": [
-        "out",
-        "out",
-        "out",
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/99an674pwfn3fnhl050kkng9v8a3l1qb-gum-0.17.0"
+        "out": "/nix/store/rf0zlw5q4j051xkjk9djfw5dpb8nwbgm-gum-0.17.0"
       },
       "system": "x86_64-linux",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "nodejs_24",
+      "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/0jp24w00c62cysdikz38xrnmxwzv0q4r-nodejs-24.13.0.drv",
+      "derivation": "/nix/store/g2yfx00n1lp9i8ka7nbl11fawc0yfm7n-nodejs-24.14.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
-      "install_id": "nodejs_24",
+      "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=0182a361324364ae3f436a63005877674cf45efb",
-      "name": "nodejs-24.13.0",
-      "pname": "nodejs_24",
-      "rev": "0182a361324364ae3f436a63005877674cf45efb",
-      "rev_count": 948083,
-      "rev_date": "2026-02-17T23:04:30Z",
-      "scrape_date": "2026-02-19T04:40:16.365172Z",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "name": "nodejs-24.14.0",
+      "pname": "nodejs",
+      "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "rev_count": 980183,
+      "rev_date": "2026-04-14T12:31:25Z",
+      "scrape_date": "2026-04-16T06:05:42.106352Z",
       "stabilities": [
-        "unstable",
-        "staging"
+        "staging",
+        "unstable"
       ],
       "unfree": false,
-      "version": "24.13.0",
+      "version": "24.14.0",
       "outputs_to_install": [
+        "out",
         "out",
         "out",
         "out"
       ],
       "outputs": {
-        "dev": "/nix/store/ywm49y8ncwny2nr0wvs6vmaxqjiqg523-nodejs-24.13.0-dev",
-        "libv8": "/nix/store/67xyvmmgkisc7mr16wbpyjq2fqyz44af-nodejs-24.13.0-libv8",
-        "out": "/nix/store/szvl8aalaplzshakdpyq8l5yq8q1bw66-nodejs-24.13.0"
+        "out": "/nix/store/d5hw52iialz64hvfzfp9qm1gr2fp43kx-nodejs-24.14.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "nodejs_24",
+      "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/l64r4vxgdpi0jxp27mvr9sj2c2mq2cys-nodejs-24.13.0.drv",
+      "derivation": "/nix/store/jj8rw2gnisil7dw10xi2qdinad9jqp7s-nodejs-24.14.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
-      "install_id": "nodejs_24",
+      "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=0182a361324364ae3f436a63005877674cf45efb",
-      "name": "nodejs-24.13.0",
-      "pname": "nodejs_24",
-      "rev": "0182a361324364ae3f436a63005877674cf45efb",
-      "rev_count": 948083,
-      "rev_date": "2026-02-17T23:04:30Z",
-      "scrape_date": "2026-02-19T05:13:32.366892Z",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "name": "nodejs-24.14.0",
+      "pname": "nodejs",
+      "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "rev_count": 980183,
+      "rev_date": "2026-04-14T12:31:25Z",
+      "scrape_date": "2026-04-16T06:37:50.441212Z",
       "stabilities": [
-        "unstable",
-        "staging"
+        "staging",
+        "unstable"
       ],
       "unfree": false,
-      "version": "24.13.0",
+      "version": "24.14.0",
       "outputs_to_install": [
+        "out",
+        "out",
         "out"
       ],
       "outputs": {
-        "dev": "/nix/store/qk4n3r5bvqzvpaq1qbpwwf47zg51wrhq-nodejs-24.13.0-dev",
-        "libv8": "/nix/store/rh9dg0mdq0hnp4cbdy4zdbmy6hnhxcfh-nodejs-24.13.0-libv8",
-        "out": "/nix/store/rpyb0275h916mxx8a0cm7yavm4qbr4j9-nodejs-24.13.0"
+        "out": "/nix/store/vs8zaq8fvbbjqfg4bzn424kn55sj7s7y-nodejs-24.14.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "nodejs_24",
+      "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/xgryfaiwfymf8ndij80ssly7q2kdq8y1-nodejs-24.13.0.drv",
+      "derivation": "/nix/store/l9ksrfa960964gqf23yfr7a66a2n18c1-nodejs-24.14.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
-      "install_id": "nodejs_24",
+      "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=0182a361324364ae3f436a63005877674cf45efb",
-      "name": "nodejs-24.13.0",
-      "pname": "nodejs_24",
-      "rev": "0182a361324364ae3f436a63005877674cf45efb",
-      "rev_count": 948083,
-      "rev_date": "2026-02-17T23:04:30Z",
-      "scrape_date": "2026-02-19T05:46:02.031823Z",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "name": "nodejs-24.14.0",
+      "pname": "nodejs",
+      "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "rev_count": 980183,
+      "rev_date": "2026-04-14T12:31:25Z",
+      "scrape_date": "2026-04-16T07:08:25.914600Z",
       "stabilities": [
-        "unstable",
-        "staging"
+        "staging",
+        "unstable"
       ],
       "unfree": false,
-      "version": "24.13.0",
+      "version": "24.14.0",
       "outputs_to_install": [
+        "out",
+        "out",
         "out"
       ],
       "outputs": {
-        "dev": "/nix/store/rp55bch0hqxynmxnh7q5bs586kp0dib6-nodejs-24.13.0-dev",
-        "libv8": "/nix/store/dvl504xzwklpfjngdnn6kcpriklwsf6l-nodejs-24.13.0-libv8",
-        "out": "/nix/store/xhp1pnnq7hski7hwg36vw7kpxmg56khh-nodejs-24.13.0"
+        "out": "/nix/store/70ypbaj273w2kk0nrs4vijizyqgbg48v-nodejs-24.14.0"
       },
       "system": "x86_64-darwin",
       "group": "toplevel",
       "priority": 5
     },
     {
-      "attr_path": "nodejs_24",
+      "attr_path": "nodejs",
       "broken": false,
-      "derivation": "/nix/store/qk40027pvikybl0lvr1wmia9n8ljf99c-nodejs-24.13.0.drv",
+      "derivation": "/nix/store/15s1kk2n6vg180wg04wj2wgnl19f03v7-nodejs-24.14.0.drv",
       "description": "Event-driven I/O framework for the V8 JavaScript engine",
-      "install_id": "nodejs_24",
+      "install_id": "nodejs",
       "license": "MIT",
-      "locked_url": "https://github.com/flox/nixpkgs?rev=0182a361324364ae3f436a63005877674cf45efb",
-      "name": "nodejs-24.13.0",
-      "pname": "nodejs_24",
-      "rev": "0182a361324364ae3f436a63005877674cf45efb",
-      "rev_count": 948083,
-      "rev_date": "2026-02-17T23:04:30Z",
-      "scrape_date": "2026-02-19T06:24:05.337170Z",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "name": "nodejs-24.14.0",
+      "pname": "nodejs",
+      "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
+      "rev_count": 980183,
+      "rev_date": "2026-04-14T12:31:25Z",
+      "scrape_date": "2026-04-16T07:43:21.102705Z",
       "stabilities": [
-        "unstable",
-        "staging"
+        "staging",
+        "unstable"
       ],
       "unfree": false,
-      "version": "24.13.0",
+      "version": "24.14.0",
       "outputs_to_install": [
+        "out",
+        "out",
         "out"
       ],
       "outputs": {
-        "dev": "/nix/store/hc7fav9y6ai53nqbbpjxprwnkakl1w2d-nodejs-24.13.0-dev",
-        "libv8": "/nix/store/z7m56hl4rzdrfhnnkwig0ibzs1qz1x5d-nodejs-24.13.0-libv8",
-        "out": "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0"
+        "out": "/nix/store/v2210ar51jddnrcx46m53ivv9palc26m-nodejs-24.14.0"
       },
       "system": "x86_64-linux",
       "group": "toplevel",

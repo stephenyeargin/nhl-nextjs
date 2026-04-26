@@ -42,7 +42,7 @@ const config = {
     : undefined,
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '\\.(css|scss|sass|less|svg)$': '<rootDir>/test/__mocks__/styleMock.js',
+    '\\.(css|scss|sass|less|svg)$': '<rootDir>/tests/__mocks__/styleMock.js',
   },
 };
 

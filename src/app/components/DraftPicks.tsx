@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import standingsStyles from '@/app/components/StandingsTable.module.scss';
 import TeamLogo from '@/app/components/TeamLogo';
 import type { DraftData, DraftPick } from '@/app/types/draft';
+import { countryCodeToFlag } from '@/app/utils/formatters';
 
 interface DraftPicksProps {
   draftData: DraftData;
@@ -117,7 +118,6 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                   <th>Team</th>
                   <th>Player</th>
                   <th>Pos</th>
-                  <th>Country</th>
                   <th>Ht/Wt</th>
                   <th>Amateur Club</th>
                 </tr>
@@ -145,10 +145,12 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                       )}
                     </td>
                     <td>
+                      <span className="mr-1" title={pick.countryCode}>
+                        {countryCodeToFlag(pick.countryCode)}
+                      </span>
                       {pick.firstName?.default || ''} {pick.lastName?.default || ''}
                     </td>
                     <td>{pick.positionCode || ''}</td>
-                    <td>{pick.countryCode || ''}</td>
                     <td>
                       {pick.height && pick.weight
                         ? `${Math.floor(pick.height / 12)}'${pick.height % 12}" / ${pick.weight}`
