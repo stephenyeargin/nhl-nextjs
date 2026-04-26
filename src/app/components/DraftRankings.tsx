@@ -7,6 +7,7 @@ import { countryCodeToFlag } from '@/app/utils/formatters';
 
 interface DraftRankingsProps {
   rankingsData: DraftRankingsData;
+  viewMode?: 'picks' | 'rankings';
 }
 
 function formatHeight(inches: number): string {
@@ -45,7 +46,7 @@ function formatRankForDisplay(rank: number | null): string {
   return `${rank}`;
 }
 
-const DraftRankings: React.FC<DraftRankingsProps> = ({ rankingsData }) => {
+const DraftRankings: React.FC<DraftRankingsProps> = ({ rankingsData, viewMode }) => {
   const { rankings, categoryKey, categories } = rankingsData;
   const hasFinalRankings = rankings.some(
     (player) =>
@@ -108,7 +109,7 @@ const DraftRankings: React.FC<DraftRankingsProps> = ({ rankingsData }) => {
             return (
               <Link
                 key={category.id}
-                href={`/draft/${rankingsData.draftYear}?category=${category.id}`}
+                href={`/draft/${rankingsData.draftYear}?category=${category.id}${viewMode === 'rankings' ? '&view=rankings' : ''}`}
                 role="tab"
                 aria-current={active ? 'page' : undefined}
                 aria-selected={active}

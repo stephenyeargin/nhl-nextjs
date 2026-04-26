@@ -3,29 +3,33 @@ import React from 'react';
 import type { DraftYearSelectProps } from '@/app/types/draft';
 import { navigateTo } from '@/app/utils/navigation';
 
-const handleDraftYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  const year = e.target.value;
-  if (/^\d+$/.test(year)) {
-    navigateTo(`/draft/${year}`);
-  } else {
-    console.error('Invalid year selected:', year);
-  }
-};
-
-const DraftYearSelect: React.FC<DraftYearSelectProps> = ({ draftYears, draftYear }) => {
+const DraftYearSelect: React.FC<DraftYearSelectProps> = ({ draftYears, draftYear, view }) => {
   const currentIndex = draftYears.indexOf(draftYear);
   const prevYear = currentIndex > 0 ? draftYears[currentIndex - 1] : null;
   const nextYear = currentIndex < draftYears.length - 1 ? draftYears[currentIndex + 1] : null;
 
+  const buildUrl = (year: number) => {
+    return view === 'rankings' ? `/draft/${year}?view=rankings` : `/draft/${year}`;
+  };
+
+  const handleDraftYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const year = e.target.value;
+    if (/^\d+$/.test(year)) {
+      navigateTo(buildUrl(Number(year)));
+    } else {
+      console.error('Invalid year selected:', year);
+    }
+  };
+
   const handlePrevYear = () => {
     if (prevYear) {
-      navigateTo(`/draft/${prevYear}`);
+      navigateTo(buildUrl(prevYear));
     }
   };
 
   const handleNextYear = () => {
     if (nextYear) {
-      navigateTo(`/draft/${nextYear}`);
+      navigateTo(buildUrl(nextYear));
     }
   };
 

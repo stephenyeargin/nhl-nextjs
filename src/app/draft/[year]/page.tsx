@@ -6,6 +6,9 @@ import type { DraftData, DraftRankingsData } from '@/app/types/draft';
 
 const MIN_CATEGORY_ID = 1;
 const MAX_CATEGORY_ID = 4;
+const DEFAULT_VIEW = 'picks';
+
+type DraftView = 'picks' | 'rankings';
 
 function parseCategoryParam(value: unknown): number {
   if (typeof value !== 'string') {
@@ -17,6 +20,14 @@ function parseCategoryParam(value: unknown): number {
   }
 
   return parsed;
+}
+
+function parseViewParam(value: unknown): DraftView {
+  if (value === 'rankings') {
+    return 'rankings';
+  }
+
+  return DEFAULT_VIEW;
 }
 
 async function getDraftYearData(year: string | number): Promise<DraftData> {
@@ -54,18 +65,20 @@ export default async function DraftPage(props: any) {
   const categoryParam = Array.isArray(searchParams?.category)
     ? searchParams?.category[0]
     : searchParams?.category;
+  const viewParam = Array.isArray(searchParams?.view) ? searchParams?.view[0] : searchParams?.view;
   const categoryId = parseCategoryParam(categoryParam);
+  const preferredView = parseViewParam(viewParam);
 
   const draftData = await getDraftYearData(year);
-
-  const rankingsData =
-    !draftData.picks || draftData.picks.length === 0
-      ? await getDraftRankingsData(year, categoryId)
-      : null;
+  const rankingsData = await getDraftRankingsData(year, categoryId);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <DraftHeader draftData={draftData} rankingsData={rankingsData} />
+      <DraftHeader
+        draftData={draftData}
+        rankingsData={rankingsData}
+        preferredView={preferredView}
+      />
     </div>
   );
 }

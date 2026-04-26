@@ -31,4 +31,30 @@ describe('DraftYearSelect', () => {
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
   });
+
+  describe('view=rankings preservation', () => {
+    test('prev/next buttons append ?view=rankings when view prop is set', () => {
+      render(<DraftYearSelect draftYears={[2023, 2024, 2025]} draftYear={2024} view="rankings" />);
+      fireEvent.click(screen.getByText(/« 2023/));
+      expect(navigateTo).toHaveBeenCalledWith('/draft/2023?view=rankings');
+    });
+
+    test('next year button appends ?view=rankings when view prop is set', () => {
+      render(<DraftYearSelect draftYears={[2023, 2024, 2025]} draftYear={2024} view="rankings" />);
+      fireEvent.click(screen.getByText(/2025 »/));
+      expect(navigateTo).toHaveBeenCalledWith('/draft/2025?view=rankings');
+    });
+
+    test('select change appends ?view=rankings when view prop is set', () => {
+      render(<DraftYearSelect draftYears={[2023, 2024]} draftYear={2023} view="rankings" />);
+      fireEvent.change(screen.getByDisplayValue('2023'), { target: { value: '2024' } });
+      expect(navigateTo).toHaveBeenCalledWith('/draft/2024?view=rankings');
+    });
+
+    test('navigates without query string when view prop is not set', () => {
+      render(<DraftYearSelect draftYears={[2023, 2024, 2025]} draftYear={2024} />);
+      fireEvent.click(screen.getByText(/« 2023/));
+      expect(navigateTo).toHaveBeenCalledWith('/draft/2023');
+    });
+  });
 });

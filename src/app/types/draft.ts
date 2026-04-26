@@ -6,6 +6,7 @@ export type DraftYear = number;
 export interface DraftYearSelectProps {
   draftYears: DraftYear[];
   draftYear: DraftYear;
+  view?: 'rankings';
 }
 
 // Full draft pick shape (superset used on the draft year page)
