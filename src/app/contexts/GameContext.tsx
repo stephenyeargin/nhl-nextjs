@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { GAME_STATES } from '@/app/utils/constants';
 import { formatHeadTitle } from '@/app/utils/formatters';
 import type { TeamSide } from '@/app/types/team';
+import type { LocalizedString } from '../types';
 // Refined partial interfaces for accessed nested structures (kept minimal)
 interface GameClock {
   timeRemaining?: string;
@@ -97,6 +98,7 @@ interface RightRailData {
   last10Record?: Last10Record;
   shotsByPeriod?: { periodDescriptor?: { number?: number } }[];
   seasonSeries?: { gameType?: number }[];
+  seasonSeriesFullCoverageUrl?: LocalizedString;
   teamSeasonStats?: TeamSeasonStats | null;
   gameVideo?: GameVideo;
   gameInfo?: GameInfo;

@@ -21,7 +21,7 @@ import {
   formatSeason,
 } from '../utils/formatters';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faPlayCircle, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faNewspaper, faPlayCircle, faWarning } from '@fortawesome/free-solid-svg-icons';
 import GameSidebarSkeleton from './GameSidebarSkeleton';
 import StatComparisonRow from './StatComparisonRow';
 import FloatingVideoPlayer from './FloatingVideoPlayer';
@@ -361,6 +361,20 @@ const GameSidebar = () => {
             {rightRail.seasonSeries[0]?.gameType === 3 ? 'Playoff Series' : 'Season Series'}
           </div>
           <div className="text-center text-xs">{formatSeriesStatus(game, rightRail)}</div>
+          {rightRail.seasonSeriesFullCoverageUrl && (
+            <div className="text-center text-xs font-bold my-2">
+              <FontAwesomeIcon icon={faNewspaper}></FontAwesomeIcon>{' '}
+              <a
+                className=" underline"
+                href={rightRail.seasonSeriesFullCoverageUrl.en?.replace(
+                  /https:\/\/www\.nhl\.com\//g,
+                  '/'
+                )}
+              >
+                Series Coverage
+              </a>
+            </div>
+          )}
           <div className="grid grid-cols-12 gap-3 py-4 items-center">
             {rightRail.seasonSeries.map((g: any, i: number) => (
               <Link
