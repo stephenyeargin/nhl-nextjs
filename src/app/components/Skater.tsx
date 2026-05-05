@@ -68,7 +68,7 @@ export const Skater: React.FC<SkaterProps> = ({
 
   return (
     <div key={player.playerId} className="text-xs text-center">
-      <div className="lg:hidden my-3">
+      <div className={`lg:hidden ${compactMobile ? 'my-1' : 'my-3'}`}>
         <PlayerLink
           playerId={player.playerId}
           className={`font-bold rounded-full inline-flex items-center justify-center ${

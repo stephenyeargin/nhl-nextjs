@@ -393,32 +393,68 @@ const IceRink: React.FC<IceRinkProps> = ({
               <div className="absolute top-1 bottom-2 left-0 right-0 grid grid-cols-6 items-center">
                 <div className="col-span-1 text-center">
                   {iceSurface.awayTeam.goalies.map((p) => (
-                    <Skater key={p.playerId} player={p} isHomeTeam={false} team={awayTeam.abbrev} />
+                    <Skater
+                      key={p.playerId}
+                      player={p}
+                      isHomeTeam={false}
+                      team={awayTeam.abbrev}
+                      compactMobile={true}
+                    />
                   ))}
                 </div>
                 <div className="col-span-1 text-center">
                   {iceSurface.awayTeam.defensemen.map((p) => (
-                    <Skater key={p.playerId} player={p} isHomeTeam={false} team={awayTeam.abbrev} />
+                    <Skater
+                      key={p.playerId}
+                      player={p}
+                      isHomeTeam={false}
+                      team={awayTeam.abbrev}
+                      compactMobile={true}
+                    />
                   ))}
                 </div>
                 <div className="col-span-1 text-center">
                   {iceSurface.awayTeam.forwards.map((p) => (
-                    <Skater key={p.playerId} player={p} isHomeTeam={false} team={awayTeam.abbrev} />
+                    <Skater
+                      key={p.playerId}
+                      player={p}
+                      isHomeTeam={false}
+                      team={awayTeam.abbrev}
+                      compactMobile={true}
+                    />
                   ))}
                 </div>
                 <div className="col-span-1 text-center">
                   {iceSurface.homeTeam.forwards.map((p) => (
-                    <Skater key={p.playerId} player={p} isHomeTeam={true} team={homeTeam.abbrev} />
+                    <Skater
+                      key={p.playerId}
+                      player={p}
+                      isHomeTeam={true}
+                      team={homeTeam.abbrev}
+                      compactMobile={true}
+                    />
                   ))}
                 </div>
                 <div className="col-span-1 text-center">
                   {iceSurface.homeTeam.defensemen.map((p) => (
-                    <Skater key={p.playerId} player={p} isHomeTeam={true} team={homeTeam.abbrev} />
+                    <Skater
+                      key={p.playerId}
+                      player={p}
+                      isHomeTeam={true}
+                      team={homeTeam.abbrev}
+                      compactMobile={true}
+                    />
                   ))}
                 </div>
                 <div className="col-span-1 text-center">
                   {iceSurface.homeTeam.goalies.map((p) => (
-                    <Skater key={p.playerId} player={p} isHomeTeam={true} team={homeTeam.abbrev} />
+                    <Skater
+                      key={p.playerId}
+                      player={p}
+                      isHomeTeam={true}
+                      team={homeTeam.abbrev}
+                      compactMobile={true}
+                    />
                   ))}
                 </div>
               </div>
@@ -433,7 +469,6 @@ const IceRink: React.FC<IceRinkProps> = ({
           if (!awayPen.length && !homePen.length) {
             return null;
           }
-          const compact = hasPlays;
 
           return (
             <div
@@ -448,7 +483,7 @@ const IceRink: React.FC<IceRinkProps> = ({
                       player={p}
                       isHomeTeam={false}
                       team={awayTeam.abbrev}
-                      compactMobile={compact}
+                      compactMobile={true}
                     />
                   </div>
                 ))}
@@ -463,7 +498,7 @@ const IceRink: React.FC<IceRinkProps> = ({
                       player={p}
                       isHomeTeam={true}
                       team={homeTeam.abbrev}
-                      compactMobile={compact}
+                      compactMobile={true}
                     />
                   </div>
                 ))}
