@@ -466,6 +466,8 @@ const IceRink: React.FC<IceRinkProps> = ({
         (() => {
           const awayPen = iceSurface.awayTeam.penaltyBox || [];
           const homePen = iceSurface.homeTeam.penaltyBox || [];
+          const leftPenaltyBox = isHomeDefendingLeft ? homePen : awayPen;
+          const rightPenaltyBox = isHomeDefendingLeft ? awayPen : homePen;
           if (!awayPen.length && !homePen.length) {
             return null;
           }
@@ -477,12 +479,12 @@ const IceRink: React.FC<IceRinkProps> = ({
               data-testid="penalty-box"
             >
               <div className="min-w-0 overflow-hidden flex flex-nowrap gap-2 justify-end">
-                {awayPen.map((p, i) => (
+                {leftPenaltyBox.map((p, i) => (
                   <div key={`${p.playerId}-${i}`} className="shrink-0 text-center">
                     <Skater
                       player={p}
-                      isHomeTeam={false}
-                      team={awayTeam.abbrev}
+                      isHomeTeam={isHomeDefendingLeft}
+                      team={isHomeDefendingLeft ? homeTeam.abbrev : awayTeam.abbrev}
                       compactMobile={true}
                     />
                   </div>
@@ -492,12 +494,12 @@ const IceRink: React.FC<IceRinkProps> = ({
                 Penalty Box
               </div>
               <div className="min-w-0 overflow-hidden flex flex-nowrap gap-2 justify-start">
-                {homePen.map((p, i) => (
+                {rightPenaltyBox.map((p, i) => (
                   <div key={`${p.playerId}-${i}`} className="shrink-0 text-center">
                     <Skater
                       player={p}
-                      isHomeTeam={true}
-                      team={homeTeam.abbrev}
+                      isHomeTeam={!isHomeDefendingLeft}
+                      team={isHomeDefendingLeft ? awayTeam.abbrev : homeTeam.abbrev}
                       compactMobile={true}
                     />
                   </div>

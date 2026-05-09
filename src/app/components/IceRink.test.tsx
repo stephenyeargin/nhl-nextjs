@@ -125,4 +125,54 @@ describe('IceRink (smoke)', () => {
     expect(screen.getByTestId('on-ice-left')).toHaveTextContent('Home Skater');
     expect(screen.getByTestId('on-ice-right')).toHaveTextContent('Away Skater');
   });
+
+  it('shows the penalty box on the same side convention as the rink', () => {
+    const props = {
+      ...baseProps,
+      plays: [
+        {
+          ...baseProps.plays[0],
+          homeTeamDefendingSide: 'left',
+        },
+      ],
+      game: {
+        summary: {
+          iceSurface: {
+            awayTeam: {
+              goalies: [],
+              defensemen: [],
+              forwards: [],
+              penaltyBox: [
+                {
+                  playerId: 21,
+                  name: { default: 'Away Penalty' },
+                  sweaterNumber: 21,
+                  positionCode: 'C',
+                },
+              ],
+            },
+            homeTeam: {
+              goalies: [],
+              defensemen: [],
+              forwards: [],
+              penaltyBox: [
+                {
+                  playerId: 42,
+                  name: { default: 'Home Penalty' },
+                  sweaterNumber: 42,
+                  positionCode: 'D',
+                },
+              ],
+            },
+          },
+        },
+      },
+    };
+
+    render(<IceRink {...(props as any)} />);
+
+    const penaltyBox = screen.getByTestId('penalty-box');
+    expect(penaltyBox.children[0]).toHaveTextContent('Home Penalty');
+    expect(penaltyBox.children[2]).toHaveTextContent('Away Penalty');
+  });
 });
