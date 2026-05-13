@@ -38,10 +38,12 @@ export const Skater: React.FC<SkaterProps> = ({
   compactMobile = false,
 }) => {
   const { teamColor } = getTeamDataByAbbreviation(team, true);
+  const hasSecondsRemaining =
+    player.secondsRemaining !== undefined && player.secondsRemaining !== null;
 
   // Add time remaining
   let time = '0:00';
-  if (player.secondsRemaining !== undefined && player.secondsRemaining !== null) {
+  if (hasSecondsRemaining) {
     const sr =
       typeof player.secondsRemaining === 'string'
         ? parseInt(player.secondsRemaining, 10)
@@ -96,10 +98,10 @@ export const Skater: React.FC<SkaterProps> = ({
         <div className="hidden xl:block">
           #{player.sweaterNumber ?? ''} • {player.positionCode}
         </div>
-        {game && player.secondsRemaining && (
+        {hasSecondsRemaining && (
           <div className="pt-1">
             <span className="border rounded-sm p-1">
-              <GameClock timeRemaining={time} running={!!game.clock?.running} />
+              <GameClock timeRemaining={time} running={!!game?.clock?.running} />
             </span>
           </div>
         )}

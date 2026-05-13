@@ -148,6 +148,7 @@ describe('IceRink (smoke)', () => {
                   name: { default: 'Away Penalty' },
                   sweaterNumber: 21,
                   positionCode: 'C',
+                  secondsRemaining: 88,
                 },
               ],
             },
@@ -161,6 +162,7 @@ describe('IceRink (smoke)', () => {
                   name: { default: 'Home Penalty' },
                   sweaterNumber: 42,
                   positionCode: 'D',
+                  secondsRemaining: 120,
                 },
               ],
             },
@@ -174,5 +176,7 @@ describe('IceRink (smoke)', () => {
     const penaltyBox = screen.getByTestId('penalty-box');
     expect(penaltyBox.children[0]).toHaveTextContent('Home Penalty');
     expect(penaltyBox.children[2]).toHaveTextContent('Away Penalty');
+    expect(penaltyBox).toHaveTextContent('02:00');
+    expect(penaltyBox).toHaveTextContent('01:28');
   });
 });
