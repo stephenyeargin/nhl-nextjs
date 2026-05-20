@@ -55,30 +55,40 @@ const DraftTicker: React.FC = () => {
             </select>
           </div>
         </div>
-        {picks.map((pick) => (
-          <div
-            key={pick.overallPick}
-            className="flex flex-col justify-center items-center gap-1 px-3 py-2 rounded-xl border min-w-[180px] max-w-xs overflow-hidden"
-          >
-            <div className="flex items-center gap-2 w-full justify-center">
-              <span className="text-lg font-extrabold text-blue-800 dark:text-blue-200 ">
-                {pick.overallPick}
-              </span>
-              <TeamLogo
-                src={pick.teamLogoLight}
-                alt={pick.teamAbbrev}
-                className="h-10 w-10 shrink-0"
-                team={pick.teamAbbrev}
-              />
+        {picks.map((pick) => {
+          const isVoided = pick.lastName?.default === 'Void' && !pick.firstName;
+
+          return (
+            <div
+              key={pick.overallPick}
+              className={`flex flex-col justify-center items-center gap-1 px-3 py-2 rounded-xl border min-w-[180px] max-w-xs overflow-hidden${isVoided ? ' opacity-50' : ''}`}
+            >
+              <div className="flex items-center gap-2 w-full justify-center">
+                <span className="text-lg font-extrabold text-blue-800 dark:text-blue-200">
+                  {pick.overallPick}
+                </span>
+                <TeamLogo
+                  src={pick.teamLogoLight}
+                  alt={pick.teamAbbrev}
+                  className="h-10 w-10 shrink-0"
+                  team={pick.teamAbbrev}
+                />
+              </div>
+              <div className="flex flex-col items-center w-full">
+                {isVoided ? (
+                  <span className="text-xs italic text-slate-500">— Voided —</span>
+                ) : (
+                  <>
+                    <span className="text-xs font-bold leading-tight text-center wrap-break-word">
+                      {pick.firstName?.default} {pick.lastName?.default}
+                    </span>
+                    <span className="text-xs">({pick.positionCode})</span>
+                  </>
+                )}
+              </div>
             </div>
-            <div className="flex flex-col items-center w-full">
-              <span className="text-xs font-bold leading-tight text-center wrap-break-word">
-                {pick.firstName?.default} {pick.lastName?.default}
-              </span>
-              <span className="text-xs ">({pick.positionCode})</span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

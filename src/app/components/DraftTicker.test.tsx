@@ -34,4 +34,25 @@ describe('DraftTicker', () => {
     render(<DraftTicker />);
     await waitFor(() => expect(screen.getByText(/First Last/)).toBeInTheDocument());
   });
+
+  it('renders voided picks with "\u2014 Voided \u2014" instead of player name', async () => {
+    mockFetch.mockResolvedValueOnce({
+      json: () =>
+        Promise.resolve({
+          selectableRounds: [1],
+          picks: [
+            {
+              overallPick: 1,
+              round: 1,
+              teamLogoLight: 'x',
+              teamAbbrev: 'ARI',
+              lastName: { default: 'Void' },
+            },
+          ],
+        }),
+    });
+    render(<DraftTicker />);
+    await waitFor(() => expect(screen.getByText('— Voided —')).toBeInTheDocument());
+    expect(screen.queryByText('Void', { exact: true })).not.toBeInTheDocument();
+  });
 });

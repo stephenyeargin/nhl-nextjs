@@ -67,4 +67,25 @@ describe('DraftPicks', () => {
     // Nashville appears again (at least one link)
     expect(screen.getAllByText('Nashville Predators').length).toBeGreaterThan(0);
   });
+
+  it('renders voided picks with a "— Voided —" indicator', () => {
+    const dataWithVoid: DraftData = {
+      ...mockDraftData,
+      picks: [
+        ...mockDraftData.picks,
+        {
+          overallPick: 3,
+          round: 1,
+          teamAbbrev: 'ARI',
+          teamLogoLight: 'logo-ari.svg',
+          teamName: { default: 'Arizona Coyotes' },
+          lastName: { default: 'Void' },
+        },
+      ],
+    };
+    render(<DraftPicks draftData={dataWithVoid} />);
+    expect(screen.getByText('— Voided —')).toBeInTheDocument();
+    // Should not render a country flag or player name
+    expect(screen.queryByText('Void')).not.toBeInTheDocument();
+  });
 });

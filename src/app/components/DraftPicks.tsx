@@ -123,45 +123,59 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {filteredPicksByRound[round].map((pick) => (
-                  <tr key={pick.overallPick}>
-                    <td>{pick.overallPick}</td>
-                    <td>
-                      <div className="flex gap-2 items-center">
-                        <TeamLogo
-                          src={pick.teamLogoLight}
-                          alt={pick.teamAbbrev}
-                          className="h-8 w-8 hidden md:block"
-                          team={pick.teamAbbrev}
-                        />
-                        <a className="font-semibold" href={`/team/${pick.teamAbbrev}`}>
-                          {pick.teamName?.default}
-                        </a>
-                      </div>
-                      {pick.teamAbbrev !== pick.teamPickHistory && pick.teamPickHistory && (
-                        <div className="text-slate-500 ps-4 text-xs">
-                          ↳ {pick.teamPickHistory.replace(/-/g, ' » ')}
+                {filteredPicksByRound[round].map((pick) => {
+                  const isVoided = pick.lastName?.default === 'Void' && !pick.firstName;
+
+                  return (
+                    <tr key={pick.overallPick} className={isVoided ? 'opacity-50' : ''}>
+                      <td>{pick.overallPick}</td>
+                      <td>
+                        <div className="flex gap-2 items-center">
+                          <TeamLogo
+                            src={pick.teamLogoLight}
+                            alt={pick.teamAbbrev}
+                            className="h-8 w-8 hidden md:block"
+                            team={pick.teamAbbrev}
+                          />
+                          <a className="font-semibold" href={`/team/${pick.teamAbbrev}`}>
+                            {pick.teamName?.default}
+                          </a>
                         </div>
-                      )}
-                    </td>
-                    <td>
-                      <span className="mr-1" title={pick.countryCode}>
-                        {countryCodeToFlag(pick.countryCode)}
-                      </span>
-                      {pick.firstName?.default || ''} {pick.lastName?.default || ''}
-                    </td>
-                    <td>{pick.positionCode || ''}</td>
-                    <td>
-                      {pick.height && pick.weight
-                        ? `${Math.floor(pick.height / 12)}'${pick.height % 12}" / ${pick.weight}`
-                        : ''}
-                    </td>
-                    <td>
-                      {pick.amateurClubName || ''}
-                      {pick.amateurLeague ? ` (${pick.amateurLeague})` : ''}
-                    </td>
-                  </tr>
-                ))}
+                        {pick.teamAbbrev !== pick.teamPickHistory && pick.teamPickHistory && (
+                          <div className="text-slate-500 ps-4 text-xs">
+                            ↳ {pick.teamPickHistory.replace(/-/g, ' » ')}
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        {isVoided ? (
+                          <span className="italic text-slate-500">— Voided —</span>
+                        ) : (
+                          <>
+                            <span className="mr-1" title={pick.countryCode}>
+                              {countryCodeToFlag(pick.countryCode)}
+                            </span>
+                            {pick.firstName?.default || ''} {pick.lastName?.default || ''}
+                          </>
+                        )}
+                      </td>
+                      <td>{isVoided ? '' : pick.positionCode || ''}</td>
+                      <td>
+                        {!isVoided && pick.height && pick.weight
+                          ? `${Math.floor(pick.height / 12)}'${pick.height % 12}" / ${pick.weight}`
+                          : ''}
+                      </td>
+                      <td>
+                        {!isVoided && (
+                          <>
+                            {pick.amateurClubName || ''}
+                            {pick.amateurLeague ? ` (${pick.amateurLeague})` : ''}
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
