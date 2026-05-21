@@ -46,6 +46,72 @@ function formatRankForDisplay(rank: number | null): string {
   return `${rank}`;
 }
 
+type RankMovement = 'up' | 'down';
+
+function getRankMovement(
+  midtermRank: number | null,
+  finalRank: number | null,
+  hasFinalRankings: boolean
+): RankMovement | null {
+  if (!hasFinalRankings) {
+    return null;
+  }
+
+  if (midtermRank === null && finalRank === null) {
+    return null;
+  }
+
+  if (midtermRank === null && finalRank !== null) {
+    return 'up';
+  }
+
+  if (midtermRank !== null && finalRank === null) {
+    return 'down';
+  }
+
+  if (finalRank === null || midtermRank === null) {
+    return null;
+  }
+
+  if (finalRank === midtermRank) {
+    return null;
+  }
+
+  return finalRank < midtermRank ? 'up' : 'down';
+}
+
+function renderRankMovementIndicator(movement: RankMovement | null): React.ReactNode {
+  if (!movement) {
+    return null;
+  }
+
+  if (movement === 'up') {
+    return (
+      <span
+        aria-label="Moved up"
+        title="Moved up"
+        className="ml-1 inline-flex align-middle text-emerald-600 dark:text-emerald-400"
+      >
+        ▲
+      </span>
+    );
+  }
+
+  if (movement === 'down') {
+    return (
+      <span
+        aria-label="Moved down"
+        title="Moved down"
+        className="ml-1 inline-flex align-middle text-red-600 dark:text-red-400"
+      >
+        ▼
+      </span>
+    );
+  }
+
+  return null;
+}
+
 const DraftRankings: React.FC<DraftRankingsProps> = ({ rankingsData, viewMode }) => {
   const { rankings, categoryKey, categories } = rankingsData;
   const hasFinalRankings = rankings.some(
@@ -125,7 +191,8 @@ const DraftRankings: React.FC<DraftRankingsProps> = ({ rankingsData, viewMode })
         <table className={`${standingsStyles.standingsTable} border-collapse`}>
           <thead>
             <tr>
-              <th>{hasFinalRankings ? 'Final (Mid)' : '#'}</th>
+              <th className="text-center">{hasFinalRankings ? 'Final' : '#'}</th>
+              {hasFinalRankings && <th className="text-center">Mid</th>}
               <th>Player</th>
               <th>Height</th>
               <th>Weight</th>
@@ -138,14 +205,26 @@ const DraftRankings: React.FC<DraftRankingsProps> = ({ rankingsData, viewMode })
             {sortedRankings.map((player, index) => {
               const finalRank = getFinalRank(player);
               const midtermRank = getMidtermRank(player);
-              const rankCell = hasFinalRankings
-                ? `${formatRankForDisplay(finalRank)} (${formatRankForDisplay(midtermRank)})`
-                : formatRankForDisplay(midtermRank);
+              const rankMovement = getRankMovement(midtermRank, finalRank, hasFinalRankings);
               const rowKey = `${player.firstName}-${player.lastName}-${finalRank ?? 'nr'}-${midtermRank ?? 'nr'}-${index}`;
 
               return (
                 <tr key={rowKey}>
-                  <td className="font-semibold">{rankCell}</td>
+                  {hasFinalRankings ? (
+                    <>
+                      <td className="font-semibold text-center tabular-nums">
+                        {formatRankForDisplay(finalRank)}
+                        {renderRankMovementIndicator(rankMovement)}
+                      </td>
+                      <td className="text-center tabular-nums">
+                        {formatRankForDisplay(midtermRank)}
+                      </td>
+                    </>
+                  ) : (
+                    <td className="font-semibold text-center tabular-nums">
+                      {formatRankForDisplay(midtermRank)}
+                    </td>
+                  )}
                   <td>
                     <span className="mr-1" title={player.birthCountry}>
                       {countryCodeToFlag(player.birthCountry)}

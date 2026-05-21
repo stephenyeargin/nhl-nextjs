@@ -128,16 +128,18 @@ describe('DraftRankings', () => {
   });
 
   describe('final rankings (with finalRank)', () => {
-    it('shows "Final (Mid)" as the rank column header', () => {
+    it('shows separate Final and Mid headers', () => {
       const rankings = [makePlayer({ midtermRank: 3, finalRank: 2 })];
       render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
-      expect(screen.getByRole('columnheader', { name: 'Final (Mid)' })).toBeInTheDocument();
+      expect(screen.getByRole('columnheader', { name: 'Final' })).toBeInTheDocument();
+      expect(screen.getByRole('columnheader', { name: 'Mid' })).toBeInTheDocument();
     });
 
-    it('displays "finalRank (midtermRank)" in the rank cell', () => {
+    it('displays final and midterm ranks in separate cells', () => {
       const rankings = [makePlayer({ midtermRank: 3, finalRank: 2 })];
       render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
-      expect(screen.getByRole('cell', { name: '2 (3)' })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: /2 Moved up/ })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: '3' })).toBeInTheDocument();
     });
 
     it('shows NR for missing finalRank with midterm in parens', () => {
@@ -147,20 +149,72 @@ describe('DraftRankings', () => {
         makePlayer({ firstName: 'Jane', lastName: 'Smith', midtermRank: 10, finalRank: undefined }),
       ];
       render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
-      expect(screen.getByRole('cell', { name: 'NR (10)' })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: /NR/ })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: '10' })).toBeInTheDocument();
     });
 
     it('shows finalRank and NR in parens when midtermRank is missing', () => {
       const rankings = [makePlayer({ midtermRank: undefined as unknown as number, finalRank: 8 })];
       render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
-      expect(screen.getByRole('cell', { name: '8 (NR)' })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: /8 Moved up/ })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: 'NR' })).toBeInTheDocument();
     });
 
     it('also uses finalRanking field as fallback for finalRank', () => {
       const rankings = [makePlayer({ midtermRank: 5, finalRanking: 4 })];
       render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
-      expect(screen.getByRole('columnheader', { name: 'Final (Mid)' })).toBeInTheDocument();
-      expect(screen.getByRole('cell', { name: '4 (5)' })).toBeInTheDocument();
+      expect(screen.getByRole('columnheader', { name: 'Final' })).toBeInTheDocument();
+      expect(screen.getByRole('columnheader', { name: 'Mid' })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: /4 Moved up/ })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: '5' })).toBeInTheDocument();
+    });
+
+    it('shows a green up triangle when the player moves up', () => {
+      const rankings = [makePlayer({ midtermRank: 10, finalRank: 3 })];
+      render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
+      expect(screen.getByLabelText('Moved up')).toHaveTextContent('▲');
+    });
+
+    it('shows a red down triangle when the player moves down', () => {
+      const rankings = [makePlayer({ midtermRank: 3, finalRank: 10 })];
+      render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
+      expect(screen.getByLabelText('Moved down')).toHaveTextContent('▼');
+    });
+
+    it('shows an unchanged indicator when the ranks are the same', () => {
+      const rankings = [makePlayer({ midtermRank: 5, finalRank: 5 })];
+      render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
+      expect(screen.queryByLabelText('Unchanged')).not.toBeInTheDocument();
+    });
+
+    it('treats an unranked player becoming ranked as up', () => {
+      const rankings = [makePlayer({ midtermRank: undefined as unknown as number, finalRank: 12 })];
+      render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
+      expect(screen.getByLabelText('Moved up')).toHaveTextContent('▲');
+    });
+
+    it('treats a ranked player becoming unranked as down', () => {
+      const rankings = [
+        makePlayer({ midtermRank: 1, finalRank: 1 }),
+        makePlayer({
+          firstName: 'Fallback',
+          lastName: 'Player',
+          midtermRank: 12,
+          finalRank: undefined,
+        }),
+      ];
+      render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
+      expect(screen.getByLabelText('Moved down')).toHaveTextContent('▼');
+    });
+  });
+
+  describe('when no final rankings are available', () => {
+    it('does not render a movement indicator', () => {
+      const rankings = [makePlayer({ midtermRank: 5 })];
+      render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
+      expect(screen.queryByLabelText('Moved up')).not.toBeInTheDocument();
+      expect(screen.queryByLabelText('Moved down')).not.toBeInTheDocument();
+      expect(screen.queryByLabelText('Unchanged')).not.toBeInTheDocument();
     });
   });
 
@@ -192,7 +246,8 @@ describe('DraftRankings', () => {
     it('shows * in final rank cell when finalRank > 500', () => {
       const rankings = [makePlayer({ midtermRank: 3, finalRank: 600 })];
       render(<DraftRankings rankingsData={makeRankingsData({ rankings })} />);
-      expect(screen.getByRole('cell', { name: '* (3)' })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: /\* Moved down/ })).toBeInTheDocument();
+      expect(screen.getByRole('cell', { name: '3' })).toBeInTheDocument();
     });
   });
 
