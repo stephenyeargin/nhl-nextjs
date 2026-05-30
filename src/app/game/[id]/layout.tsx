@@ -17,7 +17,7 @@ const GameLayout: React.FC<GameLayoutProps> = ({ children }) => {
 
   return (
     <div className="p-2">
-      <GameProvider gameId={gameId}>
+      <GameProvider key={gameId} gameId={gameId}>
         <Suspense fallback={<GameSkeleton />}>
           <div className="container mx-auto">
             <GameHeader />

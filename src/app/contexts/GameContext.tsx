@@ -1,54 +1,9 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { GAME_STATES } from '@/app/utils/constants';
 import { formatHeadTitle } from '@/app/utils/formatters';
-import type { TeamSide } from '@/app/types/team';
+import type { Game as SharedGame, GameTeam, GameVideo } from '@/app/types/game';
 import type { LocalizedString } from '../types';
-// Refined partial interfaces for accessed nested structures (kept minimal)
-interface GameClock {
-  timeRemaining?: string;
-  inIntermission?: boolean;
-  running?: boolean;
-}
-interface GameSituationTeam {
-  strength?: number;
-  situationDescriptions?: string[];
-}
-interface GameSituation {
-  awayTeam?: GameSituationTeam;
-  homeTeam?: GameSituationTeam;
-  timeRemaining?: string;
-}
-interface GameSpecialEvent {
-  lightLogoUrl?: { default: string };
-  name?: { default: string };
-}
-interface GameSummaryScoringPeriod {
-  periodDescriptor: { number: number };
-  goals: { teamAbbrev: { default: string }; timeInPeriod: string }[];
-}
-interface GameSummary {
-  scoring?: GameSummaryScoringPeriod[];
-  [k: string]: unknown;
-}
-interface GameLanding {
-  id?: string | number;
-  gameState?: string;
-  gameScheduleState?: string;
-  homeTeam: TeamSide;
-  awayTeam: TeamSide;
-  gameDate?: string;
-  venue?: { default?: string };
-  venueLocation?: { default?: string };
-  summary?: GameSummary;
-  matchup?: unknown;
-  periodDescriptor?: { number?: number; periodType?: string };
-  clock?: GameClock;
-  situation?: GameSituation;
-  startTimeUTC?: string | number | Date;
-  specialEvent?: GameSpecialEvent;
-  gameType?: number;
-  ifNecessary?: boolean;
-  tvBroadcasts?: { network: string; market: string }[];
+interface GameLanding extends SharedGame {
   [k: string]: unknown;
 }
 interface RightRailLinescore {
@@ -83,10 +38,6 @@ interface TeamSeasonStats {
   awayTeam?: TeamSeasonStatsTeam;
   homeTeam?: TeamSeasonStatsTeam;
 }
-interface GameVideo {
-  threeMinRecap?: string;
-  condensedGame?: string;
-}
 interface GameInfo {
   referees?: { default: string }[];
   linesmen?: { default: string }[];
@@ -111,8 +62,8 @@ interface GameStoryData {
 }
 
 interface GameDataShape {
-  homeTeam?: TeamSide;
-  awayTeam?: TeamSide;
+  homeTeam?: GameTeam;
+  awayTeam?: GameTeam;
   gameDate?: string;
   venue?: unknown;
   venueLocation?: unknown;

@@ -17,6 +17,8 @@ export interface GameClock {
 export interface TeamData {
   teamColor?: string;
   secondaryTeamColor?: string;
+  abbreviation?: string;
+  [key: string]: unknown;
 }
 
 export interface GameTeam {
@@ -24,11 +26,16 @@ export interface GameTeam {
   abbrev: string;
   commonName?: LocalizedString;
   placeName?: LocalizedString;
+  placeNameWithPreposition?: LocalizedString;
+  name?: LocalizedString;
   logo?: string;
   score?: number;
   sog?: number;
   data?: TeamData;
   record?: string;
+  radioLink?: string;
+  defeated?: boolean;
+  [key: string]: unknown;
 }
 
 export interface GameSituation {
