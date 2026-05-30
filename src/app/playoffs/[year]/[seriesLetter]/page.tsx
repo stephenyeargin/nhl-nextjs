@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import TeamLogo from '@/app/components/TeamLogo';
 import Link from 'next/link';
 import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
-import StoryCard from '@/app/components/StoryCard';
+import SeriesCoverage from '@/app/components/SeriesCoverage';
 
 interface FetchResult<T> {
   data?: T;
@@ -42,18 +42,10 @@ async function fetchSeriesData(seriesString: string, year: number) {
   return fetchData<any>(url, seriesString);
 }
 
-async function fetchRelatedStories(seriesString: string, year: number) {
-  const seriesLetter = seriesString.match(/(?:series-)?([a-z])(?:-coverage)?/i)?.[1]?.toLowerCase();
-  const url = `https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=${year - 1}-${String(year).slice(-2)}&tags.slug=series-${seriesLetter}&context.slug=nhl`;
-
-  return fetchData<any>(url, seriesString);
-}
-
 export default async function SeriesPage(props: any) {
   const resolved = (await props?.params) as SeriesParam | Promise<SeriesParam>;
   const { seriesLetter, year } = await resolved;
   const seriesResponse = await fetchSeriesData(seriesLetter, Number(year));
-  const relatedStoriesResponse = await fetchRelatedStories(seriesLetter, Number(year));
 
   if (seriesResponse.error === 404) {
     return notFound();
@@ -63,7 +55,6 @@ export default async function SeriesPage(props: any) {
   }
 
   const series = seriesResponse.data;
-  const relatedStories = relatedStoriesResponse?.data || { items: [] };
   const { topSeedTeam, bottomSeedTeam, games, seriesLogo, roundLabel, roundAbbrev } = series;
 
   topSeedTeam.data = getTeamDataByAbbreviation(topSeedTeam.abbrev, false);
@@ -183,20 +174,7 @@ export default async function SeriesPage(props: any) {
         )}
       </div>
 
-      {relatedStories.items?.length > 0 && (
-        <div className="my-5">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold mb-4">Series Coverage</h1>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-            {relatedStories.items.map((item: any) => (
-              <div key={item._entityId} className="col-span-4 md:col-span-1">
-                <StoryCard item={item} showDate />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <SeriesCoverage year={Number(year)} seriesString={seriesLetter} />
     </main>
   );
 }
