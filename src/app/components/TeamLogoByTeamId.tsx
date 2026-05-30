@@ -37,7 +37,7 @@ const TeamLogoByTeamId: React.FC<TeamLogoByTeamIdProps> = ({
         src={awayTeam.logo}
         alt={awayTeam.abbrev}
         className={computedClassName}
-        colorMode={theme as any}
+        colorMode={theme}
       />
     );
   }
@@ -47,7 +47,7 @@ const TeamLogoByTeamId: React.FC<TeamLogoByTeamIdProps> = ({
         src={homeTeam.logo}
         alt={homeTeam.abbrev}
         className={computedClassName}
-        colorMode={theme as any}
+        colorMode={theme}
       />
     );
   }

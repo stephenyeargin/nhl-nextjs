@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import VideoCard from './VideoCard';
 
 jest.mock('next/image', () => {
-  const Img = ({ alt }: any) => <img alt={alt} />;
-  (Img as any).displayName = 'NextImageMock';
+  const Img: React.FC<{ alt?: string }> = ({ alt }) => <img alt={alt} />;
+  Img.displayName = 'NextImageMock';
 
   return Img;
 });
@@ -18,7 +18,7 @@ jest.mock('../utils/formatters', () => ({
   formatLocalizedTime: () => '8:00 AM EDT',
 }));
 
-const baseItem = (overrides: any = {}) => ({
+const baseItem = (overrides: Record<string, unknown> = {}) => ({
   slug: 'great-goal',
   headline: 'Great Goal',
   title: 'Great Goal',

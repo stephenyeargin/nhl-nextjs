@@ -3,7 +3,9 @@ import { render, screen } from '@testing-library/react';
 import ScoresPage from './page';
 
 jest.mock('@/app/components/GameTile', () => {
-  const MockGameTile = (props: any) => <div data-testid="game-tile">Game {props.game.id}</div>;
+  const MockGameTile: React.FC<{ game: { id: number } }> = (props) => (
+    <div data-testid="game-tile">Game {props.game.id}</div>
+  );
   MockGameTile.displayName = 'MockGameTile';
 
   return MockGameTile;

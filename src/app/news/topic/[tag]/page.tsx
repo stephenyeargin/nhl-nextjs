@@ -9,7 +9,7 @@ import type { StoryItem, PaginatedContentResponse } from '@/app/types/content';
 
 interface TagData {
   title?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const NewsTagPage: React.FC = () => {

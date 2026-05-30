@@ -7,7 +7,7 @@ interface GameWeekDay {
 }
 interface ScoreGame {
   id: string | number;
-  [k: string]: any;
+  [k: string]: unknown;
 }
 export interface ScoresResponse {
   gameWeek: GameWeekDay[];
@@ -15,7 +15,7 @@ export interface ScoresResponse {
   prevDate: string;
   currentDate: string;
   nextDate?: string;
-  [k: string]: any;
+  [k: string]: unknown;
 }
 
 export interface UseScoresDataResult {

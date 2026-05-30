@@ -56,7 +56,14 @@ async function getDraftRankingsData(
   }
 }
 
-export default async function DraftPage(props: any) {
+interface DraftPageProps {
+  params: DraftYearParam | Promise<DraftYearParam>;
+  searchParams?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>;
+}
+
+export default async function DraftPage(props: DraftPageProps) {
   const resolved = (await props?.params) as DraftYearParam | Promise<DraftYearParam>;
   const { year } = await resolved;
   const searchParams = (await props?.searchParams) as

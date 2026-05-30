@@ -8,17 +8,40 @@ import { getTeamDataByAbbreviation } from '@/app/utils/teamData';
 import { notFound, useParams } from 'next/navigation';
 import TeamToggle from '@/app/components/TeamToggle';
 
+interface TeamWithData {
+  id?: number | string;
+  abbrev: string;
+  logo?: string;
+  commonName?: { default: string };
+  placeName?: { default: string };
+  data?: { abbreviation?: string; [key: string]: unknown };
+  [key: string]: unknown;
+}
+
+type StatsRows = React.ComponentProps<typeof StatsTable>['stats'];
+
+interface BoxScoreTeamsStats {
+  forwards: StatsRows;
+  defense: StatsRows;
+  goalies: StatsRows;
+}
+
+interface BoxScorePlayerByGameStats {
+  awayTeam: BoxScoreTeamsStats;
+  homeTeam: BoxScoreTeamsStats;
+}
+
 // Minimal shape we actually access; retain unknown catch-all for unused data
 interface BoxScoreData {
-  homeTeam: any; // TODO: replace with shared TeamGameSide type
-  awayTeam: any;
+  homeTeam: TeamWithData;
+  awayTeam: TeamWithData;
   gameDate?: string;
   venue?: unknown;
   venueLocation?: unknown;
   summary?: unknown;
   matchup?: unknown;
   game: { gameState: string; [k: string]: unknown };
-  boxScore: { playerByGameStats?: unknown; [k: string]: unknown };
+  boxScore: { playerByGameStats?: BoxScorePlayerByGameStats; [k: string]: unknown };
   [k: string]: unknown;
 }
 
@@ -26,7 +49,7 @@ const BoxScore: React.FC = () => {
   const { id } = useParams() as { id: string };
   const logos: Record<string, string> = {};
 
-  const [gameData, setGameData] = useState<any>(null);
+  const [gameData, setGameData] = useState<BoxScoreData | null>(null);
   const [gameState, setGameState] = useState<string | null>(null);
   const [activeStatTeam, setActiveStatTeam] = useState<'awayTeam' | 'homeTeam'>('awayTeam');
   const [errorState, setErrorState] = useState<Error | null>(null);
@@ -80,18 +103,23 @@ const BoxScore: React.FC = () => {
     return notFound();
   }
 
-  const { homeTeam, awayTeam, boxScore } = gameData as any;
+  const { homeTeam, awayTeam, boxScore } = gameData;
   homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev, true) || {};
   awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev, false) || {};
-  logos[homeTeam.abbrev] = homeTeam.logo;
-  logos[awayTeam.abbrev] = awayTeam.logo;
+  logos[homeTeam.abbrev] = homeTeam.logo || '';
+  logos[awayTeam.abbrev] = awayTeam.logo || '';
+
+  const playerByGameStats = boxScore.playerByGameStats;
+  if (!playerByGameStats) {
+    return <GameBodySkeleton />;
+  }
 
   return (
     <div>
       <div className="flex justify-end">
         <TeamToggle
-          awayTeam={awayTeam}
-          homeTeam={homeTeam}
+          awayTeam={awayTeam as React.ComponentProps<typeof TeamToggle>['awayTeam']}
+          homeTeam={homeTeam as React.ComponentProps<typeof TeamToggle>['homeTeam']}
           handleStatTeamClick={setActiveStatTeam}
           activeStatTeam={activeStatTeam}
         />
@@ -101,76 +129,58 @@ const BoxScore: React.FC = () => {
           <div className="flex">
             <TeamLogo src={logos[awayTeam.abbrev]} alt={awayTeam.abbrev} className="mr-2 h-8 w-8" />
             <div className="font-bold my-1">
-              Forwards ({boxScore.playerByGameStats?.awayTeam.forwards.length})
+              Forwards ({playerByGameStats.awayTeam.forwards.length})
             </div>
           </div>
         </div>
-        <StatsTable
-          stats={boxScore.playerByGameStats?.awayTeam.forwards}
-          team={awayTeam.data.abbreviation}
-        />
+        <StatsTable stats={playerByGameStats.awayTeam.forwards} team={awayTeam.data.abbreviation} />
         <div className="my-3">
           <div className="flex">
             <TeamLogo src={logos[awayTeam.abbrev]} alt={awayTeam.abbrev} className="mr-2 h-8 w-8" />
             <div className="font-bold my-1">
-              Defensemen ({boxScore.playerByGameStats?.awayTeam.defense.length})
+              Defensemen ({playerByGameStats.awayTeam.defense.length})
             </div>
           </div>
         </div>
-        <StatsTable
-          stats={boxScore.playerByGameStats?.awayTeam.defense}
-          team={awayTeam.data.abbreviation}
-        />
+        <StatsTable stats={playerByGameStats.awayTeam.defense} team={awayTeam.data.abbreviation} />
         <div className="my-3">
           <div className="flex">
             <TeamLogo src={logos[awayTeam.abbrev]} alt={awayTeam.abbrev} className="mr-2 h-8 w-8" />
             <div className="font-bold my-1">
-              Goalies ({boxScore.playerByGameStats?.awayTeam.goalies.length})
+              Goalies ({playerByGameStats.awayTeam.goalies.length})
             </div>
           </div>
         </div>
-        <StatsTable
-          stats={boxScore.playerByGameStats?.awayTeam.goalies}
-          team={awayTeam.data.abbreviation}
-        />
+        <StatsTable stats={playerByGameStats.awayTeam.goalies} team={awayTeam.data.abbreviation} />
       </div>
       <div id="homeTeamStats" className={activeStatTeam === 'homeTeam' ? 'block' : 'hidden'}>
         <div className="my-3">
           <div className="flex">
             <TeamLogo src={logos[homeTeam.abbrev]} alt={homeTeam.abbrev} className="mr-2 h-8 w-8" />
             <div className="font-bold my-1">
-              Forwards ({boxScore.playerByGameStats?.homeTeam.forwards.length})
+              Forwards ({playerByGameStats.homeTeam.forwards.length})
             </div>
           </div>
         </div>
-        <StatsTable
-          stats={boxScore.playerByGameStats?.homeTeam.forwards}
-          team={homeTeam.data.abbreviation}
-        />
+        <StatsTable stats={playerByGameStats.homeTeam.forwards} team={homeTeam.data.abbreviation} />
         <div className="my-3">
           <div className="flex">
             <TeamLogo src={logos[homeTeam.abbrev]} alt={homeTeam.abbrev} className="mr-2 h-8 w-8" />
             <div className="font-bold my-1">
-              Defensemen ({boxScore.playerByGameStats?.homeTeam.defense.length})
+              Defensemen ({playerByGameStats.homeTeam.defense.length})
             </div>
           </div>
         </div>
-        <StatsTable
-          stats={boxScore.playerByGameStats?.homeTeam.defense}
-          team={homeTeam.data.abbreviation}
-        />
+        <StatsTable stats={playerByGameStats.homeTeam.defense} team={homeTeam.data.abbreviation} />
         <div className="my-3">
           <div className="flex">
             <TeamLogo src={logos[homeTeam.abbrev]} alt={homeTeam.abbrev} className="mr-2 h-8 w-8" />
             <div className="font-bold my-1">
-              Goalies ({boxScore.playerByGameStats?.homeTeam.goalies.length})
+              Goalies ({playerByGameStats.homeTeam.goalies.length})
             </div>
           </div>
         </div>
-        <StatsTable
-          stats={boxScore.playerByGameStats?.homeTeam.goalies}
-          team={homeTeam.data.abbreviation}
-        />
+        <StatsTable stats={playerByGameStats.homeTeam.goalies} team={homeTeam.data.abbreviation} />
       </div>
     </div>
   );

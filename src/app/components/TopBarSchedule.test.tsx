@@ -5,15 +5,21 @@ import TopBarSchedule from './TopBarSchedule';
 // Mock GameTile to lightweight placeholder
 jest.mock('./GameTile', () => {
   // Destructure the actual prop name `hideDate` and rename to `_hideDate` to omit it from DOM spread
-  const GT = ({ hideDate: _hideDate, ...props }: any) => (
-    <div data-testid="game-tile" {...props}>
-      Game {props.game?.id}
+  type GameTileMockProps = {
+    hideDate?: boolean;
+    game?: { id?: number };
+  } & React.HTMLAttributes<HTMLDivElement>;
+  const GT: React.FC<GameTileMockProps> = ({ hideDate: _hideDate, game, ...props }) => (
+    <div data-testid="game-tile" data-game={String(game)} {...props}>
+      Game {game?.id}
     </div>
   );
-  (GT as any).displayName = 'GameTileMock';
+  GT.displayName = 'GameTileMock';
 
   return GT;
 });
+
+const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 
 const makeApiPayload = () => ({
   focusedDate: '2024-10-01',
@@ -49,10 +55,12 @@ const makeApiPayload = () => ({
 
 describe('TopBarSchedule (smoke)', () => {
   beforeEach(() => {
-    global.fetch = jest.fn().mockResolvedValue({ json: async () => makeApiPayload() });
+    global.fetch = mockFetch;
+    mockFetch.mockReset();
+    mockFetch.mockResolvedValue({ json: async () => makeApiPayload() } as Response);
   });
   afterEach(() => {
-    (global.fetch as jest.Mock).mockReset();
+    mockFetch.mockReset();
   });
 
   it('renders dates and switches focused date', async () => {

@@ -4,7 +4,13 @@ import PlayFilters from './PlayFilters';
 
 jest.mock('./PeriodSelector', () => ({
   __esModule: true,
-  default: ({ activePeriod, handlePeriodChange }: any) => (
+  default: ({
+    activePeriod,
+    handlePeriodChange,
+  }: {
+    activePeriod: number;
+    handlePeriodChange: (p: number) => void;
+  }) => (
     <button data-testid="period-selector" onClick={() => handlePeriodChange(2)}>
       Period: {activePeriod}
     </button>

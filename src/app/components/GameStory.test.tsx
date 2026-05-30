@@ -5,19 +5,25 @@ import GameStory from './GameStory';
 // Mock next/image (add displayName); allow native img for simplicity
 
 jest.mock('next/image', () => {
-  const MockImage = (props: any) => <img {...props} alt={props.alt || 'image'} />;
-  (MockImage as any).displayName = 'NextImageMock';
+  const MockImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (props) => (
+    <img {...props} alt={props.alt || 'image'} />
+  );
+  MockImage.displayName = 'NextImageMock';
 
   return MockImage;
 });
 
+const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
+
 // Mock fetch to return no items (empty state)
 beforeEach(() => {
-  global.fetch = jest.fn().mockResolvedValue({ json: async () => ({ items: [] }) });
+  global.fetch = mockFetch;
+  mockFetch.mockReset();
+  mockFetch.mockResolvedValue({ json: async () => ({ items: [] }) } as Response);
 });
 
 afterEach(() => {
-  (global.fetch as jest.Mock).mockRestore?.();
+  mockFetch.mockReset();
 });
 
 describe('GameStory (smoke)', () => {

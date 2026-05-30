@@ -2,7 +2,7 @@
 
 import React from 'react';
 import NewsPageSkeleton from '@/app/components/NewsPageSkeleton';
-import GameTile from '@/app/components/GameTile';
+import GameTile, { type GameTileGame } from '@/app/components/GameTile';
 import { formatLocalizedDate } from '@/app/utils/formatters';
 import { useScoresData } from '@/app/hooks/useScoresData';
 
@@ -67,8 +67,8 @@ const ScoresPage: React.FC = () => {
             No games scheduled.
           </div>
         )}
-        {scores.games.map((game: any, i) => (
-          <GameTile key={i} game={game as any} hideDate />
+        {scores.games.map((game, i) => (
+          <GameTile key={i} game={game as unknown as GameTileGame} hideDate />
         ))}
       </div>
     </div>

@@ -7,6 +7,7 @@ import utc from 'dayjs/plugin/utc';
 import GameTile from './GameTile';
 import TopBarScheduleSkeleton from './TopBarScheduleSkeleton';
 import { formatLocalizedDate } from '../utils/formatters';
+import type { PeriodDescriptor } from '@/app/types/game';
 
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -28,12 +29,30 @@ interface ScheduleGame {
   awayTeam: ScheduleGameTeam;
   homeTeam: ScheduleGameTeam;
   startTimeUTC: string;
-  seriesStatus?: any;
+  seriesStatus?: {
+    topSeedWins?: number;
+    bottomSeedWins?: number;
+    topSeedTeamAbbrev?: string;
+    bottomSeedTeamAbbrev?: string;
+    seriesAbbrev?: string;
+    game?: number;
+    gameNumberOfSeries?: number;
+  };
   gameOutcome?: { lastPeriodType?: string };
-  periodDescriptor?: any;
+  periodDescriptor?: PeriodDescriptor;
   clock?: { timeRemaining?: string; inIntermission?: boolean };
   ifNecessary?: boolean;
   venue?: { default: string };
+}
+
+interface ScheduleByDate {
+  date: string;
+  games: ScheduleGame[];
+}
+
+interface ScoreboardNowResponse {
+  focusedDate?: string;
+  gamesByDate: ScheduleByDate[];
 }
 
 const sortGamesByState = (games: ScheduleGame[]): ScheduleGame[] => {
@@ -64,23 +83,28 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
     const fetchGames = async () => {
       try {
         const response = await fetch('/api/nhl/scoreboard/now', { cache: 'reload' });
-        const data = await response.json();
+        const data: ScoreboardNowResponse = await response.json();
         // Establish initial target date preference order
         let targetDate =
           focusedDate || gameDate || data.focusedDate || data.gamesByDate[0]?.date || null;
 
         // Set list of all dates provided by API (even those without games)
-        setDates(data.gamesByDate.map((d: any) => d.date));
+        setDates(data.gamesByDate.map((d: ScheduleByDate) => d.date));
 
-        const findGames = (date: string | null) =>
-          date ? data.gamesByDate.find((g: any) => date === g.date)?.games || [] : [];
+        const findGames = (date: string | null) => {
+          if (!date) {
+            return [] as ScheduleGame[];
+          }
+
+          return data.gamesByDate.find((g: ScheduleByDate) => date === g.date)?.games || [];
+        };
 
         let gamesForTarget = findGames(targetDate);
 
         // If no games for the chosen date, find the closest date with games.
         if (targetDate && gamesForTarget.length === 0) {
           const candidates = data.gamesByDate.filter(
-            (d: any) => Array.isArray(d.games) && d.games.length > 0
+            (d: ScheduleByDate) => Array.isArray(d.games) && d.games.length > 0
           );
 
           // Helper to compute closest date (prefers later date when equidistant)
@@ -124,9 +148,9 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
       const fetchGames = async () => {
         try {
           const response = await fetch('/api/nhl/scoreboard/now', { cache: 'reload' });
-          const data = await response.json();
+          const data: ScoreboardNowResponse = await response.json();
           const gamesForFocusedDate =
-            data.gamesByDate.find((g: any) => focusedDate === g.date)?.games || [];
+            data.gamesByDate.find((g: ScheduleByDate) => focusedDate === g.date)?.games || [];
           if (gamesForFocusedDate.length > 0) {
             setGames(sortGamesByState(gamesForFocusedDate));
 
@@ -134,7 +158,7 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
           }
           // Fallback again if the currently focused date now has zero games (e.g., data update)
           const candidates = data.gamesByDate.filter(
-            (d: any) => Array.isArray(d.games) && d.games.length > 0
+            (d: ScheduleByDate) => Array.isArray(d.games) && d.games.length > 0
           );
           if (candidates.length > 0 && focusedDate) {
             const pivot = dayjs(focusedDate);
@@ -216,7 +240,7 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
           {games.map((game) => (
             <GameTile
               key={game.id}
-              game={game as any}
+              game={game as unknown as React.ComponentProps<typeof GameTile>['game']}
               hideDate={true}
               style={{ minWidth: '360px' }}
             />

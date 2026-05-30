@@ -113,12 +113,12 @@ const LastGamesTable: React.FC<LastGamesTableProps> = ({
                 const precision = h.precision;
                 const unit = h.unit;
                 const primary = g[key as keyof typeof g];
-                const alt = altKey ? (g[altKey as keyof typeof g] as any) : undefined;
+                const alt = altKey ? g[altKey as keyof typeof g] : undefined;
                 const val =
                   typeof primary === 'number' || typeof primary === 'string'
-                    ? (primary as any)
+                    ? primary
                     : typeof alt === 'number' || typeof alt === 'string'
-                      ? (alt as any)
+                      ? alt
                       : undefined;
 
                 if (val === undefined) {
@@ -142,7 +142,7 @@ const LastGamesTable: React.FC<LastGamesTableProps> = ({
 
                 return (
                   <td key={key} className="p-2 border text-center text-xs">
-                    {formatStat(val as any, precision, unit)}
+                    {formatStat(val, precision, unit)}
                   </td>
                 );
               })}

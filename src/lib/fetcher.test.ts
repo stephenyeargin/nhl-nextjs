@@ -58,9 +58,12 @@ describe('nhlFetch', () => {
 
 describe('nhlStatic', () => {
   test('delegates to nhlFetch with defaults', async () => {
-    (global.fetch as any) = jest
-      .fn()
-      .mockResolvedValue({ ok: true, json: () => Promise.resolve({ via: 'static' }) });
+    const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
+    global.fetch = mockFetch;
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ via: 'static' }),
+    } as Response);
     const result = await nhlStatic('/abc');
     expect(result).toEqual({ via: 'static' });
     const call = (global.fetch as jest.Mock).mock.calls[0];

@@ -4,7 +4,11 @@ import GameHeader from './GameHeader';
 import { GameContext } from '../contexts/GameContext';
 
 jest.mock('./TeamLogo', () => {
-  const Logo = ({ team, alt, className }: any) => (
+  const Logo: React.FC<{ team?: string; alt?: string; className?: string }> = ({
+    team,
+    alt,
+    className,
+  }) => (
     <span
       role="img"
       aria-label={alt || team}
@@ -13,7 +17,7 @@ jest.mock('./TeamLogo', () => {
       className={className}
     />
   );
-  (Logo as any).displayName = 'TeamLogoMock';
+  Logo.displayName = 'TeamLogoMock';
 
   return Logo;
 });
@@ -28,7 +32,7 @@ const teamBase = (abbrev: string, score: number) => ({
   commonName: { default: `${abbrev} City ${abbrev}` },
 });
 
-const baseGame = (overrides: any = {}) => ({
+const baseGame = (overrides: Record<string, unknown> = {}) => ({
   gameState: 'OFF',
   gameScheduleState: 'OK',
   homeTeam: teamBase('HOM', 3),
@@ -47,7 +51,9 @@ const baseGame = (overrides: any = {}) => ({
   ...overrides,
 });
 
-const ctx = (gameOverrides: any = {}) => {
+type GameContextValue = NonNullable<React.ComponentProps<typeof GameContext.Provider>['value']>;
+
+const ctx = (gameOverrides: Record<string, unknown> = {}): GameContextValue => {
   const game = baseGame(gameOverrides);
 
   return {
@@ -58,7 +64,7 @@ const ctx = (gameOverrides: any = {}) => {
     },
     gameState: game.gameState,
     pageError: null,
-  } as any;
+  };
 };
 
 describe('GameHeader', () => {

@@ -7,7 +7,7 @@ interface NamePart {
   default: string;
 }
 
-interface SeriesTeam {
+export interface SeriesTeam {
   id: number;
   logo?: string;
   abbrev: string;
@@ -15,7 +15,7 @@ interface SeriesTeam {
   placeNameWithPreposition?: NamePart;
 }
 
-interface SeriesInfo {
+export interface SeriesInfo {
   seriesLetter?: string;
   seriesAbbrev?: string;
   seriesLogo?: string;

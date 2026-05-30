@@ -29,9 +29,51 @@ type TeamColors = {
   abbreviation?: string;
 };
 
+interface PlayDetails {
+  eventOwnerTeamId?: number;
+  winningPlayerId?: number;
+  losingPlayerId?: number;
+  shootingPlayerId?: number;
+  goalieInNetId?: number;
+  blockingPlayerId?: number;
+  reason?: string;
+  secondaryReason?: string;
+  zoneCode?: string;
+  hittingPlayerId?: number;
+  hitteePlayerId?: number;
+  playerId?: number;
+  shotType?: string;
+  scoringPlayerId?: number;
+  scoringPlayerTotal?: number;
+  assist1PlayerId?: number;
+  assist1PlayerTotal?: number;
+  assist2PlayerId?: number;
+  assist2PlayerTotal?: number;
+  awayScore?: number;
+  homeScore?: number;
+  highlightClip?: string;
+  committedByPlayerId?: number;
+  servedByPlayerId?: number;
+  drawnByPlayerId?: number;
+  duration?: number | string;
+  typeCode?: string;
+  descKey?: string;
+}
+
+interface PlayEvent {
+  typeDescKey?: string;
+  periodDescriptor?: { number?: number; periodType?: string };
+  timeInPeriod?: string;
+  details?: PlayDetails;
+}
+
+interface GameForEvent {
+  periodDescriptor?: { number?: number; periodType?: string; maxRegulationPeriods?: number };
+}
+
 export interface PlayEventDetailsProps {
-  play: any;
-  game: any;
+  play: PlayEvent;
+  game: GameForEvent;
   rosterSpots: RosterPlayer[];
   lookupTeamDataByTeamId: (_teamId: number) => TeamColors;
   onOpenHighlight?: (_payload: { url: string; label: string }) => void;
@@ -46,14 +88,17 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
 }) => {
   const e = play.details || {};
 
-  const lookupPlayerData = (playerId: number): RosterPlayer => {
+  const lookupPlayerData = (playerId?: number): RosterPlayer => {
     const defPlayer = { firstName: { default: 'Unnamed' }, lastName: { default: 'Player' } };
-    const found = rosterSpots.find((pl: any) => pl.playerId === playerId);
+    if (playerId === undefined) {
+      return defPlayer as RosterPlayer;
+    }
+    const found = rosterSpots.find((pl: RosterPlayer) => pl.playerId === playerId);
 
     return (found || (defPlayer as RosterPlayer)) as RosterPlayer;
   };
 
-  const renderPlayer = (playerId: number) => {
+  const renderPlayer = (playerId?: number) => {
     const player = lookupPlayerData(playerId);
     if (!player.playerId) {
       return (
@@ -75,7 +120,7 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
     );
   };
 
-  const eventTeamData: any = lookupTeamDataByTeamId(e.eventOwnerTeamId);
+  const eventTeamData = lookupTeamDataByTeamId(e.eventOwnerTeamId || 0);
 
   switch (play.typeDescKey) {
     case 'period-start':
@@ -83,7 +128,7 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
         <div>
           Start of{' '}
           {formatPeriodLabel(
-            { ...game.periodDescriptor, number: play.periodDescriptor.number },
+            { ...game.periodDescriptor, number: play.periodDescriptor?.number },
             true
           )}
         </div>
@@ -111,7 +156,7 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
     case 'stoppage':
       return (
         <div>
-          {(GAME_EVENTS as Record<string, string>)[e.reason]}
+          {e.reason ? (GAME_EVENTS as Record<string, string>)[e.reason] : ''}
           {e.secondaryReason && e.secondaryReason !== e.reason
             ? `, ${(GAME_EVENTS as Record<string, string>)[e.secondaryReason]}`
             : ''}
@@ -189,11 +234,11 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
               </div>
             ) : (
               <div className="text-2xl font-bold">
-                {e.awayScore}-{e.homeScore}
+                {e.awayScore ?? 0}-{e.homeScore ?? 0}
               </div>
             )}
           </div>
-          {play.details?.highlightClip && (
+          {e.highlightClip && (
             <div className="text-center text-white">
               <button
                 onClick={() => {
@@ -201,7 +246,7 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
                     return;
                   }
                   const player = lookupPlayerData(e.scoringPlayerId);
-                  const url = `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${play.details.highlightClip}`;
+                  const url = `https://players.brightcove.net/${NHL_BRIGHTCOVE_ACCOUNT}/default_default/index.html?videoId=${e.highlightClip}`;
                   const label = `${eventTeamData.abbreviation} | ${play.timeInPeriod} ${formatPeriodLabel(play.periodDescriptor)} | ${player.firstName?.default} ${player.lastName?.default}`;
                   onOpenHighlight({ url, label });
                 }}
@@ -250,9 +295,11 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
           </div>
           <div>
             <div className="text-xs font-light">
-              {(PENALTY_TYPES as Record<string, string>)[e.typeCode]}
+              {e.typeCode ? (PENALTY_TYPES as Record<string, string>)[e.typeCode] : ''}
             </div>
-            <div>{(PENALTY_DESCRIPTIONS as Record<string, string>)[e.descKey]}</div>
+            <div>
+              {e.descKey ? (PENALTY_DESCRIPTIONS as Record<string, string>)[e.descKey] : ''}
+            </div>
           </div>
         </div>
       );
@@ -261,7 +308,7 @@ const PlayEventDetails: React.FC<PlayEventDetailsProps> = ({
         <div>
           End of{' '}
           {formatPeriodLabel(
-            { ...game.periodDescriptor, number: play.periodDescriptor.number },
+            { ...game.periodDescriptor, number: play.periodDescriptor?.number },
             true
           )}
         </div>

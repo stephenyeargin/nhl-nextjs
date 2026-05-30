@@ -14,7 +14,7 @@ interface PlayerStats {
   name?: LocalizedString;
   firstName?: LocalizedString;
   lastName?: LocalizedString;
-  [key: string]: any; // dynamic stat fields
+  [key: string]: unknown; // dynamic stat fields
 }
 interface StatsTableProps {
   stats: PlayerStats[];

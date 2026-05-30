@@ -11,14 +11,18 @@ const buildScores = (date: string) => ({
 });
 
 describe('useScoresData', () => {
-  let originalFetch: any;
+  let originalFetch: typeof global.fetch;
+  const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
   beforeEach(() => {
     originalFetch = global.fetch;
-    global.fetch = jest.fn().mockImplementation((url: string) => {
+    global.fetch = mockFetch;
+    mockFetch.mockReset();
+    mockFetch.mockImplementation((url: string | URL | Request) => {
       // Extract the date portion at end of URL
-      const date = url.split('/').pop() || '1970-01-01';
+      const urlString = typeof url === 'string' ? url : String(url);
+      const date = urlString.split('/').pop() || '1970-01-01';
 
-      return Promise.resolve({ json: async () => buildScores(date) });
+      return Promise.resolve({ json: async () => buildScores(date) } as Response);
     });
   });
   afterEach(() => {
@@ -45,7 +49,7 @@ describe('useScoresData', () => {
 
     // fetch should have been called at least once with expected pattern
     expect(global.fetch).toHaveBeenCalled();
-    const firstCall = (global.fetch as jest.Mock).mock.calls[0][0];
+    const firstCall = mockFetch.mock.calls[0][0] as string;
     expect(firstCall).toMatch(/\/api\/nhl\/score\//);
   });
 
@@ -62,7 +66,7 @@ describe('useScoresData', () => {
 
     render(<TestComponent />);
     await waitFor(() => expect(screen.getByText('scores-loaded')).toBeInTheDocument());
-    const initialFetchCount = (global.fetch as jest.Mock).mock.calls.length;
+    const initialFetchCount = mockFetch.mock.calls.length;
 
     await act(async () => {
       changeDate(targetDate);
@@ -70,10 +74,10 @@ describe('useScoresData', () => {
 
     await waitFor(() => {
       // Expect an additional fetch containing the target date
-      const calls = (global.fetch as jest.Mock).mock.calls.map((c) => c[0]);
-      expect(calls.some((u: string) => u.includes(targetDate))).toBe(true);
+      const calls = mockFetch.mock.calls.map((c) => String(c[0]));
+      expect(calls.some((u) => u.includes(targetDate))).toBe(true);
     });
 
-    expect((global.fetch as jest.Mock).mock.calls.length).toBeGreaterThan(initialFetchCount);
+    expect(mockFetch.mock.calls.length).toBeGreaterThan(initialFetchCount);
   });
 });

@@ -14,26 +14,34 @@ jest.mock('@/app/utils/navigation', () => ({
 
 const TestConsumer: React.FC = () => {
   const { story, game, players, sidebarStories, pageError } = useStoryContext();
+  const sidebarCount =
+    sidebarStories && typeof sidebarStories === 'object' && 'items' in sidebarStories
+      ? Array.isArray((sidebarStories as { items?: unknown[] }).items)
+        ? ((sidebarStories as { items?: unknown[] }).items?.length ?? 0)
+        : 0
+      : 0;
 
   return (
     <div>
       <div data-testid="story-headline">{story.headline}</div>
       {game && <div data-testid="game-loaded">yes</div>}
       <div data-testid="players-count">{players.length}</div>
-      <div data-testid="sidebar-count">
-        {(sidebarStories as any).items ? (sidebarStories as any).items.length : 0}
-      </div>
+      <div data-testid="sidebar-count">{sidebarCount}</div>
       {pageError && <div data-testid="story-error">{pageError.message}</div>}
     </div>
   );
 };
 
-const makeFetchResponse = (ok: boolean, jsonData: any) => ({ ok, json: async () => jsonData });
+const makeFetchResponse = (ok: boolean, jsonData: unknown) =>
+  ({ ok, json: async () => jsonData }) as Response;
+
+const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 
 describe('StoryContext', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    (global as any).fetch = jest.fn();
+    global.fetch = mockFetch;
+    mockFetch.mockReset();
     jest.useFakeTimers();
     jest.spyOn(console, 'error').mockImplementation(() => {
       /* silent expected error */
@@ -56,7 +64,7 @@ describe('StoryContext', () => {
         { externalSourceName: 'player', id: 2 },
       ],
     };
-    (global.fetch as any)
+    mockFetch
       // story
       .mockResolvedValueOnce(makeFetchResponse(true, story))
       // sidebar stories
@@ -75,9 +83,7 @@ describe('StoryContext', () => {
   });
 
   test('legacy story redirects', async () => {
-    (global as any).fetch.mockResolvedValueOnce(
-      makeFetchResponse(true, { items: [{ slug: 'legacy-slug' }] })
-    );
+    mockFetch.mockResolvedValueOnce(makeFetchResponse(true, { items: [{ slug: 'legacy-slug' }] }));
     render(
       <StoryProvider storyId="c-12345">
         <div />{' '}
@@ -87,7 +93,7 @@ describe('StoryContext', () => {
   });
 
   test('handles fetch error', async () => {
-    (global as any).fetch.mockResolvedValueOnce({ ok: false });
+    mockFetch.mockResolvedValueOnce({ ok: false } as Response);
     render(
       <StoryProvider storyId="broken">
         <TestConsumer />

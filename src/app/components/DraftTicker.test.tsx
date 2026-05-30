@@ -3,16 +3,20 @@ import { render, screen, waitFor } from '@testing-library/react';
 import DraftTicker from './DraftTicker';
 
 jest.mock('./TeamLogo', () => {
-  const Mock = (_props: any) => <div data-testid="logo" />;
-  (Mock as any).displayName = 'TeamLogoMock';
+  const Mock: React.FC<Record<string, unknown>> = () => <div data-testid="logo" />;
+  Mock.displayName = 'TeamLogoMock';
 
   return Mock;
 });
 
-const mockFetch = jest.fn();
-(global as any).fetch = mockFetch;
+const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 
 describe('DraftTicker', () => {
+  beforeEach(() => {
+    global.fetch = mockFetch;
+    mockFetch.mockReset();
+  });
+
   it('renders picks after fetch', async () => {
     mockFetch.mockResolvedValueOnce({
       json: () =>
@@ -30,7 +34,7 @@ describe('DraftTicker', () => {
             },
           ],
         }),
-    });
+    } as Response);
     render(<DraftTicker />);
     await waitFor(() => expect(screen.getByText(/First Last/)).toBeInTheDocument());
   });
@@ -50,7 +54,7 @@ describe('DraftTicker', () => {
             },
           ],
         }),
-    });
+    } as Response);
     render(<DraftTicker />);
     await waitFor(() => expect(screen.getByText('— Voided —')).toBeInTheDocument());
     expect(screen.queryByText('Void', { exact: true })).not.toBeInTheDocument();

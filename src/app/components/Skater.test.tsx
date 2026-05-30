@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import { Skater } from './Skater';
 
 jest.mock('./Headshot', () => {
-  const HS = ({ alt }: any) => <div data-testid="headshot">{alt}</div>;
-  (HS as any).displayName = 'HeadshotMock';
+  const HS: React.FC<{ alt?: string }> = ({ alt }) => <div data-testid="headshot">{alt}</div>;
+  HS.displayName = 'HeadshotMock';
 
   return HS;
 });

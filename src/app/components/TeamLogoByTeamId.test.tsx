@@ -4,10 +4,10 @@ import TeamLogoByTeamId from './TeamLogoByTeamId';
 
 // Mock TeamLogo to a simple div that echoes props
 jest.mock('./TeamLogo', () => {
-  const Mock = ({ alt, className }: any) => (
+  const Mock: React.FC<{ alt?: string; className?: string }> = ({ alt, className }) => (
     <div data-testid="team-logo" data-alt={alt} className={className} />
   );
-  (Mock as any).displayName = 'TeamLogoMock';
+  Mock.displayName = 'TeamLogoMock';
 
   return Mock;
 });

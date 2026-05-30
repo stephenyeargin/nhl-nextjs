@@ -39,7 +39,7 @@ export const useStoryContext = (): StoryContextValue => {
 };
 
 // Generic fetch wrapper
-const fetchJsonData = async <T = any,>(url: string): Promise<T> => {
+const fetchJsonData = async <T = unknown,>(url: string): Promise<T> => {
   const response = await fetch(url, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error(`Failed to fetch data from ${url}`);
@@ -97,7 +97,7 @@ export const StoryProvider: React.FC<StoryProviderProps> = ({ storyId, children 
         const gameTag = storyResponse.tags?.find((t) => t.externalSourceName === 'game');
         if (gameTag?.extraData?.gameId) {
           const gameResponse = await fetchGameData(gameTag.extraData.gameId);
-          setGame(gameResponse);
+          setGame(gameResponse as GameLanding);
         }
 
         const playerTags =

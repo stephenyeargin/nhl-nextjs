@@ -3,20 +3,24 @@ import { render, screen } from '@testing-library/react';
 import PlayoffSeriesTile from './PlayoffSeriesTile';
 
 jest.mock('next/image', () => {
-  const Img = ({ src, alt }: any) => <img data-testid="img" src={src} alt={alt} />;
-  (Img as any).displayName = 'NextImageMock';
+  const Img: React.FC<{ src?: string; alt?: string }> = ({ src, alt }) => (
+    <img data-testid="img" src={src} alt={alt} />
+  );
+  Img.displayName = 'NextImageMock';
 
   return Img;
 });
 jest.mock('./TeamLogo', () => {
-  const Logo = ({ alt }: any) => <div data-testid={`logo-${alt}`} />;
-  (Logo as any).displayName = 'TeamLogoMock';
+  const Logo: React.FC<{ alt?: string }> = ({ alt }) => <div data-testid={`logo-${alt}`} />;
+  Logo.displayName = 'TeamLogoMock';
 
   return Logo;
 });
 jest.mock('next/link', () => {
-  const Link = ({ children, href }: any) => <a href={href}>{children}</a>;
-  (Link as any).displayName = 'NextLinkMock';
+  const Link: React.FC<{ children?: React.ReactNode; href: string }> = ({ children, href }) => (
+    <a href={href}>{children}</a>
+  );
+  Link.displayName = 'NextLinkMock';
 
   return Link;
 });

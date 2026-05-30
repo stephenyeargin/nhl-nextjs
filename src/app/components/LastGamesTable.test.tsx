@@ -21,7 +21,7 @@ describe('LastGamesTable', () => {
   it('renders dynamic headers and placeholder cells', () => {
     const games: PlayerGameSummary[] = [
       mkGame({ goals: 2, plusMinus: 1 }),
-      mkGame({ goals: undefined as any }),
+      mkGame({ goals: undefined }),
     ];
 
     render(<LastGamesTable games={games} statHeaders={headers} />);

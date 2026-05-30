@@ -3,11 +3,21 @@ import { render, waitFor } from '@testing-library/react';
 import NewsPage from './page';
 
 // Capture props passed to StoryCard to assert layout logic
-type CapturedCard = { size?: string; showDate?: boolean; item?: any };
+type CapturedCard = {
+  size?: string;
+  showDate?: boolean;
+  item?: { _entityId?: string; slug?: string };
+};
 const captured: CapturedCard[] = [];
 
+const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
+
 jest.mock('./components/StoryCard', () => {
-  const StoryCard = (props: any) => {
+  const StoryCard: React.FC<{
+    size?: string;
+    showDate?: boolean;
+    item?: { _entityId?: string; slug?: string };
+  }> = (props) => {
     captured.push({ size: props.size, showDate: !!props.showDate, item: props.item });
 
     return (
@@ -16,7 +26,7 @@ jest.mock('./components/StoryCard', () => {
       </div>
     );
   };
-  (StoryCard as any).displayName = 'StoryCardMock';
+  StoryCard.displayName = 'StoryCardMock';
 
   return StoryCard;
 });
@@ -37,36 +47,39 @@ const makeItem = (id: number) => ({
 describe('NewsPage (page component)', () => {
   beforeEach(() => {
     captured.length = 0;
+    global.fetch = mockFetch;
+    mockFetch.mockReset();
   });
 
   afterEach(() => {
+    mockFetch.mockReset();
     jest.resetAllMocks();
   });
 
   it('renders skeleton when API returns empty list', async () => {
-    (global as any).fetch = jest
-      .fn()
-      .mockResolvedValue({ ok: true, json: async () => ({ items: [] }) });
+    mockFetch.mockResolvedValue({ ok: true, json: async () => ({ items: [] }) } as Response);
     render(<NewsPage />);
     // Wait a tick to allow effect to settle
-    await waitFor(() => expect((global as any).fetch).toHaveBeenCalled());
+    await waitFor(() => expect(mockFetch).toHaveBeenCalled());
     // No StoryCard rendered implies skeleton path exercised
     expect(captured.length).toBe(0);
   });
 
   it('renders only large card when one item', async () => {
-    (global as any).fetch = jest
-      .fn()
-      .mockResolvedValue({ ok: true, json: async () => ({ items: [makeItem(1)] }) });
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ items: [makeItem(1)] }),
+    } as Response);
     render(<NewsPage />);
     await waitFor(() => expect(captured.length).toBe(1));
     expect(captured[0].size).toBe('large');
   });
 
   it('renders large and medium cards when two items', async () => {
-    (global as any).fetch = jest
-      .fn()
-      .mockResolvedValue({ ok: true, json: async () => ({ items: [makeItem(1), makeItem(2)] }) });
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ items: [makeItem(1), makeItem(2)] }),
+    } as Response);
     render(<NewsPage />);
     await waitFor(() => expect(captured.length).toBe(2));
     expect(captured[0].size).toBe('large');
@@ -75,9 +88,7 @@ describe('NewsPage (page component)', () => {
 
   it('renders additional default cards with showDate when more than two items', async () => {
     const items = [1, 2, 3, 4].map(makeItem);
-    (global as any).fetch = jest
-      .fn()
-      .mockResolvedValue({ ok: true, json: async () => ({ items }) });
+    mockFetch.mockResolvedValue({ ok: true, json: async () => ({ items }) } as Response);
     render(<NewsPage />);
     await waitFor(() => expect(captured.length).toBe(4));
     // first two sizes
@@ -90,16 +101,16 @@ describe('NewsPage (page component)', () => {
   });
 
   it('gracefully handles non-ok response (returns empty array)', async () => {
-    (global as any).fetch = jest.fn().mockResolvedValue({ ok: false, json: async () => ({}) });
+    mockFetch.mockResolvedValue({ ok: false, json: async () => ({}) } as Response);
     render(<NewsPage />);
-    await waitFor(() => expect((global as any).fetch).toHaveBeenCalled());
+    await waitFor(() => expect(mockFetch).toHaveBeenCalled());
     expect(captured.length).toBe(0);
   });
 
   it('gracefully handles fetch rejection', async () => {
-    (global as any).fetch = jest.fn().mockRejectedValue(new Error('boom'));
+    mockFetch.mockRejectedValue(new Error('boom'));
     render(<NewsPage />);
-    await waitFor(() => expect((global as any).fetch).toHaveBeenCalled());
+    await waitFor(() => expect(mockFetch).toHaveBeenCalled());
     expect(captured.length).toBe(0);
   });
 });

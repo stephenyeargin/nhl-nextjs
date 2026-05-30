@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import FloatingAudioPlayer from './FloatingAudioPlayer';
 
 jest.mock('react-player/lazy', () => {
-  const Player = () => <div data-testid="react-player" />;
-  (Player as any).displayName = 'ReactPlayerMock';
+  const Player: React.FC = () => <div data-testid="react-player" />;
+  Player.displayName = 'ReactPlayerMock';
 
   return Player;
 });

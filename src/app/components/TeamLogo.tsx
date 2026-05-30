@@ -15,6 +15,13 @@ interface TeamLogoProps {
   style?: React.CSSProperties;
 }
 
+interface TeamLookupData {
+  division?: string;
+  teamId?: number;
+  abbreviation?: string;
+  logo?: string;
+}
+
 const TeamLogo: React.FC<TeamLogoProps> = ({
   src,
   alt,
@@ -43,7 +50,7 @@ const TeamLogo: React.FC<TeamLogoProps> = ({
   // If src is empty, extract from team name
   let league = 'nhl';
   let updatedSrc = src ? src : `https://assets.nhle.com/logos/${league}/svg/NHL_light.svg`;
-  let teamData: any = {};
+  let teamData: TeamLookupData = {};
   if (!src && team) {
     teamData = getTeamDataByAbbreviation(team, true);
     if (teamData.division === 'International') {

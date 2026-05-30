@@ -19,14 +19,14 @@ export interface StoryItem {
   contentDate?: string; // ISO date string
   summary?: string;
   thumbnail?: ThumbnailTemplate;
-  [key: string]: any; // allow additional API props without forcing casts everywhere
+  [key: string]: unknown; // allow additional API props without forcing casts everywhere
 }
 
 export interface PaginatedContentResponse<T> {
   items: T[];
   pagination?: {
     nextUrl?: string | null;
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }

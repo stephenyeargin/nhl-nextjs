@@ -16,7 +16,7 @@ const baseGame = {
 
 describe('GamePreview (smoke)', () => {
   it('renders unavailable fallback when leaders missing', () => {
-    const { asFragment } = render(<GamePreview game={baseGame as any} />);
+    const { asFragment } = render(<GamePreview game={baseGame} />);
     expect(screen.getByText(/Game preview unavailable/i)).toBeInTheDocument();
     expect(asFragment()).toMatchSnapshot();
   });

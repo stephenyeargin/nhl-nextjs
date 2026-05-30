@@ -10,12 +10,12 @@ interface ContributorRef {
 interface StoryFields {
   contributorOverride?: string;
   description?: string;
-  [key: string]: any; // fallback for unknown fields during incremental typing
+  [key: string]: unknown; // fallback for unknown fields during incremental typing
 }
 
 interface StoryReferences {
   contributor?: ContributorRef[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface StoryMinimal {

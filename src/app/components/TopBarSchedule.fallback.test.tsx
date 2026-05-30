@@ -4,15 +4,21 @@ import TopBarSchedule from './TopBarSchedule';
 
 // Lightweight mock for GameTile (omit hideDate from spread)
 jest.mock('./GameTile', () => {
-  const GT = ({ hideDate: _hideDate, ...props }: any) => (
-    <div data-testid="game-tile" {...props}>
-      Game {props.game?.id}
+  type GameTileMockProps = {
+    hideDate?: boolean;
+    game?: { id?: number };
+  } & React.HTMLAttributes<HTMLDivElement>;
+  const GT: React.FC<GameTileMockProps> = ({ hideDate: _hideDate, game, ...props }) => (
+    <div data-testid="game-tile" data-game={String(game)} {...props}>
+      Game {game?.id}
     </div>
   );
-  (GT as any).displayName = 'GameTileMock';
+  GT.displayName = 'GameTileMock';
 
   return GT;
 });
+
+const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 
 describe('TopBarSchedule fallback date behavior', () => {
   beforeAll(() => {
@@ -20,7 +26,7 @@ describe('TopBarSchedule fallback date behavior', () => {
   });
 
   afterEach(() => {
-    (global.fetch as jest.Mock | undefined)?.mockReset?.();
+    mockFetch.mockReset();
     // Clear pending timers between tests for cleanliness
     jest.setSystemTime(new Date('2024-01-01T00:00:00Z'));
   });
@@ -63,7 +69,8 @@ describe('TopBarSchedule fallback date behavior', () => {
         },
       ],
     };
-    global.fetch = jest.fn().mockResolvedValue({ json: async () => payload });
+    global.fetch = mockFetch;
+    mockFetch.mockResolvedValue({ json: async () => payload } as Response);
 
     render(<TopBarSchedule gameDate="2024-10-01" />);
 
@@ -104,7 +111,8 @@ describe('TopBarSchedule fallback date behavior', () => {
         }, // 2 days later
       ],
     };
-    global.fetch = jest.fn().mockResolvedValue({ json: async () => payload });
+    global.fetch = mockFetch;
+    mockFetch.mockResolvedValue({ json: async () => payload } as Response);
 
     render(<TopBarSchedule gameDate="2024-10-05" />);
 
@@ -146,7 +154,8 @@ describe('TopBarSchedule fallback date behavior', () => {
         { date: '2024-10-10', games: [] }, // empty requested / focused
       ],
     };
-    global.fetch = jest.fn().mockResolvedValue({ json: async () => payload });
+    global.fetch = mockFetch;
+    mockFetch.mockResolvedValue({ json: async () => payload } as Response);
 
     render(<TopBarSchedule gameDate="2024-10-10" />);
 

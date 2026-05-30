@@ -6,13 +6,15 @@ jest.mock('next/navigation', () => ({ usePathname: () => '/game/1' }));
 
 // Mock FontAwesome to avoid heavy DOM
 jest.mock('@fortawesome/react-fontawesome', () => ({
-  FontAwesomeIcon: (props: any) => <span data-icon={props.icon?.iconName || 'icon'} />,
+  FontAwesomeIcon: (props: { icon?: { iconName?: string } }) => (
+    <span data-icon={props.icon?.iconName || 'icon'} />
+  ),
 }));
 
 // Mock FloatingAudioPlayer to a simple placeholder to prevent extra async/state side effects
 jest.mock('./FloatingAudioPlayer', () => ({
   __esModule: true,
-  default: ({ isVisible, label }: any) =>
+  default: ({ isVisible, label }: { isVisible?: boolean; label?: string }) =>
     isVisible ? <div data-testid="audio-player">Audio {label}</div> : null,
 }));
 

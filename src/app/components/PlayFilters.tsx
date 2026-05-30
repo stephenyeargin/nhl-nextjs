@@ -3,8 +3,13 @@
 import React from 'react';
 import PeriodSelector from './PeriodSelector';
 
+interface TeamFilterOption {
+  id: number | string;
+  placeName: { default: string };
+}
+
 interface PlayFiltersProps {
-  periodData: any;
+  periodData: { number?: number; maxRegulationPeriods?: number; [k: string]: unknown };
   activePeriod: number;
   onPeriodChange: (_n: number) => void;
   includeAll?: boolean;
@@ -12,8 +17,8 @@ interface PlayFiltersProps {
   onEventFilterChange: (_v: string) => void;
   teamFilter: string | null;
   onTeamFilterChange: (_v: string) => void;
-  awayTeam: any;
-  homeTeam: any;
+  awayTeam: TeamFilterOption;
+  homeTeam: TeamFilterOption;
 }
 
 const PlayFilters: React.FC<PlayFiltersProps> = ({
@@ -28,10 +33,15 @@ const PlayFilters: React.FC<PlayFiltersProps> = ({
   awayTeam,
   homeTeam,
 }) => {
+  const normalizedPeriodData = {
+    ...periodData,
+    number: periodData.number ?? periodData.maxRegulationPeriods ?? 3,
+  };
+
   return (
     <div className="flex justify-center items-center my-5 text-xs md:text-sm">
       <PeriodSelector
-        periodData={periodData}
+        periodData={normalizedPeriodData}
         activePeriod={activePeriod}
         handlePeriodChange={onPeriodChange}
         includeAll={includeAll}

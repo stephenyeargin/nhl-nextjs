@@ -7,6 +7,11 @@ import { formatHeadTitle } from '@/app/utils/formatters';
 import LoadMoreButton from '@/app/components/LoadMoreButton';
 import type { VideoApiResponse, VideoItemBase } from '@/app/types/video';
 
+type RawVideoListItem = Partial<VideoItemBase> & {
+  _entityId?: string | number;
+  summary?: string;
+};
+
 const VideoPage: React.FC = () => {
   const [videos, setVideos] = useState<VideoItemBase[]>([]);
   const [offset, setOffset] = useState(0);
@@ -20,7 +25,7 @@ const VideoPage: React.FC = () => {
       );
       const videoItems: VideoApiResponse = await videosResponse.json();
       const normalized: VideoItemBase[] = videoItems.items.map(
-        (it: any) =>
+        (it: RawVideoListItem) =>
           ({
             slug: it.slug || String(it._entityId || ''),
             fields: it.fields || { description: it.summary },

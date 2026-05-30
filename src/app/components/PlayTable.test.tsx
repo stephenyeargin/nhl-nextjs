@@ -23,7 +23,7 @@ describe('PlayTable', () => {
   it('renders rows and delegates details and logos', () => {
     const { asFragment } = render(
       <PlayTable
-        plays={plays as any}
+        plays={plays}
         activePeriod={0}
         renderPlayByPlayEvent={(play) => <div data-testid={`details-${play.eventId}`}>D</div>}
         renderTeamLogo={(teamId?: number | string) => <div data-testid={`logo-${teamId}`} />}

@@ -21,11 +21,14 @@ const TestConsumer: React.FC = () => {
   );
 };
 
-const makeFetchResponse = (ok: boolean, jsonData: any, status = 200) => ({
-  ok,
-  status,
-  json: async () => jsonData,
-});
+const makeFetchResponse = (ok: boolean, jsonData: unknown, status = 200) =>
+  ({
+    ok,
+    status,
+    json: async () => jsonData,
+  }) as Response;
+
+const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 
 describe('GameContext', () => {
   beforeEach(() => {
@@ -49,8 +52,9 @@ describe('GameContext', () => {
       gameState: 'LIVE',
       gameScheduleState: 'OK',
     };
-    (global.fetch as any) = jest
-      .fn()
+    global.fetch = mockFetch;
+    mockFetch.mockReset();
+    mockFetch
       .mockResolvedValueOnce(makeFetchResponse(true, gameLanding))
       .mockResolvedValueOnce(makeFetchResponse(true, { some: 'right-rail' }))
       .mockResolvedValueOnce(makeFetchResponse(true, { some: 'story' }));
@@ -68,9 +72,10 @@ describe('GameContext', () => {
   });
 
   test('sets pageError on 404', async () => {
-    (global.fetch as any) = jest
-      .fn()
-      .mockResolvedValueOnce({ ok: false, status: 404 })
+    global.fetch = mockFetch;
+    mockFetch.mockReset();
+    mockFetch
+      .mockResolvedValueOnce({ ok: false, status: 404 } as Response)
       .mockResolvedValueOnce(makeFetchResponse(true, {}))
       .mockResolvedValueOnce(makeFetchResponse(true, {}));
 

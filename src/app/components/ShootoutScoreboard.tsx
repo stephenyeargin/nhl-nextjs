@@ -10,7 +10,7 @@ interface ShootoutPlayerNamePart {
 }
 
 interface ShootoutShot {
-  sequence: number;
+  sequence: number | string;
   playerId: number;
   teamAbbrev: ShootoutPlayerNamePart;
   firstName: ShootoutPlayerNamePart;
@@ -37,7 +37,7 @@ const ShootoutScoreboard = ({ shootout, awayTeam, homeTeam }: ShootoutScoreboard
   // Normalize sequences to numbers and sort in order taken to handle string ids
   const normalizedShots = Array.isArray(shootout)
     ? shootout
-        .map((s, idx) => ({ ...s, sequence: Number((s as any).sequence ?? idx + 1) }))
+        .map((s, idx) => ({ ...s, sequence: Number(s.sequence ?? idx + 1) }))
         .sort((a, b) => a.sequence - b.sequence)
     : [];
 

@@ -3,7 +3,42 @@ import { render, screen, within } from '@testing-library/react';
 import StandingsTable from './StandingsTable';
 
 // Helper to build a row with overrides
-const row = (overrides: Partial<any>): any => ({
+type StandingsRow = {
+  wildcardSequence: number;
+  divisionAbbrev: string;
+  divisionSequence: number;
+  conferenceAbbrev?: string;
+  points: number;
+  teamAbbrev: { default: string };
+  teamLogo: string;
+  teamName: { default: string };
+  clinchIndicator?: string;
+  gamesPlayed: number;
+  wins: number;
+  losses: number;
+  otLosses: number;
+  pointPctg: number;
+  regulationWins: number;
+  regulationPlusOtWins: number;
+  goalFor: number;
+  goalAgainst: number;
+  goalDifferential: number;
+  homeWins: number;
+  homeLosses: number;
+  homeOtLosses: number;
+  roadWins: number;
+  roadLosses: number;
+  roadOtLosses: number;
+  shootoutWins: number;
+  shootoutLosses: number;
+  l10Wins: number;
+  l10Losses: number;
+  l10OtLosses: number;
+  streakCode: string;
+  streakCount: number;
+};
+
+const row = (overrides: Partial<StandingsRow>): StandingsRow => ({
   wildcardSequence: 1,
   divisionAbbrev: 'A',
   divisionSequence: 1,

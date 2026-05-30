@@ -5,15 +5,19 @@ import IceRink from './IceRink';
 // Mock next/image with displayName
 
 jest.mock('next/image', () => {
-  const MockImg = (props: any) => <img {...props} alt={props.alt || 'img'} />;
-  (MockImg as any).displayName = 'NextImageMock';
+  const MockImg: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (props) => (
+    <img {...props} alt={props.alt || 'img'} />
+  );
+  MockImg.displayName = 'NextImageMock';
 
   return MockImg;
 });
 
 jest.mock('./TeamLogo', () => {
-  const TL = (props: any) => <div data-testid="team-logo" {...props} />;
-  (TL as any).displayName = 'TeamLogoMock';
+  const TL: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => (
+    <div data-testid="team-logo" {...props} />
+  );
+  TL.displayName = 'TeamLogoMock';
 
   return TL;
 });
@@ -67,7 +71,7 @@ const baseProps = {
 
 describe('IceRink (smoke)', () => {
   it('renders plays and opens play box on click', () => {
-    const { container } = render(<IceRink {...(baseProps as any)} />);
+    const { container } = render(<IceRink {...baseProps} />);
     const firstMarker = container.querySelector('div[data-index="0"]');
     expect(firstMarker).not.toBeNull();
     if (firstMarker) {
@@ -119,7 +123,7 @@ describe('IceRink (smoke)', () => {
       },
     };
 
-    render(<IceRink {...(props as any)} />);
+    render(<IceRink {...props} />);
 
     expect(screen.getByTestId('on-ice-label')).toHaveTextContent('On The Ice');
     expect(screen.getByTestId('on-ice-left')).toHaveTextContent('Home Skater');
@@ -171,7 +175,7 @@ describe('IceRink (smoke)', () => {
       },
     };
 
-    render(<IceRink {...(props as any)} />);
+    render(<IceRink {...props} />);
 
     const penaltyBox = screen.getByTestId('penalty-box');
     expect(penaltyBox.children[0]).toHaveTextContent('Home Penalty');

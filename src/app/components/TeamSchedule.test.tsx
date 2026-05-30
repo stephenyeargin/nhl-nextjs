@@ -3,13 +3,17 @@ import { render, screen } from '@testing-library/react';
 import TeamSchedule from './TeamSchedule';
 
 jest.mock('next/link', () => {
-  const MockLink = ({ children, href }: any) => <a href={href}>{children}</a>;
+  const MockLink: React.FC<{ children?: React.ReactNode; href: string }> = ({ children, href }) => (
+    <a href={href}>{children}</a>
+  );
   MockLink.displayName = 'MockLink';
 
   return MockLink;
 });
 jest.mock('@/app/components/TeamLogo', () => {
-  const MockTeamLogo = ({ team }: any) => <div data-testid={`logo-${team}`} />;
+  const MockTeamLogo: React.FC<{ team?: string }> = ({ team }) => (
+    <div data-testid={`logo-${team}`} />
+  );
   MockTeamLogo.displayName = 'MockTeamLogo';
 
   return MockTeamLogo;
@@ -17,7 +21,8 @@ jest.mock('@/app/components/TeamLogo', () => {
 jest.mock('@/app/utils/formatters', () => ({
   formatLocalizedDate: () => 'Jan 1',
   formatLocalizedTime: () => '7:00 PM',
-  formatBroadcasts: (b: any) => (b && b.length ? 'NET (NAT)' : 'No Broadcasts'),
+  formatBroadcasts: (b: Array<{ network: string; market: string }> | undefined) =>
+    b && b.length ? 'NET (NAT)' : 'No Broadcasts',
 }));
 
 const gameBase = {

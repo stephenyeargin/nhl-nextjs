@@ -5,7 +5,7 @@ import StatsTable from './StatsTable';
 jest.mock(
   'next/link',
   () =>
-    ({ children }: any) =>
+    ({ children }: { children?: React.ReactNode }) =>
       children
 );
 jest.mock('./Headshot', () => {

@@ -33,6 +33,110 @@ import IceRink from '@/app/components/IceRink';
 import GameStory from '@/app/components/GameStory';
 import FloatingVideoPlayer from '@/app/components/FloatingVideoPlayer';
 import ShootoutScoreboard from '@/app/components/ShootoutScoreboard';
+import type { PlayerName } from '@/app/types/team';
+
+interface TeamSideLite {
+  id?: number | string;
+  abbrev: string;
+  logo?: string;
+}
+
+interface PlayerNamePart {
+  default?: string;
+}
+
+interface ShootoutShot {
+  sequence?: number | string;
+  playerId?: number;
+  teamAbbrev?: { default: string };
+  firstName?: { default: string };
+  lastName?: { default: string };
+  shotType?: string;
+  result?: string;
+  headshot?: string;
+  gameWinner?: boolean;
+  homeScore?: number;
+  awayScore?: number;
+}
+
+interface GoalAssist {
+  firstName?: PlayerNamePart;
+  lastName?: PlayerNamePart;
+  assistsToDate?: number;
+}
+
+interface PeriodGoal {
+  playerId?: number;
+  headshot?: string;
+  firstName?: PlayerNamePart;
+  lastName?: PlayerNamePart;
+  goalsToDate?: number;
+  strength?: string;
+  goalModifier?: string;
+  teamAbbrev: { default: string };
+  assists: GoalAssist[];
+  awayScore?: number;
+  homeScore?: number;
+  timeInPeriod?: string;
+  shotType?: string;
+  highlightClip?: string;
+}
+
+interface ScoringPeriod {
+  periodDescriptor: { number?: number; periodType?: string };
+  goals: PeriodGoal[];
+}
+
+interface PenaltyEntry {
+  timeInPeriod?: string;
+  teamAbbrev: { default: string };
+  committedByPlayer?: PlayerName;
+  drawnBy?: PlayerName;
+  servedBy?: PlayerName;
+  duration?: number;
+  type?: string;
+  descKey?: string;
+}
+
+interface PenaltyPeriod {
+  penalties: PenaltyEntry[];
+}
+
+interface ThreeStar {
+  playerId: number;
+  star?: number;
+  headshot?: string;
+  name: { default: string };
+  teamAbbrev: string;
+  sweaterNo?: number;
+  position?: string;
+  goals?: number;
+  assists?: number;
+  points?: number;
+  goalsAgainstAverage?: number;
+  savePctg?: number;
+}
+
+interface GameSummaryData {
+  shootout?: { events?: ShootoutShot[] };
+  iceSurface?: unknown;
+  scoring?: ScoringPeriod[];
+  penalties?: PenaltyPeriod[];
+  threeStars?: ThreeStar[];
+}
+
+interface GamePageData {
+  homeTeam: TeamSideLite;
+  awayTeam: TeamSideLite;
+  summary?: GameSummaryData;
+  matchup?: unknown;
+  game: {
+    gameState?: string;
+    summary?: GameSummaryData;
+    periodDescriptor?: { number?: number; periodType?: string; maxRegulationPeriods?: number };
+    [key: string]: unknown;
+  };
+}
 
 const GamePage: React.FC = () => {
   const [videoPlayerLabel, setVideoPlayerLabel] = useState<string | null>(null);
@@ -61,22 +165,25 @@ const GamePage: React.FC = () => {
   const logos: Record<string, string> = {};
 
   if (pageError) {
-    if ((pageError as any).error?.status === 404) {
+    const status = (pageError as { error?: { status?: number } }).error?.status;
+    if (status === 404) {
       notFound();
     }
     const safePageError = {
-      message: (pageError as any).message || (pageError as any).error?.message,
+      message:
+        (pageError as { message?: string }).message ||
+        (pageError as { error?: { message?: string } }).error?.message,
     };
 
     return <PageError pageError={safePageError} handleRetry={() => window.location.reload()} />;
   }
 
-  const { homeTeam, awayTeam, summary, matchup, game } = gameData as any;
+  const { homeTeam, awayTeam, summary, matchup, game } = gameData as unknown as GamePageData;
   if (!game) {
     return <GameBodySkeleton />;
   }
-  logos[homeTeam.abbrev] = homeTeam.logo;
-  logos[awayTeam.abbrev] = awayTeam.logo;
+  logos[homeTeam.abbrev] = homeTeam.logo || '';
+  logos[awayTeam.abbrev] = awayTeam.logo || '';
 
   const shootoutShots = (() => {
     const events = summary?.shootout?.events ?? game?.summary?.shootout?.events ?? [];
@@ -85,7 +192,11 @@ const GamePage: React.FC = () => {
       return [];
     }
 
-    return events.filter(Boolean).sort((a: any, b: any) => (a?.sequence ?? 0) - (b?.sequence ?? 0));
+    return events
+      .filter(Boolean)
+      .sort(
+        (a: ShootoutShot, b: ShootoutShot) => Number(a?.sequence ?? 0) - Number(b?.sequence ?? 0)
+      );
   })();
 
   const handleVideoPlayerClose = () => {
@@ -96,14 +207,18 @@ const GamePage: React.FC = () => {
 
   return (
     <div>
-      {['FUT', 'PRE', 'OFF', 'FINAL'].includes(game.gameState || '') && <GameStory game={game} />}
-      {matchup && <GamePreview game={game} />}
+      {['FUT', 'PRE', 'OFF', 'FINAL'].includes(game.gameState || '') && (
+        <GameStory game={game as React.ComponentProps<typeof GameStory>['game']} />
+      )}
+      {Boolean(matchup) && (
+        <GamePreview game={game as React.ComponentProps<typeof GamePreview>['game']} />
+      )}
       {summary && (
         <div>
-          {game.summary?.iceSurface && (
+          {Boolean(game.summary?.iceSurface) && (
             <IceRink
-              game={game}
-              plays={[]}
+              game={game as React.ComponentProps<typeof IceRink>['game']}
+              plays={[] as React.ComponentProps<typeof IceRink>['plays']}
               homeTeam={homeTeam}
               awayTeam={awayTeam}
               // Main game page doesn't render the PBP inside the rink yet; provide no-op renderers to satisfy props
@@ -123,7 +238,7 @@ const GamePage: React.FC = () => {
           )}
           <div className="mb-4">
             <h3 className="text-2xl font-semibold my-3">Scoring Summary</h3>
-            {summary.scoring?.map((period: any, index: number) => (
+            {summary.scoring?.map((period: ScoringPeriod, index: number) => (
               <div key={index} className="mb-2">
                 <h4 className="font-semibold">
                   {formatPeriodLabel(
@@ -134,21 +249,36 @@ const GamePage: React.FC = () => {
                 {period.periodDescriptor.periodType === 'SO' ? (
                   <>
                     <ShootoutScoreboard
-                      shootout={shootoutShots}
-                      awayTeam={awayTeam}
-                      homeTeam={homeTeam}
+                      shootout={
+                        shootoutShots as React.ComponentProps<typeof ShootoutScoreboard>['shootout']
+                      }
+                      awayTeam={
+                        awayTeam as unknown as React.ComponentProps<
+                          typeof ShootoutScoreboard
+                        >['awayTeam']
+                      }
+                      homeTeam={
+                        homeTeam as unknown as React.ComponentProps<
+                          typeof ShootoutScoreboard
+                        >['homeTeam']
+                      }
                     />
                     {shootoutShots.length === 0 && (
                       <p className="text-slate-500">No shots taken.</p>
                     )}
-                    {shootoutShots.map((shot: any) => (
+                    {shootoutShots.map((shot: ShootoutShot) => (
                       <div key={shot.sequence} className="border grid grid-cols-12 gap-2 my-5 p-2">
                         <div className="col-span-12 flex">
                           <Headshot
                             playerId={shot.playerId}
                             src={shot.headshot}
-                            alt={formatShootoutPlayer(shot, shot.teamAbbrev?.default)}
-                            team={shot.teamAbbrev.default}
+                            alt={
+                              formatShootoutPlayer(
+                                shot as unknown as Parameters<typeof formatShootoutPlayer>[0],
+                                shot.teamAbbrev?.default
+                              ) || 'Shooter'
+                            }
+                            team={shot.teamAbbrev?.default}
                             size="4"
                             className="mr-2"
                           />
@@ -156,7 +286,10 @@ const GamePage: React.FC = () => {
                             <span className="font-bold">
                               {shot.playerId ? (
                                 <PlayerLink playerId={shot.playerId}>
-                                  {formatShootoutPlayer(shot, shot.teamAbbrev?.default)}
+                                  {formatShootoutPlayer(
+                                    shot as unknown as Parameters<typeof formatShootoutPlayer>[0],
+                                    shot.teamAbbrev?.default
+                                  )}
                                 </PlayerLink>
                               ) : (
                                 <>Unnamed</>
@@ -164,14 +297,14 @@ const GamePage: React.FC = () => {
                             </span>
                             <div className="col-span-10 flex">
                               <TeamLogo
-                                src={logos[shot.teamAbbrev.default]}
+                                src={logos[shot.teamAbbrev?.default || '']}
                                 alt="Logo"
                                 className="w-8 h-8"
-                                team={shot.teamAbbrev.default}
+                                team={shot.teamAbbrev?.default}
                               />
                               <span className="capitalize">
                                 {shot.shotType} •{' '}
-                                {(SHOOTOUT_RESULT as Record<string, string>)[shot.result] ||
+                                {(SHOOTOUT_RESULT as Record<string, string>)[shot.result || ''] ||
                                   shot.result}
                               </span>
                             </div>
@@ -206,7 +339,7 @@ const GamePage: React.FC = () => {
                       <p className="text-slate-500 my-10">No goals scored this period.</p>
                     )}
                     {period.goals.length > 0 &&
-                      period.goals.map((goal: any, i: number) => (
+                      period.goals.map((goal: PeriodGoal, i: number) => (
                         <div key={i} className="border grid grid-cols-12 gap-2 my-5 p-2">
                           <div className="col-span-12 md:col-span-5 flex">
                             <Headshot
@@ -219,9 +352,15 @@ const GamePage: React.FC = () => {
                             />
                             <div>
                               <span className="font-bold">
-                                <PlayerLink playerId={goal.playerId}>
-                                  {goal.firstName?.default} {goal.lastName?.default}
-                                </PlayerLink>{' '}
+                                {goal.playerId ? (
+                                  <PlayerLink playerId={goal.playerId}>
+                                    {goal.firstName?.default} {goal.lastName?.default}
+                                  </PlayerLink>
+                                ) : (
+                                  <>
+                                    {goal.firstName?.default} {goal.lastName?.default}
+                                  </>
+                                )}{' '}
                                 ({goal.goalsToDate})
                               </span>
                               {goal.strength !== 'ev' && (
@@ -229,42 +368,47 @@ const GamePage: React.FC = () => {
                                   {goal.strength}G
                                 </span>
                               )}
-                              {goal.goalModifier !== 'none' && (
-                                <span
-                                  className="rounded-sm text-xs ml-2 text-white bg-red-900  p-1 uppercase"
-                                  title={
-                                    (
-                                      GOAL_MODIFIERS as Record<
-                                        string,
-                                        { title: string; label: string }
-                                      >
-                                    )[goal.goalModifier]?.title
-                                  }
-                                >
-                                  {
-                                    (
-                                      GOAL_MODIFIERS as Record<
-                                        string,
-                                        { title: string; label: string }
-                                      >
-                                    )[goal.goalModifier]?.label
-                                  }
-                                </span>
-                              )}
+                              {goal.goalModifier !== 'none' &&
+                                (() => {
+                                  const goalModifierKey = goal.goalModifier || '';
+
+                                  return (
+                                    <span
+                                      className="rounded-sm text-xs ml-2 text-white bg-red-900  p-1 uppercase"
+                                      title={
+                                        (
+                                          GOAL_MODIFIERS as Record<
+                                            string,
+                                            { title: string; label: string }
+                                          >
+                                        )[goalModifierKey]?.title
+                                      }
+                                    >
+                                      {
+                                        (
+                                          GOAL_MODIFIERS as Record<
+                                            string,
+                                            { title: string; label: string }
+                                          >
+                                        )[goalModifierKey]?.label
+                                      }
+                                    </span>
+                                  );
+                                })()}
                               <br />
                               <div className="flex items-center">
                                 <TeamLogo
-                                  src={logos[goal.teamAbbrev.default]}
+                                  src={logos[goal.teamAbbrev?.default || '']}
                                   alt="Logo"
                                   className="w-8 h-8 mr-2"
-                                  team={goal.teamAbbrev.default}
+                                  team={goal.teamAbbrev?.default}
                                 />
                                 <div className="text-sm">
                                   {' '}
                                   {goal.assists.length > 0 ? (
                                     <>
                                       <strong>Assists:</strong>{' '}
-                                      {goal.assists.map((assist: any, ai: number) => (
+                                      {goal.assists.map((assist: GoalAssist, ai: number) => (
                                         <span key={ai}>
                                           {assist.firstName?.default} {assist.lastName?.default} (
                                           {assist.assistsToDate})
@@ -328,7 +472,7 @@ const GamePage: React.FC = () => {
           {game.summary?.penalties && (
             <div className="my-10">
               <h3 className="text-2xl font-semibold my-3">Penalties</h3>
-              {game.summary.penalties.map((period: any, index: number) => (
+              {game.summary.penalties.map((period: PenaltyPeriod, index: number) => (
                 <div key={index} className="mb-5">
                   <h4 className="font-semibold">
                     {formatPeriodLabel({ ...game.periodDescriptor, number: index + 1 }, true)}
@@ -338,7 +482,7 @@ const GamePage: React.FC = () => {
                   ) : (
                     <div className="min-w-full">
                       <div className="flex flex-col">
-                        {period.penalties.map((penalty: any, penaltyIndex: number) => (
+                        {period.penalties.map((penalty: PenaltyEntry, penaltyIndex: number) => (
                           <div
                             key={penaltyIndex}
                             className={`my-1 flex ${penaltyIndex % 2 ? '' : 'bg-slate-500/10'}`}
@@ -351,23 +495,23 @@ const GamePage: React.FC = () => {
                             <div className="w-1/3 p-2">
                               <div className="flex flex-wrap">
                                 <TeamLogo
-                                  src={logos[penalty.teamAbbrev.default]}
+                                  src={logos[penalty.teamAbbrev?.default || '']}
                                   alt="Logo"
                                   className="w-10 h-10 mr-2"
-                                  team={penalty.teamAbbrev.default}
+                                  team={penalty.teamAbbrev?.default}
                                 />
                                 <div>
                                   <div className="font-bold">
                                     {penalty.committedByPlayer
                                       ? formatPlayerName(penalty.committedByPlayer)
-                                      : penalty.teamAbbrev.default}
+                                      : penalty.teamAbbrev?.default}
                                   </div>
-                                  {penalty.drawnBy && (
+                                  {Boolean(penalty.drawnBy) && (
                                     <div className="text-xs text-slate-600">
                                       Drawn by: {formatPlayerName(penalty.drawnBy)}
                                     </div>
                                   )}
-                                  {penalty.servedBy && (
+                                  {Boolean(penalty.servedBy) && (
                                     <div className="text-xs text-slate-600">
                                       Served by: {formatPlayerName(penalty.servedBy)}
                                     </div>
@@ -379,14 +523,20 @@ const GamePage: React.FC = () => {
                               {penalty.duration ? `${penalty.duration} mins` : '-'}
                             </div>
                             <div className="w-1/4 p-2">
-                              <div className="text-xs font-light text-slate-600">
-                                {(PENALTY_TYPES as Record<string, string>)[penalty.type] ||
-                                  penalty.type}
-                              </div>
+                              {(() => {
+                                const penaltyType = penalty.type || '';
+
+                                return (
+                                  <div className="text-xs font-light text-slate-600">
+                                    {(PENALTY_TYPES as Record<string, string>)[penaltyType] ||
+                                      penaltyType}
+                                  </div>
+                                );
+                              })()}
                               <div className="text-sm sm:text-base">
                                 {(PENALTY_DESCRIPTIONS as Record<string, string>)[
-                                  penalty.descKey
-                                ] || penalty.descKey.replace(/-/g, ' ')}
+                                  penalty.descKey || ''
+                                ] || (penalty.descKey || '').replace(/-/g, ' ')}
                               </div>
                             </div>
                           </div>
@@ -398,11 +548,11 @@ const GamePage: React.FC = () => {
               ))}
             </div>
           )}
-          {summary?.threeStars?.length > 0 && (
+          {(summary?.threeStars?.length ?? 0) > 0 && (
             <div>
               <h3 className="text-2xl font-semibold">Three Stars</h3>
               <div className="grid grid-cols-3 gap-4">
-                {summary.threeStars.map((p: any) => (
+                {(summary.threeStars || []).map((p: ThreeStar) => (
                   <div key={p.playerId} className="text-center py-4">
                     <div className="relative inline-block">
                       <span className="absolute bottom-0 left-0 bg-white text-black rounded-full font-bold border border-slate-200 w-8 h-8 flex items-center justify-center">

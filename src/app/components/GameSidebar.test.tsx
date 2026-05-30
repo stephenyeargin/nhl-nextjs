@@ -9,15 +9,17 @@ jest.mock('./Scoreboard', () => ({
 }));
 jest.mock('./TeamLogo', () => ({
   __esModule: true,
-  default: (p: any) => <span data-testid={`logo-${p.team || p.alt}`}>{p.team || p.alt}</span>,
+  default: (p: { team?: string; alt?: string }) => (
+    <span data-testid={`logo-${p.team || p.alt}`}>{p.team || p.alt}</span>
+  ),
 }));
 jest.mock('./StatComparisonRow', () => ({
   __esModule: true,
-  default: ({ stat }: any) => <div data-testid={`stat-${stat}`}>{stat}</div>,
+  default: ({ stat }: { stat: string }) => <div data-testid={`stat-${stat}`}>{stat}</div>,
 }));
 jest.mock('./FloatingVideoPlayer', () => ({
   __esModule: true,
-  default: ({ isVisible, label }: any) =>
+  default: ({ isVisible, label }: { isVisible?: boolean; label?: string }) =>
     isVisible ? <div data-testid="video-player">Video {label}</div> : null,
 }));
 

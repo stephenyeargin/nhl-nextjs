@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import VideoCard from './VideoCard';
 
 jest.mock('next/image', () => {
-  const Img = (props: any) => <img alt={props.alt} data-testid="img" />;
-  (Img as any).displayName = 'NextImageMock';
+  const Img: React.FC<{ alt?: string }> = (props) => <img alt={props.alt} data-testid="img" />;
+  Img.displayName = 'NextImageMock';
 
   return Img;
 });
@@ -16,14 +16,18 @@ jest.mock('../utils/formatters', () => ({
 }));
 
 describe('VideoCard variants (smoke)', () => {
+  const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
+
   beforeEach(() => {
     // Provide minimal fetch mock for blurDataURL path (large/default variants)
-    global.fetch = jest
-      .fn()
-      .mockResolvedValue({ blob: async () => new Blob(['x'], { type: 'image/png' }) });
+    global.fetch = mockFetch;
+    mockFetch.mockReset();
+    mockFetch.mockResolvedValue({
+      blob: async () => new Blob(['x'], { type: 'image/png' }),
+    } as Response);
   });
   afterEach(() => {
-    (global.fetch as jest.Mock).mockReset();
+    mockFetch.mockReset();
   });
 
   const base = {
@@ -32,7 +36,7 @@ describe('VideoCard variants (smoke)', () => {
     summary: 'Some summary',
     contentDate: '2024-03-10T12:00:00Z',
     fields: { description: 'Desc' },
-  } as any;
+  };
 
   it('renders default size with description', () => {
     render(

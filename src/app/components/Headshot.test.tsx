@@ -3,15 +3,17 @@ import { render, screen } from '@testing-library/react';
 import Headshot from './Headshot';
 
 jest.mock('next/link', () => {
-  const MockLink = ({ children, href }: any) => <a href={href}>{children}</a>;
+  const MockLink: React.FC<{ children?: React.ReactNode; href: string }> = ({ children, href }) => (
+    <a href={href}>{children}</a>
+  );
   MockLink.displayName = 'MockLink';
 
   return MockLink;
 });
 jest.mock('next/image', () => {
-  const MockImage = (props: any) => (
-    <span data-testid="mock-image" aria-label={props.alt}>
-      {props.alt}
+  const MockImage: React.FC<{ alt?: string }> = ({ alt }) => (
+    <span data-testid="mock-image" aria-label={alt}>
+      {alt}
     </span>
   );
   MockImage.displayName = 'MockImage';
@@ -20,7 +22,10 @@ jest.mock('next/image', () => {
 });
 
 jest.mock('./PlayerLink', () => {
-  const Mock = ({ children, playerId }: any) => <a href={`/player/${playerId}`}>{children}</a>;
+  const Mock: React.FC<{ children?: React.ReactNode; playerId: number }> = ({
+    children,
+    playerId,
+  }) => <a href={`/player/${playerId}`}>{children}</a>;
   Mock.displayName = 'PlayerLinkMock';
 
   return Mock;

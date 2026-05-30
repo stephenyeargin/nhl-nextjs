@@ -41,7 +41,16 @@ interface Props {
 }
 
 // Helper to show a dash when value is nullish or empty string
-const show = (v: any) => (v === 0 ? 0 : v ? v : '-');
+const show = (v: unknown): React.ReactNode => {
+  if (v === 0) {
+    return 0;
+  }
+  if (typeof v === 'string' || typeof v === 'number') {
+    return v;
+  }
+
+  return '-';
+};
 
 export default function TeamStatsSummary({ standing }: Props) {
   if (!standing) {

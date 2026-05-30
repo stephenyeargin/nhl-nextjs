@@ -3,28 +3,34 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import PlayEventDetails from './PlayEventDetails';
 
 jest.mock('./Headshot', () => {
-  const Mock = ({ playerId, className }: any) => (
+  const Mock: React.FC<{ playerId?: number; className?: string }> = ({ playerId, className }) => (
     <div data-testid={`headshot-${playerId}`} className={className} />
   );
-  (Mock as any).displayName = 'HeadshotMock';
+  Mock.displayName = 'HeadshotMock';
 
   return Mock;
 });
 
 jest.mock('./TeamLogo', () => {
-  const Mock = (props: any) => <div data-testid="team-logo" {...props} />;
-  (Mock as any).displayName = 'TeamLogoMock';
+  const Mock: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => (
+    <div data-testid="team-logo" {...props} />
+  );
+  Mock.displayName = 'TeamLogoMock';
 
   return Mock;
 });
 
 jest.mock('./PlayerLink', () => {
-  const Mock = ({ children, className, playerId }: any) => (
+  const Mock: React.FC<{ children?: React.ReactNode; className?: string; playerId: number }> = ({
+    children,
+    className,
+    playerId,
+  }) => (
     <a className={className} href={`/player/${playerId}`}>
       {children}
     </a>
   );
-  (Mock as any).displayName = 'PlayerLinkMock';
+  Mock.displayName = 'PlayerLinkMock';
 
   return Mock;
 });
@@ -73,8 +79,8 @@ describe('PlayEventDetails', () => {
       <PlayEventDetails
         play={play}
         game={game}
-        rosterSpots={rosterSpots as any}
-        lookupTeamDataByTeamId={lookupTeamDataByTeamId as any}
+        rosterSpots={rosterSpots}
+        lookupTeamDataByTeamId={lookupTeamDataByTeamId}
         onOpenHighlight={onOpenHighlight}
       />
     );
@@ -100,8 +106,8 @@ describe('PlayEventDetails', () => {
       <PlayEventDetails
         play={play}
         game={game}
-        rosterSpots={rosterSpots as any}
-        lookupTeamDataByTeamId={lookupTeamDataByTeamId as any}
+        rosterSpots={rosterSpots}
+        lookupTeamDataByTeamId={lookupTeamDataByTeamId}
       />
     );
     expect(screen.getByText(/minutes/)).toBeInTheDocument();
@@ -123,8 +129,8 @@ describe('PlayEventDetails', () => {
       <PlayEventDetails
         play={play}
         game={game}
-        rosterSpots={rosterSpots as any}
-        lookupTeamDataByTeamId={lookupTeamDataByTeamId as any}
+        rosterSpots={rosterSpots}
+        lookupTeamDataByTeamId={lookupTeamDataByTeamId}
       />
     );
     expect(screen.getByText(/won a faceoff/)).toBeInTheDocument();
@@ -147,8 +153,8 @@ describe('PlayEventDetails', () => {
       <PlayEventDetails
         play={play}
         game={game}
-        rosterSpots={rosterSpots as any}
-        lookupTeamDataByTeamId={lookupTeamDataByTeamId as any}
+        rosterSpots={rosterSpots}
+        lookupTeamDataByTeamId={lookupTeamDataByTeamId}
       />
     );
     // Name should render

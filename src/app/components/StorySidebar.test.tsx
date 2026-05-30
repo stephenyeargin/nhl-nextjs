@@ -3,22 +3,25 @@ import { render, screen } from '@testing-library/react';
 import StorySidebar from './StorySidebar';
 
 jest.mock('./StoryCard', () => {
-  const SC = (props: any) => (
+  type StoryCardMockProps = React.HTMLAttributes<HTMLDivElement> & {
+    item?: { slug?: string };
+  };
+  const SC: React.FC<StoryCardMockProps> = ({ item, ...props }) => (
     <div data-testid="story-card" {...props}>
-      {props.item?.slug}
+      {item?.slug}
     </div>
   );
-  (SC as any).displayName = 'StoryCardMock';
+  SC.displayName = 'StoryCardMock';
 
   return SC;
 });
 jest.mock('./GameTile', () => {
-  const GT = (props: any) => (
+  const GT: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => (
     <div data-testid="game-tile" {...props}>
       GameTile
     </div>
   );
-  (GT as any).displayName = 'GameTileMock';
+  GT.displayName = 'GameTileMock';
 
   return GT;
 });

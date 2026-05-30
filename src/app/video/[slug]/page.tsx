@@ -10,6 +10,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import VideoCard from '@/app/components/VideoCard';
 import type { VideoApiResponse, VideoDetailItem, VideoItemBase } from '@/app/types/video';
 
+type RawVideoItem = Partial<VideoItemBase> & {
+  _entityId?: string | number;
+  summary?: string;
+  thumbnail?: {
+    templateUrl?: string;
+    thumbnailUrl?: string;
+  };
+};
+
 const VideoItemPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [video, setVideo] = useState<VideoDetailItem | null>(null);
@@ -30,7 +39,7 @@ const VideoItemPage: React.FC = () => {
       );
       const videoItems: VideoApiResponse = await videosResponse.json();
       setVideos(
-        videoItems.items.map((it: any) => ({
+        videoItems.items.map((it: RawVideoItem) => ({
           slug: it.slug || String(it._entityId || ''),
           fields: it.fields || { description: it.summary },
           thumbnail: it.thumbnail

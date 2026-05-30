@@ -11,8 +11,36 @@ dayjs.extend(localizedFormat);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 
-// TODO: Replace 'any' types below with richer domain models once shared types are introduced.
-export const formatSeriesStatus = (game: any, rightRail: any): string => {
+interface SeriesGameSide {
+  placeName?: { default?: string };
+}
+
+interface SeriesGame {
+  homeTeam: SeriesGameSide;
+  awayTeam: SeriesGameSide;
+}
+
+interface SeriesWins {
+  homeTeamWins: number;
+  awayTeamWins: number;
+  neededToWin: number;
+}
+
+interface RightRailSeriesData {
+  seasonSeriesWins?: SeriesWins;
+}
+
+export interface PeriodLabelInput {
+  number?: number;
+  periodType?: string;
+  otPeriods?: number | boolean;
+  maxRegulationPeriods?: number;
+}
+
+export const formatSeriesStatus = (game: SeriesGame, rightRail: RightRailSeriesData): string => {
+  if (!rightRail?.seasonSeriesWins) {
+    return '';
+  }
   const { homeTeamWins, awayTeamWins, neededToWin } = rightRail.seasonSeriesWins;
   const isTied = homeTeamWins === awayTeamWins;
 
@@ -30,7 +58,9 @@ export const formatSeriesStatus = (game: any, rightRail: any): string => {
 
   const status = neededToWin === leadingWins ? 'wins' : 'leads';
 
-  return `${leadingTeam.placeName.default} ${status} ${leadingWins}-${trailingWins}`;
+  const leadingTeamName = leadingTeam.placeName?.default || '';
+
+  return `${leadingTeamName} ${status} ${leadingWins}-${trailingWins}`.trim();
 };
 
 export const formatBroadcasts = (
@@ -55,7 +85,7 @@ export const formatLocalizedTime = (timeString: string | number | Date | undefin
 };
 
 export const formatStat = (
-  value: number | string | undefined,
+  value: unknown,
   precision?: number,
   unit?: 'start' | 'time' | 'plusMinus' | string
 ): string | number => {
@@ -64,10 +94,10 @@ export const formatStat = (
   }
 
   if (unit === 'time') {
-    return formatSecondsToGameTime(value);
+    return formatSecondsToGameTime(value as number | string | undefined);
   }
 
-  const numeric = typeof value === 'number' ? value : Number(value);
+  const numeric = typeof value === 'number' ? value : Number(value as string | number);
 
   if (precision) {
     if (value === undefined || value === null || value === '') {
@@ -84,15 +114,19 @@ export const formatStat = (
     return numeric.toFixed(precision).replace(/^0\./, '.');
   }
 
-  if (value === undefined) {
+  if (value === undefined || value === null) {
     return '--';
   }
 
-  if (numeric && unit === 'plusMinus') {
-    return Number(value) > 0 ? `+${value}` : value;
+  if (!Number.isNaN(numeric) && numeric !== 0 && unit === 'plusMinus') {
+    return numeric > 0 ? `+${numeric}` : numeric;
   }
 
-  return value;
+  if (typeof value === 'number' || typeof value === 'string') {
+    return value;
+  }
+
+  return '--';
 };
 
 export const formatStatValue = (stat: string, value: number): string | number => {
@@ -165,8 +199,17 @@ export const formatTextColorByBackgroundColor = (backgroundColor: string | undef
   return brightness > 125 ? '#000' : '#FFF';
 };
 
-export const formatPeriodLabel = (periodData: any, long: boolean = false): string => {
-  const { number, periodType, otPeriods } = periodData;
+export const formatPeriodLabel = (
+  periodData: PeriodLabelInput | string | undefined,
+  long: boolean = false
+): string => {
+  if (typeof periodData === 'string') {
+    return periodData;
+  }
+
+  const { number, periodType, otPeriods } = periodData || {};
+  const periodNumber = number ?? 0;
+  const maxRegulationPeriods = periodData?.maxRegulationPeriods ?? 3;
 
   const ordinalSuffix = (n: number): string => {
     if (n === 1) {
@@ -183,18 +226,20 @@ export const formatPeriodLabel = (periodData: any, long: boolean = false): strin
   };
 
   switch (true) {
-    case number === 1:
-      return long ? `1${ordinalSuffix(number)} Period` : `1${ordinalSuffix(number)}`;
-    case number === 2:
-      return long ? `2${ordinalSuffix(number)} Period` : `2${ordinalSuffix(number)}`;
-    case number === 3 && number <= periodData.maxRegulationPeriods:
-      return long ? `3${ordinalSuffix(number)} Period` : `3${ordinalSuffix(number)}`;
-    case number === 4 && !otPeriods:
+    case periodNumber === 1:
+      return long ? `1${ordinalSuffix(periodNumber)} Period` : `1${ordinalSuffix(periodNumber)}`;
+    case periodNumber === 2:
+      return long ? `2${ordinalSuffix(periodNumber)} Period` : `2${ordinalSuffix(periodNumber)}`;
+    case periodNumber === 3 && periodNumber <= maxRegulationPeriods:
+      return long ? `3${ordinalSuffix(periodNumber)} Period` : `3${ordinalSuffix(periodNumber)}`;
+    case periodNumber === 4 && !otPeriods:
       return long ? 'Overtime' : 'OT';
-    case number > periodData.maxRegulationPeriods && periodType === 'SO':
+    case periodNumber > maxRegulationPeriods && periodType === 'SO':
       return long ? 'Shootout' : 'SO';
-    case number > periodData.maxRegulationPeriods && periodType === 'OT':
-      return long ? `${number - 3}${ordinalSuffix(number - 3)} Overtime` : `${number - 3}OT`;
+    case periodNumber > maxRegulationPeriods && periodType === 'OT':
+      return long
+        ? `${periodNumber - 3}${ordinalSuffix(periodNumber - 3)} Overtime`
+        : `${periodNumber - 3}OT`;
     default:
       return '';
   }

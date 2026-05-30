@@ -31,5 +31,5 @@ export interface StandingRow {
   l10OtLosses?: number;
   streakCode?: string;
   streakCount?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }

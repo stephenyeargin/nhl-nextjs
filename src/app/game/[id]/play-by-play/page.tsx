@@ -13,10 +13,41 @@ import PlayEventDetails from '@/app/components/PlayEventDetails';
 import TeamLogoByTeamId from '@/app/components/TeamLogoByTeamId';
 import { sortPlaysByRecency } from '@/app/utils/sortPlays';
 
+type PlayRow = React.ComponentProps<typeof PlayTable>['plays'][number];
+type RosterSpots = React.ComponentProps<typeof PlayEventDetails>['rosterSpots'];
+type IceRinkGameProp = React.ComponentProps<typeof IceRink>['game'];
+type IceRinkPlayProp = React.ComponentProps<typeof IceRink>['plays'];
+type IceRinkRenderPlayProp = React.ComponentProps<typeof IceRink>['renderPlayByPlayEvent'];
+
+interface PlayByPlayResponse {
+  gameState?: string;
+  periodDescriptor?: { number?: number };
+  plays?: PlayRow[];
+  rosterSpots?: RosterSpots;
+}
+
+interface PlayByPlayTeam {
+  id?: number | string;
+  abbrev: string;
+  data?: Record<string, unknown>;
+}
+
+interface PlayByPlayGame {
+  homeTeam: { abbrev: string };
+  awayTeam: { abbrev: string };
+  periodDescriptor?: { number?: number; periodType?: string; maxRegulationPeriods?: number };
+}
+
+interface GameDataForPlayByPlay {
+  homeTeam: PlayByPlayTeam;
+  awayTeam: PlayByPlayTeam;
+  game: PlayByPlayGame;
+}
+
 const PlayByPlay: React.FC = () => {
   const { gameData } = useGameContext();
   const { id } = useParams() as { id: string };
-  const [playByPlay, setPlayByPlay] = useState<any>(null);
+  const [playByPlay, setPlayByPlay] = useState<PlayByPlayResponse | null>(null);
   const [gameState, setGameState] = useState<string | null>(null);
   const [activePeriod, setActivePeriod] = useState<number | null>(null);
   const [eventFilter, setEventFilter] = useState<string | null>(null);
@@ -32,11 +63,11 @@ const PlayByPlay: React.FC = () => {
         const playByPlayResponse = await fetch(`/api/nhl/gamecenter/${id}/play-by-play`, {
           cache: 'no-store',
         });
-        const playByPlayData = await playByPlayResponse.json();
+        const playByPlayData: PlayByPlayResponse = await playByPlayResponse.json();
         setPlayByPlay(playByPlayData);
-        setGameState(playByPlayData.gameState);
+        setGameState(playByPlayData.gameState || null);
         if (activePeriod === null) {
-          setActivePeriod(playByPlayData.periodDescriptor?.number);
+          setActivePeriod(playByPlayData.periodDescriptor?.number ?? null);
         }
       } catch (error) {
         console.error('Error fetching game data:', error);
@@ -77,14 +108,14 @@ const PlayByPlay: React.FC = () => {
     return notFound();
   }
 
-  const { homeTeam, awayTeam, game } = gameData as any;
+  const { homeTeam, awayTeam, game } = gameData as GameDataForPlayByPlay;
   homeTeam.data = getTeamDataByAbbreviation(game.homeTeam.abbrev, true) || {};
   awayTeam.data = getTeamDataByAbbreviation(game.awayTeam.abbrev, false) || {};
 
-  const filteredPlays = (playByPlay.plays || []).filter((p: any) => {
+  const filteredPlays = (playByPlay.plays || []).filter((p: PlayRow) => {
     let includePlay = true;
     if (activePeriod) {
-      includePlay = includePlay && p.periodDescriptor.number === activePeriod;
+      includePlay = includePlay && p.periodDescriptor?.number === activePeriod;
     }
     if (eventFilter && eventFilter !== 'all') {
       includePlay = includePlay && p.typeDescKey === eventFilter;
@@ -116,15 +147,15 @@ const PlayByPlay: React.FC = () => {
       homeTeam={homeTeam}
       awayTeam={awayTeam}
       size={size}
-      theme={theme as any}
+      theme={theme as React.ComponentProps<typeof TeamLogoByTeamId>['theme']}
     />
   );
-  const renderPlayByPlayEvent = (play: any) => (
+  const renderPlayByPlayEvent = (play: PlayRow) => (
     <PlayEventDetails
-      play={play}
+      play={play as React.ComponentProps<typeof PlayEventDetails>['play']}
       game={game}
-      rosterSpots={playByPlay.rosterSpots}
-      lookupTeamDataByTeamId={lookupTeamDataByTeamId as any}
+      rosterSpots={playByPlay.rosterSpots || []}
+      lookupTeamDataByTeamId={lookupTeamDataByTeamId}
       onOpenHighlight={({ url, label }) => {
         setVideoPlayerUrl(url);
         setVideoPlayerLabel(label);
@@ -142,7 +173,7 @@ const PlayByPlay: React.FC = () => {
   return (
     <div>
       <PlayFilters
-        periodData={game.periodDescriptor}
+        periodData={game.periodDescriptor || {}}
         activePeriod={activePeriod || 0}
         onPeriodChange={setActivePeriod}
         includeAll={true}
@@ -150,15 +181,15 @@ const PlayByPlay: React.FC = () => {
         onEventFilterChange={setEventFilter}
         teamFilter={teamFilter}
         onTeamFilterChange={setTeamFilter}
-        awayTeam={awayTeam}
-        homeTeam={homeTeam}
+        awayTeam={awayTeam as unknown as React.ComponentProps<typeof PlayFilters>['awayTeam']}
+        homeTeam={homeTeam as unknown as React.ComponentProps<typeof PlayFilters>['homeTeam']}
       />
       <IceRink
-        game={game}
-        plays={filteredPlays}
+        game={game as unknown as IceRinkGameProp}
+        plays={filteredPlays as unknown as IceRinkPlayProp}
         homeTeam={homeTeam}
         awayTeam={awayTeam}
-        renderPlayByPlayEvent={renderPlayByPlayEvent}
+        renderPlayByPlayEvent={renderPlayByPlayEvent as unknown as IceRinkRenderPlayProp}
         renderTeamLogo={renderTeamLogo}
       />
       <PlayTable

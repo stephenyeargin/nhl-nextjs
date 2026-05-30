@@ -37,37 +37,43 @@ const GameStory: React.FC<GameStoryProps> = ({ game }) => {
 
   return (
     <>
-      {content.items.map((item: StoryItem) => (
-        <div
-          key={item._entityId}
-          className="mb-4 p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded-sm leading-2"
-        >
-          {item.thumbnail?.thumbnailUrl && (
-            <Link href={`/news/${item.slug}`}>
-              <Image
-                src={item.thumbnail.thumbnailUrl}
-                width="416"
-                height="416"
-                alt="Story Photo"
-                className="w-full"
-              />
-            </Link>
-          )}
-          <div>
-            <h1 className="text-2xl font-bold mb-2">
-              <Link href={`/news/${item.slug}`}>{item.headline}</Link>
-            </h1>
-            <h2 className="text-lg text-slate-500 mb-2">{item.fields?.description}</h2>
-            <p
-              className="text-sm mb-2"
-              dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary) }}
-            />
-            <Link href={`/news/${item.slug}`} className="font-bold underline">
-              Read Story
-            </Link>
-          </div>
-        </div>
-      ))}
+      {content.items.map((item: StoryItem) =>
+        (() => {
+          const fields = item.fields as { description?: string } | undefined;
+
+          return (
+            <div
+              key={item._entityId}
+              className="mb-4 p-4 flex flex-wrap md:flex-nowrap gap-5 border rounded-sm leading-2"
+            >
+              {item.thumbnail?.thumbnailUrl && (
+                <Link href={`/news/${item.slug}`}>
+                  <Image
+                    src={item.thumbnail.thumbnailUrl}
+                    width="416"
+                    height="416"
+                    alt="Story Photo"
+                    className="w-full"
+                  />
+                </Link>
+              )}
+              <div>
+                <h1 className="text-2xl font-bold mb-2">
+                  <Link href={`/news/${item.slug}`}>{item.headline}</Link>
+                </h1>
+                <h2 className="text-lg text-slate-500 mb-2">{fields?.description}</h2>
+                <p
+                  className="text-sm mb-2"
+                  dangerouslySetInnerHTML={{ __html: formatMarkdownContent(item.summary) }}
+                />
+                <Link href={`/news/${item.slug}`} className="font-bold underline">
+                  Read Story
+                </Link>
+              </div>
+            </div>
+          );
+        })()
+      )}
     </>
   );
 };

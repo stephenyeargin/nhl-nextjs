@@ -28,8 +28,8 @@ import FloatingVideoPlayer from './FloatingVideoPlayer';
 
 interface SimpleGame {
   gameState: string;
-  periodDescriptor?: any;
-  clock?: any;
+  periodDescriptor?: { number?: number; periodType?: string; maxRegulationPeriods?: number };
+  clock?: { inIntermission?: boolean; timeRemaining?: string };
 }
 const gameIsInProgress = (game: SimpleGame) => {
   const state = GAME_STATES[game.gameState as keyof typeof GAME_STATES];
@@ -38,15 +38,41 @@ const gameIsInProgress = (game: SimpleGame) => {
 };
 
 interface SimplePlayer {
-  id: string | number;
+  id?: string | number;
   firstName?: { default?: string };
   lastName?: { default?: string };
 }
-const renderPlayer = (player: SimplePlayer) => (
-  <PlayerLink playerId={player.id}>
-    {player.firstName?.default} {player.lastName?.default}
-  </PlayerLink>
-);
+const renderPlayer = (player: SimplePlayer) =>
+  player.id ? (
+    <PlayerLink playerId={player.id}>
+      {player.firstName?.default} {player.lastName?.default}
+    </PlayerLink>
+  ) : (
+    <span>
+      {player.firstName?.default} {player.lastName?.default}
+    </span>
+  );
+
+type StatKey = React.ComponentProps<typeof StatComparisonRow>['stat'];
+
+interface ShotByPeriod {
+  away?: number;
+  home?: number;
+  periodDescriptor?: { number?: number };
+}
+
+interface SeriesListGame extends SimpleGame {
+  id: number | string;
+  awayTeam: { score: number; logo?: string; abbrev?: string };
+  homeTeam: { score: number; logo?: string; abbrev?: string };
+  gameScheduleState?: string;
+  gameOutcome?: { lastPeriodType?: string; otPeriods?: number };
+  startTimeUTC?: string;
+}
+
+interface Official {
+  default?: string;
+}
 
 const GameSidebar = () => {
   const [videoPlayerLabel, setVideoPlayerLabel] = useState<string | null>(null);
@@ -108,7 +134,7 @@ const GameSidebar = () => {
     }
   );
 
-  const gameStatRows = [
+  const gameStatRows: Array<{ stat: StatKey; rank?: string }> = [
     { stat: 'sog' },
     { stat: 'faceoffWinningPctg' },
     { stat: 'powerPlayPctg', rank: 'powerPlay' },
@@ -119,7 +145,7 @@ const GameSidebar = () => {
     { stat: 'takeaways' },
   ];
 
-  const seasonStatRows = [
+  const seasonStatRows: Array<{ stat: StatKey }> = [
     { stat: 'ppPctg' },
     { stat: 'pkPctg' },
     { stat: 'faceoffWinningPctg' },
@@ -179,7 +205,12 @@ const GameSidebar = () => {
 
       {rightRail.linescore?.byPeriod && rightRail.linescore?.totals && game.periodDescriptor && (
         <div className="mb-5">
-          <Scoreboard game={game as any} linescore={rightRail.linescore as any} />
+          <Scoreboard
+            game={game as unknown as React.ComponentProps<typeof Scoreboard>['game']}
+            linescore={
+              rightRail.linescore as unknown as React.ComponentProps<typeof Scoreboard>['linescore']
+            }
+          />
         </div>
       )}
       {rightRail.shotsByPeriod && (
@@ -203,7 +234,7 @@ const GameSidebar = () => {
               />
             </div>
           </div>
-          {rightRail.shotsByPeriod.map((period: any, index: number) => (
+          {rightRail.shotsByPeriod.map((period: ShotByPeriod, index: number) => (
             <div key={index} className={`flex text-center ${index % 2 ? '' : 'bg-slate-500/10'}`}>
               <div className="w-1/4 p-2">{period.away}</div>
               <div className="w-1/2 p-3 text-xs">
@@ -258,9 +289,9 @@ const GameSidebar = () => {
                 homeStatRank={
                   rank && gameStats?.[rank]?.homeValue ? gameStats[rank].homeValue : undefined
                 }
-                awayTeam={awayTeam as any}
-                homeTeam={homeTeam as any}
-                stat={stat as any}
+                awayTeam={awayTeam as React.ComponentProps<typeof StatComparisonRow>['awayTeam']}
+                homeTeam={homeTeam as React.ComponentProps<typeof StatComparisonRow>['homeTeam']}
+                stat={stat}
               />
             ))}
           </div>
@@ -292,21 +323,42 @@ const GameSidebar = () => {
 
           {(() => {
             const seasonStats = rightRail.teamSeasonStats; // already truthy due to outer conditional
-            const awaySeason: any = seasonStats.awayTeam;
-            const homeSeason: any = seasonStats.homeTeam;
+            const awaySeason = seasonStats.awayTeam as Record<string, unknown>;
+            const homeSeason = seasonStats.homeTeam as Record<string, unknown>;
 
-            return seasonStatRows.map(({ stat }) => (
-              <StatComparisonRow
-                key={stat}
-                awayStat={awaySeason?.[stat] || 0}
-                homeStat={homeSeason?.[stat] || 0}
-                awayStatRank={awaySeason?.[`${stat}Rank`]}
-                homeStatRank={homeSeason?.[`${stat}Rank`]}
-                awayTeam={awayTeam as any}
-                homeTeam={homeTeam as any}
-                stat={stat as any}
-              />
-            ));
+            return seasonStatRows.map(({ stat }) =>
+              (() => {
+                const awayValue = awaySeason?.[stat];
+                const homeValue = homeSeason?.[stat];
+                const awayRank = awaySeason?.[`${stat}Rank`];
+                const homeRank = homeSeason?.[`${stat}Rank`];
+
+                return (
+                  <StatComparisonRow
+                    key={stat}
+                    awayStat={typeof awayValue === 'number' ? awayValue : Number(awayValue) || 0}
+                    homeStat={typeof homeValue === 'number' ? homeValue : Number(homeValue) || 0}
+                    awayStatRank={
+                      typeof awayRank === 'number' || typeof awayRank === 'string'
+                        ? awayRank
+                        : undefined
+                    }
+                    homeStatRank={
+                      typeof homeRank === 'number' || typeof homeRank === 'string'
+                        ? homeRank
+                        : undefined
+                    }
+                    awayTeam={
+                      awayTeam as React.ComponentProps<typeof StatComparisonRow>['awayTeam']
+                    }
+                    homeTeam={
+                      homeTeam as React.ComponentProps<typeof StatComparisonRow>['homeTeam']
+                    }
+                    stat={stat}
+                  />
+                );
+              })()
+            );
           })()}
         </div>
       )}
@@ -334,7 +386,7 @@ const GameSidebar = () => {
               {rightRail.last10Record?.homeTeam?.streak})
             </div>
           </div>
-          {rightRail.last10Record?.awayTeam?.pastGameResults?.map((_g: any, i: number) => (
+          {rightRail.last10Record?.awayTeam?.pastGameResults?.map((_g: unknown, i: number) => (
             <div key={i} className="flex text-center text-xs my-1 gap-1">
               <div
                 className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-25'}`}
@@ -360,7 +412,18 @@ const GameSidebar = () => {
           <div className="p-2 text-2xl font-bold text-center">
             {rightRail.seasonSeries[0]?.gameType === 3 ? 'Playoff Series' : 'Season Series'}
           </div>
-          <div className="text-center text-xs">{formatSeriesStatus(game, rightRail)}</div>
+          <div className="text-center text-xs">
+            {formatSeriesStatus(
+              game,
+              rightRail as {
+                seasonSeriesWins?: {
+                  homeTeamWins: number;
+                  awayTeamWins: number;
+                  neededToWin: number;
+                };
+              }
+            )}
+          </div>
           {rightRail.seasonSeriesFullCoverageUrl && (
             <div className="text-center text-xs font-bold my-2">
               <FontAwesomeIcon icon={faNewspaper}></FontAwesomeIcon>{' '}
@@ -376,85 +439,91 @@ const GameSidebar = () => {
             </div>
           )}
           <div className="grid grid-cols-12 gap-3 py-4 items-center">
-            {rightRail.seasonSeries.map((g: any, i: number) => (
-              <Link
-                href={`/game/${g.id}`}
-                key={i}
-                className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded-sm ${g.gameState === 'CRIT' ? 'border-red-900' : ''}`}
-              >
-                <div
-                  className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}
+            {rightRail.seasonSeries.map((seriesGame, i: number) => {
+              const g = seriesGame as SeriesListGame;
+
+              return (
+                <Link
+                  href={`/game/${g.id}`}
+                  key={i}
+                  className={`col-span-12 lg:col-span-6 p-1 mb-1 border rounded-sm ${g.gameState === 'CRIT' ? 'border-red-900' : ''}`}
                 >
-                  <div className="flex items-center font-bold gap-1">
-                    <TeamLogo src={g.awayTeam.logo} alt="Logo" className="w-8 h-8" />
-                    {g.awayTeam.abbrev}
-                  </div>
-                  <div className="text-lg font-bold">{g.awayTeam.score}</div>
-                </div>
-                <div
-                  className={`flex justify-between ${g.awayTeam.score > g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}
-                >
-                  <div className="flex items-center font-bold gap-1">
-                    <TeamLogo src={g.homeTeam.logo} alt="Logo" className="w-8 h-8" />
-                    {g.homeTeam.abbrev}
-                  </div>
-                  <div className="text-lg font-bold">{g.homeTeam.score}</div>
-                </div>
-                {!['OFF', 'FUT', 'FINAL', 'PRE'].includes(g.gameState) ? (
-                  <div className="flex justify-between">
-                    <div>
-                      <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded-sm mr-1 uppercase">
-                        {formatPeriodLabel(g.periodDescriptor)}
-                        {g.clock?.inIntermission ? ' INT' : ''}
-                      </span>
-                      <span className="text-xs font-bold">{g.clock?.timeRemaining}</span>
+                  <div
+                    className={`flex justify-between ${g.awayTeam.score < g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}
+                  >
+                    <div className="flex items-center font-bold gap-1">
+                      <TeamLogo src={g.awayTeam.logo} alt="Logo" className="w-8 h-8" />
+                      {g.awayTeam.abbrev}
                     </div>
-                    <div className="text-xs py-1 text-right">
-                      {dayjs(g.startTimeUTC).format('MMM D')}
-                    </div>
+                    <div className="text-lg font-bold">{g.awayTeam.score}</div>
                   </div>
-                ) : (
-                  <div className="flex justify-between">
-                    <div>
-                      {['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase">
-                          Final
-                          {g.gameOutcome?.lastPeriodType !== 'REG' && (
-                            <>
-                              /{g.gameOutcome?.otPeriods > 1 && g.gameOutcome?.otPeriods}
-                              {g.gameOutcome?.lastPeriodType}
-                            </>
-                          )}
+                  <div
+                    className={`flex justify-between ${g.awayTeam.score > g.homeTeam.score && !gameIsInProgress(g) ? 'opacity-50' : ''}`}
+                  >
+                    <div className="flex items-center font-bold gap-1">
+                      <TeamLogo src={g.homeTeam.logo} alt="Logo" className="w-8 h-8" />
+                      {g.homeTeam.abbrev}
+                    </div>
+                    <div className="text-lg font-bold">{g.homeTeam.score}</div>
+                  </div>
+                  {!['OFF', 'FUT', 'FINAL', 'PRE'].includes(g.gameState) ? (
+                    <div className="flex justify-between">
+                      <div>
+                        <span className="text-xs font-medium px-2 py-1 bg-red-900 text-white rounded-sm mr-1 uppercase">
+                          {formatPeriodLabel(g.periodDescriptor)}
+                          {g.clock?.inIntermission ? ' INT' : ''}
                         </span>
-                      )}
-                      {['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                        <span className="text-xs font-bold">{g.clock?.timeRemaining}</span>
+                      </div>
+                      <div className="text-xs py-1 text-right">
+                        {dayjs(g.startTimeUTC).format('MMM D')}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between">
+                      <div>
+                        {['OFF', 'FINAL'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                          <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase">
+                            Final
+                            {g.gameOutcome?.lastPeriodType !== 'REG' && (
+                              <>
+                                /{(g.gameOutcome?.otPeriods ?? 0) > 1 && g.gameOutcome?.otPeriods}
+                                {g.gameOutcome?.lastPeriodType}
+                              </>
+                            )}
+                          </span>
+                        )}
+                        {['FUT', 'PRE'].includes(g.gameState) && g.gameScheduleState === 'OK' && (
+                          <span className="text-xs py-1">
+                            {formatLocalizedTime(game.startTimeUTC)}
+                          </span>
+                        )}
+                        {g.gameScheduleState === 'CNCL' && (
+                          <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded-sm mr-1 uppercase">
+                            <FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled
+                          </span>
+                        )}
+                        {g.gameScheduleState === 'PPD' && (
+                          <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded-sm mr-1 uppercase">
+                            <FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed
+                          </span>
+                        )}
+                        {g.gameScheduleState === 'TBD' && (
+                          <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase">
+                            TBD
+                          </span>
+                        )}
+                      </div>
+                      <div>
                         <span className="text-xs py-1">
-                          {formatLocalizedTime(game.startTimeUTC)}
+                          {dayjs(g.startTimeUTC).format('MMM D')}
                         </span>
-                      )}
-                      {g.gameScheduleState === 'CNCL' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-900 text-white rounded-sm mr-1 uppercase">
-                          <FontAwesomeIcon icon={faBan} fixedWidth /> Cancelled
-                        </span>
-                      )}
-                      {g.gameScheduleState === 'PPD' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-yellow-500 text-black rounded-sm mr-1 uppercase">
-                          <FontAwesomeIcon icon={faWarning} fixedWidth /> Postponed
-                        </span>
-                      )}
-                      {g.gameScheduleState === 'TBD' && (
-                        <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-black rounded-sm mr-1 uppercase">
-                          TBD
-                        </span>
-                      )}
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-xs py-1">{dayjs(g.startTimeUTC).format('MMM D')}</span>
-                    </div>
-                  </div>
-                )}
-              </Link>
-            ))}
+                  )}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}
@@ -471,7 +540,7 @@ const GameSidebar = () => {
                   <div className="font-bold">Officials</div>
                   <div>
                     Referees:{' '}
-                    {rightRail.gameInfo.referees.map((o: any, i: number) => (
+                    {rightRail.gameInfo.referees.map((o: Official, i: number) => (
                       <span key={i}>
                         {i > 0 && ', '}
                         {o.default}
@@ -480,7 +549,7 @@ const GameSidebar = () => {
                   </div>
                   <div>
                     Linesmen:{' '}
-                    {rightRail.gameInfo.linesmen.map((o: any, i: number) => (
+                    {rightRail.gameInfo.linesmen.map((o: Official, i: number) => (
                       <span key={i}>
                         {i > 0 && ', '}
                         {o.default}
@@ -501,7 +570,7 @@ const GameSidebar = () => {
               <div className="my-2">
                 <div className="font-bold">{awayTeam.abbrev} Scratches</div>
                 {rightRail.gameInfo.awayTeam?.scratches?.length === 0 && <>No players listed.</>}
-                {rightRail.gameInfo.awayTeam?.scratches?.map((p: any, i: number) => (
+                {rightRail.gameInfo.awayTeam?.scratches?.map((p: SimplePlayer, i: number) => (
                   <span key={p.id}>
                     {i > 0 && ', '}
                     {renderPlayer(p)}
@@ -519,7 +588,7 @@ const GameSidebar = () => {
               <div className="my-2">
                 <div className="font-bold">{homeTeam.abbrev} Scratches</div>
                 {rightRail.gameInfo.homeTeam?.scratches?.length === 0 && <>No players listed.</>}
-                {rightRail.gameInfo.homeTeam?.scratches?.map((p: any, i: number) => (
+                {rightRail.gameInfo.homeTeam?.scratches?.map((p: SimplePlayer, i: number) => (
                   <span key={p.id}>
                     {i > 0 && ', '}
                     {renderPlayer(p)}

@@ -36,7 +36,7 @@ interface Venue {
   default: string;
 }
 
-interface GameTileGame {
+export interface GameTileGame {
   id: string | number;
   awayTeam: TeamSide;
   homeTeam: TeamSide;

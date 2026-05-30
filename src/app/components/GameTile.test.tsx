@@ -3,13 +3,15 @@ import { render, screen } from '@testing-library/react';
 import GameTile from './GameTile';
 
 jest.mock('next/link', () => {
-  const MockLink = ({ children, href }: any) => <a href={href}>{children}</a>;
+  const MockLink: React.FC<{ children?: React.ReactNode; href: string }> = ({ children, href }) => (
+    <a href={href}>{children}</a>
+  );
   MockLink.displayName = 'MockLink';
 
   return MockLink;
 });
 jest.mock('@/app/components/TeamLogo', () => {
-  const MockTeamLogo = ({ alt }: any) => <div data-testid={`logo-${alt}`} />;
+  const MockTeamLogo: React.FC<{ alt?: string }> = ({ alt }) => <div data-testid={`logo-${alt}`} />;
   MockTeamLogo.displayName = 'MockTeamLogo';
 
   return MockTeamLogo;
@@ -30,7 +32,7 @@ const baseTeam = (abbrev: string) => ({
   name: { default: abbrev },
 });
 
-const makeGame = (overrides: any = {}) => ({
+const makeGame = (overrides: Record<string, unknown> = {}) => ({
   id: 1,
   awayTeam: baseTeam('AWY'),
   homeTeam: baseTeam('HOM'),

@@ -6,16 +6,16 @@ import FloatingVideoPlayer from './FloatingVideoPlayer';
 // Mock next/image (not strictly needed here) with display name & suppress @next/next rule
 
 jest.mock('next/image', () => {
-  const Img = ({ alt }: any) => <img alt={alt || 'img'} />;
-  (Img as any).displayName = 'MockImage';
+  const Img: React.FC<{ alt?: string }> = ({ alt }) => <img alt={alt || 'img'} />;
+  Img.displayName = 'MockImage';
 
   return Img;
 });
 
 // Mock react-player lazy import (suspends internally) to avoid act() Suspense warning
 jest.mock('react-player/lazy', () => {
-  const Player = () => <div data-testid="react-player" />;
-  (Player as any).displayName = 'ReactPlayerMock';
+  const Player: React.FC = () => <div data-testid="react-player" />;
+  Player.displayName = 'ReactPlayerMock';
 
   return Player;
 });

@@ -54,15 +54,24 @@ interface TeamStanding {
   l10OtLosses?: number;
   streakCode?: string;
   streakCount?: number;
+  clinchIndicator?: string;
   teamAbbrev?: { default: string } | string;
-  [k: string]: any;
+  [k: string]: unknown;
 }
 
 interface NewsItem {
   _entityId: string | number;
   slug: string;
-  [k: string]: any;
+  [k: string]: unknown;
 }
+
+type TeamPageProps = {
+  params: TeamSlugParam | Promise<TeamSlugParam>;
+};
+
+type GameTileItem = React.ComponentProps<typeof GameTile>['game'];
+type StatsRows = React.ComponentProps<typeof StatsTable>['stats'];
+type TeamScheduleGames = React.ComponentProps<typeof TeamSchedule>['fullSeasonSchedule']['games'];
 
 interface StandingsResponse {
   standings: TeamStanding[];
@@ -71,27 +80,27 @@ interface StandingsResponse {
 interface TeamStatsResponse {
   season?: number;
   gameType?: number;
-  skaters: any[];
-  goalies: any[];
-  [k: string]: any;
+  skaters: StatsRows;
+  goalies: StatsRows;
+  [k: string]: unknown;
 }
 
 interface NewsResponse {
-  items: any[];
-  [k: string]: any;
+  items: unknown[];
+  [k: string]: unknown;
 }
 
 interface ScoreboardResponse {
-  gamesByDate: { games: any[] }[];
-  [k: string]: any;
+  gamesByDate: { games: GameTileItem[] }[];
+  [k: string]: unknown;
 }
 
 interface FullSeasonScheduleResponse {
-  games: any[];
-  [k: string]: any;
+  games: TeamScheduleGames;
+  [k: string]: unknown;
 }
 
-export default async function TeamPage(props: any) {
+export default async function TeamPage(props: TeamPageProps) {
   const rawParams = (await props?.params) as TeamSlugParam | Promise<TeamSlugParam>;
   const { slug } = await rawParams;
   let team = getTeamDataByAbbreviation(slug?.toUpperCase(), true);
@@ -226,8 +235,8 @@ export default async function TeamPage(props: any) {
         <>
           <h1 className="text-3xl font-bold mb-6">Recent &amp; Upcoming Games</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
-            {schedule.gamesByDate?.map((date: any) =>
-              date.games.map((game: any) => <GameTile key={game.id} game={game} />)
+            {schedule.gamesByDate?.map((date: { games: GameTileItem[] }) =>
+              date.games.map((game: GameTileItem) => <GameTile key={game.id} game={game} />)
             )}
             {schedule.gamesByDate?.length === 0 && (
               <div className="text-2xl">No upcoming games</div>
@@ -246,8 +255,16 @@ export default async function TeamPage(props: any) {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-5">
-            {news.items.map((item: any) => {
-              const enriched: NewsItem = { slug: item.slug || String(item._entityId), ...item };
+            {news.items.map((item: unknown) => {
+              const record = item as Record<string, unknown>;
+              const enriched: NewsItem = {
+                ...(record as Record<string, unknown>),
+                _entityId:
+                  (record._entityId as string | number | undefined) ||
+                  (record.slug as string | undefined) ||
+                  'story',
+                slug: (record.slug as string | undefined) || String(record._entityId),
+              };
 
               return <StoryCard key={enriched._entityId} item={enriched} showDate />;
             })}
@@ -266,12 +283,20 @@ export default async function TeamPage(props: any) {
           <div className="mb-5">
             <div className="font-bold my-2">Forwards</div>
             <StatsTable
-              stats={teamStats.skaters?.filter((t: any) => t.positionCode !== 'D')}
+              stats={teamStats.skaters?.filter((t) => {
+                const row = t as { positionCode?: string };
+
+                return row.positionCode !== 'D';
+              })}
               team={team.abbreviation}
             />
             <div className="font-bold my-2">Defensemen</div>
             <StatsTable
-              stats={teamStats.skaters?.filter((t: any) => t.positionCode === 'D')}
+              stats={teamStats.skaters?.filter((t) => {
+                const row = t as { positionCode?: string };
+
+                return row.positionCode === 'D';
+              })}
               team={team.abbreviation}
             />
             <div className="font-bold my-2">Goalies</div>

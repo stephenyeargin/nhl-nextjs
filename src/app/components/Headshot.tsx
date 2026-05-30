@@ -23,13 +23,14 @@ const Headshot: React.FC<HeadshotProps> = ({
   const sizeValue = typeof size === 'number' ? size : parseFloat(size) || 0;
   const style: React.CSSProperties = { maxHeight: `${sizeValue}rem`, maxWidth: `${sizeValue}rem` };
   if (team) {
-    const { teamColor, secondaryTeamColor } = getTeamDataByAbbreviation(team, true) || ({} as any);
+    const { teamColor, secondaryTeamColor } =
+      getTeamDataByAbbreviation(team, true) || ({} as Record<string, string>);
     if (teamColor) {
-      (style as any).backgroundColor = teamColor;
-      (style as any).backgroundImage = `linear-gradient(to bottom, ${teamColor}, #FFFFFF)`;
+      style.backgroundColor = teamColor;
+      style.backgroundImage = `linear-gradient(to bottom, ${teamColor}, #FFFFFF)`;
     }
     if (secondaryTeamColor) {
-      (style as any).border = `2px solid ${secondaryTeamColor}`;
+      style.border = `2px solid ${secondaryTeamColor}`;
     }
   }
 

@@ -4,7 +4,9 @@ import '@testing-library/jest-dom';
 import TeamLogo from './TeamLogo';
 
 jest.mock('next/image', () => {
-  const MockImage = (props: any) => <img alt={props.alt || 'img'} {...props} />;
+  const MockImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (props) => (
+    <img alt={props.alt || 'img'} {...props} />
+  );
   MockImage.displayName = 'MockImage';
 
   return MockImage;
@@ -12,7 +14,7 @@ jest.mock('next/image', () => {
 jest.mock(
   'next/link',
   () =>
-    ({ children }: any) =>
+    ({ children }: { children?: React.ReactNode }) =>
       children
 );
 
@@ -24,6 +26,19 @@ jest.mock('../utils/teamData', () => ({
 }));
 
 describe('TeamLogo', () => {
+  const createMatchMedia = (matches: boolean): Window['matchMedia'] => {
+    return () => ({
+      matches,
+      media: '',
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    });
+  };
+
   test('renders provided src and alt', () => {
     render(<TeamLogo src="https://assets.nhle.com/logos/nhl/svg/BOS_light.svg" alt="Bruins" />);
     const img = screen.getByAltText('Bruins');
@@ -54,30 +69,14 @@ describe('TeamLogo', () => {
   });
 
   test('auto theme switching (light) when colorMode auto and media query light', () => {
-    window.matchMedia = (() => {
-      const fn: any = () => ({
-        matches: false,
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      });
-
-      return fn;
-    })();
+    window.matchMedia = createMatchMedia(false);
     render(<TeamLogo team="BOS" alt="Bruins" />);
     const img = screen.getByAltText('Bruins');
     expect(img.getAttribute('src')).toContain('BOS_light');
   });
 
   test('auto theme switching (dark) when colorMode auto and media query dark', () => {
-    window.matchMedia = (() => {
-      const fn: any = () => ({
-        matches: true,
-        addEventListener: () => {},
-        removeEventListener: () => {},
-      });
-
-      return fn;
-    })();
+    window.matchMedia = createMatchMedia(true);
     render(<TeamLogo team="BOS" alt="Bruins" colorMode="auto" />);
     const img = screen.getByAltText('Bruins');
     expect(img.getAttribute('src')).toContain('BOS_dark');

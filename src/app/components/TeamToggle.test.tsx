@@ -4,7 +4,9 @@ import TeamToggle from './TeamToggle';
 
 // Mock TeamLogo (use same alias path the component uses)
 jest.mock('@/app/components/TeamLogo', () => {
-  const MockTeamLogo = (props: any) => <div data-testid={`logo-${props.alt}`} />;
+  const MockTeamLogo: React.FC<{ alt?: string }> = (props) => (
+    <div data-testid={`logo-${props.alt}`} />
+  );
   MockTeamLogo.displayName = 'MockTeamLogo';
 
   return MockTeamLogo;

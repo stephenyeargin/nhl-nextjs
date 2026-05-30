@@ -10,23 +10,117 @@ import { getTeamDataByAbbreviation } from '../utils/teamData';
 import TeamToggle from './TeamToggle';
 import PlayerLink from './PlayerLink';
 
+interface NameParts {
+  default?: string;
+}
+
+interface TeamData {
+  abbreviation?: string;
+  teamColor?: string;
+  secondaryTeamColor?: string;
+}
+
+interface TeamPreview {
+  id?: number | string;
+  abbrev: string;
+  logo?: string;
+  commonName: NameParts;
+  placeName?: NameParts;
+  data?: TeamData;
+}
+
+interface LeaderPlayer {
+  playerId: number | string;
+  headshot?: string;
+  firstName?: NameParts;
+  lastName?: NameParts;
+  sweaterNumber?: number | string;
+  positionCode?: string;
+  value?: number | string;
+}
+
+interface SkaterLeader {
+  category: string;
+  awayLeader?: LeaderPlayer;
+  homeLeader?: LeaderPlayer;
+}
+
+interface TeamTotals {
+  record?: string;
+  gaa?: number | string;
+  savePctg?: number | string;
+  shutouts?: number | string;
+}
+
+interface Goaltender {
+  playerId: number | string;
+  headshot?: string;
+  firstName?: NameParts;
+  lastName?: NameParts;
+  sweaterNumber?: number | string;
+  positionCode?: string;
+  record?: string;
+  gaa?: number | string;
+  savePctg?: number | string;
+  shutouts?: number | string;
+}
+
+interface GoalieComparisonTeam {
+  teamTotals?: TeamTotals;
+  leaders: Goaltender[];
+}
+
+interface TeamStatPlayer {
+  playerId: number | string;
+  teamId?: string | number;
+  position?: string;
+  [key: string]: unknown;
+}
+
+interface MatchupData {
+  skaterComparison?: {
+    contextLabel?: string;
+    leaders: SkaterLeader[];
+  };
+  goalieComparison?: {
+    awayTeam: GoalieComparisonTeam;
+    homeTeam: GoalieComparisonTeam;
+  };
+  skaterSeasonStats?: {
+    skaters: TeamStatPlayer[];
+  };
+  goalieSeasonStats?: {
+    goalies: TeamStatPlayer[];
+  };
+}
+
 interface GamePreviewProps {
-  game: any;
+  game: {
+    gameScheduleState?: string;
+    matchup: MatchupData;
+    awayTeam: TeamPreview;
+    homeTeam: TeamPreview;
+  };
 }
 
 const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
   const [activeStatTeam, setActiveStatTeam] = useState<'awayTeam' | 'homeTeam'>('awayTeam');
 
   const { matchup, awayTeam, homeTeam } = game;
-  const { skaterSeasonStats, goalieSeasonStats } = matchup;
+  const skaterSeasonStats = matchup.skaterSeasonStats || { skaters: [] };
+  const goalieSeasonStats = matchup.goalieSeasonStats || { goalies: [] };
+  const goalieComparison = matchup.goalieComparison || {
+    awayTeam: { leaders: [] },
+    homeTeam: { leaders: [] },
+  };
 
   const contextLabel = matchup.skaterComparison?.contextLabel as
     | keyof typeof STAT_CONTEXT
     | undefined;
 
   const logos: Record<string, string> = {};
-  logos[homeTeam.abbrev] = homeTeam.logo;
-  logos[awayTeam.abbrev] = awayTeam.logo;
+  logos[homeTeam.abbrev] = homeTeam.logo || '';
+  logos[awayTeam.abbrev] = awayTeam.logo || '';
 
   homeTeam.data = getTeamDataByAbbreviation(homeTeam.abbrev, true) || {};
   awayTeam.data = getTeamDataByAbbreviation(awayTeam.abbrev, false) || {};
@@ -35,7 +129,13 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
     setActiveStatTeam(team);
   };
 
-  const renderGoaltenderTeamTotals = ({ team, teamAbbrev }: { team: any; teamAbbrev: string }) => (
+  const renderGoaltenderTeamTotals = ({
+    team,
+    teamAbbrev,
+  }: {
+    team: GoalieComparisonTeam;
+    teamAbbrev: string;
+  }) => (
     <div className="grid grid-cols-12 mb-0 py-2 items-center">
       <div className="col-span-4">
         <TeamLogo src={logos[teamAbbrev]} alt={teamAbbrev} className="w-20 h-20" />
@@ -65,7 +165,7 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
     </div>
   );
 
-  const renderGoaltender = ({ goaltender, team }: { goaltender: any; team: string }) => {
+  const renderGoaltender = ({ goaltender, team }: { goaltender: Goaltender; team: string }) => {
     return (
       <div className="border grid grid-cols-12 mb-3 py-2 items-center">
         <div className="col-span-4 p-2 flex">
@@ -160,7 +260,7 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
           />
         </div>
       </div>
-      {matchup.skaterComparison?.leaders.map((leader: any) => (
+      {matchup.skaterComparison?.leaders.map((leader: SkaterLeader) => (
         <div key={leader.category} className="border grid grid-cols-12 mb-3 py-2 items-center">
           {leader.awayLeader && (
             <div className="col-span-3 p-2 flex">
@@ -220,10 +320,10 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
         {/* Away Team */}
         <div>
           {renderGoaltenderTeamTotals({
-            team: matchup.goalieComparison.awayTeam,
+            team: goalieComparison.awayTeam,
             teamAbbrev: awayTeam.abbrev,
           })}
-          {matchup.goalieComparison.awayTeam.leaders.map((goaltender: any) => (
+          {goalieComparison.awayTeam.leaders.map((goaltender: Goaltender) => (
             <div key={goaltender.playerId}>
               {renderGoaltender({ goaltender, team: awayTeam.abbrev })}
             </div>
@@ -233,10 +333,10 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
         {/* Home Team */}
         <div>
           {renderGoaltenderTeamTotals({
-            team: matchup.goalieComparison.homeTeam,
+            team: goalieComparison.homeTeam,
             teamAbbrev: homeTeam.abbrev,
           })}
-          {matchup.goalieComparison.homeTeam.leaders.map((goaltender: any) => (
+          {goalieComparison.homeTeam.leaders.map((goaltender: Goaltender) => (
             <div key={goaltender.playerId}>
               {renderGoaltender({ goaltender, team: homeTeam.abbrev })}
             </div>
@@ -247,8 +347,8 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
       <div className="flex justify-between">
         <div className="text-3xl font-bold">Team Stats</div>
         <TeamToggle
-          homeTeam={homeTeam}
-          awayTeam={awayTeam}
+          homeTeam={homeTeam as React.ComponentProps<typeof TeamToggle>['homeTeam']}
+          awayTeam={awayTeam as React.ComponentProps<typeof TeamToggle>['awayTeam']}
           handleStatTeamClick={handleStatTeamClick}
           activeStatTeam={activeStatTeam}
         />
@@ -264,38 +364,50 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
               Forwards (
               {
                 skaterSeasonStats.skaters.filter(
-                  (t: any) => t.teamId === awayTeam.id && t.position !== 'D'
+                  (t: TeamStatPlayer) => t.teamId === awayTeam.id && t.position !== 'D'
                 ).length
               }
               )
             </div>
             <StatsTable
-              stats={skaterSeasonStats.skaters.filter(
-                (t: any) => t.teamId === awayTeam.id && t.position !== 'D'
-              )}
+              stats={
+                skaterSeasonStats.skaters.filter(
+                  (t: TeamStatPlayer) => t.teamId === awayTeam.id && t.position !== 'D'
+                ) as React.ComponentProps<typeof StatsTable>['stats']
+              }
               team={awayTeam.data.abbreviation}
             />
             <div className="font-bold my-2">
               Defensemen (
               {
                 skaterSeasonStats.skaters.filter(
-                  (t: any) => t.teamId === awayTeam.id && t.position === 'D'
+                  (t: TeamStatPlayer) => t.teamId === awayTeam.id && t.position === 'D'
                 ).length
               }
               )
             </div>
             <StatsTable
-              stats={skaterSeasonStats.skaters.filter(
-                (t: any) => t.teamId === awayTeam.id && t.position === 'D'
-              )}
+              stats={
+                skaterSeasonStats.skaters.filter(
+                  (t: TeamStatPlayer) => t.teamId === awayTeam.id && t.position === 'D'
+                ) as React.ComponentProps<typeof StatsTable>['stats']
+              }
               team={awayTeam.data.abbreviation}
             />
             <div className="font-bold my-2">
               Goalies (
-              {goalieSeasonStats.goalies.filter((t: any) => t.teamId === awayTeam.id).length})
+              {
+                goalieSeasonStats.goalies.filter((t: TeamStatPlayer) => t.teamId === awayTeam.id)
+                  .length
+              }
+              )
             </div>
             <StatsTable
-              stats={goalieSeasonStats.goalies.filter((t: any) => t.teamId === awayTeam.id)}
+              stats={
+                goalieSeasonStats.goalies.filter(
+                  (t: TeamStatPlayer) => t.teamId === awayTeam.id
+                ) as React.ComponentProps<typeof StatsTable>['stats']
+              }
               team={awayTeam.data.abbreviation}
             />
           </div>
@@ -308,38 +420,50 @@ const GamePreview: React.FC<GamePreviewProps> = ({ game }) => {
               Forwards (
               {
                 skaterSeasonStats.skaters.filter(
-                  (t: any) => t.teamId === homeTeam.id && t.position !== 'D'
+                  (t: TeamStatPlayer) => t.teamId === homeTeam.id && t.position !== 'D'
                 ).length
               }
               )
             </div>
             <StatsTable
-              stats={skaterSeasonStats.skaters.filter(
-                (t: any) => t.teamId === homeTeam.id && t.position !== 'D'
-              )}
+              stats={
+                skaterSeasonStats.skaters.filter(
+                  (t: TeamStatPlayer) => t.teamId === homeTeam.id && t.position !== 'D'
+                ) as React.ComponentProps<typeof StatsTable>['stats']
+              }
               team={homeTeam.data.abbreviation}
             />
             <div className="font-bold my-2">
               Defensemen (
               {
                 skaterSeasonStats.skaters.filter(
-                  (t: any) => t.teamId === homeTeam.id && t.position === 'D'
+                  (t: TeamStatPlayer) => t.teamId === homeTeam.id && t.position === 'D'
                 ).length
               }
               )
             </div>
             <StatsTable
-              stats={skaterSeasonStats.skaters.filter(
-                (t: any) => t.teamId === homeTeam.id && t.position === 'D'
-              )}
+              stats={
+                skaterSeasonStats.skaters.filter(
+                  (t: TeamStatPlayer) => t.teamId === homeTeam.id && t.position === 'D'
+                ) as React.ComponentProps<typeof StatsTable>['stats']
+              }
               team={homeTeam.data.abbreviation}
             />
             <div className="font-bold my-2">
               Goalies (
-              {goalieSeasonStats.goalies.filter((t: any) => t.teamId === homeTeam.id).length})
+              {
+                goalieSeasonStats.goalies.filter((t: TeamStatPlayer) => t.teamId === homeTeam.id)
+                  .length
+              }
+              )
             </div>
             <StatsTable
-              stats={goalieSeasonStats.goalies.filter((t: any) => t.teamId === homeTeam.id)}
+              stats={
+                goalieSeasonStats.goalies.filter(
+                  (t: TeamStatPlayer) => t.teamId === homeTeam.id
+                ) as React.ComponentProps<typeof StatsTable>['stats']
+              }
               team={homeTeam.data.abbreviation}
             />
           </div>

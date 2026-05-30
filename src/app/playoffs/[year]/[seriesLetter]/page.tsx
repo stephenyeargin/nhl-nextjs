@@ -1,7 +1,7 @@
 import React from 'react';
 import type { SeriesParam } from '@/app/types/routeParams';
 import Image from 'next/image';
-import GameTile from '@/app/components/GameTile';
+import GameTile, { type GameTileGame } from '@/app/components/GameTile';
 import { notFound } from 'next/navigation';
 import TeamLogo from '@/app/components/TeamLogo';
 import Link from 'next/link';
@@ -11,6 +11,27 @@ import SeriesCoverage from '@/app/components/SeriesCoverage';
 interface FetchResult<T> {
   data?: T;
   error?: number;
+}
+
+interface SeriesTeam {
+  id: string | number;
+  abbrev: string;
+  logo: string;
+  seriesWins?: number;
+  placeName?: { default?: string };
+  name?: { default?: string };
+  data?: { teamColor?: string };
+}
+
+interface SeriesData {
+  topSeedTeam: SeriesTeam;
+  bottomSeedTeam: SeriesTeam;
+  games: GameTileGame[];
+  seriesLogo?: string;
+  roundLabel: string;
+  roundAbbrev: string;
+  neededToWin?: number;
+  length?: number;
 }
 
 async function fetchData<T>(url: string, seriesString: string): Promise<FetchResult<T>> {
@@ -39,10 +60,14 @@ async function fetchSeriesData(seriesString: string, year: number) {
   const seriesLetter = seriesString.match(/(?:series-)?([a-z])(?:-coverage)?/i)?.[1]?.toLowerCase();
   const url = `https://api-web.nhle.com/v1/schedule/playoff-series/${year - 1}${year}/${seriesLetter}/`;
 
-  return fetchData<any>(url, seriesString);
+  return fetchData<SeriesData>(url, seriesString);
 }
 
-export default async function SeriesPage(props: any) {
+interface SeriesPageProps {
+  params: SeriesParam | Promise<SeriesParam>;
+}
+
+export default async function SeriesPage(props: SeriesPageProps) {
   const resolved = (await props?.params) as SeriesParam | Promise<SeriesParam>;
   const { seriesLetter, year } = await resolved;
   const seriesResponse = await fetchSeriesData(seriesLetter, Number(year));
@@ -53,9 +78,14 @@ export default async function SeriesPage(props: any) {
   if (seriesResponse.error === 500) {
     throw new Error('Failed to load series data');
   }
+  if (!seriesResponse.data) {
+    return notFound();
+  }
 
   const series = seriesResponse.data;
   const { topSeedTeam, bottomSeedTeam, games, seriesLogo, roundLabel, roundAbbrev } = series;
+  const neededToWin = series.neededToWin ?? 4;
+  const seriesLength = series.length ?? neededToWin * 2 - 1;
 
   topSeedTeam.data = getTeamDataByAbbreviation(topSeedTeam.abbrev, false);
   bottomSeedTeam.data = getTeamDataByAbbreviation(bottomSeedTeam.abbrev, true);
@@ -108,14 +138,17 @@ export default async function SeriesPage(props: any) {
               <div className="text-lg hidden md:block">
                 <div className="text-sm">{topSeedTeam.placeName?.default}</div>
                 <div className="text-lg font-black">
-                  {topSeedTeam.name?.default.replace(topSeedTeam.placeName?.default, '')}
+                  {(topSeedTeam.name?.default || '').replace(
+                    topSeedTeam.placeName?.default || '',
+                    ''
+                  )}
                 </div>
               </div>
             </Link>
           </div>
         </div>
         <div
-          className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${bottomSeedTeam.seriesWins === series.neededToWin && series.neededToWin ? 'opacity-50' : ''}`}
+          className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${bottomSeedTeam.seriesWins === neededToWin ? 'opacity-50' : ''}`}
         >
           {topSeedTeam.seriesWins}
         </div>
@@ -124,12 +157,10 @@ export default async function SeriesPage(props: any) {
           <span className="hidden md:block font-bold capitalize">
             {seriesTitles[roundLabel] || roundLabel.replace(/-/g, ' ')}
           </span>
-          <span className="block text-sm">
-            Best of {series.length || series.neededToWin * 2 - 1}
-          </span>
+          <span className="block text-sm">Best of {seriesLength}</span>
         </div>
         <div
-          className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${topSeedTeam.seriesWins === series.neededToWin && series.neededToWin ? 'opacity-50' : ''}`}
+          className={`col-span-2 flex flex-wrap justify-center items-center text-center text-5xl md:text-7xl font-black ${topSeedTeam.seriesWins === neededToWin ? 'opacity-50' : ''}`}
         >
           {bottomSeedTeam.seriesWins}
         </div>
@@ -140,7 +171,10 @@ export default async function SeriesPage(props: any) {
               <div className="text-lg hidden md:block">
                 <div className="text-sm">{bottomSeedTeam.placeName?.default}</div>
                 <div className="text-lg font-black">
-                  {bottomSeedTeam.name?.default?.replace(bottomSeedTeam.placeName?.default, '')}
+                  {(bottomSeedTeam.name?.default || '').replace(
+                    bottomSeedTeam.placeName?.default || '',
+                    ''
+                  )}
                 </div>
               </div>
             </Link>
@@ -164,7 +198,7 @@ export default async function SeriesPage(props: any) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {games.length > 0 ? (
-          games.map((game: any, i: number) => <GameTile key={i} game={game} logos={logos} />)
+          games.map((game, i: number) => <GameTile key={i} game={game} logos={logos} />)
         ) : (
           <div className="col-span-1 md:col-span-2">
             <div className="text-center font-bold py-20">

@@ -5,14 +5,15 @@ import PlayoffSeriesTile from '../../components/PlayoffSeriesTile';
 import { notFound } from 'next/navigation';
 import PlayoffYearSelector from '@/app/components/PlayoffYearSelector';
 import type { LocalizedString } from '@/app/types';
+import type { SeriesInfo, SeriesTeam } from '@/app/components/PlayoffSeriesTile';
 
-interface PlayoffSeries {
+interface PlayoffSeries extends SeriesInfo {
   seriesLetter: string;
   playoffRound: number;
   seriesAbbrev?: string;
   seriesTitle?: string;
-  topSeedTeam?: any;
-  bottomSeedTeam?: any;
+  topSeedTeam?: SeriesTeam;
+  bottomSeedTeam?: SeriesTeam;
 }
 interface PlayoffBracket {
   series: PlayoffSeries[];
@@ -32,13 +33,15 @@ async function getPlayoffData(year: string | number): Promise<PlayoffBracket> {
   return res.json();
 }
 
-async function getSeasonData(): Promise<any> {
+async function getSeasonData(): Promise<number[]> {
   const res = await fetch('https://api-web.nhle.com/v1/season', { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch season data');
   }
 
-  return res.json();
+  const data: unknown = await res.json();
+
+  return Array.isArray(data) ? data.filter((s): s is number => typeof s === 'number') : [];
 }
 
 const getSeriesByLetter = (bracket: PlayoffBracket, letter: string) =>
@@ -55,7 +58,11 @@ const groupByRound = (seriesList: PlayoffSeries[]) =>
     return acc;
   }, {});
 
-export default async function PlayoffsPage(props: any) {
+interface PlayoffsPageProps {
+  params: YearParam | Promise<YearParam>;
+}
+
+export default async function PlayoffsPage(props: PlayoffsPageProps) {
   const resolved = (await props?.params) as YearParam | Promise<YearParam>;
   const { year } = await resolved;
   const bracket = await getPlayoffData(year);

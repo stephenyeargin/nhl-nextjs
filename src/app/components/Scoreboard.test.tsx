@@ -3,21 +3,34 @@ import { render, screen } from '@testing-library/react';
 import Scoreboard from './Scoreboard';
 
 const formatPeriodLabelMock = jest.fn(
-  ({ periodType, number, maxRegulationPeriods }: any) =>
-    `${periodType}-${number}-${maxRegulationPeriods}`
+  ({
+    periodType,
+    number,
+    maxRegulationPeriods,
+  }: {
+    periodType?: string;
+    number?: number;
+    maxRegulationPeriods?: number;
+  }) => `${periodType}-${number}-${maxRegulationPeriods}`
 );
 
 jest.mock('./TeamLogo', () => {
-  const MockTeamLogo = ({ team }: any) => <div data-testid={`logo-${team}`} />;
+  const MockTeamLogo: React.FC<{ team?: string }> = ({ team }) => (
+    <div data-testid={`logo-${team}`} />
+  );
   MockTeamLogo.displayName = 'MockTeamLogo';
 
   return MockTeamLogo;
 });
 jest.mock('../utils/formatters', () => ({
-  formatPeriodLabel: (period: any) => formatPeriodLabelMock(period),
+  formatPeriodLabel: (period: {
+    periodType?: string;
+    number?: number;
+    maxRegulationPeriods?: number;
+  }) => formatPeriodLabelMock(period),
 }));
 
-const makeGame = (overrides: any = {}) => ({
+const makeGame = (overrides: Record<string, unknown> = {}) => ({
   periodDescriptor: { number: 5, periodType: 'OT' },
   regPeriods: 3,
   awayTeam: { abbrev: 'AWY' },
@@ -25,7 +38,13 @@ const makeGame = (overrides: any = {}) => ({
   ...overrides,
 });
 
-const makeLinescore = (periods: any[], totals = { away: 2, home: 3 }) => ({
+type LinescorePeriod = {
+  periodDescriptor: { number: number; periodType?: string; maxRegulationPeriods?: number };
+  away: number;
+  home: number;
+};
+
+const makeLinescore = (periods: LinescorePeriod[], totals = { away: 2, home: 3 }) => ({
   byPeriod: periods,
   totals,
 });

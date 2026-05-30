@@ -36,8 +36,8 @@ exports[`TopBarSchedule (smoke) renders dates and switches focused date 1`] = `
         class="flex flex-nowrap gap-4"
       >
         <div
+          data-game="[object Object]"
           data-testid="game-tile"
-          game="[object Object]"
           style="min-width: 360px;"
         >
           Game 1
@@ -84,8 +84,8 @@ exports[`TopBarSchedule (smoke) renders dates and switches focused date 2`] = `
         class="flex flex-nowrap gap-4"
       >
         <div
+          data-game="[object Object]"
           data-testid="game-tile"
-          game="[object Object]"
           style="min-width: 360px;"
         >
           Game 2

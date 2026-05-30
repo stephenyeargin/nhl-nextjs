@@ -3,7 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import PeriodSelector from './PeriodSelector';
 
 jest.mock('../utils/formatters', () => ({
-  formatPeriodLabel: (p: any, long: boolean) => (long ? `Period ${p.number}` : `${p.number}`),
+  formatPeriodLabel: (p: { number?: number }, long: boolean) =>
+    long ? `Period ${p.number}` : `${p.number}`,
 }));
 
 describe('PeriodSelector', () => {

@@ -15,11 +15,11 @@ import {
 
 describe('formatters', () => {
   test('formatSeriesStatus basic paths', () => {
-    const game: any = {
+    const game = {
       homeTeam: { placeName: { default: 'Home' } },
       awayTeam: { placeName: { default: 'Away' } },
     };
-    const rightRail: any = {
+    const rightRail = {
       seasonSeriesWins: { homeTeamWins: 0, awayTeamWins: 0, neededToWin: 4 },
     };
     expect(formatSeriesStatus(game, rightRail)).toBe('');
@@ -86,7 +86,7 @@ describe('formatters', () => {
   });
 
   test('formatPeriodLabel', () => {
-    const base: any = { maxRegulationPeriods: 3, periodType: 'REG', otPeriods: 0 };
+    const base = { maxRegulationPeriods: 3, periodType: 'REG', otPeriods: 0 };
     expect(formatPeriodLabel({ ...base, number: 1 })).toBe('1st');
     expect(formatPeriodLabel({ ...base, number: 4 }, true)).toBe('Overtime');
     expect(formatPeriodLabel({ ...base, number: 5, periodType: 'SO' })).toBe('SO');

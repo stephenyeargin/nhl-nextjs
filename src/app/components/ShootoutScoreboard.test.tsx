@@ -3,13 +3,15 @@ import { render, screen } from '@testing-library/react';
 import ShootoutScoreboard from './ShootoutScoreboard';
 
 jest.mock('./TeamLogo', () => {
-  const MockTeamLogo = ({ team }: any) => <div data-testid={`logo-${team}`} />;
+  const MockTeamLogo: React.FC<{ team?: string }> = ({ team }) => (
+    <div data-testid={`logo-${team}`} />
+  );
   MockTeamLogo.displayName = 'MockTeamLogo';
 
   return MockTeamLogo;
 });
 jest.mock('@fortawesome/react-fontawesome', () => ({
-  FontAwesomeIcon: (props: any) => (
+  FontAwesomeIcon: (props: { title?: string; icon?: { iconName?: string } }) => (
     <i data-testid="fa" title={props.title}>
       {props.icon?.iconName || 'icon'}
     </i>

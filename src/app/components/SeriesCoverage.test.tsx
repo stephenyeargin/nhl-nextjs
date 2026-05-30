@@ -3,11 +3,15 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import SeriesCoverage from './SeriesCoverage';
 
 jest.mock('@/app/components/StoryCard', () => {
-  const StoryCard = (props: any) => <div data-testid="story-card">{props.item?.slug}</div>;
-  (StoryCard as any).displayName = 'StoryCardMock';
+  const StoryCard: React.FC<{ item?: { slug?: string } }> = (props) => (
+    <div data-testid="story-card">{props.item?.slug}</div>
+  );
+  StoryCard.displayName = 'StoryCardMock';
 
   return StoryCard;
 });
+
+const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 
 const makeStory = (id: number) => ({
   _entityId: id,
@@ -15,18 +19,23 @@ const makeStory = (id: number) => ({
 });
 
 describe('SeriesCoverage', () => {
+  beforeEach(() => {
+    global.fetch = mockFetch;
+  });
+
   afterEach(() => {
+    mockFetch.mockReset();
     jest.resetAllMocks();
   });
 
   it('loads first page and shows load more button when next page exists', async () => {
-    (global as any).fetch = jest.fn().mockResolvedValue({
+    mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
         items: [makeStory(1), makeStory(2)],
         pagination: { nextUrl: '/next' },
       }),
-    });
+    } as Response);
 
     render(<SeriesCoverage year={2025} seriesString="series-a-coverage" />);
 
@@ -34,33 +43,32 @@ describe('SeriesCoverage', () => {
 
     expect(screen.getByText('story-2')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /load more/i })).toBeInTheDocument();
-    expect((global as any).fetch).toHaveBeenCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining('tags.slug=series-a'),
       expect.objectContaining({ cache: 'no-store' })
     );
-    expect((global as any).fetch).toHaveBeenCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining('$skip=0&$limit=24'),
       expect.objectContaining({ cache: 'no-store' })
     );
   });
 
   it('loads another page when clicking load more', async () => {
-    (global as any).fetch = jest
-      .fn()
+    mockFetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           items: [makeStory(1)],
           pagination: { nextUrl: '/next' },
         }),
-      })
+      } as Response)
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           items: [makeStory(2)],
           pagination: { nextUrl: null },
         }),
-      });
+      } as Response);
 
     render(<SeriesCoverage year={2025} seriesString="series-a" />);
 
@@ -69,8 +77,8 @@ describe('SeriesCoverage', () => {
 
     await waitFor(() => expect(screen.getByText('story-2')).toBeInTheDocument());
 
-    expect((global as any).fetch).toHaveBeenCalledTimes(2);
-    expect((global as any).fetch).toHaveBeenNthCalledWith(
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(mockFetch).toHaveBeenNthCalledWith(
       2,
       expect.stringContaining('$skip=24&$limit=24'),
       expect.objectContaining({ cache: 'no-store' })
@@ -79,22 +87,21 @@ describe('SeriesCoverage', () => {
   });
 
   it('deduplicates stories when later pages repeat entity IDs', async () => {
-    (global as any).fetch = jest
-      .fn()
+    mockFetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           items: [makeStory(1)],
           pagination: { nextUrl: '/next' },
         }),
-      })
+      } as Response)
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           items: [makeStory(1), makeStory(2)],
           pagination: { nextUrl: null },
         }),
-      });
+      } as Response);
 
     render(<SeriesCoverage year={2025} seriesString="series-a" />);
 
@@ -107,19 +114,19 @@ describe('SeriesCoverage', () => {
   });
 
   it('renders nothing when no stories are returned and there is no next page', async () => {
-    (global as any).fetch = jest.fn().mockResolvedValue({
+    mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
         items: [],
         pagination: { nextUrl: null },
       }),
-    });
+    } as Response);
 
     render(<SeriesCoverage year={2025} seriesString="series-a" />);
 
     await waitFor(() => {
       expect(screen.queryByText('Series Coverage')).not.toBeInTheDocument();
     });
-    expect((global as any).fetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 });

@@ -90,8 +90,8 @@ interface GameVideo {
 interface GameInfo {
   referees?: { default: string }[];
   linesmen?: { default: string }[];
-  awayTeam?: { headCoach?: { default: string }; scratches?: any[] };
-  homeTeam?: { headCoach?: { default: string }; scratches?: any[] };
+  awayTeam?: { headCoach?: { default: string }; scratches?: Array<{ id?: string | number }> };
+  homeTeam?: { headCoach?: { default: string }; scratches?: Array<{ id?: string | number }> };
 }
 interface RightRailData {
   linescore?: RightRailLinescore;
@@ -106,7 +106,7 @@ interface RightRailData {
   [k: string]: unknown;
 }
 interface GameStoryData {
-  summary?: { teamGameStats?: any[] };
+  summary?: { teamGameStats?: Array<Record<string, unknown>> };
   [k: string]: unknown;
 }
 

@@ -29,7 +29,7 @@ describe('formatters extra coverage', () => {
     expect(result).toBe('Series tied.');
   });
   test('formatSeriesStatus leads vs wins', () => {
-    const baseGame: any = {
+    const baseGame = {
       homeTeam: { placeName: { default: 'Home' } },
       awayTeam: { placeName: { default: 'Away' } },
     };
@@ -48,8 +48,8 @@ describe('formatters extra coverage', () => {
     expect(formatStat(0.5, 3)).toBe('.500');
     expect(formatStat('abc', 2)).toBe('--');
     expect(formatStat(undefined, 2)).toBe('--');
-    expect(formatStat(true as any, undefined, 'start')).toBe('Yes');
-    expect(formatStat(false as any, undefined, 'start')).toBe('No');
+    expect(formatStat(true, undefined, 'start')).toBe('Yes');
+    expect(formatStat(false, undefined, 'start')).toBe('No');
   });
 
   test('formatSecondsToGameTime variants', () => {

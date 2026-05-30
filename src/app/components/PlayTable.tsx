@@ -6,10 +6,24 @@ import SirenOnSVG from '@/app/assets/siren-on-solid.svg';
 import { GAME_EVENTS } from '@/app/utils/constants';
 import { formatPeriodLabel } from '@/app/utils/formatters';
 
+interface PlayDetails {
+  eventOwnerTeamId?: number | string;
+  [k: string]: unknown;
+}
+
+interface PlayRow {
+  eventId: string | number;
+  timeRemaining?: string;
+  periodDescriptor?: { number?: number; periodType?: string; maxRegulationPeriods?: number };
+  details?: PlayDetails;
+  typeDescKey?: string;
+  [k: string]: unknown;
+}
+
 interface PlayTableProps {
-  plays: any[];
+  plays: PlayRow[];
   activePeriod: number | null;
-  renderPlayByPlayEvent: (_play: any) => React.ReactNode;
+  renderPlayByPlayEvent: (_play: PlayRow) => React.ReactNode;
   renderTeamLogo: (_teamId?: number | string) => React.ReactNode;
 }
 
@@ -38,7 +52,7 @@ const PlayTable: React.FC<PlayTableProps> = ({
             </tr>
           )}
           {plays &&
-            plays.map((play: any, i: number) => (
+            plays.map((play: PlayRow, i: number) => (
               <tr key={play.eventId} className={i % 2 === 0 ? 'bg-slate-500/10' : ''}>
                 <td className="p-2 text-xs text-center">
                   <div className="mt-1">
@@ -47,7 +61,9 @@ const PlayTable: React.FC<PlayTableProps> = ({
                     </span>
                   </div>
                   {activePeriod === 0 && (
-                    <div className="p-2">{formatPeriodLabel(play.periodDescriptor, true)}</div>
+                    <div className="p-2">
+                      {formatPeriodLabel(play.periodDescriptor || {}, true)}
+                    </div>
                   )}
                 </td>
                 <td className="p-2 flex flex-wrap gap-2 items-center">
@@ -57,7 +73,7 @@ const PlayTable: React.FC<PlayTableProps> = ({
                   </div>
                   <div>
                     <span className="hidden lg:block p-1 border rounded-sm font-bold text-xs uppercase">
-                      {(GAME_EVENTS as Record<string, string>)[play.typeDescKey]}
+                      {(GAME_EVENTS as Record<string, string>)[play.typeDescKey ?? '']}
                     </span>
                     {play.typeDescKey === 'goal' && (
                       <div>

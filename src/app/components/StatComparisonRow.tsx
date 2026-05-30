@@ -5,12 +5,12 @@ import { TEAM_STATS } from '../utils/constants';
 interface TeamColorData {
   teamColor?: string;
   secondaryTeamColor?: string;
-  [key: string]: any; // Allow additional fields until a shared Team type is created
+  [key: string]: unknown; // Allow additional fields until a shared Team type is created
 }
 
 interface TeamWrapper {
   data: TeamColorData;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 type TeamStatKey = keyof typeof TEAM_STATS;

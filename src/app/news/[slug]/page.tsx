@@ -11,28 +11,35 @@ import ContentMarkdown from '@/app/components/ContentMarkdown';
 import ContentByline from '@/app/components/ContentByline';
 import PageError from '@/app/components/PageError';
 import ContentTag from '@/app/components/ContentTag';
+import type { Tag } from '@/app/types/tag';
 
 interface StoryPartBase {
   type: string;
-  [key: string]: any;
+  [key: string]: unknown;
+}
+interface StoryPageError {
+  message?: string;
 }
 interface Story {
   _entityId?: string | number;
   status?: number;
   headline?: string;
   title?: string;
-  parts: StoryPartBase[];
-  tags: any[];
+  parts?: StoryPartBase[];
+  tags?: Tag[];
+  contentDate?: string;
+  references?: Record<string, unknown>;
   fields?: { description?: string };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const NewsArticle: React.FC = () => {
-  const { story, pageError }: { story?: Story; pageError?: Error | number } =
-    useStoryContext() as any;
+  const ctx = useStoryContext();
+  const story = ctx.story as Story | undefined;
+  const pageError = ctx.pageError as StoryPageError | null;
 
   if (pageError) {
-    return <PageError pageError={pageError as any} handleRetry={() => window.location.reload()} />;
+    return <PageError pageError={pageError} handleRetry={() => window.location.reload()} />;
   }
 
   if (story && story.status === 404) {
@@ -43,9 +50,10 @@ const NewsArticle: React.FC = () => {
     return <GameBodySkeleton />;
   }
 
-  let storyParts: StoryPartBase[] = [{ type: 'byline' }, ...story.parts];
-  if (['photo', 'customentity'].includes(story.parts[0].type)) {
-    storyParts = [story.parts[0], { type: 'byline' }, ...story.parts.slice(1)];
+  const parts = Array.isArray(story.parts) ? story.parts : [];
+  let storyParts: StoryPartBase[] = [{ type: 'byline' }, ...parts];
+  if (parts[0] && ['photo', 'customentity'].includes(parts[0].type)) {
+    storyParts = [parts[0], { type: 'byline' }, ...parts.slice(1)];
   }
 
   return (
@@ -59,15 +67,40 @@ const NewsArticle: React.FC = () => {
         const { type } = part;
         switch (type) {
           case 'byline':
-            return <ContentByline key={i} story={story as any} />;
+            return (
+              <ContentByline
+                key={i}
+                story={story as unknown as React.ComponentProps<typeof ContentByline>['story']}
+              />
+            );
           case 'photo':
-            return <ContentPhoto key={i} part={part as any} />;
+            return (
+              <ContentPhoto
+                key={i}
+                part={part as unknown as React.ComponentProps<typeof ContentPhoto>['part']}
+              />
+            );
           case 'customentity':
-            return <ContentCustomEntity key={i} part={part as any} />;
+            return (
+              <ContentCustomEntity
+                key={i}
+                part={part as unknown as React.ComponentProps<typeof ContentCustomEntity>['part']}
+              />
+            );
           case 'external':
-            return <ContentExternal key={i} part={part as any} />;
+            return (
+              <ContentExternal
+                key={i}
+                part={part as unknown as React.ComponentProps<typeof ContentExternal>['part']}
+              />
+            );
           case 'markdown':
-            return <ContentMarkdown key={i} part={part as any} />;
+            return (
+              <ContentMarkdown
+                key={i}
+                part={part as unknown as React.ComponentProps<typeof ContentMarkdown>['part']}
+              />
+            );
           default:
             console.warn(`Unknown story part type: ${type}, rendering as title`);
             break;
@@ -80,9 +113,9 @@ const NewsArticle: React.FC = () => {
 
       <div className="my-5">
         <span className="inline-block rounded-sm p-1 text-xs font-bold m-1">Tags:</span>
-        {story.tags
-          .filter((t: any) => !t.extraData?.hideOnSite)
-          .map((tag: any) => (
+        {(story.tags || [])
+          .filter((t: Tag) => !t.extraData?.hideOnSite)
+          .map((tag: Tag) => (
             <ContentTag tag={tag} key={tag._entityId} />
           ))}
       </div>
