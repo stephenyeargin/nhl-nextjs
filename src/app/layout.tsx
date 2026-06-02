@@ -13,6 +13,7 @@ import Link from 'next/link';
 import MatomoAnalytics from '@/app/components/MatomoAnalytics';
 import { PlayerCardProvider } from '@/app/contexts/PlayerCardContext';
 import PlayerCardPopover from '@/app/components/PlayerCardPopover';
+import { getTopBarMode } from '@/lib/schedule/season';
 import './globals.css';
 
 config.autoAddCss = false;
@@ -33,27 +34,20 @@ export const metadata: Metadata = {
   description: env.NEXT_PUBLIC_SITE_NAME,
 };
 
-function isDraftSeason(): boolean {
-  const now = new Date();
-  const year = now.getFullYear();
-  const june15 = new Date(year, 5, 15);
-  const july15 = new Date(year, 6, 15);
-
-  return now >= june15 && now < july15;
-}
-
 interface RootLayoutProps {
   children: ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const topBarMode = await getTopBarMode();
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <PlayerCardProvider>
           <MainNav />
           <section id="root">
-            {isDraftSeason() ? <DraftTicker /> : <TopBarSchedule />}
+            {topBarMode === 'draft' ? <DraftTicker /> : <TopBarSchedule />}
             {children}
           </section>
           <PlayerCardPopover />
