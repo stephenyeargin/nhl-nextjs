@@ -11,6 +11,7 @@ interface TeamLogoProps {
   className?: string;
   team?: string;
   colorMode?: 'light' | 'dark' | 'auto';
+  loading?: 'lazy' | 'eager';
   noLink?: boolean;
   style?: React.CSSProperties;
 }
@@ -28,6 +29,7 @@ const TeamLogo: React.FC<TeamLogoProps> = ({
   className,
   team,
   colorMode = 'auto',
+  loading,
   noLink = false,
   style = {},
 }) => {
@@ -92,6 +94,7 @@ const TeamLogo: React.FC<TeamLogoProps> = ({
       className={className}
       width={256}
       height={256}
+      loading={loading}
       style={style}
     />
   );

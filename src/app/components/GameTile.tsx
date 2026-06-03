@@ -110,6 +110,7 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
             <TeamLogo
               team={game.awayTeam.abbrev}
               noLink={true}
+              loading="eager"
               src={
                 game.awayTeam.logo ||
                 (game.awayTeam.id !== undefined ? logos[game.awayTeam.id] : undefined)
@@ -156,6 +157,7 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
             <TeamLogo
               team={game.homeTeam.abbrev}
               noLink={true}
+              loading="eager"
               src={
                 game.homeTeam.logo ||
                 (game.homeTeam.id !== undefined ? logos[game.homeTeam.id] : undefined)

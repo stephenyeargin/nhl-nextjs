@@ -72,6 +72,7 @@ const DraftTicker: React.FC = () => {
                   alt={pick.teamAbbrev}
                   className="h-10 w-10 shrink-0"
                   team={pick.teamAbbrev}
+                  loading="eager"
                 />
               </div>
               <div className="flex flex-col items-center w-full">
