@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import TeamLogo from './TeamLogo';
 import Link from 'next/link';
 import type { DraftPickTicker } from '@/app/types/draft';
+import { countryCodeToFlag } from '../utils/formatters';
 
 interface DraftApiResponse {
   selectableRounds?: number[];
@@ -35,7 +36,7 @@ const DraftTicker: React.FC = () => {
   }
 
   return (
-    <div className="px-2 mt-3 mb-10">
+    <div className="px-2 my-3">
       <div className="flex text-xs gap-3 overflow-x-auto scrollbar-hidden items-center">
         <div className="font-bold text-base px-4 whitespace-nowrap">
           <div>
@@ -56,12 +57,13 @@ const DraftTicker: React.FC = () => {
           </div>
         </div>
         {picks.map((pick) => {
+          const isPickIsIn = pick.lastName?.default && pick.firstName?.default;
           const isVoided = pick.lastName?.default === 'Void' && !pick.firstName;
 
           return (
             <div
               key={pick.overallPick}
-              className={`flex flex-col justify-center items-center gap-1 px-3 py-2 rounded-xl border min-w-[180px] max-w-xs overflow-hidden${isVoided ? ' opacity-50' : ''}`}
+              className={`flex flex-col justify-center items-center gap-1 px-3 py-2 border rounded-lg shadow-xs min-w-45 max-w-xs overflow-hidden${isVoided ? ' opacity-50' : ''}`}
             >
               <div className="flex items-center gap-2 w-full justify-center">
                 <span className="text-lg font-extrabold text-blue-800 dark:text-blue-200">
@@ -76,14 +78,34 @@ const DraftTicker: React.FC = () => {
                 />
               </div>
               <div className="flex flex-col items-center w-full">
-                {isVoided ? (
-                  <span className="text-xs italic text-slate-500">— Voided —</span>
-                ) : (
+                {isPickIsIn ? (
                   <>
                     <span className="text-xs font-bold leading-tight text-center wrap-break-word">
-                      {pick.firstName?.default} {pick.lastName?.default}
+                      {pick.firstName?.default}&nbsp;{pick.lastName?.default}
                     </span>
-                    <span className="text-xs">({pick.positionCode})</span>
+                    <span className="text-xs">
+                      {pick.positionCode}&nbsp;
+                      <span title={`${pick.countryCode} Flag`}>
+                        {countryCodeToFlag(pick.countryCode)}
+                      </span>
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    {isVoided ? (
+                      <span className="text-xs italic text-slate-500 leading-[2.5]">
+                        — Voided —
+                      </span>
+                    ) : (
+                      <>
+                        <span className="text-xs font-bold leading-tight text-center wrap-break-word">
+                          {pick.teamName?.default}
+                        </span>
+                        <span className="text-xs]">
+                          {pick.teamPickHistory?.replace(/-/g, ' » ')}
+                        </span>
+                      </>
+                    )}
                   </>
                 )}
               </div>

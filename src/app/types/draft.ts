@@ -47,6 +47,9 @@ export type DraftPickTicker = Pick<
   | 'firstName'
   | 'lastName'
   | 'positionCode'
+  | 'countryCode'
+  | 'teamPickHistory'
+  | 'teamName'
 >;
 
 // Draft ranking player shape
