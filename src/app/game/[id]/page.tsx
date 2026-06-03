@@ -60,8 +60,9 @@ interface ShootoutShot {
 }
 
 interface GoalAssist {
-  firstName?: PlayerNamePart;
-  lastName?: PlayerNamePart;
+  firstName: PlayerNamePart;
+  lastName: PlayerNamePart;
+  playerId: number | string;
   assistsToDate?: number;
 }
 
@@ -410,8 +411,10 @@ const GamePage: React.FC = () => {
                                       <strong>Assists:</strong>{' '}
                                       {goal.assists.map((assist: GoalAssist, ai: number) => (
                                         <span key={ai}>
-                                          {assist.firstName?.default} {assist.lastName?.default} (
-                                          {assist.assistsToDate})
+                                          <PlayerLink playerId={assist.playerId}>
+                                            {assist.firstName?.default} {assist.lastName?.default}
+                                          </PlayerLink>{' '}
+                                          ({assist.assistsToDate})
                                           {ai !== goal.assists.length - 1 && ', '}
                                         </span>
                                       ))}
