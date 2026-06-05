@@ -73,10 +73,63 @@ const sortGamesByState = (games: ScheduleGame[]): ScheduleGame[] => {
 interface TopBarScheduleProps {
   gameDate?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Stanley Cup Final helpers
+// These are only relevant during the ~2 weeks of the SCF. All SCF-specific
+// logic is isolated here so it can be easily toggled or removed off-season.
+// ---------------------------------------------------------------------------
+const SCF_ABBREV = 'SCF';
+
+interface SCFInfo {
+  /** Date whose first game is SCF Game 1; the "Stanley Cup Final" pill replaces this date. */
+  scfGame1Date: string | null;
+  /** Dates with SCF game > 1 that should be hidden from the strip entirely. */
+  scfLaterDates: string[];
+}
+
+function getSCFInfo(gamesByDate: ScheduleByDate[]): SCFInfo {
+  let scfGame1Date: string | null = null;
+  const scfLaterDates: string[] = [];
+
+  for (const day of gamesByDate) {
+    for (const g of day.games) {
+      if (g.seriesStatus?.seriesAbbrev !== SCF_ABBREV) {
+        continue;
+      }
+      const gameNum = g.seriesStatus?.game ?? 0;
+      if (gameNum === 1) {
+        scfGame1Date = day.date;
+      } else if (gameNum > 1 && !scfLaterDates.includes(day.date)) {
+        scfLaterDates.push(day.date);
+      }
+    }
+  }
+
+  return { scfGame1Date, scfLaterDates };
+}
+
+/** Returns all SCF games from every date, sorted by start time. */
+const collectSCFGames = (gamesByDate: ScheduleByDate[]): ScheduleGame[] =>
+  gamesByDate
+    .flatMap((d) => d.games.filter((g) => g.seriesStatus?.seriesAbbrev === SCF_ABBREV))
+    .sort((a, b) => a.startTimeUTC.localeCompare(b.startTimeUTC));
+
+/** True when the games for a date are all SCF Game 1 (series view should aggregate). */
+const isSCFGame1Date = (games: ScheduleGame[]): boolean =>
+  games.length > 0 &&
+  games[0].seriesStatus?.seriesAbbrev === SCF_ABBREV &&
+  games[0].seriesStatus?.game === 1;
+// ---------------------------------------------------------------------------
+
 const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
   const [games, setGames] = useState<ScheduleGame[] | null>(null);
   const [focusedDate, setFocusedDate] = useState<string | null>(gameDate || null);
   const [dates, setDates] = useState<string[]>([]);
+  // SCF state — only populated during the Stanley Cup Final
+  const [scfMode, setScfMode] = useState(false);
+  const [scfGame1Date, setScfGame1Date] = useState<string | null>(null);
+  const [scfLaterDates, setScfLaterDates] = useState<string[]>([]);
 
   // Fetch the game data on initial load and when focusedDate changes
   useEffect(() => {
@@ -133,7 +186,20 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
           setFocusedDate(targetDate);
         }
 
-        setGames(sortGamesByState(gamesForTarget));
+        // Always track which dates contain SCF games (game > 1 should be hidden from the date strip).
+        // SCF detection — only active during Stanley Cup Final.
+        const scfInfo = getSCFInfo(data.gamesByDate);
+        setScfGame1Date(scfInfo.scfGame1Date);
+        setScfLaterDates(scfInfo.scfLaterDates);
+
+        if (isSCFGame1Date(gamesForTarget)) {
+          const allSCF = collectSCFGames(data.gamesByDate);
+          setScfMode(true);
+          setGames(allSCF);
+        } else {
+          setScfMode(false);
+          setGames(sortGamesByState(gamesForTarget));
+        }
       } catch (error) {
         console.error('Error fetching games:', error);
       }
@@ -152,7 +218,16 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
           const gamesForFocusedDate =
             data.gamesByDate.find((g: ScheduleByDate) => focusedDate === g.date)?.games || [];
           if (gamesForFocusedDate.length > 0) {
-            setGames(sortGamesByState(gamesForFocusedDate));
+            const scfInfo = getSCFInfo(data.gamesByDate);
+            setScfGame1Date(scfInfo.scfGame1Date);
+            setScfLaterDates(scfInfo.scfLaterDates);
+            if (isSCFGame1Date(gamesForFocusedDate)) {
+              const allSCF = collectSCFGames(data.gamesByDate);
+              setScfMode(true);
+              setGames(allSCF);
+            } else {
+              setGames(sortGamesByState(gamesForFocusedDate));
+            }
 
             return;
           }
@@ -206,26 +281,38 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
   return (
     <div className="px-2 my-3">
       <div className="flex text-xs gap-2 overflow-x-auto scrollbar-hidden">
-        {dates.map((date) => {
-          let dateClass = 'border rounded-xl';
-          if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
-            dateClass = 'border border-blue-400 rounded-xl';
-          }
-          if (date === focusedDate) {
-            dateClass = 'active rounded-xl bg-slate-500 text-white';
-          }
+        {dates
+          .filter((date) => date !== scfGame1Date && !scfLaterDates.includes(date))
+          .map((date) => {
+            let dateClass = 'border rounded-xl';
+            if (dayjs(date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
+              dateClass = 'border border-blue-400 rounded-xl';
+            }
+            if (date === focusedDate) {
+              dateClass = 'active rounded-xl bg-slate-500 text-white';
+            }
 
-          return (
-            <button
-              key={date}
-              className={dateClass}
-              onClick={() => handleDateClick(date)}
-              title={formatLocalizedDate(date, 'dddd, MMMM D, YYYY')}
-            >
-              <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={date}
+                className={dateClass}
+                onClick={() => handleDateClick(date)}
+                title={formatLocalizedDate(date, 'dddd, MMMM D, YYYY')}
+              >
+                <div className="px-4 text-center">{dayjs(date).utc().format('MMM D')}</div>
+              </button>
+            );
+          })}
+        {scfGame1Date && (
+          <button
+            key="scf"
+            className={scfMode ? 'active rounded-xl bg-slate-500 text-white' : 'border rounded-xl'}
+            title="Stanley Cup Final"
+            onClick={() => handleDateClick(scfGame1Date)}
+          >
+            <div className="px-4 text-center">Stanley Cup Final</div>
+          </button>
+        )}
       </div>
       <div className="overflow-x-auto scrollbar-hidden my-3">
         <div className="flex flex-nowrap gap-4">
