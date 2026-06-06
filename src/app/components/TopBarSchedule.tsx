@@ -328,7 +328,7 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
             <GameTile
               key={game.id}
               game={game as unknown as React.ComponentProps<typeof GameTile>['game']}
-              hideDate={true}
+              hideDate={game.seriesStatus?.seriesAbbrev === 'SCF' ? false : true}
               style={{ minWidth: '360px' }}
             />
           ))}
