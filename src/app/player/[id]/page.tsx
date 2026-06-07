@@ -34,6 +34,23 @@ import LastGamesTable from '@/app/components/LastGamesTable';
 
 type PlayerNewsResponse = PaginatedContentResponse<StoryItem>;
 
+async function parseJsonResponse<T>(response: Response, source: string): Promise<T> {
+  if (!response.ok) {
+    throw new Error(`Failed request to ${source}: ${response.status}`);
+  }
+
+  const bodyText = await response.text();
+  if (!bodyText.trim()) {
+    throw new Error(`Empty response body from ${source}`);
+  }
+
+  try {
+    return JSON.parse(bodyText) as T;
+  } catch {
+    throw new Error(`Invalid JSON from ${source}: ${bodyText.slice(0, 120)}`);
+  }
+}
+
 const SEASON_TYPES: Record<number, 'regularSeason' | 'playoffs'> = {
   2: 'regularSeason',
   3: 'playoffs',
@@ -118,44 +135,62 @@ export default function PlayerPage() {
 
   useEffect(() => {
     const fetchPlayer = async () => {
-      const playerResponse = await fetch(`/api/nhl/player/${filteredId}/landing`, {
-        cache: 'no-store',
-      });
-      if (!playerResponse.ok) {
+      try {
+        const playerResponse = await fetch(`/api/nhl/player/${filteredId}/landing`, {
+          cache: 'no-store',
+        });
+        if (!playerResponse.ok) {
+          return notFound();
+        }
+
+        const playerData = await parseJsonResponse<PlayerLandingResponse>(
+          playerResponse,
+          `/api/nhl/player/${filteredId}/landing`
+        );
+        setPlayer(playerData);
+
+        const [playerContentJson, topStoriesJson, photosJson] = await Promise.all([
+          fetch(
+            `https://forge-dapi.d3.nhle.com/v2/content/en-us/players?tags.slug=playerid-${playerData.playerId}`,
+            { cache: 'no-store' }
+          )
+            .then((res) =>
+              parseJsonResponse<PaginatedContentResponse<ContentCustomEntityPart>>(
+                res,
+                'player content endpoint'
+              )
+            )
+            .catch(() => ({ items: [] }) as PaginatedContentResponse<ContentCustomEntityPart>),
+          fetch(
+            `https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=playerid-${playerData.playerId}&context.slug=nhl&$limit=4`,
+            { cache: 'no-store' }
+          )
+            .then((res) => parseJsonResponse<PlayerNewsResponse>(res, 'player stories endpoint'))
+            .catch(() => ({ items: [] }) as PlayerNewsResponse),
+          fetch(
+            `https://forge-dapi.d3.nhle.com/v2/content/en-us/photos/?tags.slug=playerid-${playerData.playerId}&$skip=${photoOffset}&$limit=8`,
+            { cache: 'no-store' }
+          )
+            .then((res) =>
+              parseJsonResponse<PaginatedContentResponse<PhotoPart>>(res, 'player photos endpoint')
+            )
+            .catch(() => ({ items: [] }) as PaginatedContentResponse<PhotoPart>),
+        ]);
+
+        setPlayerContent(playerContentJson);
+        setPlayerNews(topStoriesJson);
+        setPlayerPhotos((prevPhotos) => [...prevPhotos, ...(photosJson.items || [])]);
+
+        if (!photosJson.pagination?.nextUrl) {
+          setHasMorePhotos(false);
+        }
+
+        formatHeadTitle(
+          `${playerData.firstName?.default} ${playerData.lastName?.default} | #${playerData.sweaterNumber} | ${playerData.position}`
+        );
+      } catch {
         return notFound();
       }
-      const playerData: PlayerLandingResponse = await playerResponse.json();
-      setPlayer(playerData);
-
-      const playerContentResponse = await fetch(
-        `https://forge-dapi.d3.nhle.com/v2/content/en-us/players?tags.slug=playerid-${playerData.playerId}`,
-        { cache: 'no-store' }
-      );
-      const playerContentJson: PaginatedContentResponse<ContentCustomEntityPart> =
-        await playerContentResponse.json();
-      setPlayerContent(playerContentJson);
-
-      const topStoriesResponse = await fetch(
-        `https://forge-dapi.d3.nhle.com/v2/content/en-us/stories?tags.slug=playerid-${playerData.playerId}&context.slug=nhl&$limit=4`,
-        { cache: 'no-store' }
-      );
-      const topStoriesJson: PlayerNewsResponse = await topStoriesResponse.json();
-      setPlayerNews(topStoriesJson);
-
-      const photosResponse = await fetch(
-        `https://forge-dapi.d3.nhle.com/v2/content/en-us/photos/?tags.slug=playerid-${playerData.playerId}&$skip=${photoOffset}&$limit=8`,
-        { cache: 'no-store' }
-      );
-      const photosJson: PaginatedContentResponse<PhotoPart> = await photosResponse.json();
-      setPlayerPhotos((prevPhotos) => [...prevPhotos, ...photosJson.items]);
-
-      if (!photosJson.pagination?.nextUrl) {
-        setHasMorePhotos(false);
-      }
-
-      formatHeadTitle(
-        `${playerData.firstName?.default} ${playerData.lastName?.default} | #${playerData.sweaterNumber} | ${playerData.position}`
-      );
     };
 
     fetchPlayer();
