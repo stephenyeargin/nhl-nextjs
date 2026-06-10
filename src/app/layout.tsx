@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import React from 'react';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { env } from '@/config/env';
 import localFont from 'next/font/local';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -64,7 +65,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           </div>
         </div>
         {env.MATOMO_URL && env.MATOMO_SITE_ID && (
-          <MatomoAnalytics url={env.MATOMO_URL} siteId={env.MATOMO_SITE_ID} />
+          <Suspense fallback={null}>
+            <MatomoAnalytics url={env.MATOMO_URL} siteId={env.MATOMO_SITE_ID} />
+          </Suspense>
         )}
         <SpeedInsights />
       </body>
