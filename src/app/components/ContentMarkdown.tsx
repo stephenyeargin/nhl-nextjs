@@ -13,6 +13,22 @@ interface ContentMarkdownProps {
 }
 
 const PLAYER_PATH_PATTERN = /^\/player\/(?:.*-)?(\d+)\/?$/;
+const VOID_ELEMENTS = new Set([
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]);
 
 const renderNode = (node: Node, key: string): React.ReactNode => {
   if (node.nodeType === Node.TEXT_NODE) {
@@ -26,7 +42,9 @@ const renderNode = (node: Node, key: string): React.ReactNode => {
   const el = node as HTMLElement;
   const children = Array.from(el.childNodes).map((child, i) => renderNode(child, `${key}-${i}`));
 
-  if (el.tagName.toLowerCase() === 'a') {
+  const tagName = el.tagName.toLowerCase();
+
+  if (tagName === 'a') {
     const href = el.getAttribute('href') || '';
     const match = href.match(PLAYER_PATH_PATTERN);
 
@@ -50,7 +68,11 @@ const renderNode = (node: Node, key: string): React.ReactNode => {
     props[attr.name] = attr.value;
   });
 
-  return React.createElement(el.tagName.toLowerCase(), { key, ...props }, children);
+  if (VOID_ELEMENTS.has(tagName)) {
+    return React.createElement(tagName, { key, ...props });
+  }
+
+  return React.createElement(tagName, { key, ...props }, children);
 };
 
 const renderMarkdownWithPlayerLinks = (html: string): React.ReactNode[] => {

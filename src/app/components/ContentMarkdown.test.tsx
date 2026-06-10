@@ -61,4 +61,13 @@ describe('ContentMarkdown', () => {
     expect(link).toHaveAttribute('href', '/team/bos');
     expect(link).toHaveClass('underline');
   });
+
+  test('renders void elements without passing children', () => {
+    const { container } = render(
+      <ContentMarkdown part={{ _entityId: 'x', content: '<p>First line<br>Second line</p>' }} />
+    );
+
+    expect(container).toHaveTextContent('First lineSecond line');
+    expect(container.querySelector('br')).not.toBeNull();
+  });
 });
