@@ -478,7 +478,7 @@ const IceRink: React.FC<IceRinkProps> = ({
               aria-label="Penalty box"
               data-testid="penalty-box"
             >
-              <div className="min-w-0 overflow-hidden flex flex-nowrap gap-2 justify-end">
+              <div className="min-w-0 flex flex-nowrap gap-2 justify-end">
                 {leftPenaltyBox.map((p, i) => (
                   <div key={`${p.playerId}-${i}`} className="shrink-0 text-center">
                     <Skater

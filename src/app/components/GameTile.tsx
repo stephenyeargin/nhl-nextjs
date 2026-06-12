@@ -94,13 +94,19 @@ const GameTile = ({ game, logos = {}, hideDate = false, style }: GameTileProps) 
     }
   }
 
+  let gameTileStyle = 'border rounded-lg shadow-xs p-2 hover:shadow-md transition-shadow';
+  if (formatLocalizedDate(game.startTimeUTC) === formatLocalizedDate(new Date())) {
+    gameTileStyle = `${gameTileStyle} border-blue-700 dark:border-blue-300`;
+  }
+  if (game.gameScheduleState === 'CNCL') {
+    gameTileStyle = `${gameTileStyle} 'opacity-40'`;
+  }
+  if (game.gameState === 'CRIT') {
+    gameTileStyle = `${gameTileStyle} border-red-900`;
+  }
+
   return (
-    <Link
-      href={`/game/${game.id}`}
-      key={game.id}
-      className={`border rounded-lg shadow-xs p-2 hover:shadow-md transition-shadow ${game.gameScheduleState === 'CNCL' ? 'opacity-40' : ''} ${game.gameState === 'CRIT' ? 'border-red-900' : ''}`}
-      style={style}
-    >
+    <Link href={`/game/${game.id}`} key={game.id} className={gameTileStyle} style={style}>
       <div className="">
         {/* Away Team */}
         <div
