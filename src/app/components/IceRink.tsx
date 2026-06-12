@@ -493,7 +493,7 @@ const IceRink: React.FC<IceRinkProps> = ({
               <div className="hidden md:block pt-3 text-[10px] md:text-xs uppercase tracking-wide opacity-70 whitespace-nowrap">
                 Penalty Box
               </div>
-              <div className="min-w-0 overflow-hidden flex flex-nowrap gap-2 justify-start">
+              <div className="min-w-0 flex flex-nowrap gap-2 justify-start">
                 {rightPenaltyBox.map((p, i) => (
                   <div key={`${p.playerId}-${i}`} className="shrink-0 text-center">
                     <Skater
