@@ -28,13 +28,29 @@ describe('getTopBarMode', () => {
     await expect(getTopBarMode(new Date('2026-06-02T12:00:00Z'))).resolves.toBe('schedule');
   });
 
-  it('returns draft when no games are scheduled in the next three weeks', async () => {
+  it('returns schedule when games exist in the previous three weeks', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
         gamesByDate: [
           {
-            date: '2026-07-01',
+            date: '2026-05-28',
+            games: [{ id: 99 }],
+          },
+        ],
+      }),
+    } as Response);
+
+    await expect(getTopBarMode(new Date('2026-06-02T12:00:00Z'))).resolves.toBe('schedule');
+  });
+
+  it('returns draft when no games are scheduled within three weeks in either direction', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        gamesByDate: [
+          {
+            date: '2026-07-15',
             games: [{ id: 7 }],
           },
         ],

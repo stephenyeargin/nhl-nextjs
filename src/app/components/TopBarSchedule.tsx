@@ -307,7 +307,9 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
           <button
             key="scf"
             className={
-              scfMode ? 'active rounded-xl border border-blue-400 text-white' : 'border rounded-xl'
+              scfMode
+                ? 'active rounded-xl border border-blue-400 dark:text-white'
+                : 'border rounded-xl'
             }
             title="Stanley Cup Final"
             onClick={() => handleDateClick(scfGame1Date)}

@@ -59,4 +59,21 @@ describe('DraftTicker', () => {
     await waitFor(() => expect(screen.getByText('— Voided —')).toBeInTheDocument());
     expect(screen.queryByText('Void', { exact: true })).not.toBeInTheDocument();
   });
+
+  it('renders score ticker empty state when no picks are available', async () => {
+    mockFetch.mockResolvedValueOnce({
+      json: () =>
+        Promise.resolve({
+          selectableRounds: [1],
+          picks: [],
+        }),
+    } as Response);
+
+    render(<DraftTicker />);
+
+    await waitFor(() =>
+      expect(screen.getByText('No games scheduled for today.')).toBeInTheDocument()
+    );
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+  });
 });

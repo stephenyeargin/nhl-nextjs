@@ -16,6 +16,7 @@ interface ScoreboardNowResponse {
 }
 
 const LOOKAHEAD_DAYS = 21;
+const LOOKBACK_DAYS = 21;
 
 function toDateKey(date: Date): string {
   return date.toISOString().slice(0, 10);
@@ -39,7 +40,7 @@ function hasGamesInWindow(response: ScoreboardNowResponse, start: string, end: s
 }
 
 export async function getTopBarMode(now: Date = new Date()): Promise<TopBarMode> {
-  const startDate = toDateKey(now);
+  const startDate = toDateKey(addDays(now, -LOOKBACK_DAYS));
   const endDate = toDateKey(addDays(now, LOOKAHEAD_DAYS));
   const scoreboard = await nhlStatic<ScoreboardNowResponse>('/scoreboard/now', ['nhl']);
 

@@ -32,7 +32,20 @@ const DraftTicker: React.FC = () => {
   }, [selectedRound]);
 
   if (!picks.length) {
-    return null;
+    return (
+      <div className="px-2 my-3">
+        <div className="overflow-x-auto scrollbar-hidden my-3">
+          <div className="flex flex-nowrap gap-4">
+            <div
+              className="flex items-center border rounded-sm"
+              style={{ minHeight: '9.25rem', minWidth: '360px' }}
+            >
+              <div className="p-4 text-gray-500">No games scheduled for today.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
