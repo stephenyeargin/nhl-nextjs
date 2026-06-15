@@ -71,9 +71,7 @@ describe('DraftTicker', () => {
 
     render(<DraftTicker />);
 
-    await waitFor(() =>
-      expect(screen.getByText('No games scheduled for today.')).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByText('Draft order pending.')).toBeInTheDocument());
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
 });

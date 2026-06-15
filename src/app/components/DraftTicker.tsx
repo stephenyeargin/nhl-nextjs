@@ -38,9 +38,9 @@ const DraftTicker: React.FC = () => {
           <div className="flex flex-nowrap gap-4">
             <div
               className="flex items-center border rounded-sm"
-              style={{ minHeight: '9.25rem', minWidth: '360px' }}
+              style={{ minHeight: '4.5rem', minWidth: '360px' }}
             >
-              <div className="p-4 text-gray-500">No games scheduled for today.</div>
+              <div className="p-4 text-gray-500">Draft order pending.</div>
             </div>
           </div>
         </div>
