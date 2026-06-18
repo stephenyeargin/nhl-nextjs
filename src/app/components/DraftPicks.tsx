@@ -128,7 +128,10 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                   const isForfeited = pick.lastName?.default === 'Forfeited' && !pick.firstName;
 
                   return (
-                    <tr key={pick.overallPick} className={isVoided ? 'opacity-50' : ''}>
+                    <tr
+                      key={pick.overallPick}
+                      className={isVoided || isForfeited ? 'opacity-50' : ''}
+                    >
                       <td>{pick.overallPick}</td>
                       <td>
                         <div className="flex gap-2 items-center">

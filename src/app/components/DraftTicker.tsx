@@ -77,7 +77,7 @@ const DraftTicker: React.FC = () => {
           return (
             <div
               key={pick.overallPick}
-              className={`flex flex-col justify-center items-center gap-1 px-3 py-2 border rounded-lg shadow-xs min-w-45 max-w-xs overflow-hidden${isVoided ? ' opacity-50' : ''}`}
+              className={`flex flex-col justify-center items-center gap-1 px-3 py-2 border rounded-lg shadow-xs min-w-45 max-w-xs overflow-hidden${isVoided || isForfeited ? ' opacity-50' : ''}`}
             >
               <div className="flex items-center gap-2 w-full justify-center">
                 <span className="text-lg font-extrabold text-blue-800 dark:text-blue-200">
@@ -115,7 +115,7 @@ const DraftTicker: React.FC = () => {
                         <span className="text-xs font-bold leading-tight text-center wrap-break-word">
                           {pick.teamName?.default}
                         </span>
-                        <span className="text-xs]">
+                        <span className="text-xs text-slate-500">
                           {pick.teamPickHistory?.replace(/-/g, ' » ')}
                         </span>
                       </>

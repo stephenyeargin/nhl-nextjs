@@ -16,7 +16,7 @@ interface ScoreboardNowResponse {
 }
 
 const LOOKAHEAD_DAYS = 21;
-const LOOKBACK_DAYS = 21;
+const LOOKBACK_DAYS = 3;
 
 function toDateKey(date: Date): string {
   return date.toISOString().slice(0, 10);
