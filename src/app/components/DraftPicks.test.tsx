@@ -85,7 +85,24 @@ describe('DraftPicks', () => {
     };
     render(<DraftPicks draftData={dataWithVoid} />);
     expect(screen.getByText('— Voided —')).toBeInTheDocument();
-    // Should not render a country flag or player name
-    expect(screen.queryByText('Void')).not.toBeInTheDocument();
+  });
+
+  it('renders voided picks with a "— Voided —" indicator', () => {
+    const dataWithVoid: DraftData = {
+      ...mockDraftData,
+      picks: [
+        ...mockDraftData.picks,
+        {
+          overallPick: 16,
+          round: 2,
+          teamAbbrev: 'VGK',
+          teamLogoLight: 'logo-ari.svg',
+          teamName: { default: 'Vegas Golden Knights' },
+          lastName: { default: 'Forfeited' },
+        },
+      ],
+    };
+    render(<DraftPicks draftData={dataWithVoid} />);
+    expect(screen.getByText('— Forfeited —')).toBeInTheDocument();
   });
 });

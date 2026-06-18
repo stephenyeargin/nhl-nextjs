@@ -72,6 +72,7 @@ const DraftTicker: React.FC = () => {
         {picks.map((pick) => {
           const isPickIsIn = pick.lastName?.default && pick.firstName?.default;
           const isVoided = pick.lastName?.default === 'Void' && !pick.firstName;
+          const isForfeited = pick.lastName?.default === 'Forfeited' && !pick.firstName;
 
           return (
             <div
@@ -105,9 +106,9 @@ const DraftTicker: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    {isVoided ? (
+                    {isVoided || isForfeited ? (
                       <span className="text-xs italic text-slate-500 leading-[2.5]">
-                        — Voided —
+                        — {isVoided ? 'Voided' : 'Forfeited'} —
                       </span>
                     ) : (
                       <>

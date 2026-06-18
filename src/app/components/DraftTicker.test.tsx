@@ -60,6 +60,26 @@ describe('DraftTicker', () => {
     expect(screen.queryByText('Void', { exact: true })).not.toBeInTheDocument();
   });
 
+  it('renders forfeited picks with "\u2014 Forfeited \u2014" instead of player name', async () => {
+    mockFetch.mockResolvedValueOnce({
+      json: () =>
+        Promise.resolve({
+          selectableRounds: [1],
+          picks: [
+            {
+              overallPick: 1,
+              round: 1,
+              teamLogoLight: 'x',
+              teamAbbrev: 'VGK',
+              lastName: { default: 'Forfeited' },
+            },
+          ],
+        }),
+    } as Response);
+    render(<DraftTicker />);
+    await waitFor(() => expect(screen.getByText('— Forfeited —')).toBeInTheDocument());
+  });
+
   it('renders score ticker empty state when no picks are available', async () => {
     mockFetch.mockResolvedValueOnce({
       json: () =>

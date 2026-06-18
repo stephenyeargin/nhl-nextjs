@@ -125,6 +125,7 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
               <tbody>
                 {filteredPicksByRound[round].map((pick) => {
                   const isVoided = pick.lastName?.default === 'Void' && !pick.firstName;
+                  const isForfeited = pick.lastName?.default === 'Forfeited' && !pick.firstName;
 
                   return (
                     <tr key={pick.overallPick} className={isVoided ? 'opacity-50' : ''}>
@@ -148,8 +149,10 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                         )}
                       </td>
                       <td>
-                        {isVoided ? (
-                          <span className="italic text-slate-500">— Voided —</span>
+                        {isVoided || isForfeited ? (
+                          <span className="italic text-slate-500">
+                            — {isVoided ? 'Voided' : 'Forfeited'} —
+                          </span>
                         ) : (
                           <>
                             <span className="mr-1" title={pick.countryCode}>
@@ -159,14 +162,14 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                           </>
                         )}
                       </td>
-                      <td>{isVoided ? '' : pick.positionCode || ''}</td>
+                      <td>{isVoided || isForfeited ? '' : pick.positionCode || ''}</td>
                       <td>
-                        {!isVoided && pick.height && pick.weight
+                        {!isVoided && !isForfeited && pick.height && pick.weight
                           ? `${Math.floor(pick.height / 12)}'${pick.height % 12}" / ${pick.weight}`
                           : ''}
                       </td>
                       <td>
-                        {!isVoided && (
+                        {!isVoided && !isForfeited && (
                           <>
                             {pick.amateurClubName || ''}
                             {pick.amateurLeague ? ` (${pick.amateurLeague})` : ''}
