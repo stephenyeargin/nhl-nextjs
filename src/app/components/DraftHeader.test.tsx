@@ -1,5 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+
+jest.mock('next/navigation', () => ({
+  usePathname: () => '/draft/2025',
+  useRouter: () => ({ refresh: jest.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 // Mock next/image to avoid base URL issues in tests
 jest.mock('next/image', () => {
   const MockImage = (props: React.ImgHTMLAttributes<HTMLSpanElement>) => (

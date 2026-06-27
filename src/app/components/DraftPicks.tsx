@@ -4,12 +4,15 @@ import standingsStyles from '@/app/components/StandingsTable.module.scss';
 import TeamLogo from '@/app/components/TeamLogo';
 import type { DraftData, DraftPick } from '@/app/types/draft';
 import { countryCodeToFlag } from '@/app/utils/formatters';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock } from '@fortawesome/free-solid-svg-icons';
 
 interface DraftPicksProps {
   draftData: DraftData;
   teamFilter?: string; // controlled value (optional)
   onTeamFilterChange?: (_team: string) => void; // controlled change handler
   hideFilter?: boolean; // when true, don't render internal filter UI
+  state?: string;
 }
 
 // Human friendly round labels (fallback to generic if out of range)
@@ -29,7 +32,22 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
   teamFilter: controlledTeamFilter,
   onTeamFilterChange,
   hideFilter = false,
+  state,
 }) => {
+  const isLive = !!state?.toLowerCase().startsWith('live');
+  const onTheClockOverall = useMemo(() => {
+    if (!isLive) {
+      return null;
+    }
+    const pick = draftData.picks.find(
+      (p) =>
+        !p.firstName?.default &&
+        p.lastName?.default !== 'Void' &&
+        p.lastName?.default !== 'Forfeited'
+    );
+
+    return pick?.overallPick ?? null;
+  }, [isLive, draftData.picks]);
   const [internalTeamFilter, setInternalTeamFilter] = useState<string>(''); // empty = all
   const isControlled = controlledTeamFilter !== undefined && onTeamFilterChange;
   const teamFilter = isControlled ? (controlledTeamFilter as string) : internalTeamFilter;
@@ -126,12 +144,20 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                 {filteredPicksByRound[round].map((pick) => {
                   const isVoided = pick.lastName?.default === 'Void' && !pick.firstName;
                   const isForfeited = pick.lastName?.default === 'Forfeited' && !pick.firstName;
+                  const isDrafted = !!pick.firstName?.default;
+                  const isOnTheClock = isLive && pick.overallPick === onTheClockOverall;
+                  const isFuture =
+                    isLive && !isDrafted && !isVoided && !isForfeited && !isOnTheClock;
+
+                  let rowClass = '';
+                  if (isVoided || isForfeited) {
+                    rowClass = 'opacity-50';
+                  } else if (isOnTheClock) {
+                    rowClass = 'bg-amber-50 dark:bg-amber-950/40';
+                  }
 
                   return (
-                    <tr
-                      key={pick.overallPick}
-                      className={isVoided || isForfeited ? 'opacity-50' : ''}
-                    >
+                    <tr key={pick.overallPick} className={rowClass}>
                       <td>{pick.overallPick}</td>
                       <td>
                         <div className="flex gap-2 items-center">
@@ -151,10 +177,14 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                           </div>
                         )}
                       </td>
-                      <td>
+                      <td className={isFuture ? 'opacity-40' : ''}>
                         {isVoided || isForfeited ? (
                           <span className="italic text-slate-500">
                             — {isVoided ? 'Voided' : 'Forfeited'} —
+                          </span>
+                        ) : isOnTheClock ? (
+                          <span className="text-orange-500 text-xs font-semibold">
+                            <FontAwesomeIcon icon={faClock} /> On the Clock
                           </span>
                         ) : (
                           <>
@@ -165,13 +195,15 @@ const DraftPicks: React.FC<DraftPicksProps> = ({
                           </>
                         )}
                       </td>
-                      <td>{isVoided || isForfeited ? '' : pick.positionCode || ''}</td>
-                      <td>
+                      <td className={isFuture ? 'opacity-40' : ''}>
+                        {isVoided || isForfeited ? '' : pick.positionCode || ''}
+                      </td>
+                      <td className={isFuture ? 'opacity-40' : ''}>
                         {!isVoided && !isForfeited && pick.height && pick.weight
                           ? `${Math.floor(pick.height / 12)}'${pick.height % 12}" / ${pick.weight}`
                           : ''}
                       </td>
-                      <td>
+                      <td className={isFuture ? 'opacity-40' : ''}>
                         {!isVoided && !isForfeited && (
                           <>
                             {pick.amateurClubName || ''}

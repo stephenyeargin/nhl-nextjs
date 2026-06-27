@@ -16,6 +16,8 @@ export interface DraftPick {
   teamLogoLight?: string;
   teamAbbrev: string;
   teamName?: LocalizedString;
+  teamCommonName?: LocalizedString;
+  teamPlaceNameWithPreposition?: LocalizedString;
   teamPickHistory?: string;
   firstName?: LocalizedString;
   lastName?: LocalizedString;
@@ -34,6 +36,7 @@ export interface DraftData {
   draftYears: number[];
   selectableRounds: number[];
   picks: DraftPick[];
+  state?: string;
   [k: string]: unknown;
 }
 
@@ -50,6 +53,8 @@ export type DraftPickTicker = Pick<
   | 'countryCode'
   | 'teamPickHistory'
   | 'teamName'
+  | 'teamCommonName'
+  | 'teamPlaceNameWithPreposition'
 >;
 
 // Draft ranking player shape

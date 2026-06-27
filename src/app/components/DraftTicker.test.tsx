@@ -36,7 +36,8 @@ describe('DraftTicker', () => {
         }),
     } as Response);
     render(<DraftTicker />);
-    await waitFor(() => expect(screen.getByText(/First Last/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Last')).toBeInTheDocument());
+    expect(screen.getByText('First')).toBeInTheDocument();
   });
 
   it('renders voided picks with "\u2014 Voided \u2014" instead of player name', async () => {

@@ -1,7 +1,7 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { DraftData, DraftRankingsData } from '@/app/types/draft';
 import DraftYearSelect from '@/app/components/DraftYearSelect';
 import DraftPicks from '@/app/components/DraftPicks';
@@ -13,12 +13,25 @@ interface DraftHeaderProps {
   preferredView?: 'picks' | 'rankings';
 }
 
+function parseDayLabel(state?: string): string | null {
+  if (!state) {
+    return null;
+  }
+  const match = state.match(/^live[Dd]ay(\d+)$/i);
+  if (!match) {
+    return null;
+  }
+
+  return `Day ${match[1]}`;
+}
+
 const DraftHeader: React.FC<DraftHeaderProps> = ({
   draftData,
   rankingsData,
   preferredView = 'picks',
 }) => {
   const pathname = usePathname();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const hasPicks = !!draftData.picks && draftData.picks.length > 0;
   const canToggleRankings =
@@ -28,6 +41,18 @@ const DraftHeader: React.FC<DraftHeaderProps> = ({
     rankingsData.rankings.length > 0;
   const showRankings = !hasPicks || (canToggleRankings && preferredView === 'rankings');
   const [teamFilter, setTeamFilter] = useState<string>('');
+
+  const isLive = !!draftData.state?.toLowerCase().startsWith('live');
+  const dayLabel = parseDayLabel(draftData.state);
+
+  useEffect(() => {
+    if (!isLive) {
+      return;
+    }
+    const interval = setInterval(() => router.refresh(), 60_000);
+
+    return () => clearInterval(interval);
+  }, [isLive, router]);
 
   const getViewHref = (view: 'picks' | 'rankings') => {
     const nextParams = new URLSearchParams(searchParams.toString());
@@ -58,10 +83,18 @@ const DraftHeader: React.FC<DraftHeaderProps> = ({
   return (
     <div>
       <div className="mb-6 flex flex-col items-center text-center gap-4 md:flex-row md:items-center md:justify-between md:text-left">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-          {draftData.draftYear} NHL Entry Draft
-          {showRankings && <span> Rankings</span>}
-        </h1>
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex items-center gap-3 flex-wrap">
+            {draftData.draftYear} NHL Entry Draft
+            {isLive && (
+              <span className="text-sm font-semibold text-red-500 flex items-center gap-1">
+                <span className="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                LIVE
+              </span>
+            )}
+          </h1>
+          {dayLabel && <p className="text-sm text-slate-500 mt-1">{dayLabel}</p>}
+        </div>
         <div className="flex justify-center md:justify-center">
           <DraftYearSelect
             draftYears={draftData.draftYears}
@@ -156,6 +189,7 @@ const DraftHeader: React.FC<DraftHeaderProps> = ({
           teamFilter={teamFilter}
           onTeamFilterChange={setTeamFilter}
           hideFilter
+          state={draftData.state}
         />
       )}
     </div>
