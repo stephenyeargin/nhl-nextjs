@@ -30,19 +30,37 @@ exports[`TopBarSchedule (smoke) renders dates and switches focused date 1`] = `
       </button>
     </div>
     <div
-      class="overflow-x-auto scrollbar-hidden my-3"
+      class="flex items-center gap-2 my-3"
     >
+      <button
+        aria-label="Scroll left"
+        class="shrink-0 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        type="button"
+      >
+        ‹
+      </button>
       <div
-        class="flex flex-nowrap gap-4"
+        class="overflow-x-auto scrollbar-hidden"
       >
         <div
-          data-game="[object Object]"
-          data-testid="game-tile"
-          style="min-width: 360px;"
+          class="flex flex-nowrap gap-4"
         >
-          Game 1
+          <div
+            data-game="[object Object]"
+            data-testid="game-tile"
+            style="min-width: 360px;"
+          >
+            Game 1
+          </div>
         </div>
       </div>
+      <button
+        aria-label="Scroll right"
+        class="shrink-0 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        type="button"
+      >
+        ›
+      </button>
     </div>
   </div>
 </DocumentFragment>
@@ -78,19 +96,37 @@ exports[`TopBarSchedule (smoke) renders dates and switches focused date 2`] = `
       </button>
     </div>
     <div
-      class="overflow-x-auto scrollbar-hidden my-3"
+      class="flex items-center gap-2 my-3"
     >
+      <button
+        aria-label="Scroll left"
+        class="shrink-0 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        type="button"
+      >
+        ‹
+      </button>
       <div
-        class="flex flex-nowrap gap-4"
+        class="overflow-x-auto scrollbar-hidden"
       >
         <div
-          data-game="[object Object]"
-          data-testid="game-tile"
-          style="min-width: 360px;"
+          class="flex flex-nowrap gap-4"
         >
-          Game 2
+          <div
+            data-game="[object Object]"
+            data-testid="game-tile"
+            style="min-width: 360px;"
+          >
+            Game 2
+          </div>
         </div>
       </div>
+      <button
+        aria-label="Scroll right"
+        class="shrink-0 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        type="button"
+      >
+        ›
+      </button>
     </div>
   </div>
 </DocumentFragment>

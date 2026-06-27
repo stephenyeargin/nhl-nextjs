@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -269,6 +269,12 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, [focusedDate]); // Only re-run interval if focusedDate changes
 
+  const gamesScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollGames = (dir: 'left' | 'right') => {
+    gamesScrollRef.current?.scrollBy({ left: dir === 'left' ? -300 : 300, behavior: 'smooth' });
+  };
+
   // Handle date click to update focusedDate
   const handleDateClick = (date: string) => {
     setFocusedDate(date);
@@ -318,25 +324,43 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
           </button>
         )}
       </div>
-      <div className="overflow-x-auto scrollbar-hidden my-3">
-        <div className="flex flex-nowrap gap-4">
-          {games.length === 0 && (
-            <div
-              className="flex items-center border rounded-sm"
-              style={{ minHeight: '9.25rem', minWidth: '360px' }}
-            >
-              <div className="p-4 text-gray-500">No games scheduled for today.</div>
-            </div>
-          )}
-          {games.map((game) => (
-            <GameTile
-              key={game.id}
-              game={game as unknown as React.ComponentProps<typeof GameTile>['game']}
-              hideDate={game.seriesStatus?.seriesAbbrev === 'SCF' ? false : true}
-              style={{ minWidth: '360px' }}
-            />
-          ))}
+      <div className="flex items-center gap-2 my-3">
+        <button
+          type="button"
+          aria-label="Scroll left"
+          className="shrink-0 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          onClick={() => scrollGames('left')}
+        >
+          ‹
+        </button>
+        <div ref={gamesScrollRef} className="overflow-x-auto scrollbar-hidden">
+          <div className="flex flex-nowrap gap-4">
+            {games.length === 0 && (
+              <div
+                className="flex items-center border rounded-sm"
+                style={{ minHeight: '9.25rem', minWidth: '360px' }}
+              >
+                <div className="p-4 text-gray-500">No games scheduled for today.</div>
+              </div>
+            )}
+            {games.map((game) => (
+              <GameTile
+                key={game.id}
+                game={game as unknown as React.ComponentProps<typeof GameTile>['game']}
+                hideDate={game.seriesStatus?.seriesAbbrev === 'SCF' ? false : true}
+                style={{ minWidth: '360px' }}
+              />
+            ))}
+          </div>
         </div>
+        <button
+          type="button"
+          aria-label="Scroll right"
+          className="shrink-0 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          onClick={() => scrollGames('right')}
+        >
+          ›
+        </button>
       </div>
     </div>
   );
