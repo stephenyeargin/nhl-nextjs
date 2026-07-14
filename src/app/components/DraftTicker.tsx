@@ -6,6 +6,7 @@ import type { DraftPickTicker } from '@/app/types/draft';
 import { countryCodeToFlag } from '../utils/formatters';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DraftTickerSkeleton from './DraftTickerSkeleton';
 
 interface ApiResponse {
   selectableRounds?: number[];
@@ -93,20 +94,7 @@ const DraftTicker: React.FC = () => {
       : allPicks.filter((p) => !!p.firstName?.default).at(-1);
 
   if (!allPicks.length) {
-    return (
-      <div className="px-2 my-3">
-        <div className="overflow-x-auto scrollbar-hidden my-3">
-          <div className="flex flex-nowrap gap-4">
-            <div
-              className="flex items-center border rounded-sm"
-              style={{ minHeight: '4.5rem', minWidth: '360px' }}
-            >
-              <div className="p-4 text-gray-500">Draft order pending.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <DraftTickerSkeleton />;
   }
 
   return (

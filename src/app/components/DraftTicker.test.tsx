@@ -81,7 +81,7 @@ describe('DraftTicker', () => {
     await waitFor(() => expect(screen.getByText('— Forfeited —')).toBeInTheDocument());
   });
 
-  it('renders score ticker empty state when no picks are available', async () => {
+  it('renders loading skeleton when no picks are available', async () => {
     mockFetch.mockResolvedValueOnce({
       json: () =>
         Promise.resolve({
@@ -92,7 +92,6 @@ describe('DraftTicker', () => {
 
     render(<DraftTicker />);
 
-    await waitFor(() => expect(screen.getByText('Draft order pending.')).toBeInTheDocument());
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByTestId('draft-ticker-skeleton')).toBeInTheDocument());
   });
 });

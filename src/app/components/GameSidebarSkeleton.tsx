@@ -1,20 +1,21 @@
 import React from 'react';
+import { SkeletonBlock, SkeletonPulse } from './loading/SkeletonPrimitives';
 
 const GameSidebarSkeleton = () => {
   return (
-    <div className="animate-pulse">
-      <div className="my-2 h-10 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-      <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-      <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-      <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-      <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
+    <SkeletonPulse>
+      <SkeletonBlock className="my-2 h-10" />
+      <SkeletonBlock className="my-2 h-5" />
+      <SkeletonBlock className="my-2 h-5" />
+      <SkeletonBlock className="my-2 h-5" />
+      <SkeletonBlock className="my-2 h-5" />
 
-      <div className="mt-10 mb-2 h-10 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-      <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-      <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-      <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-      <div className="my-2 h-5 bg-slate-300 dark:bg-slate-700 animate-pulse"></div>
-    </div>
+      <SkeletonBlock className="mt-10 mb-2 h-10" />
+      <SkeletonBlock className="my-2 h-5" />
+      <SkeletonBlock className="my-2 h-5" />
+      <SkeletonBlock className="my-2 h-5" />
+      <SkeletonBlock className="my-2 h-5" />
+    </SkeletonPulse>
   );
 };
 
