@@ -6,7 +6,7 @@ import TeamLogo from '@/app/components/TeamLogo';
 import { formatLocalizedDate, formatLocalizedTime, formatBroadcasts } from '@/app/utils/formatters';
 import styles from '@/app/components/StatsTable.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faStar, faWarning } from '@fortawesome/free-solid-svg-icons';
 
 interface TeamInfo {
   abbreviation: string;
@@ -44,6 +44,10 @@ interface Game {
   awayTeam: GameTeam;
   homeTeam: GameTeam;
   tvBroadcasts?: BroadcastInfo[] | null;
+  neutralSite: boolean;
+  venue: {
+    default: string;
+  };
 }
 
 interface FullSeasonSchedule {
@@ -81,7 +85,7 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }: TeamSchedulePro
           </tr>
         </thead>
         <tbody>
-          {fullSeasonSchedule.games?.map((game) => (
+          {fullSeasonSchedule.games?.map((game: Game) => (
             <tr key={game.id}>
               <td>
                 <time dateTime={game.startTimeUTC} suppressHydrationWarning={true}>
@@ -104,10 +108,17 @@ const TeamSchedule = ({ team, fullSeasonSchedule, headerStyle }: TeamSchedulePro
                     }
                     className="h-8 w-8"
                   />
-                  <Link href={`/game/${game.id}`} className="underline">
-                    {game.awayTeam.placeName.default || game.awayTeam.commonName.default} @{' '}
-                    {game.homeTeam.placeName.default || game.homeTeam.commonName.default}
-                  </Link>
+                  <div>
+                    <Link href={`/game/${game.id}`} className="underline">
+                      {game.awayTeam.placeName.default || game.awayTeam.commonName.default} @{' '}
+                      {game.homeTeam.placeName.default || game.homeTeam.commonName.default}
+                    </Link>
+                    {game.neutralSite && (
+                      <div className="text-xs">
+                        <FontAwesomeIcon icon={faStar} /> {game.venue.default}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </td>
               <td className="text-center">

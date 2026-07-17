@@ -30,6 +30,8 @@ const gameBase = {
   startTimeUTC: '2025-01-01T00:00:00Z',
   gameType: 2,
   gameState: 'FINAL',
+  neutralSite: false,
+  venue: { default: '' },
   awayTeam: {
     abbrev: 'AWY',
     score: 2,

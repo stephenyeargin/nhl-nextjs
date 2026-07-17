@@ -55,11 +55,13 @@ exports[`TeamSchedule renders final game with W/L logic and broadcasts 1`] = `
               <div
                 data-testid="logo-AWY"
               />
-              <a
-                href="/game/1"
-              >
-                Away @ Home
-              </a>
+              <div>
+                <a
+                  href="/game/1"
+                >
+                  Away @ Home
+                </a>
+              </div>
             </div>
           </td>
           <td
@@ -139,11 +141,13 @@ exports[`TeamSchedule renders live game badge and cancelled 1`] = `
               <div
                 data-testid="logo-HOM"
               />
-              <a
-                href="/game/2"
-              >
-                Away @ Home
-              </a>
+              <div>
+                <a
+                  href="/game/2"
+                >
+                  Away @ Home
+                </a>
+              </div>
             </div>
           </td>
           <td
@@ -187,11 +191,13 @@ exports[`TeamSchedule renders live game badge and cancelled 1`] = `
               <div
                 data-testid="logo-HOM"
               />
-              <a
-                href="/game/3"
-              >
-                Away @ Home
-              </a>
+              <div>
+                <a
+                  href="/game/3"
+                >
+                  Away @ Home
+                </a>
+              </div>
             </div>
           </td>
           <td
@@ -244,11 +250,13 @@ exports[`TeamSchedule renders live game badge and cancelled 1`] = `
               <div
                 data-testid="logo-HOM"
               />
-              <a
-                href="/game/4"
-              >
-                Away @ Home
-              </a>
+              <div>
+                <a
+                  href="/game/4"
+                >
+                  Away @ Home
+                </a>
+              </div>
             </div>
           </td>
           <td
