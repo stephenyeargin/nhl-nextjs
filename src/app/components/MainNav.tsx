@@ -58,6 +58,13 @@ const MainNav: React.FC = () => {
           </Link>
         </li>
         <li
+          className={`${isActive(/^\/stats$/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
+        >
+          <Link href="/stats" className="text-black dark:text-white">
+            Stats
+          </Link>
+        </li>
+        <li
           className={`${isActive(/^\/team$/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
         >
           <Link href="/team" className="text-black dark:text-white" onMouseEnter={handleMouseEnter}>

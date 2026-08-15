@@ -153,3 +153,17 @@ export interface StatHeader {
   precision?: number;
   unit?: string;
 }
+
+// Entry shape returned by /v1/skater-stats-leaders and /v1/goalie-stats-leaders
+export interface StatsLeaderPlayer {
+  id: number;
+  firstName: { default: string };
+  lastName: { default: string };
+  teamAbbrev: string;
+  teamLogo: string;
+  headshot: string;
+  position: string;
+  value: number;
+}
+
+export type StatsLeaderResponse = Record<string, StatsLeaderPlayer[]>;
