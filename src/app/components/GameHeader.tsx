@@ -18,6 +18,7 @@ import { GAME_TYPE_LABELS } from '../utils/constants';
 const GameHeader: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
   const stickyRef = useRef<HTMLDivElement | null>(null);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const { gameData } = useGameContext();
 
@@ -34,6 +35,16 @@ const GameHeader: React.FC = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleThemeChange = () => setTheme(mediaQuery.matches ? 'dark' : 'light');
+
+    mediaQuery.addEventListener('change', handleThemeChange);
+    handleThemeChange();
+
+    return () => mediaQuery.removeEventListener('change', handleThemeChange);
   }, []);
 
   if (!gameData || !gameData.game) {
@@ -144,7 +155,13 @@ const GameHeader: React.FC = () => {
           {game.specialEvent.lightLogoUrl?.default ? (
             <div className="flex justify-center py-5">
               <Image
-                src={game.specialEvent.lightLogoUrl.default}
+                src={
+                  theme === 'dark'
+                    ? game.specialEvent.lightLogoUrl.default
+                        .replace('-light', '-dark')
+                        .replace('_light', '_dark')
+                    : game.specialEvent.lightLogoUrl.default
+                }
                 width={300}
                 height={100}
                 alt="Event Logo"

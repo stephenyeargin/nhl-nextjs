@@ -24,7 +24,7 @@ const teamData: TeamDataEntry[] = [
   {
     name: 'Buffalo Sabres',
     slug: 'sabres',
-    hashtag: 'SabreHood',
+    hashtag: 'Sabrehood',
     abbreviation: 'BUF',
     teamColor: '#003087',
     secondaryTeamColor: '#FFB81C',
@@ -44,7 +44,7 @@ const teamData: TeamDataEntry[] = [
   {
     name: 'Carolina Hurricanes',
     slug: 'hurricanes',
-    hashtag: 'RaiseUp',
+    hashtag: 'CarolinaCulture',
     abbreviation: 'CAR',
     teamColor: '#c8102e',
     secondaryTeamColor: '#FFFFFF',
