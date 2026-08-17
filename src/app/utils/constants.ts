@@ -91,7 +91,7 @@ export const PENALTY_DESCRIPTIONS = {
   kneeing: 'Kneeing',
   'late-on-ice': 'Late on ice',
   'leaving-penalty-box': 'Leaving penalty box',
-  'leaving-players-penalty-bench': 'Leaving player\'s penalty bench',
+  'leaving-players-penalty-bench': "Leaving player's penalty bench",
   major: 'Major',
   'match-penalty': 'Match Penalty',
   'match-penalty-10-minutes': 'Match Penalty - 10 minutes',
@@ -126,7 +126,7 @@ export const PENALTY_DESCRIPTIONS = {
   'removing-sweater': 'Removing sweater',
   roughing: 'Roughing',
   'roughing-double-minor': 'Roughing - double minor',
-  'roughing-removing-opponents-helmet': 'Roughing - Removing opponent\'s helmet',
+  'roughing-removing-opponents-helmet': "Roughing - Removing opponent's helmet",
   'shootout-illegal-stick': 'Shootout - Illegal stick',
   'shootout-unsuccessful-challenge': 'Shootout - Unsuccessful challenge',
   slashing: 'Slashing',
@@ -388,3 +388,8 @@ export const GAME_REPORT_NAMES = {
 };
 
 export const NHL_BRIGHTCOVE_ACCOUNT = '6415718365001';
+
+// Fallback regular season game count, used only if the live schedule fetch
+// (club-schedule-season, filtered to gameType 2) fails. The schedule length
+// changes between seasons, so prefer the live count over this constant.
+export const SEASON_GAMES = 84;

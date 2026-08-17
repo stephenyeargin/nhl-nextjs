@@ -220,7 +220,7 @@ describe('StandingsTable', () => {
       }),
     ];
 
-    render(<StandingsTable standings={rows} view="wildcard" />);
+    render(<StandingsTable standings={rows} view="wildcard" seasonGames={82} />);
 
     const magicHeading = screen.getByTitle('Magic Number');
     const tragicHeading = screen.getByTitle('Tragic Number');
@@ -472,7 +472,7 @@ describe('StandingsTable', () => {
       }),
     ];
 
-    render(<StandingsTable standings={rows} view="wildcard" />);
+    render(<StandingsTable standings={rows} view="wildcard" seasonGames={82} />);
 
     const lakRow = screen.getByText('Los Angeles Kings').closest('tr');
     const lakCells = within(lakRow!).getAllByRole('cell');
@@ -603,5 +603,194 @@ describe('StandingsTable', () => {
 
     expect(ranks).toEqual(['1', '2', '3']);
     expect(names[0]).toMatch(/Team 3/); // highest points first
+  });
+
+  it('honors the seasonGames prop instead of assuming an 82-game season', () => {
+    // Same shape as the 9-team race fixture above, but without official clinch
+    // indicators, so the raw computed magic/tragic numbers are visible.
+    // gamesRemaining = 84 - 65 = 19, maxPossiblePoints = pts + 38
+    // ninthPlaceTeam = T9 (78 pts, max = 116), eighthPlaceTeam = T8 (80 pts, max = 118)
+    // T1 (in playoff spot): M# = max(0, 116 - 115 + 1) = 2, T# = max(0, 153 - 78 + 1) = 76
+    // T9 (outside playoff spot): M# = max(0, 118 - 78) = 40, T# = max(0, 116 - 80 + 1) = 37
+    const rows = [
+      row({
+        teamAbbrev: { default: 'T1' },
+        teamName: { default: 'Team 1' },
+        points: 115,
+        gamesPlayed: 65,
+        wildcardSequence: 1,
+      }),
+      row({
+        teamAbbrev: { default: 'T2' },
+        teamName: { default: 'Team 2' },
+        points: 92,
+        gamesPlayed: 65,
+        wildcardSequence: 2,
+      }),
+      row({
+        teamAbbrev: { default: 'T3' },
+        teamName: { default: 'Team 3' },
+        points: 90,
+        gamesPlayed: 65,
+        wildcardSequence: 3,
+      }),
+      row({
+        teamAbbrev: { default: 'T4' },
+        teamName: { default: 'Team 4' },
+        points: 88,
+        gamesPlayed: 65,
+        wildcardSequence: 4,
+      }),
+      row({
+        teamAbbrev: { default: 'T5' },
+        teamName: { default: 'Team 5' },
+        points: 86,
+        gamesPlayed: 65,
+        wildcardSequence: 5,
+      }),
+      row({
+        teamAbbrev: { default: 'T6' },
+        teamName: { default: 'Team 6' },
+        points: 84,
+        gamesPlayed: 65,
+        wildcardSequence: 6,
+      }),
+      row({
+        teamAbbrev: { default: 'T7' },
+        teamName: { default: 'Team 7' },
+        points: 82,
+        gamesPlayed: 65,
+        wildcardSequence: 7,
+      }),
+      row({
+        teamAbbrev: { default: 'T8' },
+        teamName: { default: 'Team 8' },
+        points: 80,
+        gamesPlayed: 65,
+        wildcardSequence: 8,
+      }),
+      row({
+        teamAbbrev: { default: 'T9' },
+        teamName: { default: 'Team 9' },
+        points: 78,
+        gamesPlayed: 65,
+        wildcardSequence: 9,
+      }),
+    ];
+
+    const { unmount: unmount84 } = render(
+      <StandingsTable standings={rows} view="wildcard" seasonGames={84} />
+    );
+
+    const firstTeamRow = screen.getByText('Team 1').closest('tr');
+    const firstTeamCells = within(firstTeamRow!).getAllByRole('cell');
+    expect(firstTeamCells[2].textContent).toBe('2');
+    expect(firstTeamCells[3].textContent).toBe('76');
+
+    const ninthTeamRow = screen.getByText('Team 9').closest('tr');
+    const ninthTeamCells = within(ninthTeamRow!).getAllByRole('cell');
+    expect(ninthTeamCells[2].textContent).toBe('40');
+    expect(ninthTeamCells[3].textContent).toBe('37');
+
+    unmount84();
+
+    // Same fixture, only the season length changes -- confirms the 84-game
+    // numbers above aren't a coincidence of a hardcoded literal.
+    render(<StandingsTable standings={rows} view="wildcard" seasonGames={82} />);
+    const eightyTwoFirstTeamCells = within(screen.getByText('Team 1').closest('tr')!).getAllByRole(
+      'cell'
+    );
+    expect(eightyTwoFirstTeamCells[3].textContent).toBe('72');
+  });
+
+  it('anchors magic to the highest-ceiling chaser but tragic to the actual current 9th-place chaser', () => {
+    // Two teams outside the playoff line: CLOSER sits in the actual current
+    // 9th spot (fewer games in hand, but more points today). HICEIL sits 10th
+    // by current standings but has far more games in hand, giving it the
+    // higher ceiling. The magic number must guard against the best possible
+    // finish (HICEIL's ceiling), but the tragic number should reflect who's
+    // actually closest today (CLOSER's current points), not HICEIL's.
+    const rows = [
+      row({
+        teamAbbrev: { default: 'P1' },
+        teamName: { default: 'Playoff 1' },
+        points: 100,
+        gamesPlayed: 70,
+        wildcardSequence: 0,
+      }),
+      row({
+        teamAbbrev: { default: 'P2' },
+        teamName: { default: 'Playoff 2' },
+        points: 95,
+        gamesPlayed: 70,
+        wildcardSequence: 1,
+      }),
+      row({
+        teamAbbrev: { default: 'P3' },
+        teamName: { default: 'Playoff 3' },
+        points: 92,
+        gamesPlayed: 70,
+        wildcardSequence: 2,
+      }),
+      row({
+        teamAbbrev: { default: 'P4' },
+        teamName: { default: 'Playoff 4' },
+        points: 90,
+        gamesPlayed: 70,
+        wildcardSequence: 3,
+      }),
+      row({
+        teamAbbrev: { default: 'P5' },
+        teamName: { default: 'Playoff 5' },
+        points: 88,
+        gamesPlayed: 70,
+        wildcardSequence: 4,
+      }),
+      row({
+        teamAbbrev: { default: 'P6' },
+        teamName: { default: 'Playoff 6' },
+        points: 85,
+        gamesPlayed: 70,
+        wildcardSequence: 5,
+      }),
+      row({
+        teamAbbrev: { default: 'P7' },
+        teamName: { default: 'Playoff 7' },
+        points: 83,
+        gamesPlayed: 70,
+        wildcardSequence: 6,
+      }),
+      row({
+        teamAbbrev: { default: 'P8' },
+        teamName: { default: 'Playoff 8' },
+        points: 80,
+        gamesPlayed: 70,
+        wildcardSequence: 7,
+      }),
+      row({
+        teamAbbrev: { default: 'CLOSER' },
+        teamName: { default: 'Closer Today Team' },
+        points: 75,
+        gamesPlayed: 80,
+        wildcardSequence: 8,
+      }),
+      row({
+        teamAbbrev: { default: 'HICEIL' },
+        teamName: { default: 'High Ceiling Team' },
+        points: 60,
+        gamesPlayed: 50,
+        wildcardSequence: 9,
+      }),
+    ];
+
+    render(<StandingsTable standings={rows} view="wildcard" seasonGames={82} />);
+
+    // HICEIL (max possible 124) beats CLOSER (max possible 79) on ceiling, so
+    // it's the magic-number anchor. But CLOSER is the real current 9th place
+    // (75 pts today), so it's the tragic-number anchor instead of HICEIL.
+    const p1Row = screen.getByText('Playoff 1').closest('tr');
+    const p1Cells = within(p1Row!).getAllByRole('cell');
+    expect(p1Cells[2].textContent).toBe('25'); // magic: 124 (HICEIL ceiling) - 100 + 1
+    expect(p1Cells[3].textContent).toBe('50'); // tragic: 124 - 75 (CLOSER current pts) + 1
   });
 });

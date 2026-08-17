@@ -10,6 +10,7 @@ interface StandingsSwitcherProps {
   eastern: StandingsEntry[];
   standingsDate?: string;
   hideTables?: boolean;
+  seasonGames?: number;
 }
 
 const viewOptions: { key: StandingsView; label: string }[] = [
@@ -33,6 +34,7 @@ const StandingsSwitcher: React.FC<StandingsSwitcherProps> = ({
   eastern,
   standingsDate,
   hideTables = false,
+  seasonGames,
 }) => {
   const [view, setView] = React.useState<StandingsView>('wildcard');
   const router = useRouter();
@@ -191,17 +193,17 @@ const StandingsSwitcher: React.FC<StandingsSwitcherProps> = ({
           {view === 'league' ? (
             <section>
               <h2 className="text-xl py-2">League</h2>
-              <StandingsTable standings={leagueRows} view="league" />
+              <StandingsTable standings={leagueRows} view="league" seasonGames={seasonGames} />
             </section>
           ) : (
             <>
               <section>
                 <h2 className="text-xl py-2">Western Conference</h2>
-                <StandingsTable standings={western} view={view} />
+                <StandingsTable standings={western} view={view} seasonGames={seasonGames} />
               </section>
               <section>
                 <h2 className="text-xl py-2">Eastern Conference</h2>
-                <StandingsTable standings={eastern} view={view} />
+                <StandingsTable standings={eastern} view={view} seasonGames={seasonGames} />
               </section>
             </>
           )}

@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import TeamLogo from '@/app/components/TeamLogo';
 import { formatStat } from '@/app/utils/formatters';
+import { SEASON_GAMES } from '@/app/utils/constants';
 import type { LocalizedString } from '@/app/types/content';
 
 import '@/app/assets/datatables.css';
@@ -54,6 +55,7 @@ export type StandingsView = 'wildcard' | 'division' | 'conference' | 'league';
 interface StandingsTableProps {
   standings: StandingsEntry[];
   view?: StandingsView;
+  seasonGames?: number;
 }
 
 const columnHeadings = [
@@ -195,7 +197,11 @@ const sortByPointsDesc = (a: StandingsEntry, b: StandingsEntry) => {
   return b.points - a.points;
 };
 
-const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wildcard' }) => {
+const StandingsTable: React.FC<StandingsTableProps> = ({
+  standings,
+  view = 'wildcard',
+  seasonGames = SEASON_GAMES,
+}) => {
   const tableRows = React.useMemo(() => [...standings], [standings]);
 
   if (view === 'wildcard') {
@@ -277,7 +283,8 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
   const showRaceColumns =
     view === 'wildcard' && tableRows.length > 7 && tableRows.some((team) => team.gamesPlayed > 60);
   const totalColumns = 2 + columnHeadings.length + (showRaceColumns ? 2 : 0);
-  const maxPossiblePoints = (team: StandingsEntry) => team.points + (82 - team.gamesPlayed) * 2;
+  const maxPossiblePoints = (team: StandingsEntry) =>
+    team.points + (seasonGames - team.gamesPlayed) * 2;
 
   // The reference is the outside team with the highest ceiling (max possible points).
   // This is the "strongest team that could still finish 9th" per hockeymagicnumbers.com.
@@ -292,6 +299,11 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
     : null;
 
   const eighthPlaceTeam = showRaceColumns ? tableRows[7] || null : null;
+
+  // The actual current 9th-place team (by real standings order), as opposed to
+  // ninthPlaceTeam's "best possible finish" pick. This is the direct chaser a
+  // playoff team risks being overtaken by today, used for the tragic number.
+  const currentNinthPlaceTeam = showRaceColumns ? tableRows[8] || null : null;
 
   const getMagicNumber = (team: StandingsEntry) => {
     if (!ninthPlaceTeam || !eighthPlaceTeam) {
@@ -313,16 +325,20 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings, view = 'wild
   };
 
   const getTragicNumber = (team: StandingsEntry) => {
-    if (!ninthPlaceTeam || !eighthPlaceTeam) {
+    if (!currentNinthPlaceTeam || !eighthPlaceTeam) {
       return null;
     }
 
     const teamIndex = tableRows.indexOf(team);
     const isInPlayoffPosition = teamIndex > -1 && teamIndex < 8;
-    const tragicAnchorPoints = isInPlayoffPosition ? ninthPlaceTeam.points : eighthPlaceTeam.points;
+    const tragicAnchorPoints = isInPlayoffPosition
+      ? currentNinthPlaceTeam.points
+      : eighthPlaceTeam.points;
 
-    // Teams in playoff position are anchored to the 9th-place chaser.
-    // Teams outside are anchored to the current 8th-place cutoff line.
+    // Teams in playoff position are anchored to the actual current 9th-place
+    // chaser's points (the real threat today), not the highest-ceiling chaser
+    // used for the magic number. Teams outside are anchored to the current
+    // 8th-place cutoff line.
     // +1 requires finishing strictly ahead to avoid elimination.
     // Reaches 0 when the team is mathematically eliminated.
     return Math.max(0, maxPossiblePoints(team) - tragicAnchorPoints + 1);

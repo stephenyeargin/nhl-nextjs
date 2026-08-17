@@ -1,5 +1,6 @@
 import React from 'react';
 import StandingsSwitcher from '@/app/components/StandingsSwitcher';
+import { SEASON_GAMES } from '@/app/utils/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMagicWandSparkles,
@@ -77,10 +78,32 @@ function getStandingsDate(dateParam?: string): string {
   return dateParam;
 }
 
+// Regular season length isn't part of the standings response, so it's read from a
+// team's actual schedule (regardless of Olympic-style compression, the game count
+// still reflects the real season) rather than assumed.
+async function getSeasonGameCount(teamAbbrev: string): Promise<number> {
+  try {
+    const res = await fetch(`https://api-web.nhle.com/v1/club-schedule-season/${teamAbbrev}/now`, {
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      throw new Error('Failed to fetch schedule');
+    }
+
+    const data: { games?: { gameType?: number }[] } = await res.json();
+    const regularSeasonGames = (data.games || []).filter((g) => g.gameType === 2).length;
+
+    return regularSeasonGames || SEASON_GAMES;
+  } catch {
+    return SEASON_GAMES;
+  }
+}
+
 export default async function StandingsPage({ searchParams }: PageProps) {
   let westernConference: StandingsEntry[] = [];
   let easternConference: StandingsEntry[] = [];
   let errorMessage: string | null = null;
+  let seasonGames: number = SEASON_GAMES;
 
   const resolvedSearchParams = await searchParams;
   const standingsDate = getStandingsDate(resolvedSearchParams?.date);
@@ -101,6 +124,11 @@ export default async function StandingsPage({ searchParams }: PageProps) {
 
     westernConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'W');
     easternConference = jsonStandings.standings.filter((c) => c.conferenceAbbrev === 'E');
+
+    const anyTeamAbbrev = jsonStandings.standings[0]?.teamAbbrev?.default;
+    if (anyTeamAbbrev) {
+      seasonGames = await getSeasonGameCount(anyTeamAbbrev);
+    }
   } catch (error: unknown) {
     errorMessage = error instanceof Error ? error.message : 'Failed to fetch data';
   }
@@ -118,6 +146,7 @@ export default async function StandingsPage({ searchParams }: PageProps) {
           eastern={easternConference}
           standingsDate={standingsDate}
           hideTables={Boolean(errorMessage)}
+          seasonGames={seasonGames}
         />
       </div>
 
@@ -153,8 +182,9 @@ export default async function StandingsPage({ searchParams }: PageProps) {
           </p>
           <p className="flex items-center gap-2">
             <FontAwesomeIcon icon={faSadTear} fixedWidth />
-            <strong>Tragic #:</strong> team max possible points minus the anchor line, plus 1: 9th
-            place if currently in a playoff spot, 8th place if currently out. 0 means eliminated.
+            <strong>Tragic #:</strong> team max possible points minus the anchor line, plus 1: the
+            current 9th-place team&apos;s points if currently in a playoff spot, current 8th-place
+            points if currently out. 0 means eliminated.
           </p>
         </div>
       )}
