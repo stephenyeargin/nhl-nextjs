@@ -16,11 +16,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import TeamStatsSummary from '@/app/components/TeamStatsSummary';
 
-export const metadata = {
-  title: 'Team Schedule & Stats',
-  description: 'View the schedule and stats for a team in the NHL.',
-};
-
 // Deliberately avoid strict typing on route params due to Next.js build-time PageProps typing expectations
 // (can be a plain object or promise-like depending on internal inference). We unwrap defensively below.
 
@@ -68,6 +63,27 @@ interface NewsItem {
 type TeamPageProps = {
   params: TeamSlugParam | Promise<TeamSlugParam>;
 };
+
+export async function generateMetadata(props: TeamPageProps) {
+  const rawParams = (await props?.params) as TeamSlugParam | Promise<TeamSlugParam>;
+  const { slug } = await rawParams;
+  let team = getTeamDataByAbbreviation(slug?.toUpperCase(), true);
+  if (!team.teamId || team.abbreviation === 'NHL') {
+    team = getTeamDataBySlug(slug, true);
+  }
+
+  if (!team.teamId || team.abbreviation === 'NHL') {
+    return {
+      title: 'Team Schedule & Stats',
+      description: 'View the schedule and stats for a team in the NHL.',
+    };
+  }
+
+  return {
+    title: `${team.name} - Stats & Schedule`,
+    description: 'View the schedule and stats for a team in the NHL.',
+  };
+}
 
 type GameTileItem = React.ComponentProps<typeof GameTile>['game'];
 type StatsRows = React.ComponentProps<typeof StatsTable>['stats'];
@@ -123,8 +139,6 @@ export default async function TeamPage(props: TeamPageProps) {
       color: formatTextColorByBackgroundColor(team.teamColor),
     };
   }
-
-  metadata.title = `${team.name} - Stats & Schedule`;
 
   const [
     teamStatsResponse,
