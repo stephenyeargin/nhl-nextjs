@@ -5,10 +5,6 @@ import type { NextRequest } from 'next/server';
 jest.mock('next/server', () => ({
   NextResponse: {
     redirect: (url: string) => ({ type: 'redirect', url }),
-    rewrite: (urlObj: { href?: string; toString: () => string }) => ({
-      type: 'rewrite',
-      url: urlObj.href || urlObj.toString(),
-    }),
     next: () => ({
       type: 'next',
       headers: {
@@ -23,34 +19,23 @@ jest.mock('./app/utils/teamData', () => ({
 }));
 
 describe('proxy', () => {
-  interface MockRequest {
-    url: string;
-    nextUrl: URL & { clone: () => URL };
-  }
-
-  const makeReq = (path: string) => {
-    const url = new URL(`https://example.com${path}`);
-    const nextUrl = url as URL & { clone: () => URL };
-    nextUrl.clone = () => new URL(url.toString());
-
-    return { url: url.toString(), nextUrl } as MockRequest;
-  };
+  const makeReq = (path: string) => ({ url: `https://example.com${path}` });
 
   test('redirects team slug root', () => {
     const res = proxy(makeReq('/bruins') as unknown as NextRequest);
     expect(res).toEqual(expect.objectContaining({ type: 'redirect' }));
   });
 
-  test('rewrites playoffs root', () => {
-    const res = proxy(makeReq('/playoffs') as unknown as NextRequest);
-    expect(res.type).toBe('rewrite');
-    expect(res.url).toContain(`/playoffs/${new Date().getFullYear()}`);
-  });
-
-  test('rewrites draft root', () => {
-    const res = proxy(makeReq('/draft') as unknown as NextRequest);
-    expect(res.type).toBe('rewrite');
-    expect(res.url).toContain(`/draft/${new Date().getFullYear()}`);
+  // The year roots are handled by real routes, not a proxy rewrite: rewriting them
+  // produced an absolute URL that `next start` behind a TLS-terminating proxy treated
+  // as external and tried to re-fetch over TLS.
+  test.each(['/playoffs', '/draft'])('passes %s through with cache headers', (path) => {
+    const res = proxy(makeReq(path) as unknown as NextRequest);
+    expect(res.type).toBe('next');
+    expect(res.headers.set).toHaveBeenCalledWith(
+      'Cache-Control',
+      'public, s-maxage=3600, stale-while-revalidate=86400'
+    );
   });
 
   test('falls through for other paths', () => {
