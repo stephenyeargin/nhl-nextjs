@@ -28,6 +28,7 @@ interface SkaterProps {
   isHomeTeam?: boolean;
   team?: string;
   compactMobile?: boolean;
+  responsiveToContainer?: boolean;
 }
 
 export const Skater: React.FC<SkaterProps> = ({
@@ -36,6 +37,7 @@ export const Skater: React.FC<SkaterProps> = ({
   isHomeTeam = true,
   team = 'NHL',
   compactMobile = false,
+  responsiveToContainer = false,
 }) => {
   const { teamColor } = getTeamDataByAbbreviation(team, true);
   const hasSecondsRemaining =
@@ -70,7 +72,9 @@ export const Skater: React.FC<SkaterProps> = ({
 
   return (
     <div key={player.playerId} className="text-xs text-center">
-      <div className={`lg:hidden ${compactMobile ? 'my-1' : 'my-3'}`}>
+      <div
+        className={`${responsiveToContainer ? 'on-ice-number' : 'lg:hidden'} ${compactMobile ? 'my-1' : 'my-3'}`}
+      >
         <PlayerLink
           playerId={player.playerId}
           className={`font-bold rounded-full inline-flex items-center justify-center ${
@@ -86,16 +90,18 @@ export const Skater: React.FC<SkaterProps> = ({
         src={player.headshot}
         alt={`${player.name?.default || ''}`}
         size="2"
-        className="hidden lg:block m-1"
+        className={`${responsiveToContainer ? 'on-ice-photo hidden' : 'hidden lg:block'} m-1`}
         team={team}
       />
-      <div className="hidden lg:block font-bold">
+      <div
+        className={`${responsiveToContainer ? 'on-ice-photo hidden' : 'hidden lg:block'} font-bold`}
+      >
         <PlayerLink playerId={player.playerId}>
           {player.name?.default || player.playerId}
         </PlayerLink>
       </div>
       <div className="">
-        <div className="hidden xl:block">
+        <div className={responsiveToContainer ? 'on-ice-details hidden' : 'hidden xl:block'}>
           #{player.sweaterNumber ?? ''} • {player.positionCode}
         </div>
         {hasSecondsRemaining && (

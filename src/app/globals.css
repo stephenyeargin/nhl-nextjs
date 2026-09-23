@@ -54,3 +54,21 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.on-ice-side {
+  container-type: inline-size;
+}
+
+@container (min-width: 420px) {
+  .on-ice-side .on-ice-number {
+    display: none;
+  }
+
+  .on-ice-side .on-ice-photo {
+    display: block;
+  }
+
+  .on-ice-side .on-ice-details {
+    display: block;
+  }
+}

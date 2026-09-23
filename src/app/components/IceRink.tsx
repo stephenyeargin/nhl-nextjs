@@ -205,7 +205,13 @@ const IceRink: React.FC<IceRinkProps> = ({
       >
         {orderedPlayers.map((p) => (
           <div key={`${team}-${p.playerId}`} className="shrink-0 text-center">
-            <Skater player={p} isHomeTeam={isHomeTeam} team={team} compactMobile={true} />
+            <Skater
+              player={p}
+              isHomeTeam={isHomeTeam}
+              team={team}
+              compactMobile={true}
+              responsiveToContainer={true}
+            />
           </div>
         ))}
       </div>
@@ -222,7 +228,7 @@ const IceRink: React.FC<IceRinkProps> = ({
               className="mx-4 mb-2 grid grid-cols-2 md:grid-cols-[1fr_auto_1fr] items-start gap-2 md:gap-3"
               aria-label="Players currently on the ice"
             >
-              <div className="min-w-0 overflow-hidden" data-testid="on-ice-left">
+              <div className="on-ice-side min-w-0 overflow-hidden" data-testid="on-ice-left">
                 {renderDefendingSideSkaters(leftSideTeam, true)}
               </div>
               <div
@@ -231,7 +237,7 @@ const IceRink: React.FC<IceRinkProps> = ({
               >
                 On The Ice
               </div>
-              <div className="min-w-0 overflow-hidden" data-testid="on-ice-right">
+              <div className="on-ice-side min-w-0 overflow-hidden" data-testid="on-ice-right">
                 {renderDefendingSideSkaters(rightSideTeam, false)}
               </div>
             </div>
