@@ -25,6 +25,7 @@ import { faBan, faNewspaper, faPlayCircle, faWarning } from '@fortawesome/free-s
 import GameSidebarSkeleton from './GameSidebarSkeleton';
 import StatComparisonRow from './StatComparisonRow';
 import FloatingVideoPlayer from './FloatingVideoPlayer';
+import type { PlayerName } from '../types';
 
 interface SimpleGame {
   gameState: string;
@@ -71,7 +72,8 @@ interface SeriesListGame extends SimpleGame {
 }
 
 interface Official {
-  default?: string;
+  fullName?: PlayerName;
+  sweaterNumber?: number;
 }
 
 const GameSidebar = () => {
@@ -543,7 +545,10 @@ const GameSidebar = () => {
                     {rightRail.gameInfo.referees.map((o: Official, i: number) => (
                       <span key={i}>
                         {i > 0 && ', '}
-                        {o.default}
+                        {o.fullName?.default}
+                        {/* { o.sweaterNumber && (
+                          <>&nbsp;(#{o.sweaterNumber})</>
+                        )} */}
                       </span>
                     ))}
                   </div>
@@ -552,7 +557,10 @@ const GameSidebar = () => {
                     {rightRail.gameInfo.linesmen.map((o: Official, i: number) => (
                       <span key={i}>
                         {i > 0 && ', '}
-                        {o.default}
+                        {o.fullName?.default}
+                        {/* { o.sweaterNumber && (
+                          <>&nbsp;(#{o.sweaterNumber})</>
+                        )} */}
                       </span>
                     ))}
                   </div>

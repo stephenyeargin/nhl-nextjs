@@ -39,8 +39,8 @@ interface TeamSeasonStats {
   homeTeam?: TeamSeasonStatsTeam;
 }
 interface GameInfo {
-  referees?: { default: string }[];
-  linesmen?: { default: string }[];
+  referees?: { fullName?: { default?: string } }[];
+  linesmen?: { fullName?: { default?: string } }[];
   awayTeam?: { headCoach?: { default: string }; scratches?: Array<{ id?: string | number }> };
   homeTeam?: { headCoach?: { default: string }; scratches?: Array<{ id?: string | number }> };
 }

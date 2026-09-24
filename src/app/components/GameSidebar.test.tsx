@@ -119,8 +119,8 @@ const buildGameData = () => ({
       },
     ],
     gameInfo: {
-      referees: [{ default: 'Ref A' }, { default: 'Ref B' }],
-      linesmen: [{ default: 'Lines A' }, { default: 'Lines B' }],
+      referees: [{ fullName: { default: 'Ref A' } }, { fullName: { default: 'Ref B' } }],
+      linesmen: [{ fullName: { default: 'Lines A' } }, { fullName: { default: 'Lines B' } }],
       awayTeam: { headCoach: { default: 'Coach Away' }, scratches: [] },
       homeTeam: { headCoach: { default: 'Coach Home' }, scratches: [] },
     },
@@ -157,6 +157,10 @@ describe('GameSidebar (smoke)', () => {
     expect(screen.getByText(/Last 10 Games/i)).toBeInTheDocument();
     expect(screen.getByText(/Game Info/i)).toBeInTheDocument();
     expect(screen.getByText(/Game Reports/i)).toBeInTheDocument();
+    expect(screen.getByText('Ref A')).toBeInTheDocument();
+    expect(screen.getByText(/Ref B/)).toBeInTheDocument();
+    expect(screen.getByText('Lines A')).toBeInTheDocument();
+    expect(screen.getByText(/Lines B/)).toBeInTheDocument();
 
     // Snapshot initial render
     expect(asFragment()).toMatchSnapshot();
