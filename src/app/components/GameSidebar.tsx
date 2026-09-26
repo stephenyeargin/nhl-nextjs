@@ -43,14 +43,16 @@ interface SimplePlayer {
   firstName?: { default?: string };
   lastName?: { default?: string };
 }
-const renderPlayer = (player: SimplePlayer) =>
+const renderPlayer = (player: SimplePlayer, suffix?: string) =>
   player.id ? (
     <PlayerLink playerId={player.id}>
       {player.firstName?.default} {player.lastName?.default}
+      {suffix}
     </PlayerLink>
   ) : (
     <span>
       {player.firstName?.default} {player.lastName?.default}
+      {suffix}
     </span>
   );
 
@@ -567,8 +569,8 @@ const GameSidebar = () => {
                 </div>
               </div>
             )}
-          <div className="flex">
-            <div className="w-1/2 p-2">
+          <div className="p-2">
+            <div>
               {rightRail.gameInfo.awayTeam?.headCoach?.default && (
                 <div className="my-2">
                   <div className="font-bold">{awayTeam.abbrev} Head Coach</div>
@@ -578,15 +580,16 @@ const GameSidebar = () => {
               <div className="my-2">
                 <div className="font-bold">{awayTeam.abbrev} Scratches</div>
                 {rightRail.gameInfo.awayTeam?.scratches?.length === 0 && <>No players listed.</>}
-                {rightRail.gameInfo.awayTeam?.scratches?.map((p: SimplePlayer, i: number) => (
-                  <span key={p.id}>
-                    {i > 0 && ', '}
-                    {renderPlayer(p)}
-                  </span>
-                ))}
+                {rightRail.gameInfo.awayTeam?.scratches?.map(
+                  (p: SimplePlayer, i: number, all: SimplePlayer[]) => (
+                    <React.Fragment key={p.id}>
+                      {renderPlayer(p, i < all.length - 1 ? ',' : undefined)}{' '}
+                    </React.Fragment>
+                  )
+                )}
               </div>
             </div>
-            <div className="w-1/2 p-2">
+            <div>
               {rightRail.gameInfo.homeTeam?.headCoach?.default && (
                 <div className="my-2">
                   <div className="font-bold">{homeTeam.abbrev} Head Coach</div>
@@ -596,12 +599,13 @@ const GameSidebar = () => {
               <div className="my-2">
                 <div className="font-bold">{homeTeam.abbrev} Scratches</div>
                 {rightRail.gameInfo.homeTeam?.scratches?.length === 0 && <>No players listed.</>}
-                {rightRail.gameInfo.homeTeam?.scratches?.map((p: SimplePlayer, i: number) => (
-                  <span key={p.id}>
-                    {i > 0 && ', '}
-                    {renderPlayer(p)}
-                  </span>
-                ))}
+                {rightRail.gameInfo.homeTeam?.scratches?.map(
+                  (p: SimplePlayer, i: number, all: SimplePlayer[]) => (
+                    <React.Fragment key={p.id}>
+                      {renderPlayer(p, i < all.length - 1 ? ',' : undefined)}{' '}
+                    </React.Fragment>
+                  )
+                )}
               </div>
             </div>
           </div>
