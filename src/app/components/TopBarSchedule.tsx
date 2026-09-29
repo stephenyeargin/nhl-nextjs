@@ -338,7 +338,7 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
             {games.length === 0 && (
               <div
                 className="flex items-center border rounded-sm"
-                style={{ minHeight: '9.25rem', minWidth: '360px' }}
+                style={{ minHeight: '9.25rem', minWidth: 'min(360px, 100vw - 4rem)' }}
               >
                 <div className="p-4 text-gray-500">No games scheduled for today.</div>
               </div>
@@ -348,7 +348,7 @@ const TopBarSchedule: React.FC<TopBarScheduleProps> = ({ gameDate }) => {
                 key={game.id}
                 game={game as unknown as React.ComponentProps<typeof GameTile>['game']}
                 hideDate={game.seriesStatus?.seriesAbbrev === 'SCF' ? false : true}
-                style={{ minWidth: '360px' }}
+                style={{ minWidth: 'min(360px, 100vw - 4rem)' }}
               />
             ))}
           </div>

@@ -48,7 +48,7 @@ exports[`TopBarSchedule (smoke) renders dates and switches focused date 1`] = `
           <div
             data-game="[object Object]"
             data-testid="game-tile"
-            style="min-width: 360px;"
+            style="min-width: min(360px, 100vw - 4rem);"
           >
             Game 1
           </div>
@@ -114,7 +114,7 @@ exports[`TopBarSchedule (smoke) renders dates and switches focused date 2`] = `
           <div
             data-game="[object Object]"
             data-testid="game-tile"
-            style="min-width: 360px;"
+            style="min-width: min(360px, 100vw - 4rem);"
           >
             Game 2
           </div>

@@ -3,21 +3,40 @@
 import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import TeamsMenu from './TeamsMenu';
 
-const MainNav: React.FC = () => {
-  const pathname = usePathname();
-  const isActive = (regex: RegExp) => regex.test(pathname || '');
+const links = [
+  { href: '/', label: 'News', match: /^\/($|news)/ },
+  { href: '/video', label: 'Video', match: /^\/video/ },
+  { href: '/scores', label: 'Scores', match: /^\/scores$/ },
+  { href: '/standings', label: 'Standings', match: /^\/standings$/ },
+  { href: '/stats', label: 'Stats', match: /^\/stats$/ },
+  { href: '/team', label: 'Teams', match: /^\/team$/ },
+  { href: '/playoffs', label: 'Playoffs', match: /^\/playoffs/ },
+  { href: '/draft', label: 'Draft', match: /^\/draft/ },
+];
 
+const MainNav: React.FC = () => {
+  const pathname = usePathname() || '';
+
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [showTeamMenu, setShowTeamMenu] = useState<boolean>(false);
   const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleMouseEnter = useCallback(() => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    setShowTeamMenu(true);
-  }, [timeoutId]);
+  const handlePointerEnter = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.pointerType !== 'mouse') {
+        return;
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      setShowTeamMenu(true);
+    },
+    [timeoutId]
+  );
 
   const handleMouseLeave = useCallback(() => {
     const id = setTimeout(() => {
@@ -26,65 +45,44 @@ const MainNav: React.FC = () => {
     setTimeoutId(id);
   }, []);
 
+  const current = links.find((l) => l.match.test(pathname));
+
   return (
-    <nav className="text-xs md:text-base bg-slate-200 dark:bg-slate-800 p-3 md:p-5 relative">
-      <ul className="flex gap-4 md:gap-6">
-        <li
-          className={`${isActive(/^\/$/) || isActive(/^\/news/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
+    <nav className="bg-slate-200 dark:bg-slate-800 relative">
+      <div className="md:hidden flex items-center justify-between p-3">
+        <span className="font-semibold text-black dark:text-white">{current?.label}</span>
+        <button
+          type="button"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          aria-controls="main-nav-links"
+          className="w-8 h-8 text-lg text-black dark:text-white"
+          onClick={() => setMenuOpen((open) => !open)}
         >
-          <Link href="/" className="text-black dark:text-white">
-            News
-          </Link>
-        </li>
-        <li
-          className={`${isActive(/^\/video/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
-        >
-          <Link href="/video" className="text-black dark:text-white">
-            Video
-          </Link>
-        </li>
-        <li
-          className={`${isActive(/^\/scores$/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
-        >
-          <Link href="/scores" className="text-black dark:text-white">
-            Scores
-          </Link>
-        </li>
-        <li
-          className={`${isActive(/^\/standings$/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
-        >
-          <Link href="/standings" className="text-black dark:text-white">
-            Standings
-          </Link>
-        </li>
-        <li
-          className={`${isActive(/^\/stats$/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
-        >
-          <Link href="/stats" className="text-black dark:text-white">
-            Stats
-          </Link>
-        </li>
-        <li
-          className={`${isActive(/^\/team$/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
-        >
-          <Link href="/team" className="text-black dark:text-white" onMouseEnter={handleMouseEnter}>
-            Teams
-          </Link>
-        </li>
-        <li
-          className={`${isActive(/^\/playoffs/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
-        >
-          <Link href="/playoffs" className="text-black dark:text-white">
-            Playoffs
-          </Link>
-        </li>
-        <li
-          className={`mr-6 ${isActive(/^\/draft/) ? 'border-solid border-b-2 border-black dark:border-white' : ''}`}
-        >
-          <Link href="/draft" className="text-black dark:text-white">
-            Draft
-          </Link>
-        </li>
+          <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} fixedWidth />
+        </button>
+      </div>
+      <ul
+        id="main-nav-links"
+        className={`${menuOpen ? 'block' : 'hidden'} md:flex md:gap-6 md:p-5 border-t border-slate-300 dark:border-slate-700 md:border-0`}
+      >
+        {links.map(({ href, label, match }) => {
+          const active = match.test(pathname);
+
+          return (
+            <li key={href}>
+              <Link
+                href={href}
+                className={`block px-3 py-3 md:p-0 text-black dark:text-white ${active ? 'font-semibold md:font-normal md:border-solid md:border-b-2 md:border-black md:dark:border-white' : ''}`}
+                aria-current={active ? 'page' : undefined}
+                onClick={() => setMenuOpen(false)}
+                onPointerEnter={href === '/team' ? handlePointerEnter : undefined}
+              >
+                {label}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
       <div
         className={`${showTeamMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'}
