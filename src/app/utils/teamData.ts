@@ -114,7 +114,7 @@ const teamData: TeamDataEntry[] = [
   {
     name: 'Florida Panthers',
     slug: 'panthers',
-    hashtag: 'TimeToHunt',
+    hashtag: 'FlaPanthers',
     abbreviation: 'FLA',
     teamColor: '#041E42',
     secondaryTeamColor: '#c8102E',
@@ -134,7 +134,7 @@ const teamData: TeamDataEntry[] = [
   {
     name: 'Minnesota Wild',
     slug: 'wild',
-    hashtag: 'MNWild',
+    hashtag: 'mnwild',
     abbreviation: 'MIN',
     teamColor: '#0e4431',
     secondaryTeamColor: '#ddc9a3',
@@ -154,7 +154,7 @@ const teamData: TeamDataEntry[] = [
   {
     name: 'Nashville Predators',
     slug: 'predators',
-    hashtag: 'Smashville',
+    hashtag: 'Preds',
     abbreviation: 'NSH',
     teamColor: '#ffb81c',
     secondaryTeamColor: '#041E42',
@@ -223,7 +223,7 @@ const teamData: TeamDataEntry[] = [
   {
     name: 'St. Louis Blues',
     slug: 'blues',
-    hashtag: 'STLBlues',
+    hashtag: 'stlblues',
     abbreviation: 'STL',
     teamColor: '#004986',
     secondaryTeamColor: '#FCB514',
@@ -233,7 +233,7 @@ const teamData: TeamDataEntry[] = [
   {
     name: 'San Jose Sharks',
     slug: 'sharks',
-    hashtag: 'TheFutureIsTeal',
+    hashtag: 'TurnItAllTeal',
     abbreviation: 'SJS',
     teamColor: '#00778b',
     secondaryTeamColor: '#e57200',
@@ -263,7 +263,7 @@ const teamData: TeamDataEntry[] = [
   {
     name: 'Toronto Maple Leafs',
     slug: 'mapleleafs',
-    hashtag: 'LeafsForever',
+    hashtag: 'Leafs',
     abbreviation: 'TOR',
     teamColor: '#00205b',
     secondaryTeamColor: '#FFFFFF',
