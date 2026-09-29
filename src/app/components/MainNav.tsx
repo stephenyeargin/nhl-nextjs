@@ -45,12 +45,9 @@ const MainNav: React.FC = () => {
     setTimeoutId(id);
   }, []);
 
-  const current = links.find((l) => l.match.test(pathname));
-
   return (
     <nav className="bg-slate-200 dark:bg-slate-800 relative">
-      <div className="md:hidden flex items-center justify-between p-3">
-        <span className="font-semibold text-black dark:text-white">{current?.label}</span>
+      <div className="md:hidden flex justify-end p-3">
         <button
           type="button"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
