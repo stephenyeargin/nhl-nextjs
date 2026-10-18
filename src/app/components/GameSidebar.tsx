@@ -56,6 +56,20 @@ const renderPlayer = (player: SimplePlayer, suffix?: string) =>
     </span>
   );
 
+const getLastGameResultClassName = (result?: string) => {
+  if (['W', 'OTW', 'SOW'].includes(result || '')) {
+    return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200';
+  }
+  if (['OTL', 'SOL'].includes(result || '')) {
+    return 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200';
+  }
+  if (result === 'L') {
+    return 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-200';
+  }
+
+  return 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200';
+};
+
 type StatKey = React.ComponentProps<typeof StatComparisonRow>['stat'];
 
 interface ShotByPeriod {
@@ -369,20 +383,20 @@ const GameSidebar = () => {
 
       {showLast10 && (
         <div className="mb-5">
-          <div className="flex text-center items-center justify-between">
-            <div className="w-1/4 p-2 text-bold flex justify-center">
+          <div className="flex items-center justify-between text-center">
+            <div className="flex w-1/4 justify-center p-2">
               <TeamLogo src={logos[awayTeam.abbrev]} alt={awayTeam.abbrev} className="h-12 w-12" />
             </div>
             <div className="w-1/2 p-2 text-2xl font-bold">Last 10 Games</div>
-            <div className="w-1/4 p-2 text-bold flex justify-center">
+            <div className="flex w-1/4 justify-center p-2">
               <TeamLogo src={logos[homeTeam.abbrev]} alt={homeTeam.abbrev} className="h-12 w-12" />
             </div>
           </div>
-          <div className="flex text-center">
+          <div className="mb-2 flex text-center text-sm text-slate-600 dark:text-slate-300">
             <div className="w-1/2">
-              {rightRail?.last10Record?.awayTeam?.record} (
-              {rightRail?.last10Record?.awayTeam?.streakType}
-              {rightRail?.last10Record?.awayTeam?.streak})
+              {rightRail.last10Record?.awayTeam?.record} (
+              {rightRail.last10Record?.awayTeam?.streakType}
+              {rightRail.last10Record?.awayTeam?.streak})
             </div>
             <div className="w-1/2">
               {rightRail.last10Record?.homeTeam?.record} (
@@ -390,24 +404,32 @@ const GameSidebar = () => {
               {rightRail.last10Record?.homeTeam?.streak})
             </div>
           </div>
-          {rightRail.last10Record?.awayTeam?.pastGameResults?.map((_g: unknown, i: number) => (
-            <div key={i} className="flex text-center text-xs my-1 gap-1">
+          {rightRail.last10Record?.awayTeam?.pastGameResults?.map((awayGame, i: number) => {
+            const homeGame = rightRail.last10Record?.homeTeam?.pastGameResults?.[i];
+
+            return (
               <div
-                className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-25'}`}
-                style={{ backgroundColor: awayTeam.data?.teamColor || '#000' }}
+                key={i}
+                className={`flex gap-1 text-center text-xs ${i % 2 ? 'bg-slate-500/10' : ''}`}
               >
-                {rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.opponentAbbrev} (
-                {rightRail.last10Record?.awayTeam?.pastGameResults?.[i]?.gameResult})
+                {[awayGame, homeGame].map((pastGame, teamIndex) => (
+                  <div
+                    key={teamIndex}
+                    className="flex w-1/2 items-center justify-between px-2 py-1.5"
+                  >
+                    <span className="font-medium text-slate-700 dark:text-slate-200">
+                      {pastGame?.opponentAbbrev}
+                    </span>
+                    <span
+                      className={`rounded px-1.5 py-0.5 font-semibold ${getLastGameResultClassName(pastGame?.gameResult)}`}
+                    >
+                      {pastGame?.gameResult}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div
-                className={`p-2 w-1/2 ${['W', 'OTW', 'SOW'].includes(rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.gameResult || '') ? 'font-bold' : 'opacity-25'}`}
-                style={{ backgroundColor: homeTeam.data?.teamColor || '#000' }}
-              >
-                {rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.opponentAbbrev} (
-                {rightRail.last10Record?.homeTeam?.pastGameResults?.[i]?.gameResult})
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

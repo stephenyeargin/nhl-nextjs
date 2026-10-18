@@ -239,10 +239,10 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
       class="mb-5"
     >
       <div
-        class="flex text-center items-center justify-between"
+        class="flex items-center justify-between text-center"
       >
         <div
-          class="w-1/4 p-2 text-bold flex justify-center"
+          class="flex w-1/4 justify-center p-2"
         >
           <span
             data-testid="logo-AWY"
@@ -256,7 +256,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
           Last 10 Games
         </div>
         <div
-          class="w-1/4 p-2 text-bold flex justify-center"
+          class="flex w-1/4 justify-center p-2"
         >
           <span
             data-testid="logo-HOM"
@@ -266,7 +266,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
         </div>
       </div>
       <div
-        class="flex text-center"
+        class="mb-2 flex text-center text-sm text-slate-600 dark:text-slate-300"
       >
         <div
           class="w-1/2"
@@ -280,35 +280,67 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 1`] = `
         </div>
       </div>
       <div
-        class="flex text-center text-xs my-1 gap-1"
+        class="flex gap-1 text-center text-xs "
       >
         <div
-          class="p-2 w-1/2 font-bold"
-          style="background-color: rgb(18, 52, 86);"
+          class="flex w-1/2 items-center justify-between px-2 py-1.5"
         >
-          ABC (W)
+          <span
+            class="font-medium text-slate-700 dark:text-slate-200"
+          >
+            ABC
+          </span>
+          <span
+            class="rounded px-1.5 py-0.5 font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200"
+          >
+            W
+          </span>
         </div>
         <div
-          class="p-2 w-1/2 opacity-25"
-          style="background-color: rgb(18, 52, 86);"
+          class="flex w-1/2 items-center justify-between px-2 py-1.5"
         >
-          XYZ (L)
+          <span
+            class="font-medium text-slate-700 dark:text-slate-200"
+          >
+            XYZ
+          </span>
+          <span
+            class="rounded px-1.5 py-0.5 font-semibold bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-200"
+          >
+            L
+          </span>
         </div>
       </div>
       <div
-        class="flex text-center text-xs my-1 gap-1"
+        class="flex gap-1 text-center text-xs bg-slate-500/10"
       >
         <div
-          class="p-2 w-1/2 opacity-25"
-          style="background-color: rgb(18, 52, 86);"
+          class="flex w-1/2 items-center justify-between px-2 py-1.5"
         >
-          DEF (L)
+          <span
+            class="font-medium text-slate-700 dark:text-slate-200"
+          >
+            DEF
+          </span>
+          <span
+            class="rounded px-1.5 py-0.5 font-semibold bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-200"
+          >
+            L
+          </span>
         </div>
         <div
-          class="p-2 w-1/2 font-bold"
-          style="background-color: rgb(18, 52, 86);"
+          class="flex w-1/2 items-center justify-between px-2 py-1.5"
         >
-          QRS (W)
+          <span
+            class="font-medium text-slate-700 dark:text-slate-200"
+          >
+            QRS
+          </span>
+          <span
+            class="rounded px-1.5 py-0.5 font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200"
+          >
+            W
+          </span>
         </div>
       </div>
     </div>
@@ -743,10 +775,10 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
       class="mb-5"
     >
       <div
-        class="flex text-center items-center justify-between"
+        class="flex items-center justify-between text-center"
       >
         <div
-          class="w-1/4 p-2 text-bold flex justify-center"
+          class="flex w-1/4 justify-center p-2"
         >
           <span
             data-testid="logo-AWY"
@@ -760,7 +792,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
           Last 10 Games
         </div>
         <div
-          class="w-1/4 p-2 text-bold flex justify-center"
+          class="flex w-1/4 justify-center p-2"
         >
           <span
             data-testid="logo-HOM"
@@ -770,7 +802,7 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
         </div>
       </div>
       <div
-        class="flex text-center"
+        class="mb-2 flex text-center text-sm text-slate-600 dark:text-slate-300"
       >
         <div
           class="w-1/2"
@@ -784,35 +816,67 @@ exports[`GameSidebar (smoke) renders key sections and opens video player 2`] = `
         </div>
       </div>
       <div
-        class="flex text-center text-xs my-1 gap-1"
+        class="flex gap-1 text-center text-xs "
       >
         <div
-          class="p-2 w-1/2 font-bold"
-          style="background-color: rgb(18, 52, 86);"
+          class="flex w-1/2 items-center justify-between px-2 py-1.5"
         >
-          ABC (W)
+          <span
+            class="font-medium text-slate-700 dark:text-slate-200"
+          >
+            ABC
+          </span>
+          <span
+            class="rounded px-1.5 py-0.5 font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200"
+          >
+            W
+          </span>
         </div>
         <div
-          class="p-2 w-1/2 opacity-25"
-          style="background-color: rgb(18, 52, 86);"
+          class="flex w-1/2 items-center justify-between px-2 py-1.5"
         >
-          XYZ (L)
+          <span
+            class="font-medium text-slate-700 dark:text-slate-200"
+          >
+            XYZ
+          </span>
+          <span
+            class="rounded px-1.5 py-0.5 font-semibold bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-200"
+          >
+            L
+          </span>
         </div>
       </div>
       <div
-        class="flex text-center text-xs my-1 gap-1"
+        class="flex gap-1 text-center text-xs bg-slate-500/10"
       >
         <div
-          class="p-2 w-1/2 opacity-25"
-          style="background-color: rgb(18, 52, 86);"
+          class="flex w-1/2 items-center justify-between px-2 py-1.5"
         >
-          DEF (L)
+          <span
+            class="font-medium text-slate-700 dark:text-slate-200"
+          >
+            DEF
+          </span>
+          <span
+            class="rounded px-1.5 py-0.5 font-semibold bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-200"
+          >
+            L
+          </span>
         </div>
         <div
-          class="p-2 w-1/2 font-bold"
-          style="background-color: rgb(18, 52, 86);"
+          class="flex w-1/2 items-center justify-between px-2 py-1.5"
         >
-          QRS (W)
+          <span
+            class="font-medium text-slate-700 dark:text-slate-200"
+          >
+            QRS
+          </span>
+          <span
+            class="rounded px-1.5 py-0.5 font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200"
+          >
+            W
+          </span>
         </div>
       </div>
     </div>
